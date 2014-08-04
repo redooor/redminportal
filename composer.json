@@ -1,0 +1,33 @@
+{
+    "name": "redooor/redminportal",
+    "description": "RedminPortal by Redooor",
+    "keywords": ["package", "laravel", "redooor", "redmin", "portal", "ecommerce", "backend"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Redooor LLP",
+            "email": "support@redooor.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "doctrine/dbal": "~2.3",
+        "twbs/bootstrap": "3.1.*",
+        "imagine/imagine": "0.5.*",
+        "maatwebsite/excel": "1.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/controllers",
+            "src/migrations",
+            "src/models",
+            "src/helpers",
+            "src/config",
+            "tests/RedminTestCase.php"
+        ],
+        "psr-0": {
+            "Redooor\\Redminportal": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
