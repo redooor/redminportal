@@ -1,12 +1,13 @@
 {
     "name": "redooor/redminportal",
-    "description": "RedminPortal by Redooor",
+    "description": "RedminPortal is a backend administrating tool for Content Management and Ecommerce sites.",
     "keywords": ["package", "laravel", "redooor", "redmin", "portal", "ecommerce", "backend"],
     "license": "MIT",
     "authors": [
         {
             "name": "Redooor LLP",
-            "email": "support@redooor.com"
+            "email": "support@redooor.com",
+            "homepage": "http://www.redooor.com"
         }
     ],
     "require": {
