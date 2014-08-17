@@ -15,7 +15,7 @@ class CreateMediasTable extends Migration {
 		Schema::create('medias', function(Blueprint $table)
 		{
 			$table->increments('id');
-            $table->string('name', 64);
+            $table->string('name', 255);
             $table->string('path', 320);
             $table->string('sku', 255)->unique();
             $table->string('short_description', 255);

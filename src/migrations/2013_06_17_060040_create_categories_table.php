@@ -13,7 +13,7 @@ class CreateCategoriesTable extends Migration {
 	{
 		Schema::create('categories', function($table) {
             $table->increments('id');
-            $table->string('name', 64)->unique();
+            $table->string('name', 255)->unique();
             $table->string('short_description', 255);
             $table->text('long_description')->nullable();
             $table->boolean('active')->default(TRUE);

@@ -18,7 +18,7 @@ class CreateImagesTable extends Migration {
             $table->string('path', 320);
              // Imageable
             $table->integer('imageable_id');
-            $table->string('imageable_type', 64);
+            $table->string('imageable_type', 255);
              // created_at | updated_at DATETIME
             $table->timestamps();
         });
