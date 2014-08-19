@@ -14,11 +14,11 @@
         "php": ">=5.3.0",
         "cartalyst/sentry": "2.1.*",
         "doctrine/dbal": "~2.3",
-        "twbs/bootstrap": "3.1.*",
         "imagine/imagine": "0.5.*",
         "maatwebsite/excel": "1.*"
     },
     "require-dev": {
+        "twbs/bootstrap": "3.1.*",
 		"phpunit/phpunit": "4.0.*",
 		"mockery/mockery": "0.9.*",
         "orchestra/testbench": "~2.2.0@dev"
