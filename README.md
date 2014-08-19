@@ -8,14 +8,13 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
 
 1. Add Redminportal to composer.json of a new Laravel application, under "require". Like this:
 
-```
-"require": {
-    "laravel/framework": "4.2.*",
-    "redooor/redminportal": "0.1.*"
-},
-```
-
-2. Then add Redooor\Redminportal to your app\config\app.php providers array like this:
+        "require": {
+            "laravel/framework": "4.2.*",
+            "redooor/redminportal": "0.1.*"
+        },
+        
+2. Then run `php composer install` in a terminal.
+3. Then add Redooor\Redminportal to your app\config\app.php providers array like this:
 
         'providers' => array(
             'Illuminate\Foundation\Providers\ArtisanServiceProvider',
@@ -24,30 +23,21 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
             'Cartalyst\Sentry\SentryServiceProvider',
             'Redooor\Redminportal\RedminportalServiceProvider',
         ),
+        
+4. Then run `php artisan dump-autoload` in a terminal.
+5. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
 
-3. Then run `php composer install` in a terminal.
+        ?> php artisan migrate --package=cartalyst/sentry
+        ?> php artisan migrate --package=redooor/redminportal
 
-4. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
+6. Run the following in a terminal to seed the database with initial admin username and password:
 
-```
-?> php artisan migrate --package=cartalyst/sentry
-?> php artisan migrate --bench=redooor/redminportal
-```
+        ?> php artisan db:seed --class="RedminSeeder"
+        Username/password: admin@admin.com/admin
 
-5. Run the following in a terminal to seed the database with initial admin username and password:
+7. Publish package assets by running this in a terminal:
 
-```
-?> php artisan db:seed --class="RedminSeeder"
-```
-
-    Username: admin@admin.com
-    Password: admin
-
-6. Publish package assets by running this in a terminal:
-
-```
-php artisan asset:publish --package=redooor/redminportal
-```
+        php artisan asset:publish redooor/redminportal
 
 # Installation guide for Contributors
 
@@ -61,42 +51,30 @@ php artisan asset:publish --package=redooor/redminportal
             'Cartalyst\Sentry\SentryServiceProvider',
             'Redooor\Redminportal\RedminportalServiceProvider',
         ),
-
+        
 3. Then run `php composer update` in workspace\redoooor\redminportal folder.
+4. Then run `php artisan dump-autoload` in a terminal.
+5. This Package is dependant on Cartalyst Sentry. In order to do the database migration and seeding, we'll need to add it to the main application's composer.json file, under "require":
 
-4. This Package is dependant on Cartalyst Sentry. In order to do the database migration and seeding,
-we'll need to add it to the main application's composer.json file, under "require":
+        "require": {
+            "laravel/framework": "4.2.*",
+            "cartalyst/sentry": "2.1.*"
+        },
+        
+6. Then run `php composer update` in the main app folder.
+7. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
 
-```
-"require": {
-    "laravel/framework": "4.2.*",
-    "cartalyst/sentry": "2.1.*"
-},
-```
+        ?> php artisan migrate --package=cartalyst/sentry
+        ?> php artisan migrate --bench=redooor/redminportal
+        
+8. Run the following in a terminal to seed the database with initial admin username and password:
 
-5. Then run `php composer update` in the main app folder.
+        ?> php artisan db:seed --class="RedminSeeder"
+        Username/password: admin@admin.com/admin
+        
+9. Publish package assets by running this in a terminal:
 
-6. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
-
-```
-?> php artisan migrate --package=cartalyst/sentry
-?> php artisan migrate --bench=redooor/redminportal
-```
-
-7. Run the following in a terminal to seed the database with initial admin username and password:
-
-```
-?> php artisan db:seed --class="RedminSeeder"
-```
-
-    Username: admin@admin.com
-    Password: admin
-
-8. Publish package assets by running this in a terminal:
-
-```
-php artisan asset:publish --bench=redooor/redminportal
-```
+        php artisan asset:publish --bench=redooor/redminportal
 
 # Testing
 
