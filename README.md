@@ -2,13 +2,20 @@
 
 A Laravel 4 package as a backend administrating tool for Content Management and Ecommerce sites.
 Gives you ability to add, edit and remove category, product, promotions and many more.
-Provides User Interface for administrating users and groups (via Cartalyst Sentry)
+Provides User Interface for administrating users and groups (via Cartalyst Sentry).
 
-# Installation guide
+# Installation guide for Users
 
-1. This Package is dependant on Cartalyst Sentry. Install Sentry in your app by following the instruction [here](http://docs.cartalyst.com/sentry-2/installation/laravel-4).
-2. This Package is dependant on [Maatwebsite/Laravel-Excel](http://www.maatwebsite.nl/laravel-excel/docs). This package is already included, so no action is required from you.
-3. Then add Redooor\Redminportal to your app\config\app.php providers array like this:
+1. Add Redminportal to composer.json of a new Laravel application, under "require". Like this:
+
+```
+"require": {
+    "laravel/framework": "4.2.*",
+    "redooor/redminportal": "0.1.*"
+},
+```
+
+2. Then add Redooor\Redminportal to your app\config\app.php providers array like this:
 
         'providers' => array(
             'Illuminate\Foundation\Providers\ArtisanServiceProvider',
@@ -18,7 +25,83 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
             'Redooor\Redminportal\RedminportalServiceProvider',
         ),
 
-4. Then run `php composer update` in workspace\redoooor\redminportal folder.
+3. Then run `php composer install` in a terminal.
+
+4. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
+
+```
+?> php artisan migrate --package=cartalyst/sentry
+?> php artisan migrate --bench=redooor/redminportal
+```
+
+5. Run the following in a terminal to seed the database with initial admin username and password:
+
+```
+?> php artisan db:seed --class="RedminSeeder"
+```
+
+    Username: admin@admin.com
+    Password: admin
+
+6. Publish package assets by running this in a terminal:
+
+```
+php artisan asset:publish --package=redooor/redminportal
+```
+
+# Installation guide for Contributors
+
+1. Clone the Redooor\Redminportal repository into workbench\redooor\redminportal folder.
+2. Then add Redooor\Redminportal to your app\config\app.php providers array like this:
+
+        'providers' => array(
+            'Illuminate\Foundation\Providers\ArtisanServiceProvider',
+            ... omitted ...
+            'Illuminate\Workbench\WorkbenchServiceProvider',
+            'Cartalyst\Sentry\SentryServiceProvider',
+            'Redooor\Redminportal\RedminportalServiceProvider',
+        ),
+
+3. Then run `php composer update` in workspace\redoooor\redminportal folder.
+
+4. This Package is dependant on Cartalyst Sentry. In order to do the database migration and seeding,
+we'll need to add it to the main application's composer.json file, under "require":
+
+```
+"require": {
+    "laravel/framework": "4.2.*",
+    "cartalyst/sentry": "2.1.*"
+},
+```
+
+5. Then run `php composer update` in the main app folder.
+
+6. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
+
+```
+?> php artisan migrate --package=cartalyst/sentry
+?> php artisan migrate --bench=redooor/redminportal
+```
+
+7. Run the following in a terminal to seed the database with initial admin username and password:
+
+```
+?> php artisan db:seed --class="RedminSeeder"
+```
+
+    Username: admin@admin.com
+    Password: admin
+
+8. Publish package assets by running this in a terminal:
+
+```
+php artisan asset:publish --bench=redooor/redminportal
+```
+
+# Testing
+
+* Copy src/config/testing/database.php into the application app/config/testing folder.
+* Run vendor/bin/phpunit within the package folder.
 
 # Versioning
 
@@ -28,6 +111,13 @@ For transparency into our release cycle and in striving to maintain backward com
 
 Thank you for considering contributing to RedminPortal.
 Before any submission, please spend some time reading through the [CONTRIBUTING.md](https://github.com/redooor/redminportal/blob/master/CONTRIBUTING.md) document.
+
+# Creator
+
+Andrews Ang
+
+* [http://twitter.com/kongnir](http://twitter.com/kongnir)
+* [http://github.com/kongnir](http://github.com/kongnir)
 
 # License
 

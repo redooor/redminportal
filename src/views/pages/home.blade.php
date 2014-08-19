@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class='row'>
-        <div class='col-md-9'>
+        <div class='col-md-8'>
             <h1>RedminPortal <small>by Redooor</small></h1>
             <h2><u>Change log</u></h2>
             <h3>Version 0.1.0</h3>
@@ -70,15 +70,13 @@
                 <li>Translation capability for Simplified Chinese</li>
             </ol>
         </div>
-        <div class='col-md-3'>
+        <div class='col-md-4'>
             <h3>Contribution</h3>
-            Source code at <a href="https://github.com/redooor/redminportal">Github</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            Maintained by the core team with the help of our contributors.<br>
-            RedminPortal is open-sourced software licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.
+            <p>Source code at <a href="https://github.com/redooor/redminportal">Github</a></p>
+            <h3>Maintenance</h3>
+            <p>Maintained by the core team with the help of our contributors.</p>
+            <h3>License</h3>
+            <p>RedminPortal is open-sourced software licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
         </div>
     </div>
 @stop

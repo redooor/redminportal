@@ -1,6 +1,8 @@
 <?php
 
-class RedminTestCase extends \Illuminate\Foundation\Testing\TestCase {
+use Orchestra\Testbench\TestCase as TestBenchTestCase;
+
+class RedminTestCase extends TestBenchTestCase {
 
     /**
      * Creates the application.

@@ -21,6 +21,7 @@ class RedminportalServiceProvider extends ServiceProvider {
         $this->package('redooor/redminportal');
 
 		$this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
+		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
 
         include __DIR__.'/../../routes.php';
         include __DIR__.'/../../filters.php';
@@ -43,6 +44,7 @@ class RedminportalServiceProvider extends ServiceProvider {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
             $loader->alias('Redminportal', 'Redooor\Redminportal\Facades\Redminportal');
 			$loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
+			$loader->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
         });
 	}
 
