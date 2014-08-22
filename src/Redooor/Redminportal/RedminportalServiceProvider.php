@@ -46,6 +46,25 @@ class RedminportalServiceProvider extends ServiceProvider {
 			$loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
 			$loader->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
         });
+
+		// Get config loader
+		$loader = $this->app['config']->getLoader();
+
+		// Get environment name
+		$env = $this->app['config']->getEnvironment();
+
+		// Add package namespace with path set base on your requirement
+		$loader->addNamespace('redminportal',__DIR__.'/../../config');
+
+		// Load package override config file
+		$menu = $loader->load($env,'menu','redminportal');
+		$image = $loader->load($env,'image','redminportal');
+		$translation = $loader->load($env,'translation','redminportal');
+
+		// Override value
+		$this->app['config']->set('redminportal::menu',$menu);
+		$this->app['config']->set('redminportal::image',$image);
+		$this->app['config']->set('redminportal::translation',$translation);
 	}
 
 	/**

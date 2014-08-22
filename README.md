@@ -12,7 +12,7 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
             "laravel/framework": "4.2.*",
             "redooor/redminportal": "0.1.*"
         },
-        
+
 2. Then run `php composer install` in a terminal.
 3. Then add Redooor\Redminportal to your app\config\app.php providers array like this:
 
@@ -23,7 +23,7 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
             'Cartalyst\Sentry\SentryServiceProvider',
             'Redooor\Redminportal\RedminportalServiceProvider',
         ),
-        
+
 4. Then run `php artisan dump-autoload` in a terminal.
 5. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
 
@@ -39,6 +39,10 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
 
         php artisan asset:publish redooor/redminportal
 
+8. Publish package config by running this in a terminal:
+
+        php artisan config:publish redooor/redminportal
+
 # Installation guide for Contributors
 
 1. Clone the Redooor\Redminportal repository into workbench\redooor\redminportal folder.
@@ -51,7 +55,7 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
             'Cartalyst\Sentry\SentryServiceProvider',
             'Redooor\Redminportal\RedminportalServiceProvider',
         ),
-        
+
 3. Then run `php composer update` in workspace\redoooor\redminportal folder.
 4. Then run `php artisan dump-autoload` in a terminal.
 5. This Package is dependant on Cartalyst Sentry. In order to do the database migration and seeding, we'll need to add it to the main application's composer.json file, under "require":
@@ -60,21 +64,25 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
             "laravel/framework": "4.2.*",
             "cartalyst/sentry": "2.1.*"
         },
-        
+
 6. Then run `php composer update` in the main app folder.
 7. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
 
         ?> php artisan migrate --package=cartalyst/sentry
         ?> php artisan migrate --bench=redooor/redminportal
-        
+
 8. Run the following in a terminal to seed the database with initial admin username and password:
 
         ?> php artisan db:seed --class="RedminSeeder"
         Username/password: admin@admin.com/admin
-        
+
 9. Publish package assets by running this in a terminal:
 
         php artisan asset:publish --bench=redooor/redminportal
+
+10. Publish package config by running this in a terminal:
+
+        php artisan config:publish --path="workbench/redooor/redminportal/src/config" redooor/redminportal
 
 # Testing
 
