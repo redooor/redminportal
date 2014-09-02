@@ -86,7 +86,6 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
 
 # Testing
 
-* Copy src/config/testing/database.php into the application app/config/testing folder.
 * Run vendor/bin/phpunit within the package folder.
 
 # Versioning
