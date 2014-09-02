@@ -4,42 +4,59 @@ use Orchestra\Testbench\TestCase as TestBenchTestCase;
 
 class RedminTestCase extends TestBenchTestCase {
 
-    /**
-     * Creates the application.
-     *
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
-     */
-    public function createApplication()
+    protected function getEnvironmentSetUp($app)
     {
-        ini_set('memory_limit','256M'); // Temporarily increase memory limit to 256MB
+        $app['path.base'] = __DIR__ . '/../src';
 
-        $unitTesting = true;
-
-        $testEnvironment = 'testing';
-
-        return require __DIR__.'/../../../../bootstrap/start.php';
+        $app['config']->set('database.default', 'testbench');
+        $app['config']->set('database.connections.testbench', array(
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ));
     }
 
-    /**
-     * Default preparation for each test
-     */
     public function setUp()
     {
         parent::setUp();
 
-        $this->prepareForTests();
+        //$this->app['router']->enableFilters();
+
+        $artisan = $this->app->make('artisan');
+        $artisan->call('migrate', [
+            '--database' => 'testbench',
+            '--path'     => '../src/migrations',
+        ]);
+        $artisan->call('migrate', [
+            '--database' => 'testbench',
+            '--package'  => 'Cartalyst/Sentry',
+        ]);
+
+        Mail::pretend(true);
     }
 
-    /**
-     * Migrates the database and set the mailer to 'pretend'.
-     * This will cause the tests to run quickly.
-     */
-    private function prepareForTests()
+    protected function getApplicationPaths()
     {
-        //Artisan::call('migrate');
-        Artisan::call('migrate', array('--package' => 'Cartalyst/Sentry'));
-        Artisan::call('migrate', array('--bench' => 'Redooor/Redminportal'));
-        Mail::pretend(true);
+        $basePath = realpath(__DIR__.'/../vendor/orchestra/testbench/src/fixture');
+
+        return array(
+            'app'     => "{$basePath}/app",
+            'public'  => realpath(__DIR__.'/fixture'),
+            'base'    => $basePath,
+            'storage' => "{$basePath}/app/storage",
+        );
+    }
+
+    protected function getPackageProviders()
+    {
+        return array('Redooor\Redminportal\RedminportalServiceProvider');
+    }
+
+    protected function getPackageAliases()
+    {
+        return array(
+            'Redminportal' => 'Redooor\Redminportal\Facades\Redminportal'
+        );
     }
 
 }

@@ -40,7 +40,7 @@ class MediaControllerTest extends \RedminTestCase {
 
     public function testStoreCreateSuccess()
     {
-        $path = base_path() . '/workbench/redooor/redminportal/tests/dummy/';
+        $path = __DIR__ . '/../dummy/';
         $filename = 'foo113a.pdf';
         $mimeType = 'application/pdf';
 
