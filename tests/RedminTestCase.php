@@ -30,6 +30,7 @@ class RedminTestCase extends TestBenchTestCase {
         $artisan->call('migrate', [
             '--database' => 'testbench',
             '--package'  => 'Cartalyst/Sentry',
+            '--path'     => '../vendor/cartalyst/sentry/src/migrations',
         ]);
 
         Mail::pretend(true);
