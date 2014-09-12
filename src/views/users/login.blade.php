@@ -13,18 +13,18 @@
     @endif
     <div class="col-md-4 col-md-offset-4 form-signin">
     {{ Form::open(array('action' => 'Redooor\Redminportal\LoginController@postLogin')) }}
-        <h2 class="form-signin-heading">Please sign in</h2>
+        <h2 class="form-signin-heading">{{ Lang::get('redminportal::messages.signin') }}</h2>
 
         <div class="form-group">
-        {{ Form::email('email', null, array('class' => 'form-control', 'placeholder' => 'Email address', 'required')) }}
+        {{ Form::email('email', null, array('class' => 'form-control', 'placeholder' => Lang::get('redminportal::forms.email'), 'required')) }}
         </div>
 
         <div class="form-group">
-        {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'Password', 'required')) }}
+        {{ Form::password('password', array('class' => 'form-control', 'placeholder' => Lang::get('redminportal::forms.password'), 'required')) }}
         </div>
 
         <div class="form-actions text-right">
-        {{ Form::submit('Login', array('class' => 'btn btn-primary')) }}
+        {{ Form::submit(Lang::get('redminportal::forms.login'), array('class' => 'btn btn-primary')) }}
         </div>
     {{ Form::close() }}
     </div>

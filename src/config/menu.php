@@ -3,67 +3,67 @@
 return array(
 
     array(
-        'name' => 'Users',
+        'name' => 'users',
         'path' => 'admin/users',
         'hide' => false
     ),
     array(
-        'name' => 'Groups',
+        'name' => 'groups',
         'path' => 'admin/groups',
         'hide' => false
     ),
     array(
-        'name' => 'Memberships',
+        'name' => 'memberships',
         'path' => 'admin/memberships',
         'hide' => false
     ),
     array(
-        'name' => 'Categories',
+        'name' => 'categories',
         'path' => 'admin/categories',
         'hide' => false
     ),
     array(
-        'name' => 'Modules',
+        'name' => 'modules',
         'path' => 'admin/modules',
         'hide' => false
     ),
     array(
-        'name' => 'Medias',
+        'name' => 'medias',
         'path' => 'admin/medias',
         'hide' => false
     ),
     array(
-        'name' => 'Products',
+        'name' => 'products',
         'path' => 'admin/products',
         'hide' => false
     ),
     array(
-        'name' => 'Promotions',
+        'name' => 'promotions',
         'path' => 'admin/promotions',
         'hide' => false
     ),
     array(
-        'name' => 'News',
+        'name' => 'news',
         'path' => 'admin/announcements',
         'hide' => false
     ),
     array(
-        'name' => 'Portfolios',
+        'name' => 'portfolios',
         'path' => 'admin/portfolios',
         'hide' => false
     ),
     array(
-        'name' => 'Purchases',
+        'name' => 'purchases',
         'path' => 'admin/purchases',
         'hide' => false
     ),
     array(
-        'name' => 'Discounts',
+        'name' => 'discounts',
         'path' => 'admin/pricelists',
         'hide' => false
     ),
     array(
-        'name' => 'Mailing List',
+        'name' => 'mailinglist',
         'path' => 'admin/mailinglists',
         'hide' => false
     ),

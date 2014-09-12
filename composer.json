@@ -31,6 +31,7 @@
             "src/helpers",
             "src/config",
             "src/seeds",
+            "src/lang",
             "tests/RedminTestCase.php"
         ],
         "psr-0": {
