@@ -53,8 +53,12 @@ class RedminportalServiceProvider extends ServiceProvider {
 		// Get environment name
 		$env = $this->app['config']->getEnvironment();
 
-		// Add package namespace with path set base on your requirement
-		$loader->addNamespace('redminportal',__DIR__.'/../../config');
+		// Add package namespace with path set, override package if app config exists
+		if (file_exists(app_path() .'/config/packages/redooor/redminportal')) {
+			$loader->addNamespace('redminportal', app_path() .'/config/packages/redooor/redminportal');
+		} else {
+			$loader->addNamespace('redminportal',__DIR__.'/../../config');
+		}
 
 		// Load package override config file
 		$menu = $loader->load($env,'menu','redminportal');
