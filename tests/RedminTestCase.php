@@ -22,6 +22,8 @@ class RedminTestCase extends TestBenchTestCase {
 
         //$this->app['router']->enableFilters();
 
+        ini_set('memory_limit','256M'); // Temporarily increase memory limit to 256MB
+
         $artisan = $this->app->make('artisan');
         $artisan->call('migrate', [
             '--database' => 'testbench',
