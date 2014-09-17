@@ -110,6 +110,15 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # Change log
 
+## Version 0.1.1
+1. Supports Laravel 4.2.
+2. Moved Twitter Bootstrap to require-dev.
+3. Dynamically creates in-memory sqlite database for test.
+4. Fixed an issue when accessing admin/login directly.
+5. Added translation zh-tw and zh-cn to login page and main menus.
+6. Resolved issue where package Config cannot be overriden.
+7. Temporarily increase memory to 256MB for testing.
+
 ## Version 0.1.0
 1. Supports Laravel 4.2
 2. PHPUnit testing and fixed Model test errors.
@@ -131,19 +140,37 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 2. Uploaded image size can be controlled via config/image.php file.
 3. Translation capability can be turned on via config/translation.php file.
 
-### Models
-1. Price list for Media and Membership
-2. Discount table
-3. Media
-4. Membership
-5. Module
-6. Mailinglist
-7. Announcement
-8. Product
-9. Category
-10. Promotion
-11. Purchases (user_pricelists)
-12. Portfolio
+# Models
 
-### Downloadable Reports
+## User Management
+* User
+* Group
+
+## Content Management
+* Announcement
+* Portfolio
+
+## Online Store (Physical Products)
+* Category
+* Discount
+* Product
+* Promotion
+
+## Membership Subscription (Downloadable Products)
+* Category
+* Discount
+* Media
+* Membership
+* Module
+* ModuleMediaMembership
+* Purchase
+
+## Customer Management
+* Mailinglist
+
+## Morphs
+* Image
+* Tag
+
+## Downloadable Reports
 1. Downloadable CSV reports for Purchases and Mailinglist.
