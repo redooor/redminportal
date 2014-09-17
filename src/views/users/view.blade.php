@@ -12,7 +12,7 @@
 					<th>Email</th>
 					<th>First Name</th>
 					<th>Last Name</th>
-					<th>Permission</th>
+					<th>Groups</th>
 					<th>Activated</th>
 					<th>Last Login</th>
 					<th>Create</th>
@@ -26,7 +26,11 @@
 			        <td>{{ $user->email }}</td>
 			        <td>{{ $user->first_name }}</td>
 			        <td>{{ $user->last_name }}</td>
-			        <td>{{ HTML::attributes($user->permissions) }}</td>
+			        <td>
+						@foreach($user->getGroups() as $group)
+						<span class="label label-info">{{ $group->name }}</span>
+						@endforeach
+					</td>
 			        <td>
 			            @if ($user->activated)
 			                 <span class="label label-success"><span class='glyphicon glyphicon-ok'></span></span>
