@@ -45,25 +45,24 @@ class LoginController extends BaseController {
 
             try
             {
-                $user = \Sentry::getUserProvider()->findByCredentials(array(
-                    'email'      => $email,
-                    'password'   => $password,
-                ));
+                $credentials = array(
+                    'email'    => $email,
+                    'password' => $password,
+                );
 
-                // Log the user in
-                \Sentry::login($user, false);
+                // Authenticate the user
+                $user = \Sentry::authenticate($credentials, false);
             }
-            catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
+            catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e)
             {
-                return 'Login field is required.';
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add('invalid', "This user hasn't been activated. Please contact us for support.");
+
+                return \Redirect::to('admin')->withErrors($errors)->withInput();
             }
-            catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
+            catch (\Exception $e)
             {
-                return 'User not activated.';
-            }
-            catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-            {
-                $errors = new Illuminate\Support\MessageBag;
+                $errors = new \Illuminate\Support\MessageBag;
                 $errors->add('invalid', "Oops, your email or password is incorrect.");
 
                 return \Redirect::to('admin')->withErrors($errors)->withInput();
