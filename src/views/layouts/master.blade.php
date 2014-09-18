@@ -29,24 +29,26 @@
                     </div>
                     <div class="navbar-collapse collapse">
                         @if(Sentry::check())
-                        <ul class="nav navbar-nav">
-                            <li class="dropdown" id="navbar-menu-dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th"></span> {{ Lang::get('redminportal::menus.menu') }} <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    @foreach(\Config::get('redminportal::menu') as $menu)
-                                        @if(!$menu['hide'])
-                                            @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif {{ HTML::link($menu['path'], Lang::get('redminportal::menus.' . $menu['name'])) }}</li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-                            </li>
-                            <li class="navbar-text navbar-menu-current hidden-xs">
-                                {{ Lang::get('redminportal::menus.location') }} <span class="glyphicon glyphicon-chevron-right"></span> <span id="navbar-menu-current-text">{{ Lang::get('redminportal::menus.home') }}</span>
-                            </li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li>{{ HTML::link('logout', Lang::get('redminportal::menus.logout')) }}</li>
-                        </ul>
+                            @if(Sentry::getUser()->hasAccess('admin'))
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown" id="navbar-menu-dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th"></span> {{ Lang::get('redminportal::menus.menu') }} <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        @foreach(\Config::get('redminportal::menu') as $menu)
+                                            @if(!$menu['hide'])
+                                                @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif {{ HTML::link($menu['path'], Lang::get('redminportal::menus.' . $menu['name'])) }}</li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                </li>
+                                <li class="navbar-text navbar-menu-current hidden-xs">
+                                    {{ Lang::get('redminportal::menus.location') }} <span class="glyphicon glyphicon-chevron-right"></span> <span id="navbar-menu-current-text">{{ Lang::get('redminportal::menus.home') }}</span>
+                                </li>
+                            </ul>
+                            @endif
+                            <ul class="nav navbar-nav navbar-right">
+                                <li>{{ HTML::link('logout', Lang::get('redminportal::menus.logout')) }}</li>
+                            </ul>
                         @endif
                     </div><!--/.nav-collapse -->
 
