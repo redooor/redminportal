@@ -22,7 +22,7 @@ class CreateModulesTable extends Migration {
 			$table->boolean('featured')->default(false);
 			$table->boolean('active')->default(true);
 			$table->text('options')->nullable();
-			$table->integer('category_id');
+			$table->integer('category_id')->nullable()->unsigned();
 			$table->foreign('category_id')->references('id')->on('categories');
 			$table->timestamps();
 		});
