@@ -3,7 +3,7 @@
 @section('content')
     @if($errors->has())
     <div class='alert alert-danger'>
-        {{ Lang::get('messages.errors') }}
+        {{ Lang::get('redminportal::messages.error') }}
         <ul>
             @foreach($errors->all() as $message)
             <li>{{ $message }}</li>
