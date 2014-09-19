@@ -24,7 +24,7 @@ class CreateMediasTable extends Migration {
             $table->boolean('active')->default(true);
             $table->text('options')->nullable();
 			$table->string('mimetype', 255)->default('application/pdf');
-            $table->integer('category_id');
+            $table->integer('category_id')->nullable()->unsigned();
             $table->foreign('category_id')->references('id')->on('categories');
 			$table->timestamps();
 		});

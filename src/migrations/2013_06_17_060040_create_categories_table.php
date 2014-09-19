@@ -20,7 +20,7 @@ class CreateCategoriesTable extends Migration {
 			$table->text('options')->nullable();
 			$table->integer('order')->default(0);
             $table->timestamps();
-			$table->integer('category_id')->nullable();
+			$table->integer('category_id')->nullable()->unsigned();
 			$table->foreign('category_id')->references('id')->on('categories');
         });
 	}

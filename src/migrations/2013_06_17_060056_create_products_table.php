@@ -23,7 +23,7 @@ class CreateProductsTable extends Migration {
             $table->boolean('featured')->default(FALSE);
             $table->boolean('active')->default(TRUE);
             $table->text('options')->nullable();
-            $table->integer('category_id');
+            $table->integer('category_id')->nullable()->unsigned();
             $table->foreign('category_id')->references('id')->on('categories');
              // created_at | updated_at DATETIME
             $table->timestamps();

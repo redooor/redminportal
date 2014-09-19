@@ -16,9 +16,9 @@ class CreatePricelistsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->float('price')->default(0);
-			$table->integer('module_id');
+			$table->integer('module_id')->unsigned();
 			$table->foreign('module_id')->references('id')->on('modules');
-			$table->integer('membership_id');
+			$table->integer('membership_id')->unsigned();
 			$table->foreign('membership_id')->references('id')->on('memberships');
 			$table->unique(array('module_id', 'membership_id'));
 			$table->timestamps();
