@@ -12,6 +12,8 @@
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
         <link rel="shortcut icon" type="image/png" href="{{ URL::to('packages/redooor/redminportal/assets/img/favicon.png') }}"/>
+        @section('head')
+        @show
     </head>
     <body>
         <header id="header">
