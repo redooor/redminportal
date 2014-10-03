@@ -16,7 +16,7 @@
         <h2 class="form-signin-heading">{{ Lang::get('redminportal::messages.signin') }}</h2>
 
         <div class="form-group">
-        {{ Form::email('email', null, array('class' => 'form-control', 'placeholder' => Lang::get('redminportal::forms.email'), 'required')) }}
+        {{ Form::email('email', null, array('class' => 'form-control', 'placeholder' => Lang::get('redminportal::forms.email'), 'required', 'autofocus')) }}
         </div>
 
         <div class="form-group">
