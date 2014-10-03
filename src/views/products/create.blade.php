@@ -11,9 +11,9 @@
         </ul>
     </div>
     @endif
-    
+
     {{ Form::open(array('files' => TRUE, 'action' => 'Redooor\Redminportal\ProductController@postStore', 'role' => 'form')) }}
-    	
+
     	<div class='row'>
             <div class="col-md-3 col-md-push-9">
 	    		<div class='form-actions text-right'>
@@ -27,7 +27,7 @@
                             {{ Form::checkbox('featured', true, true, array('id' => 'featured-checker')) }} Featured
                         </label>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="active" class="checkbox inline">
                             {{ Form::checkbox('active', true, true, array('id' => 'active-checker')) }} Active
@@ -63,7 +63,7 @@
                     </div>
                 </div>
 	        </div>
-	        
+
 	        <div class="col-md-9 col-md-pull-3">
 			    <ul class="nav nav-tabs" id="lang-selector">
                     <li class="active"><a href="#lang-en">English</a></li>
@@ -75,12 +75,12 @@
                             {{ Form::label('name', 'Title') }}
                             {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
                         </div>
-                        
+
                         <div class="form-group">
                             {{ Form::label('short_description', 'Summary') }}
                             {{ Form::text('short_description', Input::old('short_description'), array('class' => 'form-control')) }}
                         </div>
-                        
+
                         <div class="form-group">
                             {{ Form::label('long_description', 'Description') }}
                             {{ Form::textarea('long_description', Input::old('long_description'), array('class' => 'form-control')) }}
@@ -91,12 +91,12 @@
                             {{ Form::label('cn_name', '标题') }}
                             {{ Form::text('cn_name', Input::old('cn_name'), array('class' => 'form-control')) }}
                         </div>
-                        
+
                         <div class="form-group">
                             {{ Form::label('cn_short_description', '简介') }}
                             {{ Form::text('cn_short_description', Input::old('cn_short_description'), array('class' => 'form-control')) }}
                         </div>
-                        
+
                         <div class="form-group">
                             {{ Form::label('cn_long_description', '内容') }}
                             {{ Form::textarea('cn_long_description', Input::old('cn_long_description'), array('class' => 'form-control')) }}
@@ -109,7 +109,6 @@
 @stop
 
 @section('footer')
-    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
     <script src="{{ URL::to('packages/redooor/redminportal/assets/js/bootstrap-fileupload.js') }}"></script>
     <script>
         !function ($) {
@@ -118,13 +117,8 @@
                     e.preventDefault();
                     $(this).tab('show');
                 });
-                tinymce.init({
-                    selector:'textarea',
-                    menubar:false,
-                    plugins: "link",
-                    toolbar: "undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link"
-                });
             })
         }(window.jQuery);
     </script>
+    @include('redminportal::plugins/tinymce')
 @stop

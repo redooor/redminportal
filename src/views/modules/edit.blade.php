@@ -129,7 +129,6 @@
 @stop
 
 @section('footer')
-    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
     <script src="{{ URL::to('packages/redooor/redminportal/assets/js/bootstrap-fileupload.js') }}"></script>
     <script>
         !function ($) {
@@ -138,12 +137,6 @@
                 $('#lang-selector a').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
-                });
-                tinymce.init({
-                    selector:'textarea',
-                    menubar:false,
-                    plugins: "link",
-                    toolbar: "undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link"
                 });
                 // Load medias base on selected category
                 function loadMedia() {
@@ -158,4 +151,5 @@
             })
         }(window.jQuery);
     </script>
+    @include('redminportal::plugins/tinymce')
 @stop

@@ -11,9 +11,9 @@
         </ul>
     </div>
     @endif
-    
+
     {{ Form::open(array('files' => TRUE, 'action' => 'Redooor\Redminportal\AnnouncementController@postStore', 'role' => 'form')) }}
-    	
+
     	<div class='row'>
             <div class="col-md-3 col-md-push-9">
                 <div class='form-actions text-right'>
@@ -54,18 +54,6 @@
 
 @section('footer')
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
     <script src="{{ URL::to('packages/redooor/redminportal/assets/js/bootstrap-fileupload.js') }}"></script>
-    <script>
-        !function ($) {
-            $(function(){
-                tinymce.init({
-                    selector:'textarea',
-                    menubar:false,
-                    plugins: "link",
-                    toolbar: "undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link"
-                });
-            })
-        }(window.jQuery);
-    </script>
+    @include('redminportal::plugins/tinymce')
 @stop
