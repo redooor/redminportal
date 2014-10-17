@@ -10,6 +10,27 @@
         <div class='col-md-8'>
             <h1>RedminPortal <small>by Redooor</small></h1>
             <h2><u>Change log</u></h2>
+            <h3>Version 0.1.2</h3>
+            <h4>Enhancements:</h4>
+            <ol>
+                <li>Temporarily increase memory to 256MB for testing.</li>
+                <li>Users View page: show Groups instead of Permission.</li>
+                <li>Added section head in master layout blade. Can be used by Views to add in styles or scripts in the header without changing the Layout.</li>
+                <li>Consolidated Tinymce into a separate view under Plugins folder (issue #1).</li>
+                <li>Minor UI change: autofocus email input on login page.</li>
+                <li>Category select list changed to hierarchical list (issue #11).</li>
+            </ol>
+            <h4>Bug fixes:</h4>
+            <ol>
+                <li>Resolved missing translation text on user login and creation page.</li>
+                <li>Hide menu from unauthorised user.</li>
+                <li>Resolved issue #3 where login catch exception not working.</li>
+                <li>Resolved issue #10 where media controller change category unable to move existing files.</li>
+            </ol>
+            <h4>Pull requests:</h4>
+            <ol>
+                <li>Fixed migration foreign reference by @tusharvikky</li>
+            </ol>
             <h3>Version 0.1.1</h3>
             <ol>
                 <li>Supports Laravel 4.2.</li>

@@ -110,6 +110,25 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # Change log
 
+## Version 0.1.2
+
+### Enhancements:
+1. Temporarily increase memory to 256MB for testing.
+2. Users View page: show Groups instead of Permission.
+3. Added section head in master layout blade. Can be used by Views to add in styles or scripts in the header without changing the Layout.
+4. Consolidated Tinymce into a separate view under Plugins folder (issue #1).
+5. Minor UI change: autofocus email input on login page.
+6. Category select list changed to hierarchical list (issue #11).
+
+### Bug fixes:
+1. Resolved missing translation text on user login and creation page.
+2. Hide menu from unauthorised user.
+3. Resolved issue #3 where login catch exception not working.
+4. Resolved issue #10 where media controller change category unable to move existing files.
+
+### Pull requests:
+1. Fixed migration foreign reference by @tusharvikky
+
 ## Version 0.1.1
 1. Supports Laravel 4.2.
 2. Moved Twitter Bootstrap to require-dev.
@@ -117,7 +136,6 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 4. Fixed an issue when accessing admin/login directly.
 5. Added translation zh-tw and zh-cn to login page and main menus.
 6. Resolved issue where package Config cannot be overriden.
-7. Temporarily increase memory to 256MB for testing.
 
 ## Version 0.1.0
 1. Supports Laravel 4.2
