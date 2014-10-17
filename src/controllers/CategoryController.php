@@ -18,14 +18,7 @@ class CategoryController extends BaseController {
 
     public function getCreate()
     {
-        $categories = array();
-
-        // Add: No parent
-        $categories[0] = "No parent";
-
-        foreach (Category::all() as $category) {
-            $categories[$category->id] = $category->name;
-        }
+        $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
 
         return \View::make('redminportal::categories/create')->with('categories', $categories);
     }
@@ -48,15 +41,7 @@ class CategoryController extends BaseController {
             $category_cn = json_decode($category->options);
         }
 
-        $categories = array();
-
-        // Add: No parent
-        $categories[0] = "No parent";
-
-        foreach (Category::all() as $cat) {
-            if ($category->id == $cat->id) continue;
-            $categories[$cat->id] = $cat->name;
-        }
+        $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
 
         return \View::make('redminportal::categories/edit')
             ->with('category', $category)
@@ -107,8 +92,10 @@ class CategoryController extends BaseController {
             $category->long_description = $long_description;
             $category->active = $active;
             $category->order = $order;
-            $category->category_id = $parent_id;
             $category->options = json_encode($options);
+
+            // Check if parent_id is equal to this->id
+            $category->category_id = ($id == $parent_id) ? 0 : $parent_id;
 
             $category->save();
 

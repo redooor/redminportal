@@ -28,9 +28,19 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
-                    {{ Form::label('parent_id', 'Parent Category') }}
-                    {{ Form::select('parent_id', $categories, Input::old('parent_id'), array('class' => 'form-control')) }}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">Parent Category</div>
+                    </div>
+                    <div class="panel-body">
+                        {{ Form::hidden('parent_id', Input::old('parent_id'), array('id' => 'parent_id'))}}
+                        <ul class="redooor-hierarchy">
+                            <li><a href="0" class="active"><span class='glyphicon glyphicon-chevron-right'></span> No Parent</a></li>
+                        @foreach ($categories as $item)
+                            <li>{{ $item->printCategory() }}</li>
+                        @endforeach
+                        </ul>
+                    </div>
                 </div>
                 <div class="form-group">
                     {{ Form::label('order', 'Priority Order') }}
@@ -105,6 +115,29 @@
                 $('#lang-selector a').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
+                });
+                // On load, check if previous category exists for error message
+                function checkCategory() {
+                    $selected_val = $('#parent_id').val();
+                    if ($selected_val != '') {
+                        $('.redooor-hierarchy a').each(function() {
+                            if ($(this).attr('href') == $selected_val) {
+                                $(this).addClass('active');
+                            }
+                        });
+                    } else {
+                        // Initialize No Parent
+                        $('#parent_id').val(0);
+                    }
+                }
+                checkCategory();
+                // Change selected category
+                $(document).on('click', '.redooor-hierarchy a', function(e) {
+                    e.preventDefault();
+                    $selected = $(this).attr('href');
+                    $('#parent_id').val($selected);
+                    $('.redooor-hierarchy a.active').removeClass('active');
+                    $(this).addClass('active');
                 });
             })
         }(window.jQuery);

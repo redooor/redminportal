@@ -35,9 +35,18 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
-                    {{ Form::label('category_id', 'Category') }}
-                    {{ Form::select('category_id', $categories, $module->category_id, array('class' => 'form-control')) }}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">Category</div>
+                    </div>
+                    <div class="panel-body">
+                        {{ Form::hidden('category_id', $module->category_id, array('id' => 'category_id'))}}
+                        <ul class="redooor-hierarchy">
+                        @foreach ($categories as $item)
+                            <li>{{ $item->printCategory() }}</li>
+                        @endforeach
+                        </ul>
+                    </div>
                 </div>
                 <div class="form-group">
                     {{ Form::label('sku', 'SKU') }}
@@ -143,11 +152,29 @@
                     $selected_val = $('#category_id').val();
                     $('#media-wrapper').empty().load('../editmedias/' + $selected_val + '/' + {{ $module->id }});
                 }
-                $('#category_id').change(function() {
+                // On load, check if previous category exists for error message
+                function checkCategory() {
+                    $selected_val = $('#category_id').val();
+                    if ($selected_val != '') {
+                        $('.redooor-hierarchy a').each(function() {
+                            if ($(this).attr('href') == $selected_val) {
+                                $(this).addClass('active');
+                            }
+                        });
+                        loadMedia();
+                    }
+                }
+                checkCategory();
+                // Change selected category
+                $(document).on('click', '.redooor-hierarchy a', function(e) {
+                    e.preventDefault();
+                    $selected = $(this).attr('href');
+                    $('#category_id').val($selected);
+                    $('.redooor-hierarchy a.active').removeClass('active');
+                    $(this).addClass('active');
+                    // Load medias
                     loadMedia();
                 });
-                // On load, load medias
-                loadMedia();
             })
         }(window.jQuery);
     </script>

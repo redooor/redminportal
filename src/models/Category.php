@@ -10,6 +10,11 @@ class Category extends Model {
         return $this->belongsTo('Redooor\Redminportal\Category');
     }
 
+    public function categories()
+    {
+        return $this->hasMany('Redooor\Redminportal\Category');
+    }
+
     public function products()
     {
         return $this->hasMany('Redooor\Redminportal\Product');
@@ -48,19 +53,31 @@ class Category extends Model {
         return Category::where('active', '=', '1')->orderBy('order', 'desc')->orderBy('name')->get();
     }
 
-    public static function printCategory($id)
+    public function printCategory()
     {
-        $category = Category::find($id);
-
-        if ($category != null) {
-            echo "<ul>";
-            echo "<li><a href='" . $category->id . "'>" . $category->name . "</a>";
-            foreach(Category::where('category_id', $id)->where('active', true)->get() as $cat) {
-                Category::printCategory($cat->id);
+        $html = "<a href='" . $this->id . "'><span class='glyphicon glyphicon-chevron-right'></span> " . $this->name . "</a>";
+        if ($this->categories->count() > 0) {
+            $html .= "<ul>";
+            foreach(\Redooor\Redminportal\Category::where('category_id', $this->id)->where('active', true)->orderBy('name')->get() as $cat) {
+                $html .= "<li>";
+                $html .= $cat->printCategory();
+                $html .= "</li>";
             }
-            echo "</li>";
-            echo "</ul>";
+            $html .= "</ul>";
         }
+
+        return $html;
+    }
+
+    public function delete()
+    {
+        // Delete main category will delete all sub categories
+        $this->categories()->delete();
+
+        // Delete all images
+        $this->deleteAllImages();
+
+        return parent::delete();
     }
 
 }

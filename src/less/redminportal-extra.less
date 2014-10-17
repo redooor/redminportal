@@ -1,6 +1,5 @@
 /*!
- * Redooor v2.0.0
- *
+ * Redminportal v0.1.1
  */
 
 /* Overwrite Bootstrap style */
@@ -171,31 +170,16 @@ ul.redooor-hierarchy {
     padding: 0;
     margin: 0;
     list-style: none;
-    height: 150px;
+    max-height: 200px;
     overflow-y: scroll;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    background: #fff;
 
     ul {
-        padding: 0;
-        margin: 0;
+        padding-left: 1.2em;
         list-style: none;
     }
 
-    &>li {
-        &>ul {
-            padding: 0;
-
-            li {
-                padding-left: 1.2em;
-                padding-top: 5px;
-            }
-        }
-    }
-
-    &>li:last-child {
-        padding-bottom: 5px;
+    li {
+        line-height: 1.8;
     }
 
     a {

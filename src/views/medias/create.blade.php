@@ -34,14 +34,18 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
-                    {{ Form::label('category_id', 'Category') }}
-                    {{ Form::hidden('category_id', Input::old('category_id'))}}
-                    <ul class="redooor-hierarchy">
-                    @foreach ($categories as $category)
-                        <li>{{ Redooor\Redminportal\Category::printCategory($category->id) }}</li>
-                    @endforeach
-                    </ul>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">Category</div>
+                    </div>
+                    <div class="panel-body">
+                        {{ Form::hidden('category_id', Input::old('category_id'), array('id' => 'category_id'))}}
+                        <ul class="redooor-hierarchy">
+                        @foreach ($categories as $item)
+                            <li>{{ $item->printCategory() }}</li>
+                        @endforeach
+                        </ul>
+                    </div>
                 </div>
 		        <div class="form-group">
 			        {{ Form::label('sku', 'SKU') }}
