@@ -121,13 +121,16 @@ class MediaController extends BaseController {
             if (isset($id)) {
                 // Check if category has changed
                 if ($media->category_id != $category_id) {
+                    $old_cat_folder = public_path() . '/assets/medias/' . $media->category_id . '/' . $id;
                     $new_cat_folder = public_path() . '/assets/medias/' . $category_id . '/' . $id;
                     // Create the directory
                     if (!file_exists($new_cat_folder)) {
                         mkdir($new_cat_folder, 0777, true);
                     }
-                    // Move existing media to new category
-                    \File::move(public_path() . '/assets/medias/' . $media->category_id . '/' . $id, public_path() . '/assets/medias/' . $category_id . '/' . $id);
+                    // Copy existing media to new category
+                    \File::copyDirectory($old_cat_folder, $new_cat_folder);
+                    // Delete old media folder
+                    \File::deleteDirectory($old_cat_folder);
                 }
             } else {
                 $media->path = 'broken.pdf';
