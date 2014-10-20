@@ -11,7 +11,7 @@ class CategoryController extends BaseController {
 
     public function getIndex()
     {
-        $categories = Category::orderBy('order', 'desc')->orderBy('name')->paginate(20);
+        $categories = Category::where('category_id', 0)->orderBy('order', 'desc')->orderBy('name')->get();
 
         return \View::make('redminportal::categories/view')->with('categories', $categories);
     }
@@ -23,10 +23,27 @@ class CategoryController extends BaseController {
         return \View::make('redminportal::categories/create')->with('categories', $categories);
     }
 
+    public function getDetail($id)
+    {
+        $category = Category::find($id);
+
+        if($category == null) {
+            return \View::make('redminportal::pages/404');
+        }
+
+        return \View::make('redminportal::categories/detail')
+            ->with('category', $category)
+            ->with('imageUrl', 'assets/img/categories/');
+    }
+
     public function getEdit($id)
     {
         // Find the category using the user id
         $category = Category::find($id);
+
+        if($category == null) {
+            return \View::make('redminportal::pages/404');
+        }
 
         if(empty($category->options))
         {
@@ -86,7 +103,17 @@ class CategoryController extends BaseController {
                 'long_description'      => $cn_long_description
             );
 
-            $category = (isset($id) ? Category::find($id) : new Category);
+            if (isset($id)) {
+                $category = Category::find($id);
+                if($category == null) {
+                    $errors = new \Illuminate\Support\MessageBag;
+                    $errors->add('deleteError', "The category cannot be found because it does not exist or may have been deleted.");
+                    return \Redirect::to('/admin/categories')->withErrors($errors);
+                }
+            } else {
+                $category = new Category;
+            }
+
             $category->name = $name;
             $category->short_description = $short_description;
             $category->long_description = $long_description;
@@ -141,6 +168,12 @@ class CategoryController extends BaseController {
     {
         // Find the category using the user id
         $category = Category::find($id);
+
+        if($category == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('deleteError', "The category cannot be found because it does not exist or may have been deleted.");
+            return \Redirect::to('/admin/categories')->withErrors($errors);
+        }
 
         // Find if there's any child
         $children = Category::where('category_id', $id)->count();

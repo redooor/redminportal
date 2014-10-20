@@ -53,12 +53,24 @@ class Category extends Model {
         return Category::where('active', '=', '1')->orderBy('order', 'desc')->orderBy('name')->get();
     }
 
-    public function printCategory()
+    public function printCategory($showActive = false)
     {
         $html = "<a href='" . $this->id . "'><span class='glyphicon glyphicon-chevron-right'></span> " . $this->name . "</a>";
         if ($this->categories->count() > 0) {
             $html .= "<ul>";
-            foreach(\Redooor\Redminportal\Category::where('category_id', $this->id)->where('active', true)->orderBy('name')->get() as $cat) {
+            if ($showActive) {
+                $categories = \Redooor\Redminportal\Category::where('category_id', $this->id)
+                    ->orderBy('order', 'desc')
+                    ->orderBy('name')
+                    ->get();
+            } else {
+                $categories = \Redooor\Redminportal\Category::where('category_id', $this->id)
+                    ->where('active', true)
+                    ->orderBy('order', 'desc')
+                    ->orderBy('name')
+                    ->get();
+            }
+            foreach($categories as $cat) {
                 $html .= "<li>";
                 $html .= $cat->printCategory();
                 $html .= "</li>";

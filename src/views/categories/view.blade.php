@@ -11,72 +11,31 @@
         </ul>
     </div>
     @endif
-    
+
     <div class="nav-controls text-right">
-        @if ($categories)
-        <span class="label label-default pull-left">
-            {{ $categories->getFrom() . ' to ' . $categories->getTo() . ' ( total ' . $categories->getTotal() . ' )' }}
-        </span>
-        @endif
         {{ HTML::link('admin/categories/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
-    
+
     @if ($categories)
-        <table class='table table-striped table-bordered'>
-            <thead>
-                <tr>
-                    <th>Priority</th>
-                    <th>Name</th>
-                    <th>Short Description</th>
-                    <th>Long Description</th>
-                    <th>Active</th>
-                    <th class='hide'>Photos</th>
-                    <th>Updated</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach ($categories as $category)
-                <tr>
-                    <td>{{ $category->order }}</td>
-                    <td>{{ $category->name }}</td>
-                    <td>{{ $category->short_description }}</td>
-                    <td>{{ $category->long_description }}</td>
-                    <td>
-                        @if ($category->active)
-                            <span class="label label-success"><span class='glyphicon glyphicon-ok'></span></span>
-                        @else
-                            <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
-                        @endif
-                    </td>
-                    <td class='hide'>
-                        @foreach( $category->images as $image )
-                        {{ $image->path }}<br/>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <ul class="redooor-hierarchy no-max-height">
+                        @foreach ($categories as $item)
+                            <li>{{ $item->printCategory(true) }}</li>
                         @endforeach
-                    </td>
-                    <td>{{ $category->updated_at }}</td>
-                    <td>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                Action <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
-                                <li>
-                                    <a href="{{ URL::to('admin/categories/edit/' . $category->id) }}">
-                                        <i class="glyphicon glyphicon-edit"></i>Edit</a>
-                                </li>
-                                <li>
-                                    <a href="{{ URL::to('admin/categories/delete/' . $category->id) }}" class="btn-confirm">
-                                        <i class="glyphicon glyphicon-remove"></i>Delete</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-        {{ $categories->links() }}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="rdpt-preloader"><img src="{{ URL::to('packages/redooor/redminportal/assets/img/Preloader_2.gif') }}" class="img-circle"/></div>
+                <div id="category-detail">
+                    <p><span class="label label-info"><span class="glyphicon glyphicon-chevron-left"></span> Select category to view detail</span></p>
+                </div>
+            </div>
+        </div>
     @else
         <p>No category found</p>
     @endif
@@ -86,9 +45,16 @@
     <script>
         !function ($) {
             $(function(){
-                // Add pagination class to ul
-                $('div.pagination > ul').addClass('pagination');
-                $('div.pagination').removeClass('pagination').addClass('text-center');
+                $(document).on('click', '.redooor-hierarchy a', function(e) {
+                    e.preventDefault();
+                    $('.rdpt-preloader').show();
+                    $url = "{{ URL::to('admin/categories/detail') }}";
+                    $detail_url = $url + '/' + $(this).attr('href');
+                    $('#category-detail').empty().load($detail_url, function() {
+                        $('.rdpt-preloader').hide();
+                    });
+                    return false;
+                });
             })
         }(window.jQuery);
     </script>
