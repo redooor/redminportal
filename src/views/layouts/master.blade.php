@@ -86,8 +86,7 @@
         <script>
             !function ($) {
                 $(function(){
-                    //$('input[type=file]').bootstrapFileInput();
-                    $('.btn-confirm').click( function(e) {
+                    $(document).on('click', '.btn-confirm', function(e) {
                         e.preventDefault();
                         $delete_url = $(this).attr('href');
                         $('#confirm-delete').attr('href', $delete_url);
