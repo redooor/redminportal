@@ -17,12 +17,7 @@ class UserController extends BaseController {
 
 	public function getIndex()
 	{
-		$users = Sentry::getUserProvider()->findAll();
-
-		foreach($users as $user)
-		{
-			$user->permissions = $user->getMergedPermissions();
-		}
+        $users = Sentry::getUserProvider()->createModel()->paginate(20);
 
 		return View::make('redminportal::users/view')->with('users', $users);
 	}

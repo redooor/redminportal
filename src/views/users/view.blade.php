@@ -2,6 +2,11 @@
 
 @section('content')
 	<div class="nav-controls text-right">
+		@if ($users)
+		<span class="label label-default pull-left">
+			{{ $users->getFrom() . ' to ' . $users->getTo() . ' ( total ' . $users->getTotal() . ' )' }}
+		</span>
+		@endif
 		{{ HTML::link('admin/users/create', 'Create New', array('class' => 'btn btn-primary')) }}
 	</div>
 
@@ -69,6 +74,7 @@
 		    @endforeach
 		    </tbody>
 	    </table>
+		{{ $users->links() }}
 	@else
 		<p>No user found</p>
 	@endif
