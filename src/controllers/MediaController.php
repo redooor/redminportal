@@ -11,7 +11,7 @@ class MediaController extends BaseController {
 
     public function getIndex()
     {
-        $medias = Media::orderBy('category_id')->orderBy('name')->paginate(20);
+        $medias = Media::orderBy('created_at', 'desc')->orderBy('category_id')->orderBy('name')->paginate(20);
 
         return \View::make('redminportal::medias/view')->with('medias', $medias);
     }
