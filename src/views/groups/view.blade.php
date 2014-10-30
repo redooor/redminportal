@@ -2,9 +2,14 @@
 
 @section('content')
 	<div class="nav-controls text-right">
+		@if ($groups)
+		<span class="label label-default pull-left">
+			{{ $groups->getFrom() . ' to ' . $groups->getTo() . ' ( total ' . $groups->getTotal() . ' )' }}
+		</span>
+		@endif
 		{{ HTML::link('admin/groups/create', 'Create New', array('class' => 'btn btn-primary')) }}
 	</div>
-	
+
 	@if ($groups)
 		<table class='table table-striped table-bordered'>
 			<thead>
@@ -26,6 +31,7 @@
 			    @endforeach
 			</tbody>
 	    </table>
+		{{ $groups->links() }}
 	@else
 		<p>No group found</p>
 	@endif

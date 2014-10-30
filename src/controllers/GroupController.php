@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\View;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 
 class GroupController extends BaseController {
-    
+
 	public function getIndex()
 	{
-		$groups = Sentry::getGroupProvider()->findAll();
+		$groups = Sentry::getGroupProvider()->createModel()->paginate(20);
 		return View::make('redminportal::groups/view')->with('groups', $groups);
 	}
 
@@ -18,13 +18,13 @@ class GroupController extends BaseController {
 	{
 		return View::make('redminportal::groups/create');
 	}
-	
+
 	public function postStore()
 	{
 		$name 	= Input::get('name');
 		$admin 	= (Input::get('admin') == 'yes' ? 1 : 0);
 		$user 	= (Input::get('user') == 'yes' ? 1 : 0);
-		
+
 		try
 		{
 		    // Create the group
@@ -44,8 +44,8 @@ class GroupController extends BaseController {
 		{
 		    return 'Group already exists';
 		}
-		
+
 		return Redirect::to('admin/groups');
 	}
-	
+
 }
