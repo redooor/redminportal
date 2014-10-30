@@ -110,4 +110,28 @@ class MailinglistControllerTest extends \RedminTestCase {
         $this->assertRedirectedTo('/admin/mailinglists');
     }
 
+    public function testSortBy_Success()
+    {
+        $crawler = $this->client->request('GET', '/admin/mailinglists/sort/email/asc');
+
+        $this->assertResponseOk();
+        $this->assertViewHas('mailinglists');
+    }
+
+    public function testSortBy_SortByValidation_Fail()
+    {
+        $crawler = $this->client->request('GET', '/admin/mailinglists/sort/->where("id", 5)/asc');
+
+        $this->assertRedirectedTo('/admin/mailinglists');
+        $this->assertSessionHasErrors();
+    }
+
+    public function testSortBy_OrderByValidation_Fail()
+    {
+        $crawler = $this->client->request('GET', '/admin/mailinglists/sort/email/->where("id", 5)');
+
+        $this->assertRedirectedTo('/admin/mailinglists');
+        $this->assertSessionHasErrors();
+    }
+
 }
