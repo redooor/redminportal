@@ -13,7 +13,41 @@ class MailinglistController extends BaseController {
     {
         $mailinglists = Mailinglist::orderBy('email')->paginate(20);
 
-        return \View::make('redminportal::mailinglists/view')->with('mailinglists', $mailinglists);
+        return \View::make('redminportal::mailinglists/view')
+            ->with('sortBy', 'email')
+            ->with('orderBy', 'asc')
+            ->with('mailinglists', $mailinglists);
+    }
+
+    public function getSort($sortBy = 'email', $orderBy = 'asc')
+    {
+        $inputs = array(
+            'sortBy' => $sortBy,
+            'orderBy' => $orderBy
+        );
+        
+        $rules = array(
+            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
+            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
+        );
+        
+        $validation = \Validator::make($inputs, $rules);
+
+        if( ! $validation->passes() )
+        {
+            return \Redirect::to('admin/mailinglists')->withErrors($validation);
+        }
+        
+        if ($orderBy != 'asc' && $orderBy != 'desc') {
+            $orderBy = 'asc';
+        }
+
+        $mailinglists = Mailinglist::orderBy($sortBy, $orderBy)->paginate(20);
+
+        return \View::make('redminportal::mailinglists/view')
+            ->with('sortBy', $sortBy)
+            ->with('orderBy', $orderBy)
+            ->with('mailinglists', $mailinglists);
     }
 
     public function getCreate()

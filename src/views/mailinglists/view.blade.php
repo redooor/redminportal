@@ -26,11 +26,46 @@
         <table class='table table-striped table-bordered'>
             <thead>
                 <tr>
-                    <th>Email</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Active</th>
-                    <th>Updated</th>
+                    <th>
+                        <a href="{{ URL::to('admin/mailinglists/sort') . '/email/' . ($sortBy == 'email' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            Email
+                            @if ($sortBy == 'email')
+                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ URL::to('admin/mailinglists/sort') . '/first_name/' . ($sortBy == 'first_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            First Name
+                            @if ($sortBy == 'first_name')
+                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ URL::to('admin/mailinglists/sort') . '/last_name/' . ($sortBy == 'last_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            Last Name
+                            @if ($sortBy == 'last_name')
+                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ URL::to('admin/mailinglists/sort') . '/active/' . ($sortBy == 'active' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            Active
+                            @if ($sortBy == 'active')
+                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            @endif
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ URL::to('admin/mailinglists/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            Updated
+                            @if ($sortBy == 'updated_at')
+                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            @endif
+                        </a>
+                    </th>
                     <th>Action</th>
                 </tr>
             </thead>
