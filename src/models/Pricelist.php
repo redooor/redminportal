@@ -3,13 +3,17 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
+/*  Columns:
+***********************
+*   id (integer)
+*   price (float)
+*   module_id (integer)
+*   membership_id (integer)
+*   module_id, membership_id (unique)
+*   created_at (date)
+*   updated_at (date)
+***********************/
 class Pricelist extends Model {
-
-    /* Members:
-    Price
-    Module
-    Membership
-    */
 
     public function module()
     {

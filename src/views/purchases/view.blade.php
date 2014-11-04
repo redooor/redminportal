@@ -11,7 +11,7 @@
         </ul>
     </div>
     @endif
-    
+
     <div class="nav-controls text-right">
         @if ($purchases)
         <span class="label label-default pull-left">
@@ -19,6 +19,7 @@
         </span><br>
         @endif
         <button class="btn btn-default" data-toggle="modal" data-target="#export-csv">Export CSV</button>
+        {{ HTML::link('admin/purchases/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
 
     @if (count($purchases) > 0)
@@ -33,6 +34,7 @@
                     <th>Payment Status</th>
                     <th>Transaction ID</th>
                     <th>Purchased on</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,10 +49,23 @@
                     @endif
                     <td>{{ $purchase->pricelist->module->name }}</td>
                     <td>{{ $purchase->pricelist->membership->name }}</td>
-                    <td>{{ Rhelper::formatCurrency($purchase->paid, Lang::get('currency.currency')) }}</td>
+                    <td>{{ Rhelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
                     <td>{{ $purchase->payment_status }}</td>
                     <td>{{ $purchase->transaction_id }}</td>
                     <td>{{ $purchase->created_at }}</td>
+                    <td>
+						<div class="btn-group">
+							<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+								Action <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+								<li>
+									<a href="{{ URL::to('admin/purchases/delete/' . $purchase->id) }}" class="btn-confirm">
+										<i class="glyphicon glyphicon-remove"></i>Delete</a>
+								</li>
+							</ul>
+						</div>
+					</td>
                 </tr>
                 @endforeach
             </tbody>
