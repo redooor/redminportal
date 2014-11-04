@@ -99,6 +99,23 @@ class PurchaseControllerTest extends \RedminTestCase {
 
         $this->assertRedirectedTo('/admin/purchases/create');
     }
+    
+    public function testStoreCreate_Failed_UserPricelist_Exists()
+    {
+        $this->testStoreCreate_Success();
+
+        $input = array(
+            'pricelist_id'   => 1,
+            'payment_status' => 'Completed',
+            'paid'           => 1.99,
+            'transaction_id' => 1,
+            'email'          => 'admin@admin.com',
+        );
+
+        $this->call('POST', '/admin/purchases/store', $input);
+
+        $this->assertRedirectedTo('/admin/purchases/create');
+    }
 
     public function testDeleteFail()
     {

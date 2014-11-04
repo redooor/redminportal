@@ -93,6 +93,14 @@ class PurchaseController extends BaseController {
                 $errors->add('userError', "The user may have been deleted. Please try again.");
                 return \Redirect::to($redirect_url)->withErrors($errors)->withInput();
             }
+            
+            // Check if user_pricelist already exist
+            $existing = UserPricelist::where('user_id', $user->id)->where('pricelist_id', $pricelist->id)->get();
+            if (count($existing) > 0) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add('userpricelistError', $email . " has already purchased " . $pricelist->module->name . " (" . $pricelist->membership->name . ").");
+                return \Redirect::to($redirect_url)->withErrors($errors)->withInput();
+            }
 
             $new_purchase = new UserPricelist;
             $new_purchase->user_id = $user->id;
