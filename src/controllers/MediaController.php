@@ -350,7 +350,7 @@ class MediaController extends BaseController {
         $media_folder = public_path() . '/assets/medias/' . $media->category_id . '/' . $id;
         $file = $media_folder . "/" . $media->path;
 
-        if (file_exists($file)) {
+        if (file_exists($file) && $media->mimetype != 'application/pdf') {
             $object = $this->retrieveId3Info($file);
             $media->options = json_encode($object);
             $media->save();

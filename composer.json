@@ -16,7 +16,7 @@
         "doctrine/dbal": "~2.3",
         "imagine/imagine": "0.5.*",
         "maatwebsite/excel": "1.*",
-        "phansys/getid3": "2.1.*@dev"
+        "phansys/getid3": "dev-master"
     },
     "require-dev": {
         "twbs/bootstrap": "3.1.*",
