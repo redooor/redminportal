@@ -13,6 +13,11 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
             "redooor/redminportal": "0.1.*"
         },
 
+Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
+
+        "minimum-stability": "dev",
+        "prefer-stable": true
+
 2. Then run `php composer install` in a terminal.
 3. Then add Redooor\Redminportal to your app\config\app.php providers array like this:
 
@@ -65,6 +70,11 @@ Provides User Interface for administrating users and groups (via Cartalyst Sentr
             "cartalyst/sentry": "2.1.*"
         },
 
+Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
+
+        "minimum-stability": "dev",
+        "prefer-stable": true
+        
 6. Then run `php composer update` in the main app folder.
 7. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
 
@@ -152,6 +162,7 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 * [Sentry](http://docs.cartalyst.com/sentry-2/overview)
 * [Jasny Bootstrap](http://jasny.github.io/bootstrap/)
 * [Plupload](http://www.plupload.com/)
+* [getID3](http://www.getid3.org/)
 
 ### Configuration
 1. Menu view can be controlled via config/menu.php file.
