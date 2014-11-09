@@ -1,124 +1,71 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
-class AnnouncementControllerTest extends \RedminTestCase {
-
-    public function testBlankIndex()
+class AnnouncementControllerTest extends BaseControllerTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $crawler = $this->client->request('GET', '/admin/announcements');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('announcements');
+        $page = '/admin/announcements';
+        $viewhas = array(
+            'singular' => 'announcement',
+            'plural' => 'announcements'
+        );
+        $input = array(
+            'create' => array(
+                'title'     => 'This is title',
+                'content'   => 'This is body',
+                'private'   => false
+            ),
+            'edit' => array(
+                'id'        => 1,
+                'title'     => 'This is title',
+                'content'   => 'This is body',
+                'private'   => false
+            )
+        );
+        
+        parent::__construct($page, $viewhas, $input);
     }
-
-    public function testCreate()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $crawler = $this->client->request('GET', '/admin/announcements/create');
-
-        $this->assertResponseOk();
+        parent::__destruct();
     }
-
-    public function testStoreCreateFails_NameBlank()
+    
+    /**
+     * Test (Fail): access postStore with input but no name
+     */
+    public function testStoreCreateFailsNameBlank()
     {
         $input = array(
             'title'     => '',
             'content'   => 'This is body'
         );
 
-        $this->call('POST', '/admin/announcements/store', $input);
+        $this->call('POST', $this->page . '/store', $input);
 
-        $this->assertRedirectedTo('/admin/announcements/create');
+        $this->assertRedirectedTo($this->page . '/create');
         $this->assertSessionHasErrors();
     }
-
-    public function testStoreCreateFails_NameNonAlphaNum()
+    
+    /**
+     * Test (Fail): access postStore with input but name is non-alphaNum
+     */
+    public function testStoreCreateFailsNameNonAlphaNum()
     {
         $input = array(
             'title'     => 'Open&%*<',
             'content'   => 'This is body'
         );
 
-        $this->call('POST', '/admin/announcements/store', $input);
+        $this->call('POST', $this->page . '/store', $input);
 
-        $this->assertRedirectedTo('/admin/announcements/create');
+        $this->assertRedirectedTo($this->page . '/create');
         $this->assertSessionHasErrors();
-    }
-
-    public function testStoreCreateSuccess()
-    {
-        $input = array(
-            'title'     => 'This is title',
-            'content'   => 'This is body',
-            'private'   => FALSE
-        );
-
-        $this->call('POST', '/admin/announcements/store', $input);
-
-        $this->assertRedirectedTo('/admin/announcements');
-    }
-
-    public function testEditFail404()
-    {
-        $crawler = $this->client->request('GET', '/admin/announcements/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
-    }
-
-    public function testEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $crawler = $this->client->request('GET', '/admin/announcements/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('announcement');
-    }
-
-    public function testStoreEditFails()
-    {
-        $input = array(
-            'id'        => 1,
-            'title'     => 'This is title',
-            'content'   => 'This is body',
-            'private'   => FALSE
-        );
-
-        $this->call('POST', '/admin/announcements/store', $input);
-
-        $this->assertRedirectedTo('/admin/announcements/edit/1');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testStoreEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $input = array(
-            'id'        => 1,
-            'title'     => 'This is title',
-            'content'   => 'This is body',
-            'private'   => FALSE
-        );
-
-        $this->call('POST', '/admin/announcements/store', $input);
-
-        $this->assertRedirectedTo('/admin/announcements');
-    }
-
-    public function testDeleteFail()
-    {
-        $this->call('GET', '/admin/announcements/delete/1');
-
-        $this->assertRedirectedTo('/admin/announcements');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testDeleteSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $this->call('GET', '/admin/announcements/delete/1');
-
-        $this->assertRedirectedTo('/admin/announcements');
     }
 }

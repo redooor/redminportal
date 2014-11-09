@@ -38,13 +38,19 @@ If you're using [Adobe Brackets](http://brackets.io), you may want to install th
 
 # PHPUnit Test
 
-Every method in constroller or model must have a test case.
+Every method in controller or model must have a test case.
 
 ## Model
 * All tests related to model must be store within tests/models folder. 
 * File name must be {ModelName}ModelTest.php.
 * All model tests must inherit parent class BaseModelTest (which resides in tests/bases folder).
 * You may include other tests in the model test itself if it's not tested in base class.
+
+## Controller
+* All tests related to controller must be store within tests/controllers folder. 
+* File name must be {ControllerName}Test.php.
+* All controller tests must inherit parent class BaseControllerTest (which resides in tests/bases folder).
+* You may include other tests in the controller test itself if it's not tested in base class.
 
 # Documentation
 

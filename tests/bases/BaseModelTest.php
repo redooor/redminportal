@@ -2,8 +2,8 @@
 
 class BaseModelTest extends \RedminTestCase
 {
-    private $model;
-    private $testcase;
+    protected $model;
+    protected $testcase;
     
     /**
      * Contructor.

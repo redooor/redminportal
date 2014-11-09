@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
-class CategoryController extends BaseController {
-
+class CategoryController extends BaseController
+{
     protected $model;
 
     public function __construct(Category $category)
@@ -23,11 +23,11 @@ class CategoryController extends BaseController {
         return \View::make('redminportal::categories/create')->with('categories', $categories);
     }
 
-    public function getDetail($id)
+    public function getDetail($sid)
     {
-        $category = Category::find($id);
+        $category = Category::find($sid);
 
-        if($category == null) {
+        if ($category == null) {
             return \View::make('redminportal::pages/404');
         }
 
@@ -36,25 +36,22 @@ class CategoryController extends BaseController {
             ->with('imageUrl', 'assets/img/categories/');
     }
 
-    public function getEdit($id)
+    public function getEdit($sid)
     {
         // Find the category using the user id
-        $category = Category::find($id);
+        $category = Category::find($sid);
 
-        if($category == null) {
+        if ($category == null) {
             return \View::make('redminportal::pages/404');
         }
 
-        if(empty($category->options))
-        {
+        if (empty($category->options)) {
             $category_cn = (object) array(
                 'name'                  => $category->name,
                 'short_description'     => $category->short_description,
                 'long_description'      => $category->long_description
             );
-        }
-        else
-        {
+        } else {
             $category_cn = json_decode($category->options);
         }
 
@@ -69,27 +66,26 @@ class CategoryController extends BaseController {
 
     public function postStore()
     {
-        $id = \Input::get('id');
+        $sid = \Input::get('id');
 
         /*
          * Validate
          */
         $rules = array(
             'image'                 => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'                  => 'required|unique:categories,name' . (isset($id) ? ',' . $id : ''),
+            'name'                  => 'required|unique:categories,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description'     => 'required',
             'order'                 => 'required|min:0',
         );
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if( $validation->passes() )
-        {
+        if ($validation->passes()) {
             $name               = \Input::get('name');
             $short_description  = \Input::get('short_description');
             $long_description   = \Input::get('long_description');
             $image              = \Input::file('image');
-            $active             = (\Input::get('active') == '' ? FALSE : TRUE);
+            $active             = (\Input::get('active') == '' ? false : true);
             $order              = \Input::get('order');
             $parent_id          = \Input::get('parent_id');
 
@@ -102,16 +98,16 @@ class CategoryController extends BaseController {
                 'short_description'     => $cn_short_description,
                 'long_description'      => $cn_long_description
             );
-
-            if (isset($id)) {
-                $category = Category::find($id);
-                if($category == null) {
-                    $errors = new \Illuminate\Support\MessageBag;
-                    $errors->add('deleteError', "The category cannot be found because it does not exist or may have been deleted.");
-                    return \Redirect::to('/admin/categories')->withErrors($errors);
-                }
-            } else {
-                $category = new Category;
+            
+            $category = (isset($sid) ? Category::find($sid) : new Category);
+            
+            if ($category == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The category cannot be found because it does not exist or may have been deleted."
+                );
+                return \Redirect::to('/admin/categories')->withErrors($errors);
             }
 
             $category->name = $name;
@@ -122,14 +118,15 @@ class CategoryController extends BaseController {
             $category->options = json_encode($options);
 
             // Check if parent_id is equal to this->id
-            $category->category_id = ($id == $parent_id) ? 0 : $parent_id;
+            $category->category_id = ($sid == $parent_id) ? 0 : $parent_id;
 
             $category->save();
 
-            if(\Input::hasFile('image'))
-            {
+            if (\Input::hasFile('image')) {
                 // Delete all existing images for edit
-                if(isset($id)) $category->deleteAllImages();
+                if (isset($sid)) {
+                    $category->deleteAllImages();
+                }
 
                 //set the name of the file
                 $originalFilename = $image->getClientOriginalName();
@@ -138,8 +135,7 @@ class CategoryController extends BaseController {
                 //Upload the file
                 $isSuccess = $image->move('assets/img/categories', $filename);
 
-                if( $isSuccess )
-                {
+                if ($isSuccess) {
                     // create photo
                     $newimage = new Image;
                     $newimage->path = $filename;
@@ -148,15 +144,11 @@ class CategoryController extends BaseController {
                     $category->images()->save($newimage);
                 }
             }
-
-        }//if it validate
-        else {
-            if(isset($id))
-            {
-                return \Redirect::to('admin/categories/edit/' . $id)->withErrors($validation)->withInput();
-            }
-            else
-            {
+            //if it validate
+        } else {
+            if (isset($sid)) {
+                return \Redirect::to('admin/categories/edit/' . $sid)->withErrors($validation)->withInput();
+            } else {
                 return \Redirect::to('admin/categories/create')->withErrors($validation)->withInput();
             }
         }
@@ -164,31 +156,41 @@ class CategoryController extends BaseController {
         return \Redirect::to('admin/categories');
     }
 
-    public function getDelete($id)
+    public function getDelete($sid)
     {
         // Find the category using the user id
-        $category = Category::find($id);
+        $category = Category::find($sid);
 
-        if($category == null) {
+        if ($category == null) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The category cannot be found because it does not exist or may have been deleted.");
+            $errors->add(
+                'deleteError',
+                "The category cannot be found because it does not exist or may have been deleted."
+            );
             return \Redirect::to('/admin/categories')->withErrors($errors);
         }
 
         // Find if there's any child
-        $children = Category::where('category_id', $id)->count();
+        $children = Category::where('category_id', $sid)->count();
 
         if ($children > 0) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The category '" . $category->name . "' cannot be deleted because it has " . $children . " children categories.");
+            $errors->add(
+                'deleteError',
+                "The category '" . $category->name .
+                "' cannot be deleted because it has " . $children . " children categories."
+            );
             return \Redirect::to('/admin/categories')->withErrors($errors);
         }
 
         // Check in use by media
-        $medias = Media::where('category_id', $id)->get();
+        $medias = Media::where('category_id', $sid)->get();
         if (count($medias) > 0) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The category '" . $category->name . "' cannot be deleted because it is in used.");
+            $errors->add(
+                'deleteError',
+                "The category '" . $category->name . "' cannot be deleted because it is in used."
+            );
             return \Redirect::to('/admin/categories')->withErrors($errors);
         }
 
@@ -200,5 +202,4 @@ class CategoryController extends BaseController {
 
         return \Redirect::to('admin/categories');
     }
-
 }

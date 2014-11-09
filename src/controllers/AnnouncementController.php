@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
-class AnnouncementController extends BaseController {
-
+class AnnouncementController extends BaseController
+{
     protected $model;
     
     public function __construct(Announcement $announcement)
@@ -21,25 +21,22 @@ class AnnouncementController extends BaseController {
         return \View::make('redminportal::announcements/create');
     }
     
-    public function getEdit($id)
+    public function getEdit($sid)
     {
         // Find the announcement using the user id
-        $announcement = Announcement::find($id);
+        $announcement = Announcement::find($sid);
         
-        if($announcement == null) {
+        if ($announcement == null) {
             return \View::make('redminportal::pages/404');
         }
         
-        if(empty($announcement->options))
-        {
+        if (empty($announcement->options)) {
             $announcement_cn = (object) array(
                 'name'                  => $announcement->name,
                 'short_description'     => $announcement->short_description,
                 'long_description'      => $announcement->long_description
             );
-        }
-        else
-        {
+        } else {
             $announcement_cn = json_decode($announcement->options);
         }
         
@@ -50,21 +47,25 @@ class AnnouncementController extends BaseController {
     
     public function postStore()
     {
-        $id = \Input::get('id');
+        $sid = \Input::get('id');
         
         $validation = Announcement::validate(\Input::all());
         
-        if( $validation->passes() )
-        {
+        if ($validation->passes()) {
             $title              = \Input::get('title');
             $content            = \Input::get('content');
             $image              = \Input::file('image');
-            $private            = (\Input::get('private') == '' ? FALSE : TRUE);
+            $private            = (\Input::get('private') == '' ? false : true);
             
-            $announcement = (isset($id) ? Announcement::find($id) : new Announcement);
+            $announcement = (isset($sid) ? Announcement::find($sid) : new Announcement);
             
-            if($announcement == null) {
-                return \Redirect::to('/admin/announcements/edit/' . $id)->withErrors($validation)->withInput();
+            if ($announcement == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The Announcement cannot be found because it does not exist or may have been deleted."
+                );
+                return \Redirect::to('/admin/announcements')->withErrors($errors);
             }
 
             $announcement->title = $title;
@@ -73,17 +74,15 @@ class AnnouncementController extends BaseController {
             
             $announcement->save();
             
-            if(\Input::hasFile('image'))
-            {
+            if (\Input::hasFile('image')) {
                 // Delete all existing images for edit
-                //if(isset($id)) $announcement->deleteAllImages();
+                //if(isset($sid)) $announcement->deleteAllImages();
                 
                 //Upload the file
                 $helper_image = new Helper\Image();
                 $filename = $helper_image->upload($image, 'announcements/' . $announcement->id, true);
                 
-                if( $filename )
-                {
+                if ($filename) {
                     // create photo
                     $newimage = new Image;
                     $newimage->path = $filename;
@@ -92,15 +91,11 @@ class AnnouncementController extends BaseController {
                     $announcement->images()->save($newimage);
                 }
             }
-
-        }//if it validate
-        else {
-            if(isset($id))
-            {
-                return \Redirect::to('admin/announcements/edit/' . $id)->withErrors($validation)->withInput();
-            }
-            else
-            {
+        //if it validate
+        } else {
+            if (isset($sid)) {
+                return \Redirect::to('admin/announcements/edit/' . $sid)->withErrors($validation)->withInput();
+            } else {
                 return \Redirect::to('admin/announcements/create')->withErrors($validation)->withInput();
             }
         }
@@ -108,12 +103,12 @@ class AnnouncementController extends BaseController {
         return \Redirect::to('admin/announcements');
     }
     
-    public function getDelete($id)
+    public function getDelete($sid)
     {
         // Find the announcement using the id
-        $announcement = Announcement::find($id);
+        $announcement = Announcement::find($sid);
         
-        if($announcement == null) {
+        if ($announcement == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The data cannot be deleted at this time.");
             return \Redirect::to('/admin/announcements')->withErrors($errors);
@@ -128,11 +123,11 @@ class AnnouncementController extends BaseController {
         return \Redirect::to('admin/announcements');
     }
     
-	public function getImgremove($id)
+    public function getImgremove($sid)
     {
-        $image = Image::find($id);
+        $image = Image::find($sid);
         
-        if($image == null) {
+        if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The image cannot be deleted at this time.");
             return \Redirect::to('/admin/announcements')->withErrors($errors);
@@ -144,5 +139,4 @@ class AnnouncementController extends BaseController {
         
         return \Redirect::to('admin/announcements/edit/' . $announcement_id);
     }
-
 }
