@@ -1,73 +1,29 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\Category;
 
-class CategoryModelTest extends \RedminTestCase {
-
-    public function testAll()
+class CategoryModelTest extends BaseModelTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $categories = Category::all();
-        $this->assertTrue($categories != null);
+        $model = new Category;
+        $testcase = array(
+            'name' => 'This is the title',
+            'short_description' => 'This is the body',
+            'active' => true
+        );
+        
+        parent::__construct($model, $testcase);
     }
-
-    public function testFind1Fails()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $category = Category::find(1);
-        $this->assertTrue($category == null);
+        parent::__destruct();
     }
-
-    public function testCreateNew()
-    {
-        $category = new Category;
-        $category->name = 'This is the title';
-        $category->short_description = 'This is the body';
-        $category->active = true;
-
-        $result = $category->save();
-
-        $this->assertTrue($category->id == 1);
-        $this->assertTrue($category->name == 'This is the title');
-        $this->assertTrue($category->short_description == 'This is the body');
-        $this->assertTrue($category->active == true);
-        $this->assertTrue($result == 1);
-    }
-
-    public function testFind1()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $category = Category::find(1);
-
-        $this->assertTrue($category != null);
-        $this->assertTrue($category->id == 1);
-        $this->assertTrue($category->name == 'This is the title');
-    }
-
-    public function testPagniate()
-    {
-        $categories = Category::paginate(20);
-    }
-
-    public function testOrderBy()
-    {
-        $categories = Category::orderBy('updated_at');
-    }
-
-    public function testOrderByThenPaginate()
-    {
-        $categories = Category::orderBy('updated_at')->paginate(20);
-    }
-
-    public function testDestroy()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $category = Category::find('1');
-        $category->delete();
-
-        $result = Category::find('1');
-
-        $this->assertTrue($result == null);
-    }
-
 }

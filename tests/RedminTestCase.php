@@ -2,8 +2,11 @@
 
 use Orchestra\Testbench\TestCase as TestBenchTestCase;
 
-class RedminTestCase extends TestBenchTestCase {
-
+class RedminTestCase extends TestBenchTestCase
+{
+    /**
+     * Overrides environment with in-memory sqlite database.
+     */
     protected function getEnvironmentSetUp($app)
     {
         $app['path.base'] = __DIR__ . '/../src';
@@ -15,14 +18,18 @@ class RedminTestCase extends TestBenchTestCase {
             'prefix'   => '',
         ));
     }
-
+    
+    /**
+     * Sets up environment for each test.
+     * Temporariliy increase memory limit to 256MB, run migrations and set Mail::pretend to true.
+     */
     public function setUp()
     {
         parent::setUp();
 
         //$this->app['router']->enableFilters();
 
-        ini_set('memory_limit','256M'); // Temporarily increase memory limit to 256MB
+        ini_set('memory_limit', '256M'); // Temporarily increase memory limit to 256MB
 
         $artisan = $this->app->make('artisan');
         $artisan->call('migrate', [
@@ -38,6 +45,9 @@ class RedminTestCase extends TestBenchTestCase {
         Mail::pretend(true);
     }
 
+    /**
+     * Points base path to testbench's fixture.
+     */
     protected function getApplicationPaths()
     {
         $basePath = realpath(__DIR__.'/../vendor/orchestra/testbench/src/fixture');
@@ -49,17 +59,22 @@ class RedminTestCase extends TestBenchTestCase {
             'storage' => "{$basePath}/app/storage",
         );
     }
-
+    
+    /**
+     * Appends additional ServiceProvider for the test.
+     */
     protected function getPackageProviders()
     {
         return array('Redooor\Redminportal\RedminportalServiceProvider');
     }
 
+    /**
+     * Appends additional Aliases for the test.
+     */
     protected function getPackageAliases()
     {
         return array(
             'Redminportal' => 'Redooor\Redminportal\Facades\Redminportal'
         );
     }
-
 }

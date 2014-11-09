@@ -32,6 +32,20 @@ Also ensure that your Pull Request satisfies the following coding standards:
 * [PSR 1 Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 * [PSR 2 Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 
+Please use [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) to detect violations of coding standard.
+
+If you're using [Adobe Brackets](http://brackets.io), you may want to install this extension: [Brackets PHP Code Quality Tools](https://github.com/mikaeljorhult/brackets-php-code-quality-tools).
+
+# PHPUnit Test
+
+Every method in constroller or model must have a test case.
+
+## Model
+* All tests related to model must be store within tests/models folder. 
+* File name must be {ModelName}ModelTest.php.
+* All model tests must inherit parent class BaseModelTest (which resides in tests/bases folder).
+* You may include other tests in the model test itself if it's not tested in base class.
+
 # Documentation
 
 All contributions are most welcome.

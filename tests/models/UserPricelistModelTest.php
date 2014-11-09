@@ -1,78 +1,31 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\UserPricelist;
 
-class UserPricelistModelTest extends \RedminTestCase {
-
-    public function testAll()
+class UserPricelistModelTest extends BaseModelTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $userPricelists = UserPricelist::all();
-        $this->assertTrue($userPricelists != null);
+        $model = new UserPricelist;
+        $testcase = array(
+            'user_id' => 1,
+            'pricelist_id' => 1,
+            'paid' => 10.99,
+            'transaction_id' => 'UK12345YZ',
+            'payment_status' => 'Completed'
+        );
+        
+        parent::__construct($model, $testcase);
     }
-
-    public function testFind1Fails()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $userPricelist = UserPricelist::find(1);
-        $this->assertTrue($userPricelist == null);
+        parent::__destruct();
     }
-
-    public function testCreateNew()
-    {
-        $userPricelist = new UserPricelist;
-        $userPricelist->user_id = 1;
-        $userPricelist->pricelist_id = 1;
-        $userPricelist->paid = 10.99;
-        $userPricelist->transaction_id = 'UK12345YZ';
-        $userPricelist->payment_status = 'Completed';
-
-        $result = $userPricelist->save();
-
-        $this->assertTrue($userPricelist->id == 1);
-        $this->assertTrue($userPricelist->user_id == 1);
-        $this->assertTrue($userPricelist->pricelist_id == 1);
-        $this->assertTrue($userPricelist->paid == 10.99);
-        $this->assertTrue($userPricelist->transaction_id == 'UK12345YZ');
-        $this->assertTrue($userPricelist->payment_status == 'Completed');
-        $this->assertTrue($result == 1);
-    }
-
-    public function testFind1()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $userPricelist = UserPricelist::find(1);
-
-        $this->assertTrue($userPricelist != null);
-        $this->assertTrue($userPricelist->id == 1);
-        $this->assertTrue($userPricelist->user_id == 1);
-        $this->assertTrue($userPricelist->pricelist_id == 1);
-    }
-
-    public function testPagniate()
-    {
-        $userPricelists = UserPricelist::paginate(20);
-    }
-
-    public function testOrderBy()
-    {
-        $userPricelists = UserPricelist::orderBy('updated_at');
-    }
-
-    public function testOrderByThenPaginate()
-    {
-        $userPricelists = UserPricelist::orderBy('updated_at')->paginate(20);
-    }
-
-    public function testDestroy()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $userPricelist = UserPricelist::find('1');
-        $userPricelist->delete();
-
-        $result = UserPricelist::find('1');
-
-        $this->assertTrue($result == null);
-    }
-
 }

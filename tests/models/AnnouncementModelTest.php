@@ -1,76 +1,32 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\Announcement;
 
-class AnnouncementModelTest extends \RedminTestCase {
-
-    public function testAll()
+class AnnouncementModelTest extends BaseModelTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $announcements = Announcement::all();
-        $this->assertTrue($announcements != null);
+        $model = new Announcement;
+        $testcase = array(
+            'title' => 'This is the title',
+            'content' => 'This is the body',
+            'private' => false
+        );
+        
+        parent::__construct($model, $testcase);
     }
-
-    public function testFind1Fails()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $announcement = Announcement::find(1);
-        $this->assertTrue($announcement == null);
+        parent::__destruct();
     }
-
-    public function testCreateNew()
-    {
-        $announcement = new Announcement;
-        $announcement->title = 'This is the title';
-        $announcement->content = 'This is the body';
-        $announcement->private = FALSE;
-
-        $result = $announcement->save();
-
-        $this->assertTrue($announcement->id == 1);
-        $this->assertTrue($announcement->title == 'This is the title');
-        $this->assertTrue($announcement->content == 'This is the body');
-        $this->assertTrue($announcement->private == FALSE);
-        $this->assertTrue($result == 1);
-    }
-
-    public function testFind1()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $announcementRepo = new Announcement;
-        $announcement = $announcementRepo->find(1);
-
-        $this->assertTrue($announcement != null);
-        $this->assertTrue($announcement->id == 1);
-        $this->assertTrue($announcement->title == 'This is the title');
-    }
-
-    public function testPagniate()
-    {
-        $announcements = Announcement::paginate(20);
-    }
-
-    public function testOrderBy()
-    {
-        $announcements = Announcement::orderBy('updated_at');
-    }
-
-    public function testOrderByThenPaginate()
-    {
-        $announcements = Announcement::orderBy('updated_at')->paginate(20);
-    }
-
-    public function testDestroy()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $announce = Announcement::find('1');
-        $announce->delete();
-
-        $result = Announcement::find('1');
-
-        $this->assertTrue($result == null);
-    }
-
+    
     public function testValidateSuccess()
     {
         $newAnnouncementInput = array(
@@ -94,5 +50,4 @@ class AnnouncementModelTest extends \RedminTestCase {
 
         $this->assertTrue(! $validation->passes());
     }
-
 }

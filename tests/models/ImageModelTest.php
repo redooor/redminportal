@@ -1,20 +1,19 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Mailinglist;
+use Redooor\Redminportal\Image;
 
-class MailinglistModelTest extends BaseModelTest
+class ImageModelTest extends BaseModelTest
 {
     /**
      * Contructor
      */
     public function __construct()
     {
-        $model = new Mailinglist;
+        $model = new Image;
         $testcase = array(
-            'email' => 'email@test.com',
-            'first_name' => 'Peter',
-            'last_name' => 'Lim',
-            'active' => true
+            'path' => '/path/to/image.jpg',
+            'imageable_id' => 1,
+            'imageable_type' => 'Type'
         );
         
         parent::__construct($model, $testcase);

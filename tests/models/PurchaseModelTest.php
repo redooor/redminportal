@@ -1,72 +1,28 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\Purchase;
 
-class PurchaseModelTest extends \RedminTestCase {
-
-    public function testAll()
+class PurchaseModelTest extends BaseModelTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $purchases = Purchase::all();
-        $this->assertTrue($purchases != null);
+        $model = new Purchase;
+        $testcase = array(
+            'user_id' => 1,
+            'pricelist_id' => 1
+        );
+        
+        parent::__construct($model, $testcase);
     }
-
-    public function testFind1Fails()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $purchase = Purchase::find(1);
-        $this->assertTrue($purchase == null);
+        parent::__destruct();
     }
-
-    public function testCreateNew()
-    {
-        $purchase = new Purchase;
-        $purchase->user_id = 1;
-        $purchase->pricelist_id = 1;
-
-        $result = $purchase->save();
-
-        $this->assertTrue($purchase->id == 1);
-        $this->assertTrue($purchase->user_id == 1);
-        $this->assertTrue($purchase->pricelist_id == 1);
-        $this->assertTrue($result == 1);
-    }
-
-    public function testFind1()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $purchase = Purchase::find(1);
-
-        $this->assertTrue($purchase != null);
-        $this->assertTrue($purchase->id == 1);
-        $this->assertTrue($purchase->user_id == 1);
-        $this->assertTrue($purchase->pricelist_id == 1);
-    }
-
-    public function testPagniate()
-    {
-        $purchases = Purchase::paginate(20);
-    }
-
-    public function testOrderBy()
-    {
-        $purchases = Purchase::orderBy('updated_at');
-    }
-
-    public function testOrderByThenPaginate()
-    {
-        $purchases = Purchase::orderBy('updated_at')->paginate(20);
-    }
-
-    public function testDestroy()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $purchase = Purchase::find('1');
-        $purchase->delete();
-
-        $result = Purchase::find('1');
-
-        $this->assertTrue($result == null);
-    }
-
 }

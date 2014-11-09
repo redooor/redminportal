@@ -33,6 +33,7 @@
             "src/config",
             "src/seeds",
             "src/lang",
+            "tests/bases",
             "tests/RedminTestCase.php"
         ],
         "psr-0": {

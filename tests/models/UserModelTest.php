@@ -1,20 +1,19 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Mailinglist;
+use Redooor\Redminportal\User;
 
-class MailinglistModelTest extends BaseModelTest
+class UserModelTest extends BaseModelTest
 {
     /**
      * Contructor
      */
     public function __construct()
     {
-        $model = new Mailinglist;
+        $model = new User;
         $testcase = array(
-            'email' => 'email@test.com',
-            'first_name' => 'Peter',
-            'last_name' => 'Lim',
-            'active' => true
+            'email'     => 'john.doe@example.com',
+            'password'  => 'test',
+            'activated' => true
         );
         
         parent::__construct($model, $testcase);

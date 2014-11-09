@@ -1,79 +1,31 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\Product;
 
-class ProductModelTest extends \RedminTestCase {
-
-    public function testAll()
+class ProductModelTest extends BaseModelTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $products = Product::all();
-        $this->assertTrue($products != null);
+        $model = new Product;
+        $testcase = array(
+            'name' => 'This is the title',
+            'sku' => 'UNIQUESKU001',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'active' => true
+        );
+        
+        parent::__construct($model, $testcase);
     }
-
-    public function testFind1Fails()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $product = Product::find(1);
-        $this->assertTrue($product == null);
+        parent::__destruct();
     }
-
-    public function testCreateNew()
-    {
-        $product = new Product;
-        $product->name = 'This is the title';
-        $product->sku = 'UNIQUESKU001';
-        $product->short_description = 'This is the body';
-        $product->category_id = 1;
-        $product->active = true;
-
-        $result = $product->save();
-
-        $this->assertTrue($product->id == 1);
-        $this->assertTrue($product->name == 'This is the title');
-        $this->assertTrue($product->sku == 'UNIQUESKU001');
-        $this->assertTrue($product->short_description == 'This is the body');
-        $this->assertTrue($product->category_id == 1);
-        $this->assertTrue($product->price == 0);
-        $this->assertTrue($product->featured == false);
-        $this->assertTrue($product->active == true);
-        $this->assertTrue($result == 1);
-    }
-
-    public function testFind1()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $product = Product::find(1);
-
-        $this->assertTrue($product != null);
-        $this->assertTrue($product->id == 1);
-        $this->assertTrue($product->name == 'This is the title');
-    }
-
-    public function testPagniate()
-    {
-        $products = Product::paginate(20);
-    }
-
-    public function testOrderBy()
-    {
-        $products = Product::orderBy('updated_at');
-    }
-
-    public function testOrderByThenPaginate()
-    {
-        $products = Product::orderBy('updated_at')->paginate(20);
-    }
-
-    public function testDestroy()
-    {
-        $this->testCreateNew(); //Create new first
-
-        $product = Product::find('1');
-        $product->delete();
-
-        $result = Product::find('1');
-
-        $this->assertTrue($result == null);
-    }
-
 }

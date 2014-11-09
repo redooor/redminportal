@@ -1,20 +1,19 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Mailinglist;
+use Redooor\Redminportal\Tag;
 
-class MailinglistModelTest extends BaseModelTest
+class TagModelTest extends BaseModelTest
 {
     /**
      * Contructor
      */
     public function __construct()
     {
-        $model = new Mailinglist;
+        $model = new Tag;
         $testcase = array(
-            'email' => 'email@test.com',
-            'first_name' => 'Peter',
-            'last_name' => 'Lim',
-            'active' => true
+            'name' => 'This is a tag',
+            'tagable_id' => 1,
+            'tagable_type' => 'Type'
         );
         
         parent::__construct($model, $testcase);

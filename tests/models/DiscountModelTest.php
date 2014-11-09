@@ -1,20 +1,21 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Mailinglist;
+use Redooor\Redminportal\Discount;
 
-class MailinglistModelTest extends BaseModelTest
+class DiscountModelTest extends BaseModelTest
 {
     /**
      * Contructor
      */
     public function __construct()
     {
-        $model = new Mailinglist;
+        $model = new Discount;
         $testcase = array(
-            'email' => 'email@test.com',
-            'first_name' => 'Peter',
-            'last_name' => 'Lim',
-            'active' => true
+            'code' => 'ABC123',
+            'percent' => 10,
+            'expiry_date' => '2016-02-29 00:00:00',
+            'discountable_id' => 1,
+            'discountable_type' => 'Type'
         );
         
         parent::__construct($model, $testcase);
