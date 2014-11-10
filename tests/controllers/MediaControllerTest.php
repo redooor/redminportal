@@ -1,27 +1,52 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
-class MediaControllerTest extends \RedminTestCase {
-
-    public function tearDown() {
-        Mockery::close();
-    }
-
-    public function testBlankIndex()
+class MediaControllerTest extends BaseControllerTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $crawler = $this->client->request('GET', '/admin/medias');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('medias');
+        $page = '/admin/medias';
+        $viewhas = array(
+            'singular' => 'media',
+            'plural' => 'medias'
+        );
+        $input = array(
+            'create' => array(
+                'name'                  => 'This is title',
+                'short_description'     => 'This is body',
+                'cn_name'               => 'CN name',
+                'cn_short_description'  => 'CN short body',
+                'category_id'           => 1,
+                'sku'                   => 'UNIQUESKU001'
+            ),
+            'edit' => array(
+                'id'        => 1,
+                'name'                  => 'This is title',
+                'short_description'     => 'This is body',
+                'cn_name'               => 'CN name',
+                'cn_short_description'  => 'CN short body',
+                'category_id'           => 1,
+                'sku'                   => 'UNIQUESKU001'
+            )
+        );
+        
+        parent::__construct($page, $viewhas, $input);
     }
-
-    public function testCreate()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $crawler = $this->client->request('GET', '/admin/medias/create');
-
-        $this->assertResponseOk();
+        parent::__destruct();
     }
-
-    public function testStoreCreateFails_NameBlank()
+    
+    /**
+     * Test (Fail): access postStore with no name
+     */
+    public function testStoreCreateFailsNameBlank()
     {
         $input = array(
             'name'                  => '',
@@ -37,101 +62,27 @@ class MediaControllerTest extends \RedminTestCase {
         $this->assertRedirectedTo('/admin/medias/create');
         $this->assertSessionHasErrors();
     }
-
-    public function testStoreCreateSuccess()
+/*
+    public function testUploadFileSuccess()
     {
+        $this->testStoreCreatePass(); // Create for upload
+        
         $path = __DIR__ . '/../dummy/';
         $filename = 'foo113a.pdf';
         $mimeType = 'application/pdf';
 
-        $file = new \Symfony\Component\HttpFoundation\File\UploadedFile (
+        $file = new \Symfony\Component\HttpFoundation\File\UploadedFile(
             $path . $filename,
             $filename,
             $mimeType
         );
 
         $input = array(
-            'name'                  => 'This is title',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1,
-            'sku'                   => 'UNIQUESKU001'
+            'name' => 'This is title'
         );
 
-        $this->call('POST', '/admin/medias/store', $input, array('media_file' => $file));
+        $this->call('POST', '/admin/medias/upload/1', $input, array('file' => $file));
 
         $this->assertRedirectedTo('/admin/medias');
-    }
-
-    public function testEditFail404()
-    {
-        $crawler = $this->client->request('GET', '/admin/medias/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
-    }
-
-    public function testEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $crawler = $this->client->request('GET', '/admin/medias/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('media');
-    }
-
-    public function testStoreEditFails()
-    {
-        $input = array(
-            'id'                    => 1,
-            'name'                  => 'This is title',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1
-        );
-
-        $this->call('POST', '/admin/medias/store', $input);
-
-        $this->assertRedirectedTo('/admin/medias/edit/1');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testStoreEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $input = array(
-            'id'                    => 1,
-            'name'                  => 'This is title',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1
-        );
-
-        $this->call('POST', '/admin/medias/store', $input);
-
-        $this->assertRedirectedTo('/admin/medias/edit/1');
-    }
-
-    public function testDeleteFail()
-    {
-        $this->call('GET', '/admin/medias/delete/1');
-
-        $this->assertRedirectedTo('/admin/medias');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testDeleteSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $this->call('GET', '/admin/medias/delete/1');
-
-        $this->assertRedirectedTo('/admin/medias');
-    }
-
+    }*/
 }

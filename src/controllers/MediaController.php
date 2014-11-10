@@ -2,8 +2,8 @@
 
 use \GetId3\GetId3Core as GetId3;
 
-class MediaController extends BaseController {
-
+class MediaController extends BaseController
+{
     protected $model;
 
     public function __construct(Media $media)
@@ -26,10 +26,10 @@ class MediaController extends BaseController {
             ->with('categories', $categories);
     }
 
-    public function getEdit($id)
+    public function getEdit($sid)
     {
         // Find the media using the user id
-        $media = Media::find($id);
+        $media = Media::find($sid);
 
         // No such id
         if ($media == null) {
@@ -39,32 +39,27 @@ class MediaController extends BaseController {
         $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
 
         $tagString = "";
-        foreach ($media->tags as $tag)
-        {
-            if(! empty($tagString))
-            {
+        foreach ($media->tags as $tag) {
+            if (! empty($tagString)) {
                 $tagString .= ",";
             }
 
             $tagString .= $tag->name;
         }
 
-		if(empty($media->options))
-        {
+        if (empty($media->options)) {
             $media_cn = (object) array(
                 'name'                  => $media->name,
                 'short_description'     => $media->short_description,
                 'long_description'      => $media->long_description
             );
-        }
-        else
-        {
+        } else {
             $media_cn = json_decode($media->options);
         }
 
         return \View::make('redminportal::medias/edit')
             ->with('media', $media)
-			->with('media_cn', $media_cn)
+            ->with('media_cn', $media_cn)
             ->with('imageUrl', 'assets/img/medias/')
             ->with('categories', $categories)
             ->with('tagString', $tagString);
@@ -72,46 +67,54 @@ class MediaController extends BaseController {
 
     public function postStore()
     {
-        $id = \Input::get('id');
+        $sid = \Input::get('id');
 
         /*
          * Validate
          */
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:medias,name' . (isset($id) ? ',' . $id : ''),
+            'name'              => 'required|unique:medias,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description' => 'required',
-            'sku'               => 'required|alpha_dash|unique:medias,sku' . (isset($id) ? ',' . $id : ''),
+            'sku'               => 'required|alpha_dash|unique:medias,sku' . (isset($sid) ? ',' . $sid : ''),
             'category_id'       => 'required',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
         );
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if( $validation->passes() )
-        {
+        if ($validation->passes()) {
             $name               = \Input::get('name');
             $sku                = \Input::get('sku');
             $short_description  = \Input::get('short_description');
             $long_description   = \Input::get('long_description');
             $image              = \Input::file('image');
-            $featured           = (\Input::get('featured') == '' ? FALSE : TRUE);
-            $active             = (\Input::get('active') == '' ? FALSE : TRUE);
+            $featured           = (\Input::get('featured') == '' ? false : true);
+            $active             = (\Input::get('active') == '' ? false : true);
             $category_id        = \Input::get('category_id');
             $tags               = \Input::get('tags');
-            $media_file         = \Input::file('media_file');
 
-			$cn_name               = \Input::get('cn_name');
+            $cn_name               = \Input::get('cn_name');
             $cn_short_description  = \Input::get('cn_short_description');
             $cn_long_description   = \Input::get('cn_long_description');
 
-			$options = array(
+            $options = array(
                 'name'                  => $cn_name,
                 'short_description'     => $cn_short_description,
                 'long_description'      => $cn_long_description
             );
 
-            $media = (isset($id) ? Media::find($id) : new Media);
+            $media = (isset($sid) ? Media::find($sid) : new Media);
+            
+            if ($media == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The media cannot be found because it does not exist or may have been deleted."
+                );
+                return \Redirect::to('/admin/medias')->withErrors($errors);
+            }
+            
             $media->name = $name;
             $media->sku = $sku;
             $media->short_description = $short_description;
@@ -120,11 +123,11 @@ class MediaController extends BaseController {
             $media->active = $active;
             $media->options = json_encode($options);
 
-            if (isset($id)) {
+            if (isset($sid)) {
                 // Check if category has changed
                 if ($media->category_id != $category_id) {
-                    $old_cat_folder = public_path() . '/assets/medias/' . $media->category_id . '/' . $id;
-                    $new_cat_folder = public_path() . '/assets/medias/' . $category_id . '/' . $id;
+                    $old_cat_folder = public_path() . '/assets/medias/' . $media->category_id . '/' . $sid;
+                    $new_cat_folder = public_path() . '/assets/medias/' . $category_id . '/' . $sid;
                     // Create the directory
                     if (!file_exists($new_cat_folder)) {
                         mkdir($new_cat_folder, 0777, true);
@@ -143,14 +146,12 @@ class MediaController extends BaseController {
             // Create or save changes
             $media->save();
 
-            if(! empty($tags))
-            {
+            if (! empty($tags)) {
                 // Delete old tags
                 $media->deleteAllTags();
 
                 // Save tags
-                foreach(explode(',', $tags) as $tagName)
-                {
+                foreach (explode(',', $tags) as $tagName) {
                     $newTag = new Tag;
                     $tagName_trim = trim($tagName); // Trim space from beginning and end
                     $newTag->name = strtolower($tagName_trim);
@@ -158,10 +159,11 @@ class MediaController extends BaseController {
                 }
             }
 
-            if(\Input::hasFile('image'))
-            {
+            if (\Input::hasFile('image')) {
                 // Delete all existing images for edit
-                if(isset($id)) $media->deleteAllImages();
+                if (isset($sid)) {
+                    $media->deleteAllImages();
+                }
 
                 //set the name of the file
                 $originalFilename = $image->getClientOriginalName();
@@ -170,8 +172,7 @@ class MediaController extends BaseController {
                 //Upload the file
                 $isSuccess = $image->move('assets/img/medias', $filename);
 
-                if( $isSuccess )
-                {
+                if ($isSuccess) {
                     // create photo
                     $newimage = new Image;
                     $newimage->path = $filename;
@@ -180,15 +181,11 @@ class MediaController extends BaseController {
                     $media->images()->save($newimage);
                 }
             }
-
-        }//if it validate
-        else {
-            if(isset($id))
-            {
-                return \Redirect::to('admin/medias/edit/' . $id)->withErrors($validation)->withInput();
-            }
-            else
-            {
+        //if it validate
+        } else {
+            if (isset($sid)) {
+                return \Redirect::to('admin/medias/edit/' . $sid)->withErrors($validation)->withInput();
+            } else {
                 return \Redirect::to('admin/medias/create')->withErrors($validation)->withInput();
             }
         }
@@ -196,10 +193,10 @@ class MediaController extends BaseController {
         return \Redirect::to('admin/medias');
     }
 
-    public function getDelete($id)
+    public function getDelete($sid)
     {
         // Find the media using the user id
-        $media = Media::find($id);
+        $media = Media::find($sid);
 
         if ($media == null) {
             $errors = new \Illuminate\Support\MessageBag;
@@ -208,7 +205,7 @@ class MediaController extends BaseController {
         }
 
         // Check if used by Module
-        $mmms = ModuleMediaMembership::where('media_id', $id)->get();
+        $mmms = ModuleMediaMembership::where('media_id', $sid)->get();
         if (count($mmms) > 0) {
             // Check for orphan
             $orphan = true;
@@ -226,7 +223,7 @@ class MediaController extends BaseController {
         }
 
         // Delete old media
-        $media->deleteMediaFolder(public_path() . '/assets/medias/' . $media->category_id . '/' . $id);
+        $media->deleteMediaFolder(public_path() . '/assets/medias/' . $media->category_id . '/' . $sid);
 
         // Delete all images first
         $media->deleteAllImages();
@@ -240,9 +237,9 @@ class MediaController extends BaseController {
         return \Redirect::to('admin/medias');
     }
 
-    public function getUploadform($id)
+    public function getUploadform($sid)
     {
-        $media = Media::find($id);
+        $media = Media::find($sid);
 
         if ($media == null) {
             return \Redirect::to('admin/medias');
@@ -252,16 +249,16 @@ class MediaController extends BaseController {
             ->with('media', $media);
     }
 
-    public function postUpload($id)
+    public function postUpload($sid)
     {
-        $media = Media::find($id);
+        $media = Media::find($sid);
 
         if ($media == null) {
             die('{"OK": 0, "info": "Unable to find this media record in the database. It could have been deleted."}');
         }
 
-        $media_tmp_folder = public_path() . '/assets/medias/tmp/' . $media->category_id . '/' . $id;
-        $media_folder = public_path() . '/assets/medias/' . $media->category_id . '/' . $id;
+        $media_tmp_folder = public_path() . '/assets/medias/tmp/' . $media->category_id . '/' . $sid;
+        $media_folder = public_path() . '/assets/medias/' . $media->category_id . '/' . $sid;
 
         if (empty($_FILES) || $_FILES['file']['error']) {
             die('{"OK": 0, "info": "Failed to move uploaded file."}');
@@ -288,20 +285,23 @@ class MediaController extends BaseController {
         $out = @fopen("{$filePath}.part", $chunk == 0 ? "wb" : "ab");
         if ($out) {
             // Read binary input stream and append it to temp file
-            $in = @fopen($_FILES['file']['tmp_name'], "rb");
+            $sin = @fopen($_FILES['file']['tmp_name'], "rb");
 
-            if ($in) {
-              while ($buff = fread($in, 4096))
-              fwrite($out, $buff);
-            } else
-            die('{"OK": 0, "info": "Failed to open input stream."}');
+            if ($sin) {
+                while ($buff = fread($sin, 4096)) {
+                    fwrite($out, $buff);
+                }
+            } else {
+                die('{"OK": 0, "info": "Failed to open input stream."}');
+            }
 
-            @fclose($in);
+            @fclose($sin);
             @fclose($out);
 
             @unlink($_FILES['file']['tmp_name']);
-        } else
+        } else {
             die('{"OK": 0, "info": "Failed to open output stream."}');
+        }
 
 
         // Check if file has been uploaded
@@ -327,7 +327,7 @@ class MediaController extends BaseController {
                 mkdir($media_folder, 0777, true);
             }
 
-            \File::move( $filePath, $media_folder . "/$fileName" );
+            \File::move($filePath, $media_folder . "/$fileName");
 
             // Delete tmp media
             $media->deleteMediaFolder($media_tmp_folder);
@@ -336,9 +336,9 @@ class MediaController extends BaseController {
         die('{"OK": 1, "info": "Upload successful."}');
     }
 
-    public function getDuration($id)
+    public function getDuration($sid)
     {
-        $media = Media::find($id);
+        $media = Media::find($sid);
         $status = array();
         $status['data'] = '';
 
@@ -347,7 +347,7 @@ class MediaController extends BaseController {
             return $status;
         }
 
-        $media_folder = public_path() . '/assets/medias/' . $media->category_id . '/' . $id;
+        $media_folder = public_path() . '/assets/medias/' . $media->category_id . '/' . $sid;
         $file = $media_folder . "/" . $media->path;
 
         if (file_exists($file) && $media->mimetype != 'application/pdf') {
@@ -381,5 +381,4 @@ class MediaController extends BaseController {
 
         return $object;
     }
-
 }

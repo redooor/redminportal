@@ -1,4 +1,4 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\Pricelist;
 use Redooor\Redminportal\Membership;
@@ -8,7 +8,7 @@ use Redooor\Redminportal\ModuleMediaMembership;
 class ModuleControllerTest extends \RedminTestCase {
 
     public function tearDown() {
-        Mockery::close();
+        \Mockery::close();
     }
 
     public function testBlankIndex()

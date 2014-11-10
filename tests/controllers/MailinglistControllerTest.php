@@ -1,23 +1,46 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
-class MailinglistControllerTest extends \RedminTestCase {
-
-    public function testBlankIndex()
+class MailinglistControllerTest extends BaseControllerTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $crawler = $this->client->request('GET', '/admin/mailinglists');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('mailinglists');
+        $page = '/admin/mailinglists';
+        $viewhas = array(
+            'singular' => 'mailinglist',
+            'plural' => 'mailinglists'
+        );
+        $input = array(
+            'create' => array(
+                'email' => 'peter.lim@test.com',
+                'first_name' => 'Peter',
+                'last_name' => 'Lim'
+            ),
+            'edit' => array(
+                'id'        => 1,
+                'email' => 'peter2.lim@test.com',
+                'first_name' => 'Peter2',
+                'last_name' => 'Lim2'
+            )
+        );
+        
+        parent::__construct($page, $viewhas, $input);
     }
-
-    public function testCreate()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $crawler = $this->client->request('GET', '/admin/mailinglists/create');
-
-        $this->assertResponseOk();
+        parent::__destruct();
     }
-
-    public function testStoreCreateFails_NameBlank()
+    
+    /**
+     * Test (Fail): access postStore with no email
+     */
+    public function testStoreCreateFailsEmailBlank()
     {
         $input = array(
             'email'                 => '',
@@ -30,108 +53,37 @@ class MailinglistControllerTest extends \RedminTestCase {
         $this->assertRedirectedTo('/admin/mailinglists/create');
         $this->assertSessionHasErrors();
     }
-
-    public function testStoreCreateSuccess()
+    
+    /**
+     * Test (Pass): access getSort by email, asc
+     */
+    public function testSortByPass()
     {
-        $input = array(
-            'email'                 => 'peter.lim@test.com',
-            'first_name'            => 'Peter',
-            'last_name'             => 'Lim'
-        );
-
-        $this->call('POST', '/admin/mailinglists/store', $input);
-
-        $this->assertRedirectedTo('/admin/mailinglists');
-    }
-
-    public function testEditFail404()
-    {
-        $crawler = $this->client->request('GET', '/admin/mailinglists/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
-    }
-
-    public function testEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $crawler = $this->client->request('GET', '/admin/mailinglists/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('mailinglist');
-    }
-
-    public function testStoreEditFails()
-    {
-        $input = array(
-            'id'                    => 1,
-            'email'                 => 'peter.lim@test.com',
-            'first_name'            => 'Peter',
-            'last_name'             => 'Lim'
-        );
-
-        $this->call('POST', '/admin/mailinglists/store', $input);
-
-        $this->assertRedirectedTo('/admin/mailinglists');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testStoreEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $input = array(
-            'id'                    => 1,
-            'email'                 => 'peter2.lim@test.com',
-            'first_name'            => 'Peter2',
-            'last_name'             => 'Lim2'
-        );
-
-        $this->call('POST', '/admin/mailinglists/store', $input);
-
-        $this->assertRedirectedTo('/admin/mailinglists');
-    }
-
-    public function testDeleteFail()
-    {
-        $this->call('GET', '/admin/mailinglists/delete/1');
-
-        $this->assertRedirectedTo('/admin/mailinglists');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testDeleteSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $this->call('GET', '/admin/mailinglists/delete/1');
-
-        $this->assertRedirectedTo('/admin/mailinglists');
-    }
-
-    public function testSortBy_Success()
-    {
-        $crawler = $this->client->request('GET', '/admin/mailinglists/sort/email/asc');
+        $this->client->request('GET', '/admin/mailinglists/sort/email/asc');
 
         $this->assertResponseOk();
         $this->assertViewHas('mailinglists');
     }
-
-    public function testSortBy_SortByValidation_Fail()
+    
+    /**
+     * Test (Fail): access getSort, try to insert query as email
+     */
+    public function testSortByValidationFail()
     {
-        $crawler = $this->client->request('GET', '/admin/mailinglists/sort/->where("id", 5)/asc');
+        $this->client->request('GET', '/admin/mailinglists/sort/->where("id", 5)/asc');
 
         $this->assertRedirectedTo('/admin/mailinglists');
         $this->assertSessionHasErrors();
     }
-
-    public function testSortBy_OrderByValidation_Fail()
+    
+    /**
+     * Test (Fail): access getSort, try to insert query as orderBy
+     */
+    public function testSortByValidationOrderByFail()
     {
-        $crawler = $this->client->request('GET', '/admin/mailinglists/sort/email/->where("id", 5)');
+        $this->client->request('GET', '/admin/mailinglists/sort/email/->where("id", 5)');
 
         $this->assertRedirectedTo('/admin/mailinglists');
         $this->assertSessionHasErrors();
     }
-
 }

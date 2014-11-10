@@ -1,4 +1,4 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
 class PortfolioControllerTest extends \RedminTestCase {
 

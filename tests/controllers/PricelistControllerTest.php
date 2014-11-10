@@ -1,4 +1,6 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
+
+use Redooor\Redminportal\Pricelist;
 
 class PricelistControllerTest extends \RedminTestCase {
 
@@ -13,7 +15,7 @@ class PricelistControllerTest extends \RedminTestCase {
     public function testStoreCreateSuccess()
     {
         // Create a Pricelist first
-        $pricelist = new Redooor\Redminportal\Pricelist;
+        $pricelist = new Pricelist;
         $pricelist->module_id = 1;
         $pricelist->membership_id = 1;
         $pricelist->price = 1;
