@@ -1,7 +1,7 @@
 <?php
 
-class RedminSeeder extends Seeder {
-
+class RedminSeeder extends Seeder
+{
     /**
      * Run the database seeds.
      *
@@ -13,5 +13,4 @@ class RedminSeeder extends Seeder {
 
         $this->call('SentrySeeder');
     }
-
 }

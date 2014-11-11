@@ -1,51 +1,154 @@
 <?php namespace Redooor\Redminportal;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\View;
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
+class GroupController extends BaseController
+{
+    public function getIndex()
+    {
+        $groups = \Sentry::getGroupProvider()->createModel()->paginate(20);
+        return \View::make('redminportal::groups/view')->with('groups', $groups);
+    }
 
-class GroupController extends BaseController {
+    public function getCreate()
+    {
+        return \View::make('redminportal::groups/create');
+    }
+    
+    public function getEdit($sid)
+    {
+        try {
+            $group = \Sentry::findGroupById($sid);
+        } catch (\Exception $exp) {
+            return \View::make('redminportal::pages/404');
+        }
+        
+        if (isset($group->permissions['admin'])) {
+            $checkbox_admin = $this->checkPermission($group->permissions['admin']);
+        } else {
+            $checkbox_admin = false;
+        }
+        
+        if (isset($group->permissions['users'])) {
+            $checkbox_users = $this->checkPermission($group->permissions['users']);
+        } else {
+            $checkbox_users = false;
+        }
+        
+        return \View::make('redminportal::groups/edit')
+            ->with('group', $group)
+            ->with('checkbox_admin', $checkbox_admin)
+            ->with('checkbox_users', $checkbox_users);
+    }
+    
+    private function checkPermission($permission)
+    {
+        return ($permission == '1') ? true : false;
+    }
+    
+    public function postStore()
+    {
+        $sid = \Input::get('id');
+        
+        $rules = array(
+            'name' => 'required'
+        );
 
-	public function getIndex()
-	{
-		$groups = Sentry::getGroupProvider()->createModel()->paginate(20);
-		return View::make('redminportal::groups/view')->with('groups', $groups);
-	}
+        $validation = \Validator::make(\Input::all(), $rules);
 
-	public function getCreate()
-	{
-		return View::make('redminportal::groups/create');
-	}
+        if ($validation->passes()) {
+            $name 	= \Input::get('name');
+            $admin 	= (\Input::get('admin') == '' ? false : true);
+            $user 	= (\Input::get('user') == '' ? false : true);
 
-	public function postStore()
-	{
-		$name 	= Input::get('name');
-		$admin 	= (Input::get('admin') == 'yes' ? 1 : 0);
-		$user 	= (Input::get('user') == 'yes' ? 1 : 0);
+            if (isset($sid)) {
+                // Edit existing
+                try {
+                    $group = \Sentry::findGroupById($sid);
 
-		try
-		{
-		    // Create the group
-		    $group = Sentry::getGroupProvider()->create(array(
-		        'name'        => $name,
-		        'permissions' => array(
-		            'admin' => $admin,
-		            'users' => $user,
-		        ),
-		    ));
-		}
-		catch (Cartalyst\Sentry\Groups\NameRequiredException $e)
-		{
-		    return 'Name field is required';
-		}
-		catch (Cartalyst\Sentry\Groups\GroupExistsException $e)
-		{
-		    return 'Group already exists';
-		}
+                    // Update the group details
+                    $group->name = $name;
+                    $group->permissions = array(
+                        'admin' => $admin,
+                        'users' => $user
+                    );
+                    
+                    // Update the group
+                    if ($group->save()) {
+                        return \Redirect::to('admin/groups');
+                    } else {
+                        $errors = new \Illuminate\Support\MessageBag;
+                        $errors->add(
+                            'editError',
+                            "The portfolio cannot be updated due to some problem. Please try again."
+                        );
+                        return \Redirect::to('admin/groups/edit/' . $sid)->withErrors($errors)->withInput();
+                    }
+                } catch (\Exception $exp) {
+                    $errors = new \Illuminate\Support\MessageBag;
+                    $errors->add(
+                        'editError',
+                        "The group cannot be found because it does not exist or may have been deleted."
+                    );
+                    return \Redirect::to('/admin/groups')->withErrors($errors);
+                }
+            } else {
+                // Create new
+                try {
+                    // Create the group
+                    \Sentry::getGroupProvider()->create(array(
+                        'name'        => $name,
+                        'permissions' => array(
+                            'admin' => $admin,
+                            'users' => $user,
+                        ),
+                    ));
+                } catch (\Exception $exp) {
+                    $errors = new \Illuminate\Support\MessageBag;
+                    $errors->add(
+                        'editError',
+                        "The group cannot be created due to some problem. Please try again."
+                    );
+                    return \Redirect::to('admin/groups/create/' . $sid)->withErrors($errors)->withInput();
+                }
+            }
+            
+        //if it validate
+        } else {
+            if (isset($sid)) {
+                return \Redirect::to('admin/groups/edit/' . $sid)->withErrors($validation)->withInput();
+            } else {
+                return \Redirect::to('admin/groups/create')->withErrors($validation)->withInput();
+            }
+        }
 
-		return Redirect::to('admin/groups');
-	}
+        return \Redirect::to('admin/groups');
+    }
+    
+    public function getDelete($sid)
+    {
+        try {
+            $group = \Sentry::findGroupById($sid);
+            
+            // Find any users still in this group
+            $users = \Sentry::findAllUsersInGroup($group);
+            
+            if (count($users) > 0) {
+                // Prevent deletion of this group
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'deleteError',
+                    "The group cannot be deleted because it is in use. Try moving the users to another group first."
+                );
+                return \Redirect::to('/admin/groups')->withErrors($errors);
+            } else {
+                $group->delete();
+            }
+            
+        } catch (\Exception $exp) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('deleteError', "The group cannot be deleted at this time. It may have already been deleted.");
+            return \Redirect::to('/admin/groups')->withErrors($errors);
+        }
 
+        return \Redirect::to('admin/groups');
+    }
 }

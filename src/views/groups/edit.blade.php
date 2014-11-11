@@ -13,27 +13,27 @@
     @endif
 
 	{{ Form::open(array('action' => 'Redooor\Redminportal\GroupController@postStore', 'role' => 'form')) }}
-	
+    {{ Form::hidden('id', $group->id) }}
 		<div class="form-group">
 			{{ Form::label('name', 'Name') }}
-			{{ Form::text('name', null, array('class' => 'form-control', 'required')) }}
+			{{ Form::text('name', $group->name, array('class' => 'form-control', 'required')) }}
 		</div>
 		
 		<div class="form-group">
 			<label for="admin-checker" class="checkbox">
-				{{ Form::checkbox('admin', 'yes', true, array('id' => 'admin-checker')) }} Administrator
+				{{ Form::checkbox('admin', 'yes', $checkbox_admin, array('id' => 'admin-checker')) }} Administrator
 			</label>
 		</div>
 		
 		<div class="form-group">
 			<label for="user-checker" class="checkbox">
-				{{ Form::checkbox('user', 'yes', true, array('id' => 'user-checker')) }} User
+				{{ Form::checkbox('user', 'yes', $checkbox_users, array('id' => 'user-checker')) }} User
 			</label>
 		</div>
 		
 		<div class='form-actions text-right'>
 			{{ HTML::link('admin/groups', 'Cancel', array('class' => 'btn btn-default'))}}
-			{{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+			{{ Form::submit('Save Changes', array('class' => 'btn btn-primary')) }}
 		</div>
 		
 	{{ Form::close() }}

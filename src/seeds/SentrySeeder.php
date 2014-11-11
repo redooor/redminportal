@@ -2,8 +2,8 @@
 
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 
-class SentrySeeder extends Seeder {
-
+class SentrySeeder extends Seeder
+{
     public function run()
     {
         DB::table('users')->delete();
@@ -25,7 +25,7 @@ class SentrySeeder extends Seeder {
 
         Sentry::getGroupProvider()->create(array(
             'name'        => 'User',
-            'permissions' => array('user' => 1),
+            'permissions' => array('users' => 1),
         ));
 
         // Assign user permissions
@@ -33,5 +33,4 @@ class SentrySeeder extends Seeder {
         $adminGroup = Sentry::getGroupProvider()->findByName('Admin');
         $adminUser->addGroup($adminGroup);
     }
-
 }

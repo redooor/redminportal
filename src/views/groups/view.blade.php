@@ -1,6 +1,17 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
+    @if($errors->has())
+    <div class='alert alert-danger'>
+        We encountered the following errors:
+        <ul>
+            @foreach($errors->all() as $message)
+            <li>{{ $message }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
 	<div class="nav-controls text-right">
 		@if ($groups)
 		<span class="label label-default pull-left">
@@ -18,6 +29,7 @@
 					<th>Permissions</th>
 					<th>Created</th>
 					<th>Updated</th>
+                    <th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -27,6 +39,23 @@
 			        <td>{{ HTML::attributes($group->permissions) }}</td>
 			        <td>{{ $group->created_at }}</td>
 			        <td>{{ $group->updated_at }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                Action <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <a href="{{ URL::to('admin/groups/edit/' . $group->id) }}">
+                                        <i class="glyphicon glyphicon-edit"></i>Edit</a>
+                                </li>
+                                <li>
+                                    <a href="{{ URL::to('admin/groups/delete/' . $group->id) }}" class="btn-confirm">
+                                        <i class="glyphicon glyphicon-remove"></i>Delete</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
 			    </tr>
 			    @endforeach
 			</tbody>
