@@ -1,13 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\View;
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
-
-class UserController extends BaseController {
-
+class UserController extends BaseController
+{
     protected $model;
 
     public function __construct(User $user)
@@ -15,151 +9,213 @@ class UserController extends BaseController {
         $this->model = $user;
     }
 
-	public function getIndex()
-	{
-        $users = Sentry::getUserProvider()->createModel()->paginate(20);
+    public function getIndex()
+    {
+        $users = \Sentry::getUserProvider()->createModel()->paginate(20);
 
-		return View::make('redminportal::users/view')->with('users', $users);
-	}
+        return \View::make('redminportal::users/view')->with('users', $users);
+    }
 
-	public function getCreate()
-	{
-		$groups = Sentry::getGroupProvider()->findAll();
-		$roles = array();
+    public function getCreate()
+    {
+        $groups = \Sentry::getGroupProvider()->findAll();
+        $roles = array();
 
-		foreach ($groups as $group) {
-			$roles[$group->id] = $group->name;
-		}
+        foreach ($groups as $group) {
+            $roles[$group->id] = $group->name;
+        }
 
-		return View::make('redminportal::users/create')->with('roles', $roles);
-	}
+        return \View::make('redminportal::users/create')->with('roles', $roles);
+    }
+    
+    public function getEdit($sid)
+    {
+        try {
+            // Find the user using the user id
+            $user = \Sentry::findUserById($sid);
+        } catch (\Exception $exp) {
+            return \View::make('redminportal::pages/404');
+        }
+        
+        $groups = \Sentry::getGroupProvider()->findAll();
+        $roles = array();
 
-	public function postStore()
-	{
-	    $id = Input::get('id');
+        foreach ($groups as $group) {
+            $roles[$group->id] = $group->name;
+        }
+        
+        $group = $user->getGroups()->first();
+        
+        return \View::make('redminportal::users/edit')
+            ->with('roles', $roles)
+            ->with('user', $user)
+            ->with('group', $group);
+    }
 
-	    /*
-         * Validate
-         */
+    public function postStore()
+    {
+        $sid = \Input::get('id');
+        
         $rules = array(
             'first_name'    => 'required',
             'last_name'     => 'required',
-            'email'         => 'required',
-            'password'      => 'required|confirmed|min:6'
+            'email'         => 'required'
         );
+        
+        if (isset($sid)) {
+            $rules['password'] = 'confirmed|min:6';
+        } else {
+            $rules['password'] = 'required|confirmed|min:6';
+        }
 
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = \Validator::make(\Input::all(), $rules);
 
-        if( !$validation->passes() )
-        {
-            if(isset($id))
-            {
-                return Redirect::to('admin/users/edit/' . $id)->withErrors($validation)->withInput();
-            }
-            else
-            {
-                return Redirect::to('admin/users/create')->withErrors($validation)->withInput();
+        if (!$validation->passes()) {
+            if (isset($sid)) {
+                return \Redirect::to('admin/users/edit/' . $sid)->withErrors($validation)->withInput();
+            } else {
+                return \Redirect::to('admin/users/create')->withErrors($validation)->withInput();
             }
         }
 
-		$first_name	= Input::get('first_name');
-		$last_name	= Input::get('last_name');
-		$email 		= Input::get('email');
-		$password 	= Input::get('password');
-		$role 		= Input::get('role');
-		$activated 	= (Input::get('activated') == 'yes' ? 1 : 0);
+        $first_name    = \Input::get('first_name');
+        $last_name    = \Input::get('last_name');
+        $email         = \Input::get('email');
+        $password     = \Input::get('password');
+        $role         = \Input::get('role');
+        $activated     = (\Input::get('activated') == '' ? false : true);
+        
+        if (isset($sid)) {
+            // Edit existing
+            try {
+                $user = \Sentry::findUserById($sid);
 
-		try
-		{
-		    // Create the user
-		    $user = Sentry::getUserProvider()->create(array(
-		        'email'    		=> $email,
-		        'password' 		=> $password,
-		        'first_name'	=> $first_name,
-		        'last_name'		=> $last_name,
-		        'activated'		=> $activated,
-		    ));
+                $user->email = $email;
+                if ($password != '') {
+                    $user->password = $password;
+                }
+                $user->first_name = $first_name;
+                $user->last_name = $last_name;
+                $user->activated = $activated;
+                
+                // Find user's group
+                $old_group = $user->getGroups()->first();
+                $new_group = \Sentry::findGroupById($role);
 
-		    // Find the group using the group id
-		    $adminGroup = Sentry::getGroupProvider()->findById($role);
+                // Assign the group to the user
+                if ($old_group->id != $new_group->id) {
+                    $user->removeGroup($old_group);
+                    $user->addGroup($new_group);
+                }
 
-		    // Assign the group to the user
-		    $user->addGroup($adminGroup);
-		}
-		catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
-		{
-		    return 'Login field is required.';
-		}
-		catch (Cartalyst\Sentry\Users\PasswordRequiredException $e)
-		{
-		    return 'Password field is required.';
-		}
-		catch (Cartalyst\Sentry\Users\UserExistsException $e)
-		{
-		    return 'User with this login already exists.';
-		}
-		catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
-		{
-		    return 'Group was not found.';
-		}
+                // Update the user
+                if (! $user->save()) {
+                    $errors = new \Illuminate\Support\MessageBag;
+                    $errors->add(
+                        'editError',
+                        "The user cannot be updated due to some problem. Please try again."
+                    );
+                    return \Redirect::to('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
+                }
+            } catch (\Exception $exp) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The user cannot be found because it does not exist or may have been deleted."
+                );
+                return \Redirect::to('/admin/users')->withErrors($errors);
+            }
+        } else {
+            try {
+                // Create the user
+                $user = \Sentry::getUserProvider()->create(array(
+                    'email'      => $email,
+                    'password'   => $password,
+                    'first_name' => $first_name,
+                    'last_name'  => $last_name,
+                    'activated'  => $activated,
+                ));
 
-		return Redirect::to('admin/users');
-	}
+                // Find the group using the group id
+                $adminGroup = \Sentry::getGroupProvider()->findById($role);
 
-	public function getDelete($id)
-	{
-		try
-		{
-		    // Find the user using the user id
-		    $user = Sentry::getUserProvider()->findById($id);
+                // Assign the group to the user
+                $user->addGroup($adminGroup);
 
-		    // Delete the user
-		    $user->delete();
-		}
-		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-		{
-		    return 'User was not found.';
-		}
+            } catch (\Exception $exp) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The user cannot be created due to some problem. Please try again."
+                );
+                return \Redirect::to('admin/users/create')->withErrors($errors)->withInput();
+            }
+        }
 
-		return Redirect::to('admin/users');
-	}
+        return \Redirect::to('admin/users');
+    }
 
-    public function getActivate($id)
+    public function getDelete($sid)
     {
-        try
-        {
+        try {
             // Find the user using the user id
-            $user = Sentry::getUserProvider()->findById($id);
+            $user = \Sentry::getUserProvider()->findById($sid);
+
+            // Delete the user
+            $user->delete();
+            
+        } catch (\Exception $exp) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The user cannot be found because it does not exist or may have been deleted."
+            );
+            return \Redirect::to('/admin/users')->withErrors($errors);
+        }
+
+        return \Redirect::to('admin/users');
+    }
+
+    public function getActivate($sid)
+    {
+        try {
+            // Find the user using the user id
+            $user = \Sentry::getUserProvider()->findById($sid);
 
             // Activate the user
             $user->activated = true;
             $user->save();
+            
+        } catch (\Exception $exp) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The user cannot be found because it does not exist or may have been deleted."
+            );
+            return \Redirect::to('/admin/users')->withErrors($errors);
         }
-        catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-        {
-            return 'User was not found.';
-        }
-
-        return Redirect::to('admin/users');
+        return \Redirect::to('admin/users');
     }
 
-    public function getDeactivate($id)
+    public function getDeactivate($sid)
     {
-        try
-        {
+        try {
             // Find the user using the user id
-            $user = Sentry::getUserProvider()->findById($id);
+            $user = \Sentry::getUserProvider()->findById($sid);
 
             // Activate the user
             $user->activated = false;
             $user->save();
-        }
-        catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-        {
-            return 'User was not found.';
+            
+        } catch (\Exception $exp) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The user cannot be found because it does not exist or may have been deleted."
+            );
+            return \Redirect::to('/admin/users')->withErrors($errors);
         }
 
-        return Redirect::to('admin/users');
+        return \Redirect::to('admin/users');
     }
-
 }

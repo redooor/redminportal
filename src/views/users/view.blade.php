@@ -55,15 +55,19 @@
 								@if ($user->activated)
 									<li>
 										<a href="{{ URL::to('admin/users/deactivate/' . $user->id) }}">
-											<i class="glyphicon glyphicon-edit"></i>Deactivate</a>
+											<i class="glyphicon glyphicon-eye-close"></i>Deactivate</a>
 									</li>
 								@else
 									<li>
 										<a href="{{ URL::to('admin/users/activate/' . $user->id) }}">
-											<i class="glyphicon glyphicon-edit"></i>Activate</a>
+											<i class="glyphicon glyphicon-eye-open"></i>Activate</a>
 									</li>
 								@endif
 								<li>
+									<a href="{{ URL::to('admin/users/edit/' . $user->id) }}">
+										<i class="glyphicon glyphicon-edit"></i>Edit</a>
+								</li>
+                                <li>
 									<a href="{{ URL::to('admin/users/delete/' . $user->id) }}" class="btn-confirm">
 										<i class="glyphicon glyphicon-remove"></i>Delete</a>
 								</li>
