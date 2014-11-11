@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
-class ReportController extends BaseController {
-
+class ReportController extends BaseController
+{
     public function getIndex()
     {
         return \View::make('redminportal::pages/404');
@@ -34,9 +34,9 @@ class ReportController extends BaseController {
             return \Redirect::to('admin/mailinglists')->withErrors($errors);
         }
 
-        \Excel::create('Redooor_Mailinglist_Report', function($excel) use($data) {
+        \Excel::create('Redmin_Mailinglist_Report', function($excel) use ($data) {
 
-            $excel->sheet('Mailinglist Report', function($sheet) use($data) {
+            $excel->sheet('Mailinglist Report', function($sheet) use ($data) {
 
                 $sheet->loadView('redminportal::reports/mailinglist')->with('data', $data);
 
@@ -72,9 +72,9 @@ class ReportController extends BaseController {
             return \Redirect::to('admin/purchases')->withErrors($errors);
         }
 
-        \Excel::create('Redooor_Purchases_Report', function($excel) use($data) {
+        \Excel::create('Redmin_Purchases_Report', function($excel) use ($data) {
 
-            $excel->sheet('Purchases Report', function($sheet) use($data) {
+            $excel->sheet('Purchases Report', function($sheet) use ($data) {
 
                 $sheet->loadView('redminportal::reports/purchases')->with('data', $data);
 
@@ -82,5 +82,4 @@ class ReportController extends BaseController {
 
         })->download('csv');
     }
-
 }

@@ -22,7 +22,7 @@
                 @endif
                 <td>{{ str_replace(',', '.', $purchase->pricelist->module->name) }}</td>
                 <td>{{ str_replace(',', '.', $purchase->pricelist->membership->name) }}</td>
-                <td>{{ Rhelper::formatCurrency($purchase->paid, Lang::get('currency.currency')) }}</td>
+                <td>{{ Rhelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
                 <td>{{ str_replace(',', '.', $purchase->payment_status) }}</td>
                 <td>{{ str_replace(',', '.', $purchase->transaction_id) }}</td>
                 <td>{{ str_replace(',', '.', $purchase->created_at) }}</td>
