@@ -78,7 +78,7 @@ class GroupController extends BaseController
                         $errors = new \Illuminate\Support\MessageBag;
                         $errors->add(
                             'editError',
-                            "The portfolio cannot be updated due to some problem. Please try again."
+                            "The group cannot be updated due to some problem. Please try again."
                         );
                         return \Redirect::to('admin/groups/edit/' . $sid)->withErrors($errors)->withInput();
                     }
@@ -107,7 +107,7 @@ class GroupController extends BaseController
                         'editError',
                         "The group cannot be created due to some problem. Please try again."
                     );
-                    return \Redirect::to('admin/groups/create/' . $sid)->withErrors($errors)->withInput();
+                    return \Redirect::to('admin/groups/create')->withErrors($errors)->withInput();
                 }
             }
             
