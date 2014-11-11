@@ -5,28 +5,53 @@ use Redooor\Redminportal\Membership;
 use Redooor\Redminportal\Media;
 use Redooor\Redminportal\ModuleMediaMembership;
 
-class ModuleControllerTest extends \RedminTestCase {
-
-    public function tearDown() {
-        \Mockery::close();
-    }
-
-    public function testBlankIndex()
+class ModuleControllerTest extends BaseControllerTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $crawler = $this->client->request('GET', '/admin/modules');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('modules');
+        $page = '/admin/modules';
+        $viewhas = array(
+            'singular' => 'module',
+            'plural' => 'modules'
+        );
+        $input = array(
+            'create' => array(
+                'name'                  => 'This is title',
+                'short_description'     => 'This is body',
+                'cn_name'               => 'CN name',
+                'cn_short_description'  => 'CN short body',
+                'category_id'           => 1,
+                'sku'                   => 'UNIQUESKU001'
+            ),
+            'edit' => array(
+                'id'   => 1,
+                'name'                  => 'This is title',
+                'short_description'     => 'This is body',
+                'cn_name'               => 'CN name',
+                'cn_short_description'  => 'CN short body',
+                'category_id'           => 1,
+                'sku'                   => 'UNIQUESKU001'
+            )
+        );
+        
+        parent::__construct($page, $viewhas, $input);
     }
-
-    public function testCreate()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $crawler = $this->client->request('GET', '/admin/modules/create');
-
-        $this->assertResponseOk();
+        parent::__destruct();
     }
-
-    public function testStoreCreateFails_NameBlank()
+    
+    /**
+     * Test (Fail): access postStore with input but no name
+     */
+    public function testStoreCreateFailsNameBlank()
     {
         $input = array(
             'name'                  => '',
@@ -42,94 +67,11 @@ class ModuleControllerTest extends \RedminTestCase {
         $this->assertRedirectedTo('/admin/modules/create');
         $this->assertSessionHasErrors();
     }
-
-    public function testStoreCreateSuccess()
-    {
-        $input = array(
-            'name'                  => 'This is title',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1,
-            'sku'                   => 'UNIQUESKU001'
-        );
-
-        $this->call('POST', '/admin/modules/store', $input);
-
-        $this->assertRedirectedTo('/admin/modules');
-    }
-
-    public function testEditFail404()
-    {
-        $crawler = $this->client->request('GET', '/admin/modules/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
-    }
-
-    public function testEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $crawler = $this->client->request('GET', '/admin/modules/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('module');
-    }
-
-    public function testStoreEditFails()
-    {
-        $input = array(
-            'id'                    => 1,
-            'name'                  => 'This is title',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1
-        );
-
-        $this->call('POST', '/admin/modules/store', $input);
-
-        $this->assertRedirectedTo('/admin/modules/edit/1');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testStoreEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $input = array(
-            'id'                    => 1,
-            'name'                  => 'This is title',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1
-        );
-
-        $this->call('POST', '/admin/modules/store', $input);
-
-        $this->assertRedirectedTo('/admin/modules/edit/1');
-    }
-
-    public function testDeleteFail()
-    {
-        $this->call('GET', '/admin/modules/delete/1');
-
-        $this->assertRedirectedTo('/admin/modules');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testDeleteSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $this->call('GET', '/admin/modules/delete/1');
-
-        $this->assertRedirectedTo('/admin/modules');
-    }
-
-    public function testStorePricingSuccess()
+    
+    /**
+     * Test (Pass): access postStore to create with input and price for 1 membership
+     */
+    public function testStorePricingPass()
     {
         // Add membership
         $membership = new Membership;
@@ -159,9 +101,12 @@ class ModuleControllerTest extends \RedminTestCase {
         $this->assertTrue($pricelist->price == 99.99);
     }
 
-    public function testEditPricingSuccess()
+    /**
+     * Test (Pass): access postStore to edit with input and price for 1 membership
+     */
+    public function testEditPricingPass()
     {
-        $this->testStorePricingSuccess();
+        $this->testStorePricingPass();
 
         $input = array(
             'id'                    => 1,
@@ -185,8 +130,11 @@ class ModuleControllerTest extends \RedminTestCase {
         $this->assertTrue($pricelist->membership_id == 1);
         $this->assertTrue($pricelist->price == 88.88);
     }
-
-    public function testStoreMediasSuccess()
+    
+    /**
+     * Test (Pass): access postStore to create with input, price for 1 membership and medias
+     */
+    public function testStoreMediasPass()
     {
         // Add membership
         $membership = new Membership;
@@ -202,7 +150,7 @@ class ModuleControllerTest extends \RedminTestCase {
         $media->short_description = 'This is the body';
         $media->category_id = 1;
         $media->active = true;
-        $result = $media->save();
+        $media->save();
 
         $input = array(
             'name'                  => 'This is title',

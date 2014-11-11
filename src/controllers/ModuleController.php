@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
-class ModuleController extends BaseController {
-
+class ModuleController extends BaseController
+{
     protected $model;
 
     public function __construct(Module $module)
@@ -16,9 +16,9 @@ class ModuleController extends BaseController {
         return \View::make('redminportal::modules/view')->with('modules', $modules);
     }
 
-    public function getMedias($id)
+    public function getMedias($sid)
     {
-        $medias = Media::where('category_id', $id)->orderBy('name')->get();
+        $medias = Media::where('category_id', $sid)->orderBy('name')->get();
         $memberships = Membership::orderBy('rank')->get();
 
         return \View::make('redminportal::modules/medias')
@@ -26,9 +26,9 @@ class ModuleController extends BaseController {
             ->with('memberships', $memberships);
     }
 
-    public function getEditmedias($id, $module_id)
+    public function getEditmedias($sid, $module_id)
     {
-        $medias = Media::where('category_id', $id)->orderBy('name')->get();
+        $medias = Media::where('category_id', $sid)->orderBy('name')->get();
         $memberships = Membership::orderBy('rank')->get();
 
         $modMediaMembership = array();
@@ -51,10 +51,10 @@ class ModuleController extends BaseController {
             ->with('memberships', Membership::orderBy('rank')->get());
     }
 
-    public function getEdit($id)
+    public function getEdit($sid)
     {
         // Find the module using the user id
-        $module = Module::find($id);
+        $module = Module::find($sid);
 
         // No such id
         if ($module == null) {
@@ -64,26 +64,21 @@ class ModuleController extends BaseController {
         $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
 
         $tagString = "";
-        foreach ($module->tags as $tag)
-        {
-            if(! empty($tagString))
-            {
+        foreach ($module->tags as $tag) {
+            if (! empty($tagString)) {
                 $tagString .= ",";
             }
 
             $tagString .= $tag->name;
         }
 
-		if(empty($module->options))
-        {
+        if (empty($module->options)) {
             $module_cn = (object) array(
                 'name'                  => $module->name,
                 'short_description'     => $module->short_description,
                 'long_description'      => $module->long_description
             );
-        }
-        else
-        {
+        } else {
             $module_cn = json_decode($module->options);
         }
 
@@ -109,7 +104,7 @@ class ModuleController extends BaseController {
 
         return \View::make('redminportal::modules/edit')
             ->with('module', $module)
-			->with('module_cn', $module_cn)
+            ->with('module_cn', $module_cn)
             ->with('imageUrl', 'assets/img/modules/')
             ->with('categories', $categories)
             ->with('tagString', $tagString)
@@ -118,45 +113,51 @@ class ModuleController extends BaseController {
 
     public function postStore()
     {
-        $id = \Input::get('id');
-
-        /*
-         * Validate
-         */
+        $sid = \Input::get('id');
+        
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:modules,name' . (isset($id) ? ',' . $id : ''),
+            'name'              => 'required|unique:modules,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description' => 'required',
-            'sku'               => 'required|alpha_dash|unique:modules,sku' . (isset($id) ? ',' . $id : ''),
+            'sku'               => 'required|alpha_dash|unique:modules,sku' . (isset($sid) ? ',' . $sid : ''),
             'category_id'       => 'required',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
         );
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if( $validation->passes() )
-        {
+        if ($validation->passes()) {
             $name               = \Input::get('name');
             $sku                = \Input::get('sku');
             $short_description  = \Input::get('short_description');
             $long_description   = \Input::get('long_description');
             $image              = \Input::file('image');
-            $featured           = (\Input::get('featured') == '' ? FALSE : TRUE);
-            $active             = (\Input::get('active') == '' ? FALSE : TRUE);
+            $featured           = (\Input::get('featured') == '' ? false : true);
+            $active             = (\Input::get('active') == '' ? false : true);
             $category_id        = \Input::get('category_id');
             $tags               = \Input::get('tags');
 
-			$cn_name               = \Input::get('cn_name');
+            $cn_name               = \Input::get('cn_name');
             $cn_short_description  = \Input::get('cn_short_description');
             $cn_long_description   = \Input::get('cn_long_description');
 
-			$options = array(
+            $options = array(
                 'name'                  => $cn_name,
                 'short_description'     => $cn_short_description,
                 'long_description'      => $cn_long_description
             );
 
-            $module = (isset($id) ? Module::find($id) : new Module);
+            $module = (isset($sid) ? Module::find($sid) : new Module);
+            
+            if ($module == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The module cannot be found because it does not exist or may have been deleted."
+                );
+                return \Redirect::to('/admin/modules')->withErrors($errors);
+            }
+            
             $module->name = $name;
             $module->sku = $sku;
             $module->short_description = $short_description;
@@ -170,7 +171,7 @@ class ModuleController extends BaseController {
             $module->save();
 
             // Save pricelist
-            foreach(Membership::all() as $membership) {
+            foreach (Membership::all() as $membership) {
                 $pricelist = Pricelist::where('module_id', $module->id)
                     ->where('membership_id', $membership->id)->first();
 
@@ -197,18 +198,16 @@ class ModuleController extends BaseController {
             // Save medias
             $media_checkbox = \Input::get('media_checkbox');
 
-            if (isset($id)) {
+            if (isset($sid)) {
                 // Remove all existing medias
                 $existing_medias = ModuleMediaMembership::where('module_id', $module->id)->get();
-                foreach($existing_medias as $remove_media) {
+                foreach ($existing_medias as $remove_media) {
                     $remove_media->delete();
                 }
             }
 
-            if(is_array($media_checkbox))
-            {
-               foreach($media_checkbox as $check)
-               {
+            if (is_array($media_checkbox)) {
+                foreach ($media_checkbox as $check) {
                     $media_pair = explode('_', $check);
                     $media_id = $media_pair[0];
                     $membership_id = $media_pair[1];
@@ -218,17 +217,15 @@ class ModuleController extends BaseController {
                     $modMediaMembership->membership_id = $membership_id;
                     $modMediaMembership->media_id = $media_id;
                     $modMediaMembership->save();
-               }
-           }
+                }
+            }
 
-            if(! empty($tags))
-            {
+            if (! empty($tags)) {
                 // Delete old tags
                 $module->deleteAllTags();
 
                 // Save tags
-                foreach(explode(',', $tags) as $tagName)
-                {
+                foreach (explode(',', $tags) as $tagName) {
                     $newTag = new Tag;
                     $tagName_trim = trim($tagName); // Trim space from beginning and end
                     $newTag->name = strtolower($tagName_trim);
@@ -236,10 +233,11 @@ class ModuleController extends BaseController {
                 }
             }
 
-            if(\Input::hasFile('image'))
-            {
+            if (\Input::hasFile('image')) {
                 // Delete all existing images for edit
-                if(isset($id)) $module->deleteAllImages();
+                if (isset($sid)) {
+                    $module->deleteAllImages();
+                }
 
                 //set the name of the file
                 $originalFilename = $image->getClientOriginalName();
@@ -248,8 +246,7 @@ class ModuleController extends BaseController {
                 //Upload the file
                 $isSuccess = $image->move('assets/img/modules', $filename);
 
-                if( $isSuccess )
-                {
+                if ($isSuccess) {
                     // create photo
                     $newimage = new Image;
                     $newimage->path = $filename;
@@ -258,15 +255,11 @@ class ModuleController extends BaseController {
                     $module->images()->save($newimage);
                 }
             }
-
-        }//if it validate
-        else {
-            if(isset($id))
-            {
-                return \Redirect::to('admin/modules/edit/' . $id)->withErrors($validation)->withInput();
-            }
-            else
-            {
+        //if it validate
+        } else {
+            if (isset($sid)) {
+                return \Redirect::to('admin/modules/edit/' . $sid)->withErrors($validation)->withInput();
+            } else {
                 return \Redirect::to('admin/modules/create')->withErrors($validation)->withInput();
             }
         }
@@ -274,10 +267,10 @@ class ModuleController extends BaseController {
         return \Redirect::to('admin/modules');
     }
 
-    public function getDelete($id)
+    public function getDelete($sid)
     {
         // Find the module using the user id
-        $module = Module::find($id);
+        $module = Module::find($sid);
 
         if ($module == null) {
             $errors = new \Illuminate\Support\MessageBag;
@@ -286,12 +279,15 @@ class ModuleController extends BaseController {
         }
 
         $purchases = UserPricelist::join('pricelists', 'pricelists.id', '=', 'user_pricelists.pricelist_id')
-            ->where('pricelists.module_id', $id)
+            ->where('pricelists.module_id', $sid)
             ->get();
 
         if (count($purchases) > 0) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "This module has been purchased before. You cannot delete it. Please change disable it instead.");
+            $errors->add(
+                'deleteError',
+                "This module has been purchased before. You cannot delete it. Please change disable it instead."
+            );
             return \Redirect::to('admin/modules')->withErrors($errors);
         }
 
@@ -302,12 +298,12 @@ class ModuleController extends BaseController {
         $module->deleteAllTags();
 
         // Delete all pricelist
-        foreach (Pricelist::where('module_id', $id)->get() as $pricelist) {
+        foreach (Pricelist::where('module_id', $sid)->get() as $pricelist) {
             $pricelist->delete();
         }
 
         // Delete all media links
-        foreach (ModuleMediaMembership::where('module_id', $id)->get() as $mmm) {
+        foreach (ModuleMediaMembership::where('module_id', $sid)->get() as $mmm) {
             $mmm->delete();
         }
 
@@ -316,5 +312,4 @@ class ModuleController extends BaseController {
 
         return \Redirect::to('admin/modules');
     }
-
 }

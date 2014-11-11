@@ -1,23 +1,44 @@
 <?php namespace Redooor\Redminportal\Test;
 
-class MembershipControllerTest extends \RedminTestCase {
-
-    public function testBlankIndex()
+class MembershipControllerTest extends BaseControllerTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $crawler = $this->client->request('GET', '/admin/memberships');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('memberships');
+        $page = '/admin/memberships';
+        $viewhas = array(
+            'singular' => 'membership',
+            'plural' => 'memberships'
+        );
+        $input = array(
+            'create' => array(
+                'name' => 'This is title',
+                'rank' => 1
+            ),
+            'edit' => array(
+                'id'   => 1,
+                'name' => 'This is title',
+                'rank' => 1
+            )
+        );
+        
+        parent::__construct($page, $viewhas, $input);
     }
-
-    public function testCreate()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $crawler = $this->client->request('GET', '/admin/memberships/create');
-
-        $this->assertResponseOk();
+        parent::__destruct();
     }
-
-    public function testStoreCreateFails_NameBlank()
+    
+    /**
+     * Test (Fail): access postStore with input but no name
+     */
+    public function testStoreCreateFailsNameBlank()
     {
         $input = array(
             'name'     => '',
@@ -29,40 +50,13 @@ class MembershipControllerTest extends \RedminTestCase {
         $this->assertRedirectedTo('/admin/memberships/create');
         $this->assertSessionHasErrors();
     }
-
-    public function testStoreCreateSuccess()
-    {
-        $input = array(
-            'name'     => 'This is title',
-            'rank'     => 1
-        );
-
-        $this->call('POST', '/admin/memberships/store', $input);
-
-        $this->assertRedirectedTo('/admin/memberships');
-    }
-
-    public function testEditFail404()
-    {
-        $crawler = $this->client->request('GET', '/admin/memberships/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
-    }
-
-    public function testEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $crawler = $this->client->request('GET', '/admin/memberships/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('membership');
-    }
-
+    
+    /**
+     * Test (Fail): access postStore with input but no rank
+     */
     public function testStoreEditFails()
     {
-        $this->testStoreCreateSuccess();
+        $this->testStoreCreatePass();
 
         $input = array(
             'id'      => 1,
@@ -74,37 +68,4 @@ class MembershipControllerTest extends \RedminTestCase {
         $this->assertRedirectedTo('/admin/memberships/edit/1');
         $this->assertSessionHasErrors();
     }
-
-    public function testStoreEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $input = array(
-            'id'      => 1,
-            'name'    => 'This is title',
-            'rank'    => 2
-        );
-
-        $this->call('POST', '/admin/memberships/store', $input);
-
-        $this->assertRedirectedTo('/admin/memberships');
-    }
-
-    public function testDeleteFail()
-    {
-        $this->call('GET', '/admin/memberships/delete/1');
-
-        $this->assertRedirectedTo('/admin/memberships');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testDeleteSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $this->call('GET', '/admin/memberships/delete/1');
-
-        $this->assertRedirectedTo('/admin/memberships');
-    }
-
 }

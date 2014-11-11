@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
-class MembershipController extends BaseController {
-
+class MembershipController extends BaseController
+{
     protected $model;
 
     public function __construct(Membership $membership)
@@ -21,12 +21,12 @@ class MembershipController extends BaseController {
         return \View::make('redminportal::memberships/create');
     }
 
-    public function getEdit($id)
+    public function getEdit($sid)
     {
         // Find the membership using the user id
-        $membership = Membership::find($id);
+        $membership = Membership::find($sid);
 
-        if($membership == null) {
+        if ($membership == null) {
             return \View::make('redminportal::pages/404');
         }
 
@@ -36,37 +36,39 @@ class MembershipController extends BaseController {
 
     public function postStore()
     {
-        $id = \Input::get('id');
-
-        /*
-         * Validate
-         */
+        $sid = \Input::get('id');
+        
         $rules = array(
-            'name'   => 'required|unique:memberships,name' . (isset($id) ? ',' . $id : ''),
+            'name'   => 'required|unique:memberships,name' . (isset($sid) ? ',' . $sid : ''),
             'rank'   => 'required|min:0',
         );
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if( $validation->passes() )
-        {
+        if ($validation->passes()) {
             $name      = \Input::get('name');
             $rank      = \Input::get('rank');
 
-            $membership = (isset($id) ? Membership::find($id) : new Membership);
+            $membership = (isset($sid) ? Membership::find($sid) : new Membership);
+            
+            if ($membership == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The membership cannot be found because it does not exist or may have been deleted."
+                );
+                return \Redirect::to('/admin/memberships')->withErrors($errors);
+            }
+            
             $membership->name = $name;
             $membership->rank = $rank;
 
             $membership->save();
-
-        }//if it validate
-        else {
-            if(isset($id))
-            {
-                return \Redirect::to('admin/memberships/edit/' . $id)->withErrors($validation)->withInput();
-            }
-            else
-            {
+        //if it validate
+        } else {
+            if (isset($sid)) {
+                return \Redirect::to('admin/memberships/edit/' . $sid)->withErrors($validation)->withInput();
+            } else {
                 return \Redirect::to('admin/memberships/create')->withErrors($validation)->withInput();
             }
         }
@@ -74,10 +76,10 @@ class MembershipController extends BaseController {
         return \Redirect::to('admin/memberships');
     }
 
-    public function getDelete($id)
+    public function getDelete($sid)
     {
         // Find the membership using the user id
-        $membership = Membership::find($id);
+        $membership = Membership::find($sid);
 
         if ($membership == null) {
             $errors = new \Illuminate\Support\MessageBag;
@@ -86,7 +88,7 @@ class MembershipController extends BaseController {
         }
 
         // Cannot delete if in use
-        $modMediaMembership = ModuleMediaMembership::where('membership_id', $id)->get();
+        $modMediaMembership = ModuleMediaMembership::where('membership_id', $sid)->get();
         if (count($modMediaMembership) > 0) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The membership cannot be deleted because it is in used.");
@@ -98,5 +100,4 @@ class MembershipController extends BaseController {
 
         return \Redirect::to('admin/memberships');
     }
-
 }
