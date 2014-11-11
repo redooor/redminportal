@@ -65,20 +65,10 @@
             @endforeach
             </tbody>
         </table>
+        <div class="text-center">
         {{ $portfolios->links() }}
+        </div>
     @else
         <div class="alert alert-info">No portfolio found</div>
     @endif
-@stop
-
-@section('footer')
-    <script>
-        !function ($) {
-            $(function(){
-                // Add pagination class to ul
-                $('div.pagination > ul').addClass('pagination');
-                $('div.pagination').removeClass('pagination').addClass('text-center');
-            })
-        }(window.jQuery);
-    </script>
 @stop

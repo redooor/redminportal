@@ -104,7 +104,9 @@
             @endforeach
             </tbody>
         </table>
+        <div class="text-center">
         {{ $mailinglists->links() }}
+        </div>
     @else
         <div class="alert alert-info">No mailing list found</div>
     @endif
@@ -153,9 +155,6 @@
     <script>
         !function ($) {
             $(function(){
-                // Add pagination class to ul
-                $('div.pagination > ul').addClass('pagination');
-                $('div.pagination').removeClass('pagination').addClass('text-center');
                 // For datepicker
                 $( '.datepicker' ).datepicker({ dateFormat: 'dd/mm/yy' });
                 $('.datepicker').css('z-index', '1051'); // make picker on top of modal window

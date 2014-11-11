@@ -60,7 +60,9 @@
 			    @endforeach
 			</tbody>
 	    </table>
+        <div class="text-center">
 		{{ $groups->links() }}
+        </div>
 	@else
 		<div class="alert alert-info">No group found</div>
 	@endif

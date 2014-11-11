@@ -89,7 +89,9 @@
 		    @endforeach
 		    </tbody>
 	    </table>
+        <div class="text-center">
 		{{ $users->links() }}
+        </div>
 	@else
 		<div class="alert alert-info">No user found</div>
 	@endif

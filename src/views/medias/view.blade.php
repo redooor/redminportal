@@ -110,7 +110,9 @@
             @endforeach
             </tbody>
         </table>
+        <div class="text-center">
         {{ $medias->links() }}
+        </div>
     @else
         <div class="alert alert-info">No media found</div>
     @endif
@@ -120,9 +122,6 @@
     <script>
         !function ($) {
             $(function(){
-                // Add pagination class to ul
-                $('div.pagination > ul').addClass('pagination');
-                $('div.pagination').removeClass('pagination').addClass('text-center');
                 // Tooltip
                 $('.bs-tooltip').tooltip();
                 // Get all media durations if duration is empty

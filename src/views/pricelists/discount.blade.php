@@ -67,7 +67,9 @@
         </tbody>
     </table>
     @if (count($pricelists) > 0)
+        <div class="text-center">
         {{ $pricelists->links() }}
+        </div>
     @endif
     {{ Form::open(array('action' => 'Redooor\Redminportal\PricelistController@postDiscount', 'role' => 'form', 'id' => 'form_add')) }}
         {{ Form::hidden('pricelist_id', Input::old('pricelist_id'), array('id' => 'pricelist_id')) }}
@@ -85,9 +87,6 @@
     <script>
         !function ($) {
             $(function(){
-                // Add pagination class to ul
-                $('div.pagination > ul').addClass('pagination');
-                $('div.pagination').removeClass('pagination').addClass('text-center');
                 // Date picker
                 $( ".datepicker" ).datepicker({ dateFormat: "dd/mm/yy" });
 
