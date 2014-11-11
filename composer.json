@@ -15,8 +15,7 @@
         "cartalyst/sentry": "2.1.*",
         "doctrine/dbal": "~2.3",
         "imagine/imagine": "0.5.*",
-        "maatwebsite/excel": "1.*",
-        "phansys/getid3": "2.1.*@dev"
+        "maatwebsite/excel": "1.*"
     },
     "require-dev": {
         "twbs/bootstrap": "3.1.*",

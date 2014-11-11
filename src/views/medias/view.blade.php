@@ -18,7 +18,6 @@
             {{ $medias->getFrom() . ' to ' . $medias->getTo() . ' ( total ' . $medias->getTotal() . ' )' }}
         </span>
         @endif
-        <a id="rd-media-get-all-duration" class="btn btn-default">Get Durations</a>
         {{ HTML::link('admin/medias/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
 
@@ -35,7 +34,6 @@
                     <th>Featured</th>
                     <th>Active</th>
                     <th>Media File</th>
-                    <th>Duration</th>
                     <th class='hide'>Photos</th>
                     <th class='hide'>Updated</th>
                     <th>Action</th>
@@ -74,10 +72,6 @@
                         @else
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
-                    </td>
-                    <td>
-                        <span class="rd-media-duration"
-                            data-url="{{ URL::to('admin/medias/duration/' . $media->id) }}">@if(isset(json_decode($media->options)->duration)){{ json_decode($media->options)->duration }}@endif</span>
                     </td>
                     <td class='hide'>
                         @foreach( $media->images as $image )
@@ -124,28 +118,6 @@
             $(function(){
                 // Tooltip
                 $('.bs-tooltip').tooltip();
-                // Get all media durations if duration is empty
-                $(document).on('click', '#rd-media-get-all-duration', function(e) {
-                    e.preventDefault();
-                    // Loop through all media's duration
-                    $('.rd-media-duration').each(function() {
-                        var obj = $(this);
-                        if (obj.text() == '') {
-                            var url = obj.attr('data-url');
-                            obj.text('Fetching');
-                            $.get(url, function(data) {
-                                if (data.status == 'success') {
-                                    obj.text(data.data);
-                                } else {
-                                    obj.text('Error');
-                                }
-                            })
-                            .fail(function() {
-                                obj.text('Failed connection')
-                            });
-                        }
-                    });
-                });
             })
         }(window.jQuery);
     </script>
