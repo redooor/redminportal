@@ -2,11 +2,11 @@
 
 use Redooor\Redminportal\Pricelist;
 
-class PricelistControllerTest extends \RedminTestCase {
-
+class PricelistControllerTest extends \RedminTestCase
+{
     public function testBlankIndex()
     {
-        $crawler = $this->client->request('GET', '/admin/pricelists');
+        $this->client->request('GET', '/admin/pricelists');
 
         $this->assertResponseOk();
         $this->assertViewHas('pricelists');
@@ -49,5 +49,4 @@ class PricelistControllerTest extends \RedminTestCase {
 
         $this->assertRedirectedTo('/admin/pricelists');
     }
-
 }

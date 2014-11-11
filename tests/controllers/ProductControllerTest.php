@@ -1,23 +1,52 @@
 <?php namespace Redooor\Redminportal\Test;
 
-class ProductControllerTest extends \RedminTestCase {
-
-    public function testBlankIndex()
+class ProductControllerTest extends BaseControllerTest
+{
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $crawler = $this->client->request('GET', '/admin/products');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('products');
+        $page = '/admin/products';
+        $viewhas = array(
+            'singular' => 'product',
+            'plural' => 'products'
+        );
+        $input = array(
+            'create' => array(
+                'name'                  => 'This is title',
+                'short_description'     => 'This is body',
+                'cn_name'               => 'CN name',
+                'cn_short_description'  => 'CN short body',
+                'category_id'           => 1,
+                'sku'                   => 'UNIQUESKU001'
+            ),
+            'edit' => array(
+                'id'   => 1,
+                'name'                  => 'This is title',
+                'short_description'     => 'This is body',
+                'cn_name'               => 'CN name',
+                'cn_short_description'  => 'CN short body',
+                'category_id'           => 1,
+                'sku'                   => 'UNIQUESKU001'
+            )
+        );
+        
+        parent::__construct($page, $viewhas, $input);
     }
-
-    public function testCreate()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        $crawler = $this->client->request('GET', '/admin/products/create');
-
-        $this->assertResponseOk();
+        parent::__destruct();
     }
-
-    public function testStoreCreateFails_NameBlank()
+    
+    /**
+     * Test (Fail): access postStore with input but no name
+     */
+    public function testStoreCreateFailsNameBlank()
     {
         $input = array(
             'name'                  => '',
@@ -33,92 +62,4 @@ class ProductControllerTest extends \RedminTestCase {
         $this->assertRedirectedTo('/admin/products/create');
         $this->assertSessionHasErrors();
     }
-
-    public function testStoreCreateSuccess()
-    {
-        $input = array(
-            'name'                  => 'This is title',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1,
-            'sku'                   => 'UNIQUESKU001'
-        );
-
-        $this->call('POST', '/admin/products/store', $input);
-
-        $this->assertRedirectedTo('/admin/products');
-    }
-
-    public function testEditFail404()
-    {
-        $crawler = $this->client->request('GET', '/admin/products/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
-    }
-
-    public function testEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $crawler = $this->client->request('GET', '/admin/products/edit/1');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('product');
-    }
-
-    public function testStoreEditFails()
-    {
-        $input = array(
-            'id'                    => 1,
-            'name'                  => 'This is title',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1
-        );
-
-        $this->call('POST', '/admin/products/store', $input);
-
-        $this->assertRedirectedTo('/admin/products/edit/1');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testStoreEditSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $input = array(
-            'id'                    => 1,
-            'name'                  => 'This is title',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1,
-            'price'                 => 10
-        );
-
-        $this->call('POST', '/admin/products/store', $input);
-
-        $this->assertRedirectedTo('/admin/products/edit/1');
-    }
-
-    public function testDeleteFail()
-    {
-        $this->call('GET', '/admin/products/delete/1');
-
-        $this->assertRedirectedTo('/admin/products');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testDeleteSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $this->call('GET', '/admin/products/delete/1');
-
-        $this->assertRedirectedTo('/admin/products');
-    }
-
 }

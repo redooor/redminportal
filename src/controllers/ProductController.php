@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\View;
 use Cartalyst\Sentry\Facades\Laravel\Sentry;
 
-class ProductController extends BaseController {
-
+class ProductController extends BaseController
+{
     protected $model;
 
     public function __construct(Product $product)
@@ -31,10 +31,10 @@ class ProductController extends BaseController {
         return View::make('redminportal::products/create')->with('categories', $categories);
     }
 
-    public function getEdit($id)
+    public function getEdit($sid)
     {
         // Find the product using the user id
-        $product = Product::find($id);
+        $product = Product::find($sid);
 
         // No such id
         if ($product == null) {
@@ -44,32 +44,27 @@ class ProductController extends BaseController {
         $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
 
         $tagString = "";
-        foreach ($product->tags as $tag)
-        {
-            if(! empty($tagString))
-            {
+        foreach ($product->tags as $tag) {
+            if (! empty($tagString)) {
                 $tagString .= ",";
             }
 
             $tagString .= $tag->name;
         }
 
-		if(empty($product->options))
-        {
+        if (empty($product->options)) {
             $product_cn = (object) array(
                 'name'                  => $product->name,
                 'short_description'     => $product->short_description,
                 'long_description'      => $product->long_description
             );
-        }
-        else
-        {
+        } else {
             $product_cn = json_decode($product->options);
         }
 
         return View::make('redminportal::products/edit')
             ->with('product', $product)
-			->with('product_cn', $product_cn)
+            ->with('product_cn', $product_cn)
             ->with('imageUrl', 'assets/img/products/')
             ->with('categories', $categories)
             ->with('tagString', $tagString);
@@ -77,47 +72,56 @@ class ProductController extends BaseController {
 
     public function postStore()
     {
-        $id = Input::get('id');
+        $sid = Input::get('id');
 
         /*
          * Validate
          */
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:products,name' . (isset($id) ? ',' . $id : ''),
+            'name'              => 'required|unique:products,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description' => 'required',
             'price'             => 'numeric',
-            'sku'               => 'required|alpha_dash|unique:products,sku' . (isset($id) ? ',' . $id : ''),
+            'sku'               => 'required|alpha_dash|unique:products,sku' . (isset($sid) ? ',' . $sid : ''),
             'category_id'       => 'required',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
         );
 
         $validation = Validator::make(Input::all(), $rules);
 
-        if( $validation->passes() )
-        {
+        if ($validation->passes()) {
             $name               = Input::get('name');
             $sku                = Input::get('sku');
             $price              = Input::get('price');
             $short_description  = Input::get('short_description');
             $long_description   = Input::get('long_description');
             $image              = Input::file('image');
-            $featured           = (Input::get('featured') == '' ? FALSE : TRUE);
-            $active             = (Input::get('active') == '' ? FALSE : TRUE);
+            $featured           = (Input::get('featured') == '' ? false : true);
+            $active             = (Input::get('active') == '' ? false : true);
             $category_id        = Input::get('category_id');
             $tags               = Input::get('tags');
 
-			$cn_name               = Input::get('cn_name');
+            $cn_name               = Input::get('cn_name');
             $cn_short_description  = Input::get('cn_short_description');
             $cn_long_description   = Input::get('cn_long_description');
 
-			$options = array(
+            $options = array(
                 'name'                  => $cn_name,
                 'short_description'     => $cn_short_description,
                 'long_description'      => $cn_long_description
             );
 
-            $product = (isset($id) ? Product::find($id) : new Product);
+            $product = (isset($sid) ? Product::find($sid) : new Product);
+            
+            if ($product == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The product cannot be found because it does not exist or may have been deleted."
+                );
+                return \Redirect::to('/admin/products')->withErrors($errors);
+            }
+            
             $product->name = $name;
             $product->sku = $sku;
             $product->price = (isset($price) ? $price : 0);
@@ -130,24 +134,23 @@ class ProductController extends BaseController {
 
             $product->save();
 
-            if(! empty($tags))
-            {
+            if (! empty($tags)) {
                 // Delete old tags
                 $product->deleteAllTags();
 
                 // Save tags
-                foreach(explode(',', $tags) as $tagName)
-                {
+                foreach (explode(',', $tags) as $tagName) {
                     $newTag = new Tag;
                     $newTag->name = strtolower($tagName);
                     $product->tags()->save($newTag);
                 }
             }
 
-            if(Input::hasFile('image'))
-            {
+            if (Input::hasFile('image')) {
                 // Delete all existing images for edit
-                if(isset($id)) $product->deleteAllImages();
+                if (isset($sid)) {
+                    $product->deleteAllImages();
+                }
 
                 //set the name of the file
                 $originalFilename = $image->getClientOriginalName();
@@ -156,8 +159,7 @@ class ProductController extends BaseController {
                 //Upload the file
                 $isSuccess = $image->move('assets/img/products', $filename);
 
-                if( $isSuccess )
-                {
+                if ($isSuccess) {
                     // create photo
                     $newimage = new Image;
                     $newimage->path = $filename;
@@ -166,15 +168,11 @@ class ProductController extends BaseController {
                     $product->images()->save($newimage);
                 }
             }
-
-        }//if it validate
-        else {
-            if(isset($id))
-            {
-                return Redirect::to('admin/products/edit/' . $id)->withErrors($validation)->withInput();
-            }
-            else
-            {
+        //if it validate
+        } else {
+            if (isset($sid)) {
+                return Redirect::to('admin/products/edit/' . $sid)->withErrors($validation)->withInput();
+            } else {
                 return Redirect::to('admin/products/create')->withErrors($validation)->withInput();
             }
         }
@@ -182,10 +180,10 @@ class ProductController extends BaseController {
         return Redirect::to('admin/products');
     }
 
-    public function getDelete($id)
+    public function getDelete($sid)
     {
         // Find the product using the user id
-        $product = Product::find($id);
+        $product = Product::find($sid);
 
         if ($product == null) {
             $errors = new \Illuminate\Support\MessageBag;
@@ -204,5 +202,4 @@ class ProductController extends BaseController {
 
         return Redirect::to('admin/products');
     }
-
 }
