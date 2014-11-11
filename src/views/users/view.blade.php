@@ -1,8 +1,19 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
+    @if($errors->has())
+    <div class='alert alert-danger'>
+        We encountered the following errors:
+        <ul>
+            @foreach($errors->all() as $message)
+            <li>{{ $message }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
 	<div class="nav-controls text-right">
-		@if ($users)
+		@if (count($users) > 0)
 		<span class="label label-default pull-left">
 			{{ $users->getFrom() . ' to ' . $users->getTo() . ' ( total ' . $users->getTotal() . ' )' }}
 		</span>
@@ -10,7 +21,7 @@
 		{{ HTML::link('admin/users/create', 'Create New', array('class' => 'btn btn-primary')) }}
 	</div>
 
-	@if ($users)
+	@if (count($users) > 0)
 		<table class='table table-striped table-bordered'>
 			<thead>
 				<tr>
@@ -80,6 +91,6 @@
 	    </table>
 		{{ $users->links() }}
 	@else
-		<p>No user found</p>
+		<div class="alert alert-info">No user found</div>
 	@endif
 @stop

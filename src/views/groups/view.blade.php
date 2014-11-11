@@ -13,7 +13,7 @@
     @endif
 
 	<div class="nav-controls text-right">
-		@if ($groups)
+		@if (count($groups) > 0)
 		<span class="label label-default pull-left">
 			{{ $groups->getFrom() . ' to ' . $groups->getTo() . ' ( total ' . $groups->getTotal() . ' )' }}
 		</span>
@@ -21,7 +21,7 @@
 		{{ HTML::link('admin/groups/create', 'Create New', array('class' => 'btn btn-primary')) }}
 	</div>
 
-	@if ($groups)
+	@if (count($groups) > 0)
 		<table class='table table-striped table-bordered'>
 			<thead>
 				<tr>
@@ -62,6 +62,6 @@
 	    </table>
 		{{ $groups->links() }}
 	@else
-		<p>No group found</p>
+		<div class="alert alert-info">No group found</div>
 	@endif
 @stop

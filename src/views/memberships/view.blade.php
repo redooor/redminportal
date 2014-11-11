@@ -13,7 +13,7 @@
     @endif
 
     <div class="nav-controls text-right">
-        @if ($memberships)
+        @if (count($memberships) > 0)
         <span class="label label-default pull-left">
             {{ $memberships->getFrom() . ' to ' . $memberships->getTo() . ' ( total ' . $memberships->getTotal() . ' )' }}
         </span>
@@ -21,7 +21,7 @@
         {{ HTML::link('admin/memberships/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
 
-    @if ($memberships)
+    @if (count($memberships) > 0)
         <table class='table table-striped table-bordered'>
             <thead>
                 <tr>
@@ -58,7 +58,7 @@
         </table>
         {{ $memberships->links() }}
     @else
-        <p>No membership found</p>
+        <div class="alert alert-info">No membership found</div>
     @endif
 @stop
 

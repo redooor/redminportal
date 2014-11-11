@@ -13,7 +13,7 @@
     @endif
 
     <div class="nav-controls text-right">
-        @if ($medias)
+        @if (count($medias) > 0)
         <span class="label label-default pull-left">
             {{ $medias->getFrom() . ' to ' . $medias->getTo() . ' ( total ' . $medias->getTotal() . ' )' }}
         </span>
@@ -22,7 +22,7 @@
         {{ HTML::link('admin/medias/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
 
-    @if ($medias)
+    @if (count($medias) > 0)
         <table class='table table-striped table-bordered'>
             <thead>
                 <tr>
@@ -112,7 +112,7 @@
         </table>
         {{ $medias->links() }}
     @else
-        <p>No media found</p>
+        <div class="alert alert-info">No media found</div>
     @endif
 @stop
 

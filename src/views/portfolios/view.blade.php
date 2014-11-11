@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="nav-controls text-right">
-        @if ($portfolios)
+        @if (count($portfolios) > 0)
         <span class="label label-default pull-left">
             {{ $portfolios->getFrom() . ' to ' . $portfolios->getTo() . ' ( total ' . $portfolios->getTotal() . ' )' }}
         </span>
@@ -10,7 +10,7 @@
         {{ HTML::link('admin/portfolios/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
     
-    @if ($portfolios)
+    @if (count($portfolios) > 0)
         <table class='table table-striped table-bordered'>
             <thead>
                 <tr>
@@ -67,7 +67,7 @@
         </table>
         {{ $portfolios->links() }}
     @else
-        <p>No portfolio found</p>
+        <div class="alert alert-info">No portfolio found</div>
     @endif
 @stop
 

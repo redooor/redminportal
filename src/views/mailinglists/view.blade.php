@@ -13,7 +13,7 @@
     @endif
 
     <div class="nav-controls text-right">
-        @if ($mailinglists)
+        @if (count($mailinglists) > 0)
         <span class="label label-default pull-left">
             {{ $mailinglists->getFrom() . ' to ' . $mailinglists->getTo() . ' ( total ' . $mailinglists->getTotal() . ' )' }}
         </span>
@@ -22,7 +22,7 @@
         {{ HTML::link('admin/mailinglists/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
 
-    @if ($mailinglists)
+    @if (count($mailinglists) > 0)
         <table class='table table-striped table-bordered'>
             <thead>
                 <tr>
@@ -106,7 +106,7 @@
         </table>
         {{ $mailinglists->links() }}
     @else
-        <p>No mailinglist found</p>
+        <div class="alert alert-info">No mailing list found</div>
     @endif
     <div id="export-csv" class="modal fade">
         <div class="modal-dialog">

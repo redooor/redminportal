@@ -37,7 +37,7 @@
             </div>
         </div>
     @else
-        <p>No category found</p>
+        <div class="alert alert-info">No category found</div>
     @endif
 @stop
 

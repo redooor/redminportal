@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="nav-controls text-right">
-        @if ($announcements)
+        @if (count($announcements) >0)
         <span class="label label-default pull-left">
             {{ $announcements->getFrom() . ' to ' . $announcements->getTo() . ' ( total ' . $announcements->getTotal() . ' )' }}
         </span>
@@ -10,7 +10,7 @@
         {{ HTML::link('admin/announcements/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
     
-    @if ($announcements)
+    @if (count($announcements) >0)
         <table class='table table-striped table-bordered'>
             <thead>
                 <tr>
@@ -57,7 +57,7 @@
         </table>
         {{ $announcements->links() }}
     @else
-        <p>No announcement found</p>
+        <div class="alert alert-info">No announcement found</div>
     @endif
 @stop
 

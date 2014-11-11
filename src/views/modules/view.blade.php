@@ -13,7 +13,7 @@
     @endif
 
     <div class="nav-controls text-right">
-        @if ($modules)
+        @if (count($modules) > 0)
         <span class="label label-default pull-left">
             {{ $modules->getFrom() . ' to ' . $modules->getTo() . ' ( total ' . $modules->getTotal() . ' )' }}
         </span>
@@ -21,7 +21,7 @@
         {{ HTML::link('admin/modules/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
 
-    @if ($modules)
+    @if (count($modules) > 0)
         <table class='table table-striped table-bordered'>
             <thead>
                 <tr>
@@ -94,7 +94,7 @@
         </table>
         {{ $modules->links() }}
     @else
-        <p>No module found</p>
+        <div class="alert alert-info">No module found</div>
     @endif
 @stop
 

@@ -13,10 +13,10 @@
     @endif
 
     <div class="nav-controls text-right">
-        @if ($purchases)
+        @if (count($purchases) > 0)
         <span class="label label-default pull-left">
             {{ $purchases->getFrom() . ' to ' . $purchases->getTo() . ' ( total ' . $purchases->getTotal() . ' )' }}
-        </span><br>
+        </span>
         @endif
         <button class="btn btn-default" data-toggle="modal" data-target="#export-csv">Export CSV</button>
         {{ HTML::link('admin/purchases/create', 'Create New', array('class' => 'btn btn-primary')) }}
@@ -74,7 +74,7 @@
         {{ $purchases->links() }}
         </div>
     @else
-        <div class="well">No purchase found</div>
+        <div class="alert alert-info">No purchase found</div>
     @endif
     <div id="export-csv" class="modal fade">
         <div class="modal-dialog">

@@ -1,8 +1,19 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
+    @if($errors->has())
+    <div class='alert alert-danger'>
+        We encountered the following errors:
+        <ul>
+            @foreach($errors->all() as $message)
+            <li>{{ $message }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     <div class="nav-controls text-right">
-        @if ($promotions)
+        @if (count($promotions) > 0)
         <span class="label label-default pull-left">
             {{ $promotions->getFrom() . ' to ' . $promotions->getTo() . ' ( total ' . $promotions->getTotal() . ' )' }}
         </span>
@@ -10,7 +21,7 @@
         {{ HTML::link('admin/promotions/create', 'Create New', array('class' => 'btn btn-primary')) }}
     </div>
     
-    @if ($promotions)
+    @if (count($promotions) > 0)
         <table class='table table-striped table-bordered'>
             <thead>
                 <tr>
@@ -69,7 +80,7 @@
         </table>
         {{ $promotions->links() }}
     @else
-        <p>No promotion found</p>
+        <div class="alert alert-info">No promotion found</div>
     @endif
 @stop
 
