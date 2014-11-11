@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
-class LoginController extends BaseController {
-
+class LoginController extends BaseController
+{
     protected $model;
 
     public function __construct(User $user)
@@ -38,30 +38,25 @@ class LoginController extends BaseController {
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if( $validation->passes() )
-        {
+        if ($validation->passes()) {
             $email      = \Input::get('email');
             $password   = \Input::get('password');
 
-            try
-            {
+            try {
                 $credentials = array(
                     'email'    => $email,
                     'password' => $password,
                 );
 
                 // Authenticate the user
-                $user = \Sentry::authenticate($credentials, false);
-            }
-            catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e)
-            {
+                \Sentry::authenticate($credentials, false);
+                
+            } catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add('invalid', "This user hasn't been activated. Please contact us for support.");
 
                 return \Redirect::to('admin')->withErrors($errors)->withInput();
-            }
-            catch (\Exception $e)
-            {
+            } catch (\Exception $e) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add('invalid', "Oops, your email or password is incorrect.");
 
@@ -73,5 +68,4 @@ class LoginController extends BaseController {
 
         return \Redirect::to('admin')->withErrors($validation)->withInput();
     }
-
 }
