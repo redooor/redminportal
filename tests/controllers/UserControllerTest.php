@@ -1,7 +1,5 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
-
 class UserControllerTest extends BaseControllerTest
 {
     /**
