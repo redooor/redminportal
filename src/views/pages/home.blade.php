@@ -10,6 +10,35 @@
         <div class='col-md-8'>
             <h1>RedminPortal <small>by Redooor</small></h1>
             <h2><u>Change log</u></h2>
+            <h3>Version 0.1.3</h3>
+            <p>The focus of this update was on cleaning up the code and making sure all tests pass.</p>
+
+            <h4>New features:</h4>
+            <ol>
+                <li>Create and Delete Purchases (issue #23).</li>
+                <li>Add Edit and Delete functions to GroupController (issue #30).</li>
+                <li>Add Edit function to UserController (issue #31).</li>
+            </ol>
+            <h4>Enhancements:</h4>
+            <ol>
+                <li>Use Laravel lists for select input instead of foreach (issue #6).</li>
+                <li>Category view page change to hierarchical tree view (issue #12).</li>
+                <li>MediaController sort by created_at before parent and name (issue #16).</li>
+                <li>Need test for MailinglistController sort function (issue #17).</li>
+                <li>Remove the Javascript which add Bootstrap pagination class to ul.pagination (issue #20).</li>
+                <li>Users view page has no pagination (issue #21).</li>
+                <li>Groups view page has no pagination (issue #22).</li>
+                <li>Change test folder names for clarity (issue #26).</li>
+                <li>Create test cases for all models (issue #27).</li>
+                <li>Create test cases for all controllers (issue #28).</li>
+            </ol>
+            <h4>Bug fixes:</h4>
+            <ol>
+                <li>Category view when empty not showing correct message (issue #13).</li>
+                <li>AJAX UI delete button doesn't prompt warning (issue #14).</li>
+                <li>Prevent same user and pricelist to be added to Purchases (issue #24).</li>
+                <li>All view pages where no record is found, don't show table (issue #25).</li>
+            </ol>
             <h3>Version 0.1.2</h3>
             <h4>Enhancements:</h4>
             <ol>

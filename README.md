@@ -1,8 +1,53 @@
-# Redooor RedminPortal
+# Table of Content
+1. [RedminPortal by Redooor](#redminportal-by-redooor)
+2. [Models and Features](#models-and-features)
+3. [Installation guide for Users](#installation-guide-for-users)
+4. [Installation guide for Contributors](#installation-guide-for-contributors)
+5. [Testing](#testing)
+6. [Versioning](#versioning)
+7. [Contributing](#contributing)
+8. [Creator](#creator)
+9. [License](#license)
+10. [Change log](#change-log)
 
-A Laravel 4 package as a backend administrating tool for Content Management and Ecommerce sites.
-Gives you ability to add, edit and remove category, product, promotions and many more.
-Provides User Interface for administrating users and groups (via Cartalyst Sentry).
+# RedminPortal by Redooor
+
+A Laravel 4 package as a backend administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups (via Cartalyst Sentry).
+
+# Models and Features
+
+## User Management
+* User
+* Group
+
+## Content Management
+* Announcement
+* Portfolio
+
+## Online Store (Physical Products)
+* Category
+* Discount
+* Product
+* Promotion
+
+## Membership Subscription (Downloadable Products)
+* Category
+* Discount
+* Media
+* Membership
+* Module
+* ModuleMediaMembership
+* Purchase
+
+## Customer Management
+* Mailinglist
+
+## Morphs
+* Image
+* Tag
+
+## Downloadable Reports
+1. Downloadable CSV reports for Purchases and Mailinglist.
 
 # Installation guide for Users
 
@@ -120,6 +165,32 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # Change log
 
+## Version 0.1.3
+The focus of this update was on cleaning up the code and making sure all tests pass.
+
+### New features:
+1. Create and Delete Purchases (issue #23).
+2. Add Edit and Delete functions to GroupController (issue #30).
+3. Add Edit function to UserController (issue #31).
+
+### Enhancements:
+1. Use Laravel lists for select input instead of foreach (issue #6).
+2. Category view page change to hierarchical tree view (issue #12).
+3. MediaController sort by created_at before parent and name (issue #16).
+4. Need test for MailinglistController sort function (issue #17).
+5. Remove the Javascript which add Bootstrap pagination class to ul.pagination (issue #20).
+6. Users view page has no pagination (issue #21).
+7. Groups view page has no pagination (issue #22).
+8. Change test folder names for clarity (issue #26).
+9. Create test cases for all models (issue #27).
+10. Create test cases for all controllers (issue #28).
+
+### Bug fixes:
+1. Category view when empty not showing correct message (issue #13).
+2. AJAX UI delete button doesn't prompt warning (issue #14).
+3. Prevent same user and pricelist to be added to Purchases (issue #24).
+4. All view pages where no record is found, don't show table (issue #25).
+
 ## Version 0.1.2
 
 ### Enhancements:
@@ -168,38 +239,3 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 1. Menu view can be controlled via config/menu.php file.
 2. Uploaded image size can be controlled via config/image.php file.
 3. Translation capability can be turned on via config/translation.php file.
-
-# Models
-
-## User Management
-* User
-* Group
-
-## Content Management
-* Announcement
-* Portfolio
-
-## Online Store (Physical Products)
-* Category
-* Discount
-* Product
-* Promotion
-
-## Membership Subscription (Downloadable Products)
-* Category
-* Discount
-* Media
-* Membership
-* Module
-* ModuleMediaMembership
-* Purchase
-
-## Customer Management
-* Mailinglist
-
-## Morphs
-* Image
-* Tag
-
-## Downloadable Reports
-1. Downloadable CSV reports for Purchases and Mailinglist.
