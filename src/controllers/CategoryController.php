@@ -11,14 +11,14 @@ class CategoryController extends BaseController
 
     public function getIndex()
     {
-        $categories = Category::where('category_id', 0)->orderBy('order', 'desc')->orderBy('name')->get();
+        $categories = Category::where('category_id', 0)->orWhere('category_id', null)->orderBy('order', 'desc')->orderBy('name')->get();
 
         return \View::make('redminportal::categories/view')->with('categories', $categories);
     }
 
     public function getCreate()
     {
-        $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
+        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
 
         return \View::make('redminportal::categories/create')->with('categories', $categories);
     }
@@ -55,7 +55,7 @@ class CategoryController extends BaseController
             $category_cn = json_decode($category->options);
         }
 
-        $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
+        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
 
         return \View::make('redminportal::categories/edit')
             ->with('category', $category)
@@ -117,8 +117,8 @@ class CategoryController extends BaseController
             $category->order = $order;
             $category->options = json_encode($options);
 
-            // Check if parent_id is equal to this->id
-            $category->category_id = ($sid == $parent_id) ? 0 : $parent_id;
+            // Check if parent_id is equal to this->id. If 0, save as null
+            $category->category_id = ($sid == $parent_id) ? null : (($parent_id == 0) ? null : $parent_id);
 
             $category->save();
 
