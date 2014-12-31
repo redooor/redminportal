@@ -26,7 +26,7 @@ class ProductController extends BaseController
 
     public function getCreate()
     {
-        $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
+        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
 
         return View::make('redminportal::products/create')->with('categories', $categories);
     }
@@ -41,7 +41,7 @@ class ProductController extends BaseController
             return \View::make('redminportal::pages/404');
         }
 
-        $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
+        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
 
         $tagString = "";
         foreach ($product->tags as $tag) {
