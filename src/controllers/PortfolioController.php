@@ -18,7 +18,7 @@ class PortfolioController extends BaseController
 
     public function getCreate()
     {
-        $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
+        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
 
         return \View::make('redminportal::portfolios/create')->with('categories', $categories);
     }
@@ -32,7 +32,7 @@ class PortfolioController extends BaseController
             return \View::make('redminportal::pages/404');
         }
 
-        $categories = Category::where('active', true)->where('category_id', 0)->orderBy('name')->get();
+        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
 
         if (empty($portfolio->options)) {
             $portfolio_cn = (object) array(
