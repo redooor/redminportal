@@ -9,10 +9,15 @@
 8. [Creator](#creator)
 9. [License](#license)
 10. [Change log](#change-log)
+11. [Upgrade Guide](#upgrade-guide)
 
 # RedminPortal by Redooor
 
 A Laravel 4 package as a backend administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups (via Cartalyst Sentry).
+
+# Important note
+
+If you're upgrading to version 0.1.4 or latest master, please refer to the [Upgrade Guide](#upgrade-guide).
 
 # Models and Features
 
@@ -165,6 +170,19 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # Change log
 
+## Version 0.1.4 (and latest master)
+Released for a major bug fix related to MySQL database and a new feature to allow same sub-category names under different parent.
+
+### Important:
+If you're upgrading from <= v0.1.3, please refer to the [Upgrade Guide](#upgrade-guide).
+
+### Bug fixes:
+1. Error occurs when create new category, MySQL cannot accept 0 as the foreign key (issue #37).
+2. Categories is not showing in the products and modules creation sections (issue #38, related to the fix for issue #37).
+
+### New feature:
+1. Allow same sub-category names under different parent (issue #40).
+
 ## Version 0.1.3
 The focus of this update was on cleaning up the code and making sure all tests pass.
 
@@ -239,3 +257,18 @@ The focus of this update was on cleaning up the code and making sure all tests p
 1. Menu view can be controlled via config/menu.php file.
 2. Uploaded image size can be controlled via config/image.php file.
 3. Translation capability can be turned on via config/translation.php file.
+
+# Upgrade Guide
+
+## Upgrading to v0.1.4 from <= v0.1.3
+
+Version 0.1.4 removes the unique index of "name" column from "categories" table.
+Run the following commands in a terminal to perform database migration for Redminportal:
+
+For users, run:
+
+        ?> php artisan migrate --package=redooor/redminportal
+
+For contributors, run:
+
+        ?> php artisan migrate --bench=redooor/redminportal
