@@ -73,7 +73,7 @@ class CategoryController extends BaseController
          */
         $rules = array(
             'image'                 => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'                  => 'required|unique:categories,name' . (isset($sid) ? ',' . $sid : ''),
+            'name'                  => 'required',
             'short_description'     => 'required',
             'order'                 => 'required|min:0',
         );
@@ -108,6 +108,26 @@ class CategoryController extends BaseController
                     "The category cannot be found because it does not exist or may have been deleted."
                 );
                 return \Redirect::to('/admin/categories')->withErrors($errors);
+            }
+            
+            // Check if there's an existing category with the same name under the same parent
+            if (isset($sid)) {
+                $checkSameName = Category::where('name', $name)->where('category_id', (($parent_id == 0) ? null : $parent_id))->whereNotIn( 'id', [$sid])->count();
+            } else {
+                $checkSameName = Category::where('name', $name)->where('category_id', (($parent_id == 0) ? null : $parent_id))->count();
+            }
+            
+            if ($checkSameName > 0) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'nameError',
+                    "The category cannot be added because there's an existing category with the same name."
+                );
+                if (isset($sid)) {
+                    return \Redirect::to('admin/categories/edit/' . $sid)->withErrors($errors)->withInput();
+                } else {
+                    return \Redirect::to('admin/categories/create')->withErrors($errors)->withInput();
+                }
             }
 
             $category->name = $name;

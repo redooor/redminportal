@@ -10,6 +10,19 @@
         <div class='col-md-8'>
             <h1>RedminPortal <small>by Redooor</small></h1>
             <h2><u>Change log</u></h2>
+            <h3>Version 0.1.4</h3>
+            <p>Released for a major bug fix related to MySQL database and a new feature to allow same sub-category names under different parent.</p>
+            <h4>Important:</h4>
+            <p>If you're upgrading from &lt;= v0.1.3, please refer to the Upgrade Guide.</p>
+            <h4>Bug fixes:</h4>
+            <ol>
+                <li>Error occurs when create new category, MySQL cannot accept 0 as the foreign key (issue #37).</li>
+                <li>Categories is not showing in the products and modules creation sections (issue #38).</li>
+            </ol>
+            <h4>New feature:</h4>
+            <ol>
+                <li>Allow same sub-category names under different parent (issue #40).</li>
+            </ol>
             <h3>Version 0.1.3</h3>
             <p>The focus of this update was on cleaning up the code and making sure all tests pass.</p>
 
