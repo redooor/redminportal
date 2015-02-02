@@ -2,6 +2,8 @@
 
 use Redooor\Redminportal\Pricelist;
 use Redooor\Redminportal\UserPricelist;
+use Redooor\Redminportal\Module;
+use Redooor\Redminportal\Membership;
 
 class PurchaseControllerTest extends \RedminTestCase {
 
@@ -36,6 +38,23 @@ class PurchaseControllerTest extends \RedminTestCase {
 
     public function testStoreCreate_Success()
     {
+        // Add membership
+        $membership = new Membership;
+        $membership->name = "Gold";
+        $membership->rank = 5;
+        $membership->save();
+        
+        // Add module
+        $module = new Module;
+        $module->name = 'This is title';
+        $module->sku = 'UNIQUESKU001';
+        $module->short_description = 'This is body';
+        $module->long_description = 'This is long body';
+        $module->featured = true;
+        $module->active = true;
+        $module->category_id = 1;
+        $module->save();
+                
         // Create a new Pricelist for use later
         $pricelist = new Pricelist;
         $pricelist->price = 0;
