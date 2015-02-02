@@ -21,7 +21,7 @@ class RedminTestCase extends TestBenchTestCase
     
     /**
      * Sets up environment for each test.
-     * Temporariliy increase memory limit to 256MB, run migrations and set Mail::pretend to true.
+     * Temporariliy increase memory limit, run migrations and set Mail::pretend to true.
      */
     public function setUp()
     {
@@ -29,7 +29,13 @@ class RedminTestCase extends TestBenchTestCase
 
         //$this->app['router']->enableFilters();
 
-        ini_set('memory_limit', '256M'); // Temporarily increase memory limit to 256MB
+        ini_set('memory_limit', '350M'); // Temporarily increase memory limit to 350MB
+        
+        /**
+         * By default, Laravel keeps a log in memory of all queries that have been run for 
+         * the current request. Disable logging for test to reduce memory.
+         */
+        DB::connection()->disableQueryLog();
 
         $artisan = $this->app->make('artisan');
         $artisan->call('migrate', [
