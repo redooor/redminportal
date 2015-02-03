@@ -4,7 +4,7 @@ class DiscountController extends BaseController {
 
     public function getIndex()
     {
-        $pricelists = Pricelist::paginate(20);
+        $discounts = Discount::paginate(20);
 
         $pricelists_select = array();
 
@@ -21,14 +21,24 @@ class DiscountController extends BaseController {
         }
 
         return \View::make('redminportal::discounts/view')
-            ->with('pricelists', $pricelists)
+            ->with('discounts', $discounts)
             ->with('pricelists_select', $pricelists_select);
+    }
+    
+    public function getCreate()
+    {
+        return \View::make('redminportal::pages/404');
+    }
+    
+    public function getEdit($id = null)
+    {
+        return \View::make('redminportal::pages/404');
     }
 
     public function postStore()
     {
         $id = \Input::get('id');
-
+        
         $rules = array(
             'pricelist_id'      => 'required',
             'code'              => 'required',

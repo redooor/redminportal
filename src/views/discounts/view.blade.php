@@ -13,14 +13,13 @@
     @endif
 
     <div class="nav-controls text-right">
-        @if (count($pricelists) > 0)
+        @if (count($discounts) > 0)
         <span class="label label-default pull-left">
-            {{ $pricelists->getFrom() . ' to ' . $pricelists->getTo() . ' ( total ' . $pricelists->getTotal() . ' )' }}
+            {{ $discounts->getFrom() . ' to ' . $discounts->getTo() . ' ( total ' . $discounts->getTotal() . ' )' }}
         </span>
         <br>
         @endif
     </div>
-
     
     <table class='table table-striped table-bordered'>
         <thead>
@@ -42,33 +41,31 @@
                     <a href="#" class="btn btn-primary btn-xs btn-add"><span class="glyphicon glyphicon-plus"></span> Add</a>
                 </td>
             </tr>
-            @if (count($pricelists) > 0)
-                @foreach ($pricelists as $pricelist)
-                    @foreach ($pricelist->discounts as $discount)
-                        <tr>
-                            <td>{{ $pricelist->module->name }} ({{ $pricelist->membership->name }})</td>
-                            <td>
-                                {{ $discount->code }}
-                            </td>
-                            <td>
-                                {{ $discount->percent }}
-                            </td>
-                            <td>
-                                {{ $discount->expiry_date }}
-                            </td>
-                            <td>
-                                <a href="{{ URL::to('admin/pricelists/deletediscount/' . $discount->id) }}" class="btn btn-danger btn-xs btn-confirm">
-                                    <span class="glyphicon glyphicon-remove"></span> Delete</a>
-                            </td>
-                        </tr>
-                    @endforeach
+            @if (count($discounts) > 0)
+                @foreach ($discounts as $discount)
+                    <tr>
+                        <td>{{ $discount->discountable->module->name }} ({{ $discount->discountable->membership->name }})</td>
+                        <td>
+                            {{ $discount->code }}
+                        </td>
+                        <td>
+                            {{ $discount->percent }}
+                        </td>
+                        <td>
+                            {{ $discount->expiry_date }}
+                        </td>
+                        <td>
+                            <a href="{{ URL::to('admin/discounts/delete/' . $discount->id) }}" class="btn btn-danger btn-xs btn-confirm">
+                                <span class="glyphicon glyphicon-remove"></span> Delete</a>
+                        </td>
+                    </tr>
                 @endforeach
             @endif
         </tbody>
     </table>
-    @if (count($pricelists) > 0)
+    @if (count($discounts) > 0)
         <div class="text-center">
-        {{ $pricelists->links() }}
+        {{ $discounts->links() }}
         </div>
     @endif
     {{ Form::open(array('action' => 'Redooor\Redminportal\DiscountController@postStore', 'role' => 'form', 'id' => 'form_add')) }}
@@ -77,8 +74,8 @@
         {{ Form::hidden('percent', Input::old('percent'), array('id' => 'percent')) }}
         {{ Form::hidden('expiry_date', Input::old('expiry_date'), array('id' => 'expiry_date')) }}
     {{ Form::close() }}
-    @if (count($pricelists) == 0)
-        <div class="alert alert-info">No pricelist found</div>
+    @if (count($discounts) == 0)
+        <div class="alert alert-info">No discount found</div>
     @endif
 @stop
 

@@ -178,7 +178,7 @@ If you're upgrading from <= v0.1.3, please refer to the [Upgrade Guide](#upgrade
 
 ### Bug fixes:
 1. PurchaseControllerTest is producing an error (issue #48).
-2. PHPUnit test run out of memory issue (issue #49).
+2. PHPUnit test run out of memory issue, increase from 256MB to 400MB (issue #49).
 3. orchestra/testbench is using developer branch (issue #50).
 4. PricelistController has been changed to DiscountController (issue #55).
 
