@@ -2,13 +2,6 @@
 
 class PurchaseController extends BaseController {
 
-    protected $model;
-
-    public function __construct(UserPricelist $module)
-    {
-        $this->model = $module;
-    }
-
     public function getIndex()
     {
         $purchases = UserPricelist::orderBy('created_at', 'desc')->paginate(20);
@@ -50,6 +43,10 @@ class PurchaseController extends BaseController {
         return \View::make('redminportal::purchases/create')
             ->with('pricelists_select', $pricelists_select)
             ->with('payment_statuses', $payment_statuses);
+    }
+    
+    public function getEdit($id = null) {
+        return \View::make('redminportal::pages/404');
     }
 
     public function postStore()

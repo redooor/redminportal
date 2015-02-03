@@ -5,39 +5,56 @@ use Redooor\Redminportal\UserPricelist;
 use Redooor\Redminportal\Module;
 use Redooor\Redminportal\Membership;
 
-class PurchaseControllerTest extends \RedminTestCase {
+class PurchaseControllerTest extends BaseControllerTest {
 
+    /**
+     * Contructor
+     */
+    public function __construct()
+    {
+        $page = '/admin/purchases';
+        $viewhas = array(
+            'singular' => 'purchase',
+            'plural' => 'purchases'
+        );
+        $input = array(
+            'create' => array(
+                'pricelist_id'   => 1,
+                'payment_status' => 'Completed',
+                'paid'           => 1.99,
+                'transaction_id' => 1,
+                'email'          => 'admin@admin.com'
+            ),
+            'edit' => array(
+                'id'   => 1,
+                'pricelist_id'   => 1,
+                'payment_status' => 'Completed',
+                'paid'           => 1.99,
+                'transaction_id' => 1,
+                'email'          => 'admin@admin.com'
+            )
+        );
+        
+        parent::__construct($page, $viewhas, $input);
+    }
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
+    {
+        parent::__destruct();
+    }
+    
+    /**
+     * Setup initial data for use in tests
+     */
     public function setup()
     {
         parent::setup();
         
         $this->seed('RedminSeeder');
-    }
-    
-    public function testBlankIndex()
-    {
-        $crawler = $this->client->request('GET', '/admin/purchases');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('purchases');
-    }
-
-    public function testCreate()
-    {
-        $crawler = $this->client->request('GET', '/admin/purchases/create');
-
-        $this->assertResponseOk();
-    }
-    
-    public function testEmails()
-    {
-        $crawler = $this->client->request('GET', '/admin/purchases/emails');
-
-        $this->assertResponseOk();
-    }
-
-    public function testStoreCreate_Success()
-    {
+        
         // Add membership
         $membership = new Membership;
         $membership->name = "Gold";
@@ -61,31 +78,37 @@ class PurchaseControllerTest extends \RedminTestCase {
         $pricelist->module_id = 1;
         $pricelist->membership_id = 1;
         $pricelist->save();
+    }
+    
+    /**
+     * Test (Pass): access getEmails
+     */
+    public function testEmails()
+    {
+        $crawler = $this->client->request('GET', '/admin/purchases/emails');
 
-        $input = array(
-            'pricelist_id'   => 1,
-            'payment_status' => 'Completed',
-            'paid'           => 1.99,
-            'transaction_id' => 1,
-            'email'          => 'admin@admin.com',
-        );
-
-        $this->call('POST', '/admin/purchases/store', $input);
-
-        $this->assertRedirectedTo('/admin/purchases');
-        
-        $purchase = UserPricelist::find(1);
-        $this->assertTrue($purchase->pricelist_id == 1);
-        $this->assertTrue($purchase->price == 0);
-        $this->assertTrue($purchase->payment_status == 'Completed');
-        $this->assertTrue($purchase->transaction_id == 1);
-        $this->assertTrue($purchase->user->email == 'admin@admin.com');
+        $this->assertResponseOk();
+    }
+    
+    /**
+     * Overwrite base functions, no edit for Purchase
+     */
+    public function testEditPass()
+    {
+        return;
+    }
+    
+    /**
+     * Overwrite base functions, no edit for Purchase
+     */
+    public function testStoreEdit() {
+        return;
     }
 
     public function testStoreCreate_Failed_NoPricelist()
     {
         $input = array(
-            'pricelist_id'   => 1,
+            'pricelist_id'   => 2,
             'payment_status' => 'Completed',
             'paid'           => 1.99,
             'transaction_id' => 1,
@@ -99,15 +122,8 @@ class PurchaseControllerTest extends \RedminTestCase {
     
     public function testStoreCreate_Failed_NoSuchUser()
     {
-        // Create a new Pricelist for use later
-        $pricelist = new Pricelist;
-        $pricelist->price = 0;
-        $pricelist->module_id = 1;
-        $pricelist->membership_id = 1;
-        $pricelist->save();
-
         $input = array(
-            'pricelist_id'   => 1,
+            'pricelist_id'   => 2,
             'payment_status' => 'Completed',
             'paid'           => 1.99,
             'transaction_id' => 1,
@@ -117,40 +133,6 @@ class PurchaseControllerTest extends \RedminTestCase {
         $this->call('POST', '/admin/purchases/store', $input);
 
         $this->assertRedirectedTo('/admin/purchases/create');
-    }
-    
-    public function testStoreCreate_Failed_UserPricelist_Exists()
-    {
-        $this->testStoreCreate_Success();
-
-        $input = array(
-            'pricelist_id'   => 1,
-            'payment_status' => 'Completed',
-            'paid'           => 1.99,
-            'transaction_id' => 1,
-            'email'          => 'admin@admin.com',
-        );
-
-        $this->call('POST', '/admin/purchases/store', $input);
-
-        $this->assertRedirectedTo('/admin/purchases/create');
-    }
-
-    public function testDeleteFail()
-    {
-        $this->call('GET', '/admin/purchases/delete/1');
-
-        $this->assertRedirectedTo('/admin/purchases');
-        $this->assertSessionHasErrors();
-    }
-
-    public function testDeleteSuccess()
-    {
-        $this->testStoreCreate_Success();
-
-        $this->call('GET', '/admin/purchases/delete/1');
-
-        $this->assertRedirectedTo('/admin/purchases');
     }
 
 }
