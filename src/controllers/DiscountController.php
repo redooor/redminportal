@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal;
 
-class PricelistController extends BaseController {
+class DiscountController extends BaseController {
 
     public function getIndex()
     {
@@ -20,12 +20,12 @@ class PricelistController extends BaseController {
             $pricelist->module->name . " (" . $pricelist->membership->name . ")";
         }
 
-        return \View::make('redminportal::pricelists/discount')
+        return \View::make('redminportal::discounts/view')
             ->with('pricelists', $pricelists)
             ->with('pricelists_select', $pricelists_select);
     }
 
-    public function postDiscount()
+    public function postStore()
     {
         $id = \Input::get('id');
 
@@ -51,7 +51,7 @@ class PricelistController extends BaseController {
             if ($pricelist == null) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add('deleteError', "The pricelist for discount may have been deleted. Please try again.");
-                return \Redirect::to('admin/pricelists')->withErrors($errors)->withInput();
+                return \Redirect::to('admin/discounts')->withErrors($errors)->withInput();
             }
 
             $newDiscount = new Discount;
@@ -63,13 +63,13 @@ class PricelistController extends BaseController {
 
         }//if it validate
         else {
-            return \Redirect::to('admin/pricelists')->withErrors($validation)->withInput();
+            return \Redirect::to('admin/discounts')->withErrors($validation)->withInput();
         }
 
-        return \Redirect::to('admin/pricelists');
+        return \Redirect::to('admin/discounts');
     }
 
-    public function getDeletediscount($id)
+    public function getDelete($id)
     {
         $discount = Discount::find($id);
 
@@ -77,11 +77,12 @@ class PricelistController extends BaseController {
         if ($discount == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The discount may have been deleted.");
-            return \Redirect::to('admin/pricelists')->withErrors($errors)->withInput();
+            return \Redirect::to('admin/discounts')->withErrors($errors)->withInput();
         }
 
         $discount->delete();
 
-        return \Redirect::to('admin/pricelists');
+        return \Redirect::to('admin/discounts');
     }
+    
 }

@@ -71,7 +71,7 @@
         {{ $pricelists->links() }}
         </div>
     @endif
-    {{ Form::open(array('action' => 'Redooor\Redminportal\PricelistController@postDiscount', 'role' => 'form', 'id' => 'form_add')) }}
+    {{ Form::open(array('action' => 'Redooor\Redminportal\DiscountController@postStore', 'role' => 'form', 'id' => 'form_add')) }}
         {{ Form::hidden('pricelist_id', Input::old('pricelist_id'), array('id' => 'pricelist_id')) }}
         {{ Form::hidden('code', Input::old('code'), array('id' => 'code')) }}
         {{ Form::hidden('percent', Input::old('percent'), array('id' => 'percent')) }}

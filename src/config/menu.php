@@ -59,7 +59,7 @@ return array(
     ),
     array(
         'name' => 'discounts',
-        'path' => 'admin/pricelists',
+        'path' => 'admin/discounts',
         'hide' => false
     ),
     array(

@@ -13,11 +13,11 @@
 
 # RedminPortal by Redooor
 
-A Laravel 4 package as a backend administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups (via Cartalyst Sentry).
+A Laravel 4 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups (via Cartalyst Sentry).
 
 # Important note
 
-If you're upgrading to version 0.1.4 or latest master, please refer to the [Upgrade Guide](#upgrade-guide).
+If you're upgrading from version 0.1.3 or below, please refer to the [Upgrade Guide](#upgrade-guide).
 
 # Models and Features
 
@@ -170,7 +170,19 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # Change log
 
-## Version 0.1.4 (and latest master)
+## Version 0.1.5 (and latest master)
+The focus of this update was on cleaning up the code and making sure all tests pass.
+
+### Important:
+If you're upgrading from <= v0.1.3, please refer to the [Upgrade Guide](#upgrade-guide).
+
+### Bug fixes:
+1. PurchaseControllerTest is producing an error (issue #48).
+2. PHPUnit test run out of memory issue (issue #49).
+3. orchestra/testbench is using developer branch (issue #50).
+4. PricelistController has been changed to DiscountController (issue #55).
+
+## Version 0.1.4
 Released for a major bug fix related to MySQL database and a new feature to allow same sub-category names under different parent.
 
 ### Important:
@@ -259,6 +271,41 @@ The focus of this update was on cleaning up the code and making sure all tests p
 3. Translation capability can be turned on via config/translation.php file.
 
 # Upgrade Guide
+
+## Upgrading to v0.1.5 from <= v0.1.4
+
+Version 0.1.5 changed the route for 'admin/pricelists' to 'admin/discounts' due to the change of class name from PricelistController to DiscountController.
+
+Change the menu configuration file at 
+**app/config/packages/redooor/redminportal/menu.php**
+
+from:
+    
+        array(
+            'name' => 'discounts',
+            'path' => 'admin/pricelists',
+            'hide' => false
+        ),
+
+to:
+    
+        array(
+            'name' => 'discounts',
+            'path' => 'admin/discounts',
+            'hide' => false
+        ),
+
+If you didn't change the config file, you can choose to run the following command.
+
+**Caution**: This command will overwrite all your changes to the files in the folder app/config/packages/redooor/redminportal.
+
+For users, run:
+        
+        php artisan config:publish redooor/redminportal
+        
+For contributors, run:
+
+        php artisan config:publish --path="workbench/redooor/redminportal/src/config" redooor/redminportal
 
 ## Upgrading to v0.1.4 from <= v0.1.3
 
