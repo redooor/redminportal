@@ -1,52 +1,93 @@
 <?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\Pricelist;
+use Redooor\Redminportal\Module;
+use Redooor\Redminportal\Membership;
 
-class DiscountControllerTest extends \RedminTestCase
+class DiscountControllerTest extends BaseControllerTest
 {
-    public function testBlankIndex()
+    /**
+     * Contructor
+     */
+    public function __construct()
     {
-        $this->client->request('GET', '/admin/discounts');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('pricelists');
+        $page = '/admin/discounts';
+        $viewhas = array(
+            'singular' => 'discount',
+            'plural' => 'discounts'
+        );
+        $input = array(
+            'create' => array(
+                'pricelist_id'          => 1,
+                'code'                  => 'UY8736',
+                'percent'               => 10,
+                'expiry_date'           => '01/01/1990'
+            ),
+            'edit' => array(
+                'id'   => 1,
+                'pricelist_id'          => 1,
+                'code'                  => 'UY8736',
+                'percent'               => 10,
+                'expiry_date'           => '01/01/1990'
+            )
+        );
+        
+        parent::__construct($page, $viewhas, $input);
     }
-
-    public function testStoreCreateSuccess()
+    
+    /**
+     * Destructor
+     */
+    public function __destruct()
     {
-        // Create a Pricelist first
+        parent::__destruct();
+    }
+    
+    /**
+     * Setup initial data for use in tests
+     */
+    public function setup()
+    {
+        parent::setup();
+        
+        // Add membership
+        $membership = new Membership;
+        $membership->name = "Gold";
+        $membership->rank = 5;
+        $membership->save();
+        
+        // Add module
+        $module = new Module;
+        $module->name = 'This is title';
+        $module->sku = 'UNIQUESKU001';
+        $module->short_description = 'This is body';
+        $module->long_description = 'This is long body';
+        $module->featured = true;
+        $module->active = true;
+        $module->category_id = 1;
+        $module->save();
+                
+        // Create a new Pricelist for use later
         $pricelist = new Pricelist;
         $pricelist->module_id = 1;
         $pricelist->membership_id = 1;
         $pricelist->price = 1;
         $pricelist->save();
-
-        $input = array(
-            'pricelist_id'          => 1,
-            'code'                  => 'UY8736',
-            'percent'               => 10,
-            'expiry_date'           => '01/01/1990'
-        );
-
-        $this->call('POST', '/admin/discounts/store', $input);
-
-        $this->assertRedirectedTo('/admin/discounts');
     }
-
-    public function testDeleteFail()
+    
+    /**
+     * Overwrite base functions, no edit for Discount
+     */
+    public function testEditPass()
     {
-        $this->call('GET', '/admin/discounts/delete/1');
-
-        $this->assertRedirectedTo('/admin/discounts');
-        $this->assertSessionHasErrors();
+        return;
     }
-
-    public function testDeleteSuccess()
-    {
-        $this->testStoreCreateSuccess();
-
-        $this->call('GET', '/admin/discounts/delete/1');
-
-        $this->assertRedirectedTo('/admin/discounts');
+    
+    /**
+     * Overwrite base functions, no edit for Discount
+     */
+    public function testStoreEdit() {
+        return;
     }
+    
 }

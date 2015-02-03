@@ -29,7 +29,7 @@ class RedminTestCase extends TestBenchTestCase
 
         //$this->app['router']->enableFilters();
 
-        ini_set('memory_limit', '350M'); // Temporarily increase memory limit to 350MB
+        ini_set('memory_limit', '400M'); // Temporarily increase memory limit to 400MB
         
         /**
          * By default, Laravel keeps a log in memory of all queries that have been run for 
