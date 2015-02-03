@@ -30,7 +30,14 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth.sentry'), function()
     Route::controller('modules',          'Redooor\Redminportal\ModuleController');
     Route::controller('memberships',      'Redooor\Redminportal\MembershipController');
     Route::controller('purchases',        'Redooor\Redminportal\PurchaseController');
-    Route::controller('pricelists',       'Redooor\Redminportal\PricelistController');
+    Route::controller('discounts',        'Redooor\Redminportal\DiscountController');
     Route::controller('mailinglists',     'Redooor\Redminportal\MailinglistController');
     Route::controller('reports',          'Redooor\Redminportal\ReportController');
+    // ------------------------------------
+    // Legacy support for v0.1.4 and below
+    // This will be removed in v0.2.0
+    // ------------------------------------
+    Route::get('pricelists', function() {
+        return Redirect::to('admin/discounts');
+    });
 });

@@ -2,11 +2,11 @@
 
 use Redooor\Redminportal\Pricelist;
 
-class PricelistControllerTest extends \RedminTestCase
+class DiscountControllerTest extends \RedminTestCase
 {
     public function testBlankIndex()
     {
-        $this->client->request('GET', '/admin/pricelists');
+        $this->client->request('GET', '/admin/discounts');
 
         $this->assertResponseOk();
         $this->assertViewHas('pricelists');
@@ -28,16 +28,16 @@ class PricelistControllerTest extends \RedminTestCase
             'expiry_date'           => '01/01/1990'
         );
 
-        $this->call('POST', '/admin/pricelists/discount', $input);
+        $this->call('POST', '/admin/discounts/store', $input);
 
-        $this->assertRedirectedTo('/admin/pricelists');
+        $this->assertRedirectedTo('/admin/discounts');
     }
 
     public function testDeleteFail()
     {
-        $this->call('GET', '/admin/pricelists/deletediscount/1');
+        $this->call('GET', '/admin/discounts/delete/1');
 
-        $this->assertRedirectedTo('/admin/pricelists');
+        $this->assertRedirectedTo('/admin/discounts');
         $this->assertSessionHasErrors();
     }
 
@@ -45,8 +45,8 @@ class PricelistControllerTest extends \RedminTestCase
     {
         $this->testStoreCreateSuccess();
 
-        $this->call('GET', '/admin/pricelists/deletediscount/1');
+        $this->call('GET', '/admin/discounts/delete/1');
 
-        $this->assertRedirectedTo('/admin/pricelists');
+        $this->assertRedirectedTo('/admin/discounts');
     }
 }
