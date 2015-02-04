@@ -4,10 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>RedminPortal by Redooor</title>
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css" />
+        {{ HTML::style('packages/redooor/redminportal/assets/css/jquery-ui/themes/blitzer/jquery-ui.min.css') }}
         {{ HTML::style('packages/redooor/redminportal/assets/css/jasny-bootstrap.css') }}
         {{ HTML::style('packages/redooor/redminportal/assets/css/jasny-responsive.css') }}
-        {{ HTML::style('packages/redooor/redminportal/assets/css/redminportal.css') }}
+        {{ HTML::style('packages/redooor/redminportal/assets/css/redminportal.min.css') }}
         <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -81,8 +81,9 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-        <script src="{{ URL::to('packages/redooor/redminportal/assets/js/vendor/jquery.js') }}"></script>
-        <script src="{{ URL::to('packages/redooor/redminportal/assets/js/bootstrap.min.js') }}"></script>
+        {{ HTML::script('packages/redooor/redminportal/assets/js/jquery/jquery.min.js') }}
+        {{ HTML::script('packages/redooor/redminportal/assets/js/jquery-ui/jquery-ui.min.js') }}
+        {{ HTML::script('packages/redooor/redminportal/assets/js/bootstrap.min.js') }}
         <script>
             !function ($) {
                 $(function(){

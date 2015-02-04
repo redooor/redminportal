@@ -150,8 +150,6 @@
 @stop
 
 @section('footer')
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css" />
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script>
         !function ($) {
             $(function(){

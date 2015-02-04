@@ -1,15 +1,26 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    <div class="row">
-        <div class="col-md-12 text-center">
-            {{ HTML::image( URL::to('packages/redooor/redminportal/assets/img/redminportal_logo.png'), 'RedminPortal', array('class' => 'img-responsive') )}}
-        </div>
-    </div>
     <div class='row'>
         <div class='col-md-8'>
             <h1>RedminPortal <small>by Redooor</small></h1>
             <h2><u>Change log</u></h2>
+            <h3>Under Development, Version 0.1.5 (latest master)</h3>
+            <p>Focus on fixing bugs and cleaning up code. Improve assets management via Grunt and Bower. Improve Discount module.</p>
+            <h4>Important:</h4>
+            <p>If you're upgrading from &lt;= v0.1.3, please refer to the Upgrade Guide in README.md.</p>
+            <h4>Bug fixes:</h4>
+            <ol>
+                <li>PurchaseControllerTest is producing an error (issue #48).</li>
+                <li>PHPUnit test run out of memory issue, increase from 256MB to 400MB (issue #49).</li>
+                <li>orchestra/testbench is using developer branch (issue #50).</li>
+                <li>PricelistController has been changed to DiscountController (issue #55).</li>
+                <li>admin/discounts does not show correct display count (issue #33).</li>
+                <li>Unable to delete discount from UI due to fix for issue #55 (issue #57).</li>
+                <li>More coming... (developing)</li>
+            </ol>
+            <h4>Note for Contributors</h4>
+            <p>All assets are now managed via Grunt and Bower. Please refer to <strong>Install Grunt and Bower dependencies</strong> in the README.md file.</p>
             <h3>Version 0.1.4</h3>
             <p>Released for a major bug fix related to MySQL database and a new feature to allow same sub-category names under different parent.</p>
             <h4>Important:</h4>
@@ -107,12 +118,19 @@
             </ol>
         </div>
         <div class='col-md-4'>
-            <h3>Contribution</h3>
-            <p>Source code at <a href="https://github.com/redooor/redminportal">Github</a></p>
-            <h3>Maintenance</h3>
-            <p>Maintained by the core team with the help of our contributors.</p>
-            <h3>License</h3>
-            <p>RedminPortal is open-sourced software licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
+            
+            <div class="panel">
+                <div class="panel-body">
+                    {{ HTML::image( URL::to('packages/redooor/redminportal/assets/img/redminportal_logo.png'), 'RedminPortal', array('class' => 'img-responsive pull-right') )}}
+                    <h3>Contribution</h3>
+                    <p>Source code at <a href="https://github.com/redooor/redminportal">Github</a></p>
+                    <h3>Maintenance</h3>
+                    <p>Maintained by the core team with the help of our contributors.</p>
+                    <h3>License</h3>
+                    <p>RedminPortal is open-sourced software licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
+                </div>
+            </div>
+            
         </div>
     </div>
 @stop

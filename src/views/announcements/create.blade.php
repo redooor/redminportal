@@ -53,7 +53,6 @@
 @stop
 
 @section('footer')
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script src="{{ URL::to('packages/redooor/redminportal/assets/js/bootstrap-fileupload.js') }}"></script>
     @include('redminportal::plugins/tinymce')
 @stop

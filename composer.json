@@ -19,7 +19,6 @@
         "phansys/getid3": "2.1.*@dev"
     },
     "require-dev": {
-        "twbs/bootstrap": "3.1.*",
 		"phpunit/phpunit": "4.0.*",
 		"mockery/mockery": "0.9.*",
         "orchestra/testbench": "2.2.*"
