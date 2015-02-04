@@ -144,6 +144,15 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
 
         php artisan config:publish --path="workbench/redooor/redminportal/src/config" redooor/redminportal
 
+## Install Grunt and Bower dependencies
+
+1. You need to have nodejs installed
+3. cd to workbench/redooor/redminportal
+2. Run _npm install_
+3. Run _bower install_
+4. To build all assets, run _grunt_
+5. To compile just the less css, run _grunt less-compile_
+
 # Testing
 
 * Run vendor/bin/phpunit within the package folder.
@@ -181,6 +190,11 @@ If you're upgrading from <= v0.1.3, please refer to the [Upgrade Guide](#upgrade
 2. PHPUnit test run out of memory issue, increase from 256MB to 400MB (issue #49).
 3. orchestra/testbench is using developer branch (issue #50).
 4. PricelistController has been changed to DiscountController (issue #55).
+5. admin/discounts does not show correct display count (issue #33).
+6. Unable to delete discount from UI due to fix for issue #55 (issue #57).
+
+### Note for Contributors
+All assets are now managed via Grunt and Bower. Please refer to [Install Grunt and Bower dependencies](#install-grunt-and-bower-dependencies).
 
 ## Version 0.1.4
 Released for a major bug fix related to MySQL database and a new feature to allow same sub-category names under different parent.
@@ -274,6 +288,8 @@ The focus of this update was on cleaning up the code and making sure all tests p
 
 ## Upgrading to v0.1.5 from <= v0.1.4
 
+### Change config:menu
+
 Version 0.1.5 changed the route for 'admin/pricelists' to 'admin/discounts' due to the change of class name from PricelistController to DiscountController.
 
 Change the menu configuration file at 
@@ -307,9 +323,46 @@ For contributors, run:
 
         php artisan config:publish --path="workbench/redooor/redminportal/src/config" redooor/redminportal
 
+### Publish assets
+
+Version 0.1.5 changes some structure of the JavaScript and CSS files. You need to run the following command to publish the assets to use the new locations.
+
+**Caution**: This action will overwrite any changes made to the public/packages/redooor/redminportal/assets folder.
+
+For users:
+
+        php artisan asset:publish redooor/redminportal
+        
+For contributors:
+
+        php artisan asset:publish --bench=redooor/redminportal
+
+### Run dump-autoload
+
+Due to the changes in route, you may need to run this command to get the routing work.
+
+        ?> php artisan dump-autoload
+
+If you get an error message saying that DiscountController is missing, open 
+
+For users:
+
+        vendor/redooor/redminportal/src/routes.php 
+
+For contributors:
+
+        workbench/redooor/redminportal/src/routes.php 
+
+and comment off those lines with DiscountController. 
+
+Then run dump-autoload again. Once it's done, go back to routes.php and undo the comment.
+
 ## Upgrading to v0.1.4 from <= v0.1.3
 
 Version 0.1.4 removes the unique index of "name" column from "categories" table.
+
+**Caution**: Always backup your database before running this type of command.
+
 Run the following commands in a terminal to perform database migration for Redminportal:
 
 For users, run:
