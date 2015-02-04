@@ -24,9 +24,11 @@
                 <hr>
                 <div class='well well-sm'>
                     <div class="form-group">
-                        <label for="private" class="checkbox inline">
-                            {{ Form::checkbox('private', $announcement->private, $announcement->private, array('id' => 'private-checker')) }} Private
-                        </label>
+                        <div class="checkbox">
+                            <label for="private-checker">
+                                {{ Form::checkbox('private', $announcement->private, $announcement->private, array('id' => 'private-checker')) }} Private
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="fileupload fileupload-new" data-provides="fileupload">

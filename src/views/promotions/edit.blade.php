@@ -24,9 +24,11 @@
                 <hr>
                 <div class='well well-sm'>
                     <div class="form-group">
-                        <label for="active" class="checkbox inline">
-                            {{ Form::checkbox('active', $promotion->active, $promotion->active, array('id' => 'active-checker')) }} Active
-                        </label>
+                        <div class="checkbox">
+                            <label for="active-checker">
+                                {{ Form::checkbox('active', $promotion->active, $promotion->active, array('id' => 'active-checker')) }} Active
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

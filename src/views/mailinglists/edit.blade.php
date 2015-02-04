@@ -38,9 +38,11 @@
                 </div>
                 <div class='well well-small'>
                     <div class="form-group">
-                        <label for="active" class="checkbox inline">
-                            {{ Form::checkbox('active', $mailinglist->active, $mailinglist->active, array('id' => 'active-checker')) }} Active
-                        </label>
+                        <div class="checkbox">
+                            <label for="active-checker">
+                                {{ Form::checkbox('active', $mailinglist->active, $mailinglist->active, array('id' => 'active-checker')) }} Active
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
