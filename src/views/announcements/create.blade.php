@@ -23,9 +23,11 @@
                 <hr>
                 <div class='well well-sm'>
                     <div class="form-group">
-                        <label for="private" class="checkbox inline">
-                            {{ Form::checkbox('private', true, true, array('id' => 'private-checker')) }} Private
-                        </label>
+                        <div class="checkbox">
+                            <label for="private-checker">
+                                {{ Form::checkbox('private', true, true, array('id' => 'private-checker')) }} Private
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div>

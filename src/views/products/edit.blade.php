@@ -24,15 +24,19 @@
                 <hr>
                 <div class='well well-small'>
                     <div class="form-group">
-                        <label for="active" class="checkbox inline">
-                            {{ Form::checkbox('featured', $product->featured, $product->featured, array('id' => 'featured-checker')) }} Featured
-                        </label>
+                        <div class="checkbox">
+                            <label for="featured-checker">
+                                {{ Form::checkbox('featured', $product->featured, $product->featured, array('id' => 'featured-checker')) }} Featured
+                            </label>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="active" class="checkbox inline">
-                            {{ Form::checkbox('active', $product->active, $product->active, array('id' => 'active-checker')) }} Active
-                        </label>
+                        <div class="checkbox">
+                            <label for="active-checker">
+                                {{ Form::checkbox('active', $product->active, $product->active, array('id' => 'active-checker')) }} Active
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="panel panel-default">

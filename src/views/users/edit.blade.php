@@ -45,9 +45,11 @@
 		</div>
 
 		<div class="form-group">
-			<label for="activated-checker" class="checkbox">
-				{{ Form::checkbox('activated', 'yes', $user->activated, array('id' => 'activated-checker')) }} Activate Now
-			</label>
+            <div class="checkbox">
+                <label for="activated-checker">
+                    {{ Form::checkbox('activated', 'yes', $user->activated, array('id' => 'activated-checker')) }} Activate Now
+                </label>
+            </div>
 			<p class="help-block">Allow user to log in to this account</p>
 		</div>
 

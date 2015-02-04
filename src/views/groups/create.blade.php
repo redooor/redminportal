@@ -20,15 +20,19 @@
 		</div>
 		
 		<div class="form-group">
-			<label for="admin-checker" class="checkbox">
-				{{ Form::checkbox('admin', 'yes', true, array('id' => 'admin-checker')) }} Administrator
-			</label>
+            <div class="checkbox">
+                <label for="admin-checker">
+                    {{ Form::checkbox('admin', 'yes', true, array('id' => 'admin-checker')) }} Administrator
+                </label>
+            </div>
 		</div>
 		
 		<div class="form-group">
-			<label for="user-checker" class="checkbox">
-				{{ Form::checkbox('user', 'yes', true, array('id' => 'user-checker')) }} User
-			</label>
+            <div class="checkbox">
+                <label for="user-checker">
+                    {{ Form::checkbox('user', 'yes', true, array('id' => 'user-checker')) }} User
+                </label>
+            </div>
 		</div>
 		
 		<div class='form-actions text-right'>
