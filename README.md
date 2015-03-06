@@ -192,6 +192,9 @@ If you're upgrading from <= v0.1.3, please refer to the [Upgrade Guide](#upgrade
 4. PricelistController has been changed to DiscountController (issue #55).
 5. admin/discounts does not show correct display count (issue #33).
 6. Unable to delete discount from UI due to fix for issue #55 (issue #57).
+7. Sorting capability for Users page (issue #70).
+8. Sorting capability for Group page (issue #71).
+9. Add relationship in classes User and Group (issue #72).
 
 ### Note for Contributors
 All assets are now managed via Grunt and Bower. Please refer to [Install Grunt and Bower dependencies](#install-grunt-and-bower-dependencies).

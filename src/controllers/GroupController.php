@@ -4,8 +4,18 @@ class GroupController extends BaseController
 {
     public function getIndex()
     {
-        $groups = \Sentry::getGroupProvider()->createModel()->paginate(20);
-        return \View::make('redminportal::groups/view')->with('groups', $groups);
+        //$groups = \Sentry::getGroupProvider()->createModel()->paginate(20);
+        //return \View::make('redminportal::groups/view')->with('groups', $groups);
+        
+        $sortBy = 'name';
+        $orderBy = 'asc';
+        
+        $groups = Group::orderBy($sortBy, $orderBy)->paginate(20);
+
+        return \View::make('redminportal::groups/view')
+            ->with('sortBy', $sortBy)
+            ->with('orderBy', $orderBy)
+            ->with('groups', $groups);
     }
 
     public function getCreate()
@@ -150,5 +160,36 @@ class GroupController extends BaseController
         }
 
         return \Redirect::to('admin/groups');
+    }
+    
+    public function getSort($sortBy = 'email', $orderBy = 'asc')
+    {
+        $inputs = array(
+            'sortBy' => $sortBy,
+            'orderBy' => $orderBy
+        );
+        
+        $rules = array(
+            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
+            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
+        );
+        
+        $validation = \Validator::make($inputs, $rules);
+
+        if( ! $validation->passes() )
+        {
+            return \Redirect::to('admin/groups')->withErrors($validation);
+        }
+        
+        if ($orderBy != 'asc' && $orderBy != 'desc') {
+            $orderBy = 'asc';
+        }
+
+        $groups = Group::orderBy($sortBy, $orderBy)->paginate(20);
+
+        return \View::make('redminportal::groups/view')
+            ->with('sortBy', $sortBy)
+            ->with('orderBy', $orderBy)
+            ->with('groups', $groups);
     }
 }

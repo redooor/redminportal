@@ -25,10 +25,31 @@
 		<table class='table table-striped table-bordered'>
 			<thead>
 				<tr>
-					<th>Name</th>
+                    <th>
+                        <a href="{{ URL::to('admin/groups/sort') . '/name/' . ($sortBy == 'name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            Name
+                            @if ($sortBy == 'name')
+                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            @endif
+                        </a>
+                    </th>
 					<th>Permissions</th>
-					<th>Created</th>
-					<th>Updated</th>
+					<th>
+                        <a href="{{ URL::to('admin/groups/sort') . '/created_at/' . ($sortBy == 'created_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            Created
+                            @if ($sortBy == 'created_at')
+                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            @endif
+                        </a>
+                    </th>
+					<th>
+                        <a href="{{ URL::to('admin/groups/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            Updated
+                            @if ($sortBy == 'updated_at')
+                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            @endif
+                        </a>
+                    </th>
                     <th>Action</th>
 				</tr>
 			</thead>
@@ -36,7 +57,15 @@
 				@foreach ($groups as $group)
 				<tr>
 			        <td>{{ $group->name }}</td>
-			        <td>{{ HTML::attributes($group->permissions) }}</td>
+			        <td>
+                        @foreach (json_decode($group->permissions) as $key => $value)
+                            @if ($value == 1)
+                                <span class="label label-success">{{ $key }}</span>
+                            @else
+                                <span class="label label-danger">{{ $key }}</span>
+                            @endif
+                        @endforeach
+                    </td>
 			        <td>{{ $group->created_at }}</td>
 			        <td>{{ $group->updated_at }}</td>
                     <td>
