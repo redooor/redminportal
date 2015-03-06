@@ -2,18 +2,17 @@
 
 class UserController extends BaseController
 {
-    protected $model;
-
-    public function __construct(User $user)
-    {
-        $this->model = $user;
-    }
-
     public function getIndex()
     {
-        $users = \Sentry::getUserProvider()->createModel()->paginate(20);
+        $sortBy = 'email';
+        $orderBy = 'asc';
+        
+        $users = User::orderBy($sortBy, $orderBy)->paginate(20);
 
-        return \View::make('redminportal::users/view')->with('users', $users);
+        return \View::make('redminportal::users/view')
+            ->with('sortBy', $sortBy)
+            ->with('orderBy', $orderBy)
+            ->with('users', $users);
     }
 
     public function getCreate()
@@ -217,5 +216,36 @@ class UserController extends BaseController
         }
 
         return \Redirect::to('admin/users');
+    }
+    
+    public function getSort($sortBy = 'email', $orderBy = 'asc')
+    {
+        $inputs = array(
+            'sortBy' => $sortBy,
+            'orderBy' => $orderBy
+        );
+        
+        $rules = array(
+            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
+            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
+        );
+        
+        $validation = \Validator::make($inputs, $rules);
+
+        if( ! $validation->passes() )
+        {
+            return \Redirect::to('admin/users')->withErrors($validation);
+        }
+        
+        if ($orderBy != 'asc' && $orderBy != 'desc') {
+            $orderBy = 'asc';
+        }
+
+        $users = User::orderBy($sortBy, $orderBy)->paginate(20);
+
+        return \View::make('redminportal::users/view')
+            ->with('sortBy', $sortBy)
+            ->with('orderBy', $orderBy)
+            ->with('users', $users);
     }
 }

@@ -17,6 +17,9 @@
                 <li>PricelistController has been changed to DiscountController (issue #55).</li>
                 <li>admin/discounts does not show correct display count (issue #33).</li>
                 <li>Unable to delete discount from UI due to fix for issue #55 (issue #57).</li>
+                <li>Sorting capability for Users page (issue #70).</li>
+                <li>Sorting capability for Group page (issue #71).</li>
+                <li>Add relationship in classes User and Group (issue #72).</li>
                 <li>More coming... (developing)</li>
             </ol>
             <h4>Note for Contributors</h4>

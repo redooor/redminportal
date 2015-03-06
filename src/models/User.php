@@ -64,5 +64,11 @@ class User extends Model implements UserInterface, RemindableInterface {
     {
         return 'remember_token';
     }
-
+    
+    public function groups()
+    {
+        // Based on Cartalyst/Sentry SQL schema
+        return $this->belongsToMany('Redooor\Redminportal\Group', 'users_groups');
+    }
+    
 }

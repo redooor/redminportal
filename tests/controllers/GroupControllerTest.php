@@ -53,4 +53,37 @@ class GroupControllerTest extends BaseControllerTest
         $this->assertRedirectedTo('/admin/groups/create');
         $this->assertSessionHasErrors();
     }
+    
+    /**
+     * Test (Pass): access getSort by email, asc
+     */
+    public function testSortByPass()
+    {
+        $this->client->request('GET', '/admin/groups/sort/email/asc');
+
+        $this->assertResponseOk();
+        $this->assertViewHas('groups');
+    }
+    
+    /**
+     * Test (Fail): access getSort, try to insert query as email
+     */
+    public function testSortByValidationFail()
+    {
+        $this->client->request('GET', '/admin/groups/sort/->where("id", 5)/asc');
+
+        $this->assertRedirectedTo('/admin/groups');
+        $this->assertSessionHasErrors();
+    }
+    
+    /**
+     * Test (Fail): access getSort, try to insert query as orderBy
+     */
+    public function testSortByValidationOrderByFail()
+    {
+        $this->client->request('GET', '/admin/groups/sort/email/->where("id", 5)');
+
+        $this->assertRedirectedTo('/admin/groups');
+        $this->assertSessionHasErrors();
+    }
 }

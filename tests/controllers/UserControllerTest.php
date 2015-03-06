@@ -140,4 +140,37 @@ class UserControllerTest extends BaseControllerTest
         $this->assertRedirectedTo('/admin/promotions/create');
         $this->assertSessionHasErrors();
     }
+    
+    /**
+     * Test (Pass): access getSort by email, asc
+     */
+    public function testSortByPass()
+    {
+        $this->client->request('GET', '/admin/users/sort/email/asc');
+
+        $this->assertResponseOk();
+        $this->assertViewHas('users');
+    }
+    
+    /**
+     * Test (Fail): access getSort, try to insert query as email
+     */
+    public function testSortByValidationFail()
+    {
+        $this->client->request('GET', '/admin/users/sort/->where("id", 5)/asc');
+
+        $this->assertRedirectedTo('/admin/users');
+        $this->assertSessionHasErrors();
+    }
+    
+    /**
+     * Test (Fail): access getSort, try to insert query as orderBy
+     */
+    public function testSortByValidationOrderByFail()
+    {
+        $this->client->request('GET', '/admin/users/sort/email/->where("id", 5)');
+
+        $this->assertRedirectedTo('/admin/users');
+        $this->assertSessionHasErrors();
+    }
 }
