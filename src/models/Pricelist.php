@@ -1,7 +1,6 @@
 <?php namespace Redooor\Redminportal;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\File;
 
 /*  Columns:
 ***********************
@@ -15,6 +14,8 @@ use Illuminate\Support\Facades\File;
 ***********************/
 class Pricelist extends Model {
 
+    protected $table = 'pricelists';
+    
     public function module()
     {
         return $this->belongsTo('Redooor\Redminportal\Module');
@@ -24,10 +25,28 @@ class Pricelist extends Model {
     {
         return $this->belongsTo('Redooor\Redminportal\Membership');
     }
-
+    
+    /* 
+     * Note to contributors: 
+     * Discount model will be removed from v0.2.0. 
+     * Please use Coupon model instead. 
+     */
     public function discounts()
     {
         return $this->morphMany('Redooor\Redminportal\Discount', 'discountable');
+    }
+    
+    public function coupons()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\Coupon', 'coupon_pricelist');
+    }
+    
+    public function delete()
+    {
+        // Remove all relationships
+        $this->coupons()->detach();
+        
+        return parent::delete();
     }
 
 }

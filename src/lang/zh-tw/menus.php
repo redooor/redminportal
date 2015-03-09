@@ -18,4 +18,5 @@ return array(
     'purchases' => '購買歷史',
     'discounts' => '折扣管理',
     'mailinglist' => '群發郵件',
+    'coupons' => '優惠券管理'
 );

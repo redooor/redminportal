@@ -100,6 +100,8 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
 
 # Installation guide for Contributors
 
+It is recommended that contributors use Laravel Homestead for development because it will provide the same development environment for all of us. Read more about Laravel Homestead [here](http://laravel.com/docs/master/homestead).
+
 1. Clone the Redooor\Redminportal repository into workbench\redooor\redminportal folder.
 2. Then add Redooor\Redminportal to your app\config\app.php providers array like this:
 
@@ -179,11 +181,14 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # Change log
 
-## Version 0.1.5 (and latest master)
-The focus of this update was on cleaning up the code and making sure all tests pass.
+## Under Development, Version 0.2.0 (latest master)
+Focus on supporting Laravel 5.0.
+
+## Version 0.1.5
+The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.
 
 ### Important:
-If you're upgrading from <= v0.1.3, please refer to the [Upgrade Guide](#upgrade-guide).
+If you're upgrading from <= v0.1.4, please refer to the [Upgrade Guide](#upgrade-guide).
 
 ### Bug fixes:
 1. PurchaseControllerTest is producing an error (issue #48).
@@ -195,6 +200,18 @@ If you're upgrading from <= v0.1.3, please refer to the [Upgrade Guide](#upgrade
 7. Sorting capability for Users page (issue #70).
 8. Sorting capability for Group page (issue #71).
 9. Add relationship in classes User and Group (issue #72).
+
+### New feature:
+Discount module is restricted to membership/module (pricelist) and does not allow usage limit.
+Coupon module was created to replace Discount module and to provide greater flexibility.
+
+1. New Coupon module will replace Discount module (issue #62).
+2. Ability to add, edit and delete Coupon module (issue #62).
+3. Coupon module supports adding coupon for category, product and membership/module (pricelist).
+4. Coupon module to allow per coupon limit (issue #18).
+5. Coupon module to allow per user limit (issue #19).
+6. Coupon module to include a start date (issue #56).
+7. Coupon end date should allow specifying time (issue #58).
 
 ### Note for Contributors
 All assets are now managed via Grunt and Bower. Please refer to [Install Grunt and Bower dependencies](#install-grunt-and-bower-dependencies).
@@ -293,26 +310,38 @@ The focus of this update was on cleaning up the code and making sure all tests p
 
 ### Change config:menu
 
-Version 0.1.5 changed the route for 'admin/pricelists' to 'admin/discounts' due to the change of class name from PricelistController to DiscountController.
+Version 0.1.5 changed the route from 'admin/pricelists' to 'admin/discounts' due to the change of class name from PricelistController to DiscountController. And added a new route for CouponController.
 
 Change the menu configuration file at 
 **app/config/packages/redooor/redminportal/menu.php**
 
+#### For discounts
+
 from:
-    
-        array(
-            'name' => 'discounts',
-            'path' => 'admin/pricelists',
-            'hide' => false
-        ),
+
+    array(
+        'name' => 'discounts',
+        'path' => 'admin/pricelists',
+        'hide' => false
+    ),
 
 to:
-    
-        array(
-            'name' => 'discounts',
-            'path' => 'admin/discounts',
-            'hide' => false
-        ),
+
+    array(
+        'name' => 'discounts',
+        'path' => 'admin/discounts',
+        'hide' => false
+    ),
+
+#### For coupons
+
+add:
+
+    array(
+        'name' => 'coupons',
+        'path' => 'admin/coupons',
+        'hide' => false
+    ),
 
 If you didn't change the config file, you can choose to run the following command.
 
@@ -320,11 +349,11 @@ If you didn't change the config file, you can choose to run the following comman
 
 For users, run:
         
-        php artisan config:publish redooor/redminportal
+    php artisan config:publish redooor/redminportal
         
 For contributors, run:
 
-        php artisan config:publish --path="workbench/redooor/redminportal/src/config" redooor/redminportal
+    php artisan config:publish --path="workbench/redooor/redminportal/src/config" redooor/redminportal
 
 ### Publish assets
 
@@ -334,29 +363,45 @@ Version 0.1.5 changes some structure of the JavaScript and CSS files. You need t
 
 For users:
 
-        php artisan asset:publish redooor/redminportal
+    php artisan asset:publish redooor/redminportal
         
 For contributors:
 
-        php artisan asset:publish --bench=redooor/redminportal
+    php artisan asset:publish --bench=redooor/redminportal
+
+### Run migrate
+
+Version 0.1.5 adds a new "coupons" table.
+
+**Caution**: Always backup your database before running this type of command.
+
+Run the following commands in a terminal to perform database migration for Redminportal:
+
+For users, run:
+
+    ?> php artisan migrate --package=redooor/redminportal
+
+For contributors, run:
+
+    ?> php artisan migrate --bench=redooor/redminportal
 
 ### Run dump-autoload
 
 Due to the changes in route, you may need to run this command to get the routing work.
 
-        ?> php artisan dump-autoload
+    ?> php artisan dump-autoload
 
 If you get an error message saying that DiscountController is missing, open 
 
 For users:
 
-        vendor/redooor/redminportal/src/routes.php 
+    vendor/redooor/redminportal/src/routes.php 
 
 For contributors:
 
-        workbench/redooor/redminportal/src/routes.php 
+    workbench/redooor/redminportal/src/routes.php 
 
-and comment off those lines with DiscountController. 
+and comment off those lines with DiscountController and CouponController. 
 
 Then run dump-autoload again. Once it's done, go back to routes.php and undo the comment.
 
@@ -370,8 +415,8 @@ Run the following commands in a terminal to perform database migration for Redmi
 
 For users, run:
 
-        ?> php artisan migrate --package=redooor/redminportal
+    ?> php artisan migrate --package=redooor/redminportal
 
 For contributors, run:
 
-        ?> php artisan migrate --bench=redooor/redminportal
+    ?> php artisan migrate --bench=redooor/redminportal

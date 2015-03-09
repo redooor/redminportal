@@ -108,6 +108,18 @@ module.exports = function (grunt) {
             jqueryuijs: {
                 src: 'bower_components/jquery-ui/jquery-ui.min.js',
                 dest: 'public/assets/js/jquery-ui/jquery-ui.min.js'
+            },
+            momentjs: {
+                src: 'bower_components/moment/min/moment.min.js',
+                dest: 'public/assets/js/moment/moment.min.js'
+            },
+            datetimepickerjs: {
+                src: 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+                dest: 'public/assets/js/datetimepicker/bootstrap-datetimepicker.min.js'
+            },
+            datetimepickercss: {
+                src: 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
+                dest: 'public/assets/css/datetimepicker/bootstrap-datetimepicker.min.css'
             }
         },
         watch: {
@@ -134,7 +146,7 @@ module.exports = function (grunt) {
     grunt.registerTask('less-compile', ['less:compileCore', 'autoprefixer:core', 'usebanner', 'cssmin:minifyCore']);
     
     // Distribute all assets to public folder
-    grunt.registerTask('dist-assets', ['copy:fonts', 'copy:jquery', 'copy:bootstrapjs', 'copy:jqueryui', 'copy:jqueryuijs']);
+    grunt.registerTask('dist-assets', ['copy:fonts', 'copy:jquery', 'copy:bootstrapjs', 'copy:jqueryui', 'copy:jqueryuijs', 'copy:momentjs', 'copy:datetimepickerjs', 'copy:datetimepickercss']);
     
     // Default task, compile and distribute all assets to public folder
     grunt.registerTask('default', ['less-compile', 'dist-assets']);
