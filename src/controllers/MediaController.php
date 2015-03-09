@@ -1,5 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
+use \GetId3\GetId3Core as GetId3;
+
 class MediaController extends BaseController
 {
     protected $model;
@@ -314,6 +316,7 @@ class MediaController extends BaseController
             // Save the media link
             $media->path = $fileName;
             $media->mimetype = $mime;
+            $media->options = json_encode($this->retrieveId3Info($file));
             $media->save();
 
             // Delete old media
@@ -331,5 +334,51 @@ class MediaController extends BaseController
         }
 
         die('{"OK": 1, "info": "Upload successful."}');
+    }
+
+    public function getDuration($sid)
+    {
+        $media = Media::find($sid);
+        $status = array();
+        $status['data'] = '';
+
+        if ($media == null) {
+            $status['status'] = 'error';
+            return $status;
+        }
+
+        $media_folder = public_path() . '/assets/medias/' . $media->category_id . '/' . $sid;
+        $file = $media_folder . "/" . $media->path;
+
+        if (file_exists($file) && $media->mimetype != 'application/pdf') {
+            $object = $this->retrieveId3Info($file);
+            $media->options = json_encode($object);
+            $media->save();
+            if (isset($object['duration'])) {
+                $status['data'] = $object['duration'];
+            }
+        }
+
+        $status['status'] = 'success';
+        return $status;
+    }
+
+    protected function retrieveId3Info($file)
+    {
+        $object = array();
+
+        if (file_exists($file)) {
+            // Getting ID3 of media
+            $getID3 = new GetId3();
+
+            $ThisFileInfo = $getID3->analyze($file);
+
+            $len = @$ThisFileInfo['playtime_string'];
+            if ($len != null) {
+                $object['duration'] = $len;
+            }
+        }
+
+        return $object;
     }
 }
