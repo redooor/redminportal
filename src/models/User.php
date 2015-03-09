@@ -71,4 +71,15 @@ class User extends Model implements UserInterface, RemindableInterface {
         return $this->belongsToMany('Redooor\Redminportal\Group', 'users_groups');
     }
     
+    public function coupons()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\Coupon', 'coupon_user');
+    }
+    
+    public function delete()
+    {
+        $this->coupons()->detach();
+        return parent::delete();
+    }
+    
 }

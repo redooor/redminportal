@@ -8,6 +8,7 @@
         {{ HTML::style('packages/redooor/redminportal/assets/css/jasny-bootstrap.css') }}
         {{ HTML::style('packages/redooor/redminportal/assets/css/jasny-responsive.css') }}
         {{ HTML::style('packages/redooor/redminportal/assets/css/redminportal.min.css') }}
+        {{ HTML::style('packages/redooor/redminportal/assets/css/datetimepicker/bootstrap-datetimepicker.min.css') }}
         <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -82,8 +83,10 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
         {{ HTML::script('packages/redooor/redminportal/assets/js/jquery/jquery.min.js') }}
+        {{ HTML::script('packages/redooor/redminportal/assets/js/moment/moment.min.js') }}
         {{ HTML::script('packages/redooor/redminportal/assets/js/jquery-ui/jquery-ui.min.js') }}
         {{ HTML::script('packages/redooor/redminportal/assets/js/bootstrap.min.js') }}
+        {{ HTML::script('packages/redooor/redminportal/assets/js/datetimepicker/bootstrap-datetimepicker.min.js') }}
         <script>
             !function ($) {
                 $(function(){

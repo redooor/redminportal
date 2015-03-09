@@ -2,6 +2,12 @@
 
 class DiscountController extends BaseController {
 
+    /* 
+     * Note to contributors: 
+     * This controller will be removed from v0.2.0. 
+     * Please use Coupon controller instead. 
+     */
+    
     public function getIndex()
     {
         $discounts = Discount::paginate(20);

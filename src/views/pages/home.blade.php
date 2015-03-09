@@ -5,10 +5,12 @@
         <div class='col-md-8'>
             <h1>RedminPortal <small>by Redooor</small></h1>
             <h2><u>Change log</u></h2>
-            <h3>Under Development, Version 0.1.5 (latest master)</h3>
-            <p>Focus on fixing bugs and cleaning up code. Improve assets management via Grunt and Bower. Improve Discount module.</p>
+            <h3>Under Development, Version 0.2.0 (latest master)</h3>
+            <p>Focus on supporting Laravel 5.0.</p>
+            <h3>Version 0.1.5</h3>
+            <p>Focus on fixing bugs and cleaning up code. Improve assets management via Grunt and Bower. Add Coupon module.</p>
             <h4>Important:</h4>
-            <p>If you're upgrading from &lt;= v0.1.3, please refer to the Upgrade Guide in README.md.</p>
+            <p>If you're upgrading from &lt;= v0.1.4, please refer to the Upgrade Guide in README.md.</p>
             <h4>Bug fixes:</h4>
             <ol>
                 <li>PurchaseControllerTest is producing an error (issue #48).</li>
@@ -21,6 +23,18 @@
                 <li>Sorting capability for Group page (issue #71).</li>
                 <li>Add relationship in classes User and Group (issue #72).</li>
                 <li>More coming... (developing)</li>
+            </ol>
+            <h4>New feature:</h4>
+            <p>Discount module is restricted to membership/module (pricelist) and does not allow usage limit.</p>
+            <p>Coupon module was created to replace Discount module and to provide greater flexibility.</p>
+            <ol>
+                <li>New Coupon module will replace Discount module (issue #62).</li>
+                <li>Ability to add, edit and delete Coupon module (issue #62).</li>
+                <li>Coupon module supports adding coupon for category, product and membership/module (pricelist).</li>
+                <li>Coupon module to allow per coupon limit (issue #18).</li>
+                <li>Coupon module to allow per user limit (issue #19).</li>
+                <li>Coupon module to include a start date (issue #56).</li>
+                <li>Coupon end date should allow specifying time (issue #58).</li>
             </ol>
             <h4>Note for Contributors</h4>
             <p>All assets are now managed via Grunt and Bower. Please refer to <strong>Install Grunt and Bower dependencies</strong> in the README.md file.</p>
@@ -121,7 +135,6 @@
             </ol>
         </div>
         <div class='col-md-4'>
-            
             <div class="panel">
                 <div class="panel-body">
                     {{ HTML::image( URL::to('packages/redooor/redminportal/assets/img/redminportal_logo.png'), 'RedminPortal', array('class' => 'img-responsive pull-right') )}}

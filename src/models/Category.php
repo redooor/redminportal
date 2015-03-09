@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\File;
 
 class Category extends Model {
 
+    protected $table = 'categories';
+    
     public function category()
     {
         return $this->belongsTo('Redooor\Redminportal\Category');
@@ -28,6 +30,11 @@ class Category extends Model {
     public function images()
     {
         return $this->morphMany('Redooor\Redminportal\Image', 'imageable');
+    }
+    
+    public function coupons()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\Coupon', 'coupon_category');
     }
 
     public function deleteAllImages()
@@ -83,6 +90,9 @@ class Category extends Model {
 
     public function delete()
     {
+        // Remove all relationships
+        $this->coupons()->detach();
+        
         // Delete main category will delete all sub categories
         $this->categories()->delete();
 

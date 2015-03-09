@@ -63,6 +63,11 @@ return array(
         'hide' => false
     ),
     array(
+        'name' => 'coupons',
+        'path' => 'admin/coupons',
+        'hide' => false
+    ),
+    array(
         'name' => 'mailinglist',
         'path' => 'admin/mailinglists',
         'hide' => false
