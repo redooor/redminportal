@@ -7,6 +7,10 @@
             <h2><u>Change log</u></h2>
             <h3>Under Development, Version 0.2.0 (latest master)</h3>
             <p>Focus on supporting Laravel 5.0.</p>
+            <h4>New feature:</h4>
+            <ol>
+                <li>More coming... (developing)</li>
+            </ol>
             <h3>Version 0.1.5</h3>
             <p>Focus on fixing bugs and cleaning up code. Improve assets management via Grunt and Bower. Add Coupon module.</p>
             <h4>Important:</h4>
@@ -22,7 +26,7 @@
                 <li>Sorting capability for Users page (issue #70).</li>
                 <li>Sorting capability for Group page (issue #71).</li>
                 <li>Add relationship in classes User and Group (issue #72).</li>
-                <li>More coming... (developing)</li>
+                <li>Removed redundant model Purchase and database table purchases (issue #60).</li>
             </ol>
             <h4>New feature:</h4>
             <p>Discount module is restricted to membership/module (pricelist) and does not allow usage limit.</p>

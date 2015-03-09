@@ -17,7 +17,7 @@ A Laravel 4 package as a **backend** administrating tool for Content Management 
 
 # Important note
 
-If you're upgrading from version 0.1.3 or below, please refer to the [Upgrade Guide](#upgrade-guide).
+If you're upgrading from version 0.1.4 or below, please refer to the [Upgrade Guide](#upgrade-guide).
 
 # Models and Features
 
@@ -200,6 +200,7 @@ If you're upgrading from <= v0.1.4, please refer to the [Upgrade Guide](#upgrade
 7. Sorting capability for Users page (issue #70).
 8. Sorting capability for Group page (issue #71).
 9. Add relationship in classes User and Group (issue #72).
+10. Removed redundant model Purchase and database table purchases (issue #60).
 
 ### New feature:
 Discount module is restricted to membership/module (pricelist) and does not allow usage limit.
