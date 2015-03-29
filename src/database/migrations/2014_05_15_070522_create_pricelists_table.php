@@ -32,7 +32,7 @@ class CreatePricelistsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('pricelists');
+		Schema::dropIfExists('pricelists');
 	}
 
 }
