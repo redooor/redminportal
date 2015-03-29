@@ -7,9 +7,9 @@ class PageController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function home()
 	{
-		return view('redminportal::pages.test');
+		return view('redminportal::pages.home');
 	}
 
 }

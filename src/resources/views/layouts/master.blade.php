@@ -4,15 +4,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>RedminPortal by Redooor</title>
-        {{ HTML::style('packages/redooor/redminportal/assets/css/jquery-ui/themes/blitzer/jquery-ui.min.css') }}
-        {{ HTML::style('packages/redooor/redminportal/assets/css/jasny-bootstrap.css') }}
-        {{ HTML::style('packages/redooor/redminportal/assets/css/jasny-responsive.css') }}
-        {{ HTML::style('packages/redooor/redminportal/assets/css/redminportal.min.css') }}
-        {{ HTML::style('packages/redooor/redminportal/assets/css/datetimepicker/bootstrap-datetimepicker.min.css') }}
+        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/jquery-ui/themes/blitzer/jquery-ui.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/jasny-bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/jasny-responsive.css') }}">
+        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/redminportal.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/datetimepicker/bootstrap-datetimepicker.min.css') }}">
         <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
-        <link rel="shortcut icon" type="image/png" href="{{ URL::to('packages/redooor/redminportal/assets/img/favicon.png') }}"/>
+        <link rel="shortcut icon" type="image/png" href="{{ URL::to('redooor/redminportal/assets/img/favicon.png') }}"/>
         @section('head')
         @show
     </head>
@@ -27,32 +27,28 @@
                             <span class="icon-bar"></span>
                         </button>
                         <a href="{{ URL::to('admin') }}" class="navbar-brand">
-                            {{ HTML::image( URL::to('packages/redooor/redminportal/assets/img/redminportal_logo.png'), 'RedminPortal', array('class' => 'redooor-nav-logo') )}} RedminPortal
+                            <img src="{{ URL::to('redooor/redminportal/assets/img/redminportal_logo.png') }}" title="RedminPortal" class="redooor-nav-logo"> RedminPortal
                         </a>
                     </div>
                     <div class="navbar-collapse collapse">
-                        @if(Sentry::check())
-                            @if(Sentry::getUser()->hasAccess('admin'))
-                            <ul class="nav navbar-nav">
-                                <li class="dropdown" id="navbar-menu-dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th"></span> {{ Lang::get('redminportal::menus.menu') }} <b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        @foreach(\Config::get('redminportal::menu') as $menu)
-                                            @if(!$menu['hide'])
-                                                @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif {{ HTML::link($menu['path'], Lang::get('redminportal::menus.' . $menu['name'])) }}</li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                </li>
-                                <li class="navbar-text navbar-menu-current hidden-xs">
-                                    {{ Lang::get('redminportal::menus.location') }} <span class="glyphicon glyphicon-chevron-right"></span> <span id="navbar-menu-current-text">{{ Lang::get('redminportal::menus.home') }}</span>
-                                </li>
-                            </ul>
-                            @endif
-                            <ul class="nav navbar-nav navbar-right">
-                                <li>{{ HTML::link('logout', Lang::get('redminportal::menus.logout')) }}</li>
-                            </ul>
-                        @endif
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown" id="navbar-menu-dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th"></span> {{ Lang::get('redminportal::menus.menu') }} <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    @foreach (config('menu') as $menu)
+                                        @if(!$menu['hide'])
+                                            @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </li>
+                            <li class="navbar-text navbar-menu-current hidden-xs">
+                                {{ Lang::get('redminportal::menus.location') }} <span class="glyphicon glyphicon-chevron-right"></span> <span id="navbar-menu-current-text">{{ Lang::get('redminportal::menus.home') }}</span>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="{{ URL::to('logout') }}">{{ Lang::get('redminportal::menus.logout') }}</a></li>
+                        </ul>
                     </div><!--/.nav-collapse -->
 
                 </div>
@@ -82,11 +78,11 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-        {{ HTML::script('packages/redooor/redminportal/assets/js/jquery/jquery.min.js') }}
-        {{ HTML::script('packages/redooor/redminportal/assets/js/moment/moment.min.js') }}
-        {{ HTML::script('packages/redooor/redminportal/assets/js/jquery-ui/jquery-ui.min.js') }}
-        {{ HTML::script('packages/redooor/redminportal/assets/js/bootstrap.min.js') }}
-        {{ HTML::script('packages/redooor/redminportal/assets/js/datetimepicker/bootstrap-datetimepicker.min.js') }}
+        <script src="{{ URL::to('redooor/redminportal/assets/js/jquery/jquery.min.js') }}"></script>
+        <script src="{{ URL::to('redooor/redminportal/assets/js/moment/moment.min.js') }}"></script>
+        <script src="{{ URL::to('redooor/redminportal/assets/js/jquery-ui/jquery-ui.min.js') }}"></script>
+        <script src="{{ URL::to('redooor/redminportal/assets/js/bootstrap.min.js') }}"></script>
+        <script src="{{ URL::to('redooor/redminportal/assets/js/datetimepicker/bootstrap-datetimepicker.min.js') }}"></script>
         <script>
             !function ($) {
                 $(function(){

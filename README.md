@@ -130,8 +130,9 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
 6. Then run `php composer update` in the main app folder.
 7. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
 
-        ?> php artisan migrate --package=cartalyst/sentry
-        ?> php artisan migrate --bench=redooor/redminportal
+        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations"
+        ?> composer dump-autoload
+        ?> php artisan migrate
 
 8. Run the following in a terminal to seed the database with initial admin username and password:
 

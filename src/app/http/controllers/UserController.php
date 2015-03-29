@@ -1,6 +1,9 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-class UserController extends BaseController
+use Redooor\Redminportal\App\Models\User;
+use Redooor\Redminportal\App\Models\Group;
+
+class UserController extends Controller
 {
     public function getIndex()
     {
@@ -17,7 +20,7 @@ class UserController extends BaseController
 
     public function getCreate()
     {
-        $groups = \Sentry::getGroupProvider()->findAll();
+        $groups = Group::all();
         $roles = array();
 
         foreach ($groups as $group) {

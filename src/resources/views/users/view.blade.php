@@ -18,7 +18,7 @@
 			{{ $users->getFrom() . ' to ' . $users->getTo() . ' ( total ' . $users->getTotal() . ' )' }}
 		</span>
 		@endif
-		{{ HTML::link('admin/users/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        <a href="{{ URL::to('admin/users/create') }}" class="btn btn-primary">Create New</a>
 	</div>
 
 	@if (count($users) > 0)

@@ -141,7 +141,7 @@
         <div class='col-md-4'>
             <div class="panel">
                 <div class="panel-body">
-                    {{ HTML::image( URL::to('packages/redooor/redminportal/assets/img/redminportal_logo.png'), 'RedminPortal', array('class' => 'img-responsive pull-right') )}}
+                    <img src="{{ URL::to('redooor/redminportal/assets/img/redminportal_logo.png') }}" title="ReminPortal" class="img-responsive pull-right">
                     <h3>Contribution</h3>
                     <p>Source code at <a href="https://github.com/redooor/redminportal">Github</a></p>
                     <h3>Maintenance</h3>
