@@ -15,10 +15,10 @@
 	<div class="nav-controls text-right">
 		@if (count($groups) > 0)
 		<span class="label label-default pull-left">
-			{{ $groups->getFrom() . ' to ' . $groups->getTo() . ' ( total ' . $groups->getTotal() . ' )' }}
+			{{ $groups->count() . ' to ' . $groups->perPage() . ' ( total ' . $groups->total() . ' )' }}
 		</span>
 		@endif
-		{{ HTML::link('admin/groups/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        <a href="{{ URL::to('admin/groups/create') }}" class="btn btn-primary">Create New</a>
 	</div>
 
 	@if (count($groups) > 0)
@@ -29,7 +29,7 @@
                         <a href="{{ URL::to('admin/groups/sort') . '/name/' . ($sortBy == 'name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Name
                             @if ($sortBy == 'name')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -38,7 +38,7 @@
                         <a href="{{ URL::to('admin/groups/sort') . '/created_at/' . ($sortBy == 'created_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Created
                             @if ($sortBy == 'created_at')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -46,7 +46,7 @@
                         <a href="{{ URL::to('admin/groups/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Updated
                             @if ($sortBy == 'updated_at')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -58,13 +58,15 @@
 				<tr>
 			        <td>{{ $group->name }}</td>
 			        <td>
-                        @foreach (json_decode($group->permissions) as $key => $value)
-                            @if ($value == 1)
-                                <span class="label label-success">{{ $key }}</span>
-                            @else
-                                <span class="label label-danger">{{ $key }}</span>
-                            @endif
-                        @endforeach
+                        @if ($group->permissions)
+                            @foreach ($group->permissions() as $key => $value)
+                                @if ($value == 1)
+                                    <span class="label label-success">{{ $key }}</span>
+                                @else
+                                    <span class="label label-danger">{{ $key }}</span>
+                                @endif
+                            @endforeach
+                        @endif
                     </td>
 			        <td>{{ $group->created_at }}</td>
 			        <td>{{ $group->updated_at }}</td>
@@ -90,7 +92,7 @@
 			</tbody>
 	    </table>
         <div class="text-center">
-		{{ $groups->links() }}
+		{{ $groups->render() }}
         </div>
 	@else
 		<div class="alert alert-info">No group found</div>

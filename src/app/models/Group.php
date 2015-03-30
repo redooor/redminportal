@@ -9,4 +9,15 @@ class Group extends Model {
         // Based on Cartalyst/Sentry SQL schema
         return $this->belongsToMany('Redooor\Redminportal\App\Models\User', 'users_groups');
     }
+    
+    public function permissions()
+    {
+        return json_decode($this->permissions);
+    }
+    
+    public function delete()
+    {
+        $this->users()->detach();
+        return parent::delete();
+    }
 }

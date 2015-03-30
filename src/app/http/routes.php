@@ -9,6 +9,7 @@
 Route::group(['namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefix' => 'admin'], function () {
 	Route::get('/', 'PageController@home');
     Route::controller('users', 'UserController');
+    Route::controller('groups', 'GroupController');
 });
 
 /*

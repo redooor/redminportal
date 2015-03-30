@@ -12,33 +12,49 @@
     </div>
     @endif
 
-	{{ Form::open(array('action' => 'Redooor\Redminportal\GroupController@postStore', 'role' => 'form')) }}
+	{!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\GroupController@postStore', 'role' => 'form')) !!}
 	
 		<div class="form-group">
-			{{ Form::label('name', 'Name') }}
-			{{ Form::text('name', null, array('class' => 'form-control', 'required')) }}
+			{!! Form::label('name', 'Name') !!}
+			{!! Form::text('name', null, array('class' => 'form-control', 'required')) !!}
 		</div>
 		
+        <div class="form-group">
+            <div class="checkbox">
+                <label for="view">
+                    {!! Form::checkbox('view', 'yes', true, array('id' => 'view')) !!} View
+                </label>
+            </div>
+		</div>
+
 		<div class="form-group">
             <div class="checkbox">
-                <label for="admin-checker">
-                    {{ Form::checkbox('admin', 'yes', true, array('id' => 'admin-checker')) }} Administrator
+                <label for="create">
+                    {!! Form::checkbox('create', 'no', false, array('id' => 'create')) !!} Create
                 </label>
             </div>
 		</div>
 		
 		<div class="form-group">
             <div class="checkbox">
-                <label for="user-checker">
-                    {{ Form::checkbox('user', 'yes', true, array('id' => 'user-checker')) }} User
+                <label for="delete">
+                    {!! Form::checkbox('delete', 'no', false, array('id' => 'delete')) !!} Delete
+                </label>
+            </div>
+		</div>
+
+        <div class="form-group">
+            <div class="checkbox">
+                <label for="update">
+                    {!! Form::checkbox('update', 'no', false, array('id' => 'update')) !!} Update
                 </label>
             </div>
 		</div>
 		
 		<div class='form-actions text-right'>
-			{{ HTML::link('admin/groups', 'Cancel', array('class' => 'btn btn-default'))}}
-			{{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+			{!! HTML::link('admin/groups', 'Cancel', array('class' => 'btn btn-default'))!!}
+			{!! Form::submit('Create', array('class' => 'btn btn-primary')) !!}
 		</div>
 		
-	{{ Form::close() }}
+	{!! Form::close() !!}
 @stop
