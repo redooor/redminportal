@@ -44,6 +44,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     public function delete()
     {
+        $this->groups()->detach();
         $this->coupons()->detach();
         return parent::delete();
     }

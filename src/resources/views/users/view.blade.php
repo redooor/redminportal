@@ -15,7 +15,7 @@
 	<div class="nav-controls text-right">
 		@if (count($users) > 0)
 		<span class="label label-default pull-left">
-			{{ $users->getFrom() . ' to ' . $users->getTo() . ' ( total ' . $users->getTotal() . ' )' }}
+			{{ $users->count() . ' to ' . $users->perPage() . ' ( total ' . $users->total() . ' )' }}
 		</span>
 		@endif
         <a href="{{ URL::to('admin/users/create') }}" class="btn btn-primary">Create New</a>
@@ -29,7 +29,7 @@
                         <a href="{{ URL::to('admin/users/sort') . '/email/' . ($sortBy == 'email' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Email
                             @if ($sortBy == 'email')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -37,7 +37,7 @@
                         <a href="{{ URL::to('admin/users/sort') . '/first_name/' . ($sortBy == 'first_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             First Name
                             @if ($sortBy == 'first_name')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -45,7 +45,7 @@
                         <a href="{{ URL::to('admin/users/sort') . '/last_name/' . ($sortBy == 'last_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Last Name
                             @if ($sortBy == 'last_name')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -54,7 +54,7 @@
                         <a href="{{ URL::to('admin/users/sort') . '/activated/' . ($sortBy == 'activated' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Activated
                             @if ($sortBy == 'activated')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -62,7 +62,7 @@
                         <a href="{{ URL::to('admin/users/sort') . '/last_login/' . ($sortBy == 'last_login' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Last Login
                             @if ($sortBy == 'last_login')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -70,7 +70,7 @@
                         <a href="{{ URL::to('admin/users/sort') . '/created_at/' . ($sortBy == 'created_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Created
                             @if ($sortBy == 'created_at')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -78,7 +78,7 @@
                         <a href="{{ URL::to('admin/users/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Updated
                             @if ($sortBy == 'updated_at')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -139,7 +139,7 @@
 		    </tbody>
 	    </table>
         <div class="text-center">
-		{{ $users->links() }}
+		{{ $users->render() }}
         </div>
 	@else
 		<div class="alert alert-info">No user found</div>

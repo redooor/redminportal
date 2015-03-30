@@ -16,7 +16,7 @@
     {!! Form::hidden('id', $group->id) !!}
 		<div class="form-group">
 			{!! Form::label('name', 'Name') !!}
-			{!! Form::text('name', $group->name, array('class' => 'form-control', 'required')) !!}
+			{!! Form::text('name', $group->name, array('class' => 'form-control', 'autofocus', 'required')) !!}
 		</div>
 		
 		<div class="form-group">

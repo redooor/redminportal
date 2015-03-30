@@ -1,4 +1,4 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,22 +27,22 @@ class Coupon extends Model {
     
     public function pricelists()
     {
-        return $this->belongsToMany('Redooor\Redminportal\Pricelist', 'coupon_pricelist');
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Pricelist', 'coupon_pricelist');
     }
     
     public function products()
     {
-        return $this->belongsToMany('Redooor\Redminportal\Product', 'coupon_product');
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Product', 'coupon_product');
     }
     
     public function categories()
     {
-        return $this->belongsToMany('Redooor\Redminportal\Category', 'coupon_category');
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Category', 'coupon_category');
     }
     
     public function users()
     {
-        return $this->belongsToMany('Redooor\Redminportal\User', 'coupon_user');
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\User', 'coupon_user');
     }
     
     public function delete()

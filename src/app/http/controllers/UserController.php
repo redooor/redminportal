@@ -11,47 +11,46 @@ class UserController extends Controller
         $orderBy = 'asc';
         
         $users = User::orderBy($sortBy, $orderBy)->paginate(20);
+        
+        $data = array(
+            'sortBy' => $sortBy,
+            'orderBy' => $orderBy,
+            'users' => $users
+        );
 
-        return \View::make('redminportal::users/view')
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy)
-            ->with('users', $users);
+        return \View::make('redminportal::users/view', $data);
     }
 
     public function getCreate()
     {
-        $groups = Group::all();
-        $roles = array();
-
-        foreach ($groups as $group) {
-            $roles[$group->id] = $group->name;
-        }
-
+        $roles = Group::orderBy('name')->lists('name', 'id');
+        
         return \View::make('redminportal::users/create')->with('roles', $roles);
     }
     
     public function getEdit($sid)
     {
-        try {
-            // Find the user using the user id
-            $user = \Sentry::findUserById($sid);
-        } catch (\Exception $exp) {
+        $user = User::find($sid);
+        
+        if ($user == null) {
             return \View::make('redminportal::pages/404');
         }
         
-        $groups = \Sentry::getGroupProvider()->findAll();
-        $roles = array();
-
-        foreach ($groups as $group) {
-            $roles[$group->id] = $group->name;
+        $roles = Group::orderBy('name')->lists('name', 'id');
+        
+        $group = $user->groups()->first();
+        
+        if ($group == null) {
+            $group = Group::orderBy('name')->first();
         }
         
-        $group = $user->getGroups()->first();
+        $data = array(
+            'roles' => $roles,
+            'user' => $user,
+            'group' => $group
+        );
         
-        return \View::make('redminportal::users/edit')
-            ->with('roles', $roles)
-            ->with('user', $user)
-            ->with('group', $group);
+        return \View::make('redminportal::users/edit', $data);
     }
 
     public function postStore()
@@ -72,11 +71,11 @@ class UserController extends Controller
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if (!$validation->passes()) {
+        if ($validation->fails()) {
             if (isset($sid)) {
-                return \Redirect::to('admin/users/edit/' . $sid)->withErrors($validation)->withInput();
+                return redirect('admin/users/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
-                return \Redirect::to('admin/users/create')->withErrors($validation)->withInput();
+                return redirect('admin/users/create')->withErrors($validation)->withInput();
             }
         }
 
@@ -88,137 +87,150 @@ class UserController extends Controller
         $activated     = (\Input::get('activated') == '' ? false : true);
         
         if (isset($sid)) {
-            // Edit existing
-            try {
-                $user = \Sentry::findUserById($sid);
-
-                $user->email = $email;
-                if ($password != '') {
-                    $user->password = $password;
-                }
-                $user->first_name = $first_name;
-                $user->last_name = $last_name;
-                $user->activated = $activated;
-                
-                // Find user's group
-                $old_group = $user->getGroups()->first();
-                $new_group = \Sentry::findGroupById($role);
-
-                // Assign the group to the user
-                if ($old_group->id != $new_group->id) {
-                    $user->removeGroup($old_group);
-                    $user->addGroup($new_group);
-                }
-
-                // Update the user
-                if (! $user->save()) {
-                    $errors = new \Illuminate\Support\MessageBag;
-                    $errors->add(
-                        'editError',
-                        "The user cannot be updated due to some problem. Please try again."
-                    );
-                    return \Redirect::to('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
-                }
-            } catch (\Exception $exp) {
+            $user = User::find($sid);
+            
+            if ($user == null) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add(
                     'editError',
                     "The user cannot be found because it does not exist or may have been deleted."
                 );
-                return \Redirect::to('/admin/users')->withErrors($errors);
+                return redirect('/admin/users')->withErrors($errors);
             }
-        } else {
-            try {
-                // Create the user
-                $user = \Sentry::getUserProvider()->create(array(
-                    'email'      => $email,
-                    'password'   => $password,
-                    'first_name' => $first_name,
-                    'last_name'  => $last_name,
-                    'activated'  => $activated,
-                ));
-
-                // Find the group using the group id
-                $adminGroup = \Sentry::getGroupProvider()->findById($role);
-
-                // Assign the group to the user
-                $user->addGroup($adminGroup);
-
-            } catch (\Exception $exp) {
+            
+            // Edit existing
+            $user->email = $email;
+            if ($password != '') {
+                $user->password = $password;
+            }
+            $user->first_name = $first_name;
+            $user->last_name = $last_name;
+            $user->activated = $activated;
+            
+            // Update the user
+            if (! $user->save()) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add(
                     'editError',
-                    "The user cannot be created due to some problem. Please try again."
+                    "The user cannot be updated due to some problem. Please try again."
                 );
-                return \Redirect::to('admin/users/create')->withErrors($errors)->withInput();
+                return redirect('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
             }
+            
+            // Find user's group
+            $old_group = $user->groups()->first();
+            $new_group = Group::find($role);
+            
+            if ($new_group == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The user cannot be updated because the selected group cannot be found. Please try again."
+                );
+                return redirect('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
+            }
+            
+            // Assign the group to the user
+            if ($old_group == null) {
+                $user->groups()->save($new_group);
+            } elseif ($old_group->id != $new_group->id) {
+                $user->groups()->detach();
+                $user->groups()->save($new_group);
+            }
+            
+        } else {
+            $user = new User;
+            $user->email = $email;
+            $user->password = $password;
+            $user->first_name = $first_name;
+            $user->last_name = $last_name;
+            $user->activated = $activated;
+            
+            // Update the user
+            if (! $user->save()) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The user cannot be updated due to some problem. Please try again."
+                );
+                return redirect('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
+            }
+            
+            $new_group = Group::find($role);
+            
+            if ($new_group == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'editError',
+                    "The user cannot be updated because the selected group cannot be found. Please try again."
+                );
+                return redirect('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
+            }
+            
+            // Assign new group
+            $user->groups()->save($new_group);
         }
 
-        return \Redirect::to('admin/users');
+        return redirect('admin/users');
     }
 
     public function getDelete($sid)
     {
-        try {
-            // Find the user using the user id
-            $user = \Sentry::getUserProvider()->findById($sid);
-
-            // Delete the user
-            $user->delete();
-            
-        } catch (\Exception $exp) {
+        $user = User::find($sid);
+        
+        if ($user == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'editError',
                 "The user cannot be found because it does not exist or may have been deleted."
             );
-            return \Redirect::to('/admin/users')->withErrors($errors);
+            return redirect('/admin/users')->withErrors($errors);
         }
-
-        return \Redirect::to('admin/users');
+        
+        // Delete the user
+        $user->delete();
+        
+        return redirect()->back();
     }
 
     public function getActivate($sid)
     {
-        try {
-            // Find the user using the user id
-            $user = \Sentry::getUserProvider()->findById($sid);
-
-            // Activate the user
-            $user->activated = true;
-            $user->save();
-            
-        } catch (\Exception $exp) {
+        $user = User::find($sid);
+        
+        if ($user == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'editError',
                 "The user cannot be found because it does not exist or may have been deleted."
             );
-            return \Redirect::to('/admin/users')->withErrors($errors);
+            return redirect('/admin/users')->withErrors($errors);
         }
-        return \Redirect::to('admin/users');
+        
+        // Activate the user
+        $user->activated = true;
+        $user->save();
+        
+        return redirect()->back();
     }
 
     public function getDeactivate($sid)
     {
-        try {
-            // Find the user using the user id
-            $user = \Sentry::getUserProvider()->findById($sid);
-
-            // Activate the user
-            $user->activated = false;
-            $user->save();
-            
-        } catch (\Exception $exp) {
+        $user = User::find($sid);
+        
+        if ($user == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'editError',
                 "The user cannot be found because it does not exist or may have been deleted."
             );
-            return \Redirect::to('/admin/users')->withErrors($errors);
+            return redirect('/admin/users')->withErrors($errors);
         }
-
-        return \Redirect::to('admin/users');
+        
+        // Deactivate the user
+        $user->activated = false;
+        $user->save();
+        
+        return redirect()->back();
     }
     
     public function getSort($sortBy = 'email', $orderBy = 'asc')
@@ -237,7 +249,7 @@ class UserController extends Controller
 
         if( ! $validation->passes() )
         {
-            return \Redirect::to('admin/users')->withErrors($validation);
+            return redirect('admin/users')->withErrors($validation);
         }
         
         if ($orderBy != 'asc' && $orderBy != 'desc') {
@@ -245,10 +257,13 @@ class UserController extends Controller
         }
 
         $users = User::orderBy($sortBy, $orderBy)->paginate(20);
-
-        return \View::make('redminportal::users/view')
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy)
-            ->with('users', $users);
+        
+        $data = array(
+            'sortBy' => $sortBy,
+            'orderBy' => $orderBy,
+            'users' => $users
+        );
+        
+        return \View::make('redminportal::users/view', $data);
     }
 }

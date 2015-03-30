@@ -16,7 +16,7 @@
 	
 		<div class="form-group">
 			{!! Form::label('name', 'Name') !!}
-			{!! Form::text('name', null, array('class' => 'form-control', 'required')) !!}
+			{!! Form::text('name', null, array('class' => 'form-control', 'autofocus', 'required')) !!}
 		</div>
 		
         <div class="form-group">
