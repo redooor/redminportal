@@ -11,6 +11,7 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 1. Support Laravel 5.0.
 2. Removed dependancy of Cartalyst/Sentry.
 3. Use Laravel's Authentication instead of Cartalyst/Sentry.
+4. Users and Groups tables should work with previous schema. (But need to add column remember_token to users table)
 
 ## Version 0.1.5
 The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.

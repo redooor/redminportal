@@ -9,6 +9,10 @@
             <p>Focus on supporting Laravel 5.0.</p>
             <h4>New feature:</h4>
             <ol>
+                <li>Support Laravel 5.0.</li>
+                <li>Removed dependancy of Cartalyst/Sentry.</li>
+                <li>Use Laravel's Authentication instead of Cartalyst/Sentry.</li>
+                <li>Users and Groups tables should work with previous schema. (But need to add column remember_token in users table)</li>
                 <li>More coming... (developing)</li>
             </ol>
             <h3>Version 0.1.5</h3>
@@ -141,7 +145,7 @@
         <div class='col-md-4'>
             <div class="panel">
                 <div class="panel-body">
-                    <img src="{{ URL::to('redooor/redminportal/assets/img/redminportal_logo.png') }}" title="ReminPortal" class="img-responsive pull-right">
+                    <img src="{{ URL::to('vendor/redooor/redminportal/img/redminportal_logo.png') }}" title="ReminPortal" class="img-responsive pull-right">
                     <h3>Contribution</h3>
                     <p>Source code at <a href="https://github.com/redooor/redminportal">Github</a></p>
                     <h3>Maintenance</h3>

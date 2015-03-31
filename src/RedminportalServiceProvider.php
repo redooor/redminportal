@@ -30,24 +30,24 @@ class RedminportalServiceProvider extends ServiceProvider {
         
         // Allow end users to publish and modify views
         $this->publishes([
-            __DIR__.'/resources/views' => base_path('resources/views/vendor/redminportal'),
+            __DIR__.'/resources/views' => base_path('resources/views/vendor/redooor/redminportal'),
         ]);
         
         // Allow end users to publish and modify public assets
         $this->publishes([
-            __DIR__.'/public' => public_path('redooor/redminportal'),
+            __DIR__.'/public' => public_path('vendor/redooor/redminportal'),
         ], 'public');
         
         // Publish a config file
         $this->publishes([
-            __DIR__.'/config/image.php' => config_path('image.php'),
-            __DIR__.'/config/menu.php' => config_path('menu.php'),
-            __DIR__.'/config/translation.php' => config_path('translation.php')
+            __DIR__.'/config/image.php' => config_path('vendor/redooor/redminportal/image.php'),
+            __DIR__.'/config/menu.php' => config_path('vendor/redooor/redminportal/menu.php'),
+            __DIR__.'/config/translation.php' => config_path('vendor/redooor/redminportal/translation.php')
         ], 'config');
-
+        
         // Publish your migrations
         $this->publishes([
-            __DIR__.'/database/migrations/' => base_path('/database/migrations')
+            __DIR__.'/database/migrations/' => base_path('database/migrations/vendor/redooor/redminportal/')
         ], 'migrations');
 	}
 

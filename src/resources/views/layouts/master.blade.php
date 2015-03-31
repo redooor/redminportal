@@ -4,15 +4,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>RedminPortal by Redooor</title>
-        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/jquery-ui/themes/blitzer/jquery-ui.min.css') }}">
-        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/jasny-bootstrap.css') }}">
-        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/jasny-responsive.css') }}">
-        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/redminportal.min.css') }}">
-        <link rel="stylesheet" href="{{ URL::to('redooor/redminportal/assets/css/datetimepicker/bootstrap-datetimepicker.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jquery-ui/themes/blitzer/jquery-ui.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jasny-bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jasny-responsive.css') }}">
+        <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/redminportal.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/datetimepicker/bootstrap-datetimepicker.min.css') }}">
         <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
-        <link rel="shortcut icon" type="image/png" href="{{ URL::to('redooor/redminportal/assets/img/favicon.png') }}"/>
+        <link rel="shortcut icon" type="image/png" href="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}"/>
         @section('head')
         @show
     </head>
@@ -27,7 +27,7 @@
                             <span class="icon-bar"></span>
                         </button>
                         <a href="{{ URL::to('admin') }}" class="navbar-brand">
-                            <img src="{{ URL::to('redooor/redminportal/assets/img/redminportal_logo.png') }}" title="RedminPortal" class="redooor-nav-logo"> RedminPortal
+                            <img src="{{ URL::to('vendor/redooor/redminportal/img/redminportal_logo.png') }}" title="RedminPortal" class="redooor-nav-logo"> RedminPortal
                         </a>
                     </div>
                     <div class="navbar-collapse collapse">
@@ -78,11 +78,11 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-        <script src="{{ URL::to('redooor/redminportal/assets/js/jquery/jquery.min.js') }}"></script>
-        <script src="{{ URL::to('redooor/redminportal/assets/js/moment/moment.min.js') }}"></script>
-        <script src="{{ URL::to('redooor/redminportal/assets/js/jquery-ui/jquery-ui.min.js') }}"></script>
-        <script src="{{ URL::to('redooor/redminportal/assets/js/bootstrap.min.js') }}"></script>
-        <script src="{{ URL::to('redooor/redminportal/assets/js/datetimepicker/bootstrap-datetimepicker.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery/jquery.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/moment/moment.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery-ui/jquery-ui.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/datetimepicker/bootstrap-datetimepicker.min.js') }}"></script>
         <script>
             !function ($) {
                 $(function(){
