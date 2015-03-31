@@ -7,6 +7,11 @@ Version 0.2.0 is **NOT** backward compatible.
 
 Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
+### New feature:
+1. Support Laravel 5.0.
+2. Removed dependancy of Cartalyst/Sentry.
+3. Use Laravel's Authentication instead of Cartalyst/Sentry.
+
 ## Version 0.1.5
 The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.
 
@@ -112,16 +117,6 @@ The focus of this update was on cleaning up the code and making sure all tests p
 3. Media supports huge file upload (via a plugin).
 4. Able to activate user from admin portal.
 5. Able to insert picture in Announcement page.
-
-### External libraries used
-* Bootstrap v3.1.*
-* jQuery v1.11.1
-* [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel)
-* [Imagine](https://github.com/avalanche123/Imagine)
-* [Sentry](http://docs.cartalyst.com/sentry-2/overview)
-* [Jasny Bootstrap](http://jasny.github.io/bootstrap/)
-* [Plupload](http://www.plupload.com/)
-* [getID3](http://www.getid3.org/)
 
 ### Configuration
 1. Menu view can be controlled via config/menu.php file.

@@ -14,12 +14,14 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 7. [Contributing](#contributing)
 8. [Creator](#creator)
 9. [License](#license)
-10. [Change log](#change-log)
-11. [Upgrade Guide](#upgrade-guide)
+10. [External Libraries Used](#external-libraries-used)
+11. [Change log](#change-log)
+12. [Upgrade Guide](#upgrade-guide)
 
 # Important note
 
 Version 0.2.0 is **NOT** backward compatible.
+
 Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
 # Models and Features
@@ -105,50 +107,86 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
 
 It is recommended that contributors use Laravel Homestead for development because it will provide the same development environment for all of us. Read more about Laravel Homestead [here](http://laravel.com/docs/master/homestead).
 
-1. Clone the Redooor\Redminportal repository into workbench\redooor\redminportal folder.
-2. Then add Redooor\Redminportal to your app\config\app.php providers array like this:
+1. Install Laravel 5.0 using [this guide](http://laravel.com/docs/5.0/installation). We'll call this the [root].
+2. Create a folder named "packages" inside the [root] folder.
+3. Clone the Redooor\Redminportal repository into [root]\packages\redooor\redminportal folder.
+4. Open a terminal, cd to [root]\packages\redooor\redminportal folder then run:
+    
+    `composer update --prefer-dist -vvv --profile`
+    
+5. Now open [root]'s composer.json file, under "require" add "illuminate/html" like this:
+
+        "require": {
+            "laravel/framework": "5.0.*",
+            "illuminate/html": "~5.0"
+        },
+
+6. Then add Redooor\Redminportal source to [root]'s composer.json under "autoload" like this:
+
+        "autoload": {
+            "classmap": [
+                "database"
+            ],
+            "psr-4": {
+                "App\\": "app/",
+                "Redooor\\Redminportal\\": "packages/redooor/redminportal/src"
+            }
+        },
+
+7. Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
+
+        "minimum-stability": "dev",
+        "prefer-stable": true
+
+8. Then cd to [root]'s folder and run:
+
+    `composer update --prefer-dist -vvv --profile`
+
+9. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
             'Illuminate\Foundation\Providers\ArtisanServiceProvider',
             ... omitted ...
-            'Illuminate\Workbench\WorkbenchServiceProvider',
-            'Cartalyst\Sentry\SentryServiceProvider',
+            
+            // Add these 2 lines
             'Redooor\Redminportal\RedminportalServiceProvider',
+            'Illuminate\Html\HtmlServiceProvider'
         ),
-
-3. Then run `php composer update` in workspace\redoooor\redminportal folder.
-4. Then run `php artisan dump-autoload` in a terminal.
-5. This Package is dependant on Cartalyst Sentry. In order to do the database migration and seeding, we'll need to add it to the main application's composer.json file, under "require":
-
-        "require": {
-            "laravel/framework": "4.2.*",
-            "cartalyst/sentry": "2.1.*"
-        },
-
-Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
-
-        "minimum-stability": "dev",
-        "prefer-stable": true
         
-6. Then run `php composer update` in the main app folder.
-7. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
+        'aliases' => [
+            ... omitted ...
+            
+            // Add these 2 lines
+            'Form'=> 'Illuminate\Html\FormFacade',
+            'HTML'=> 'Illuminate\Html\HtmlFacade',
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations"
+        ],
+
+10. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
+
+        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
         ?> composer dump-autoload
         ?> php artisan migrate
+        
+    **NOTE: using --force will overwrite existing files**
 
-8. Run the following in a terminal to seed the database with initial admin username and password:
+11. Run the following in a terminal to seed the database with initial admin username and password:
 
         ?> php artisan db:seed --class="RedminSeeder"
+        
         Username/password: admin@admin.com/admin
 
-9. Publish package assets by running this in a terminal:
+12. Publish package assets by running this in a terminal:
 
-        php artisan asset:publish --bench=redooor/redminportal
+        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
+        
+    **NOTE: using --force will overwrite existing files**
 
-10. Publish package config by running this in a terminal:
+13. Publish package config by running this in a terminal:
 
-        php artisan config:publish --path="workbench/redooor/redminportal/src/config" redooor/redminportal
+        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" --force
+        
+    **NOTE: using --force will overwrite existing files**
 
 ## Install Grunt and Bower dependencies
 
@@ -182,6 +220,17 @@ Andrews Ang
 # License
 
 RedminPortal is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+
+# External Libraries Used
+
+* Bootstrap v3.1.*
+* jQuery v1.11.1
+* [illuminate/html](https://github.com/illuminate/html)
+* [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel)
+* [Imagine](https://github.com/avalanche123/Imagine)
+* [Jasny Bootstrap](http://jasny.github.io/bootstrap/)
+* [Plupload](http://www.plupload.com/)
+* [getID3](http://www.getid3.org/)
 
 # Change log
 
