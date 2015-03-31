@@ -139,7 +139,7 @@
 		    </tbody>
 	    </table>
         <div class="text-center">
-		{{ $users->render() }}
+		{!! $users->render() !!}
         </div>
 	@else
 		<div class="alert alert-info">No user found</div>

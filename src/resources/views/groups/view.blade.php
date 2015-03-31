@@ -92,7 +92,7 @@
 			</tbody>
 	    </table>
         <div class="text-center">
-		{{ $groups->render() }}
+		{!! $groups->render() !!}
         </div>
 	@else
 		<div class="alert alert-info">No group found</div>
