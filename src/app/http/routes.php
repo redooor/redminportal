@@ -7,9 +7,10 @@
 */
 
 Route::group(['namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefix' => 'admin'], function () {
-	Route::get('/', 'PageController@home');
+    Route::get('/', 'PageController@home');
     Route::controller('users', 'UserController');
     Route::controller('groups', 'GroupController');
+    Route::controller('memberships', 'MembershipController');
 });
 
 /*
@@ -18,11 +19,7 @@ Route::get('logout', 'Redooor\Redminportal\LoginController@getLogout');
 
 Route::group(array('prefix' => 'admin', 'before' => 'auth.sentry'), function()
 {
-    Route::get('/', function(){
-        return View::make('redminportal::pages/home');
-    });
-    Route::controller('users',            'Redooor\Redminportal\UserController');
-    Route::controller('groups',           'Redooor\Redminportal\GroupController');
+    
     Route::controller('categories',       'Redooor\Redminportal\CategoryController');
     Route::controller('products',         'Redooor\Redminportal\ProductController');
     Route::controller('promotions',       'Redooor\Redminportal\PromotionController');
@@ -30,7 +27,7 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth.sentry'), function()
     Route::controller('portfolios',       'Redooor\Redminportal\PortfolioController');
     Route::controller('medias',           'Redooor\Redminportal\MediaController');
     Route::controller('modules',          'Redooor\Redminportal\ModuleController');
-    Route::controller('memberships',      'Redooor\Redminportal\MembershipController');
+    
     Route::controller('purchases',        'Redooor\Redminportal\PurchaseController');
     Route::controller('coupons',          'Redooor\Redminportal\CouponController');
     Route::controller('mailinglists',     'Redooor\Redminportal\MailinglistController');

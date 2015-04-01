@@ -1,10 +1,10 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
-class Category extends Model {
-
+class Category extends Model
+{
     protected $table = 'categories';
     
     public function category()
@@ -41,12 +41,11 @@ class Category extends Model {
     {
         $folder = 'assets/img/categories/';
 
-        foreach ($this->images as $image)
-        {
+        foreach ($this->images as $image) {
             // Delete physical file
             $filepath = $folder . $image->path;
 
-            if( File::exists($filepath) ) {
+            if (File::exists($filepath)) {
                 File::delete($filepath);
             }
 
@@ -62,7 +61,9 @@ class Category extends Model {
 
     public function printCategory($showActive = false)
     {
-        $html = "<a href='" . $this->id . "'><span class='glyphicon glyphicon-chevron-right'></span> " . $this->name . "</a>";
+        $html = "<a href='" . $this->id .
+            "'><span class='glyphicon glyphicon-chevron-right'></span> " .
+            $this->name . "</a>";
         if ($this->categories->count() > 0) {
             $html .= "<ul>";
             if ($showActive) {
@@ -77,7 +78,7 @@ class Category extends Model {
                     ->orderBy('name')
                     ->get();
             }
-            foreach($categories as $cat) {
+            foreach ($categories as $cat) {
                 $html .= "<li>";
                 $html .= $cat->printCategory();
                 $html .= "</li>";
@@ -101,5 +102,4 @@ class Category extends Model {
 
         return parent::delete();
     }
-
 }

@@ -1,14 +1,9 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-class MembershipController extends BaseController
+use Redooor\Redminportal\App\Models\Membership;
+
+class MembershipController extends Controller
 {
-    protected $model;
-
-    public function __construct(Membership $membership)
-    {
-        $this->model = $membership;
-    }
-
     public function getIndex()
     {
         $memberships = Membership::orderBy('rank')->orderBy('name')->paginate(20);

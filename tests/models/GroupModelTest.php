@@ -1,19 +1,18 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\App\Models\User;
+use Redooor\Redminportal\App\Models\Group;
 
-class UserModelTest extends BaseModelTest
+class GroupModelTest extends BaseModelTest
 {
     /**
      * Contructor
      */
     public function __construct()
     {
-        $model = new User;
+        $model = new Group;
         $testcase = array(
-            'email'     => 'john.doe@example.com',
-            'password'  => 'test',
-            'activated' => true
+            'name'  => 'test',
+            'permissions' => "{'admin.view':'1','admin.create':'0'}"
         );
         
         parent::__construct($model, $testcase);

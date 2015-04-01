@@ -1,4 +1,4 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

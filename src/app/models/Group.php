@@ -2,8 +2,20 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Group extends Model {
+/* Columns
+ *
+ * id           (increment)
+ * name         (string, unique)
+ * permissions  (text, nullable)
+ * created_at   (dateTime)
+ * updated_at   (dateTime)
+ *
+ */
 
+class Group extends Model
+{
+    protected $table = 'groups';
+    
     public function users()
     {
         // Based on Cartalyst/Sentry SQL schema

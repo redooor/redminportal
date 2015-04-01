@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-class BaseModelTest extends \RedminTestCase
+class BaseModelTest extends RedminTestCase
 {
     protected $model;
     protected $testcase;

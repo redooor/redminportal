@@ -3,17 +3,16 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration {
-
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-        if (Schema::hasTable('users'))
-        {
+class CreateUsersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        if (Schema::hasTable('users')) {
             // Add remember_token column to existing table
             if (! Schema::hasColumn('remember_token ')) {
                 Schema::table('users', function($table) {
@@ -23,10 +22,8 @@ class CreateUsersTable extends Migration {
             
         } else {
             // Continue support of Cartalyst/Sentry schema
-            Schema::create('users', function(Blueprint $table)
-            {
+            Schema::create('users', function(Blueprint $table) {
                 $table->increments('id');
-                $table->string('name');
                 $table->string('email')->unique();
                 $table->string('password', 60);
                 $table->rememberToken();
@@ -49,15 +46,15 @@ class CreateUsersTable extends Migration {
                 $table->index('reset_password_code');
             });
         }
-	}
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::dropIfExists('users');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
 }

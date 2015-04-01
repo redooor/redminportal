@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Media;
+use Redooor\Redminportal\App\Models\Media;
 
 class MediaModelTest extends BaseModelTest
 {

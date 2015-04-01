@@ -1,6 +1,6 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
-use Orchestra\Testbench\TestCase as TestBenchTestCase;
+use \Orchestra\Testbench\TestCase as TestBenchTestCase;
 
 class RedminTestCase extends TestBenchTestCase
 {
@@ -32,23 +32,17 @@ class RedminTestCase extends TestBenchTestCase
         ini_set('memory_limit', '400M'); // Temporarily increase memory limit to 400MB
         
         /**
-         * By default, Laravel keeps a log in memory of all queries that have been run for 
+         * By default, Laravel keeps a log in memory of all queries that have been run for
          * the current request. Disable logging for test to reduce memory.
          */
-        DB::connection()->disableQueryLog();
+        \DB::connection()->disableQueryLog();
 
-        $artisan = $this->app->make('artisan');
-        $artisan->call('migrate', [
+        $this->artisan('migrate', [
             '--database' => 'testbench',
-            '--path'     => '../src/migrations',
-        ]);
-        $artisan->call('migrate', [
-            '--database' => 'testbench',
-            '--package'  => 'Cartalyst/Sentry',
-            '--path'     => '../vendor/cartalyst/sentry/src/migrations',
+            '--realpath' => realpath(__DIR__.'/../src/database/migrations'),
         ]);
 
-        Mail::pretend(true);
+        \Mail::pretend(true);
     }
 
     /**
@@ -69,18 +63,18 @@ class RedminTestCase extends TestBenchTestCase
     /**
      * Appends additional ServiceProvider for the test.
      */
-    protected function getPackageProviders()
+    protected function getPackageProviders($app)
     {
-        return array('Redooor\Redminportal\RedminportalServiceProvider');
+        return ['Redooor\Redminportal\RedminportalServiceProvider'];
     }
 
     /**
      * Appends additional Aliases for the test.
      */
-    protected function getPackageAliases()
+    protected function getPackageAliases($app)
     {
-        return array(
+        return [
             'Redminportal' => 'Redooor\Redminportal\Facades\Redminportal'
-        );
+        ];
     }
 }

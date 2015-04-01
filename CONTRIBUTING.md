@@ -56,3 +56,13 @@ Every method in controller or model must have a test case.
 
 All contributions are most welcome.
 All deployment-related documentation should be done within our Wiki page.
+
+# Optional Development Tools
+
+We're using these tools in our development of RedminPortal. It'll help if you use the same tool too.
+Please feel free to suggest a better alternative.
+
+* [Laravel Homestead](http://laravel.com/docs/5.0/homestead) for consistent environment.
+* [Brackets](http://brackets.io/) for text editing.
+* [Brackets PHP Code Quality Tools](https://github.com/mikaeljorhult/brackets-php-code-quality-tools) a plugin for Brackets.
+* [Brackets PHP Syntax Hint](http://www.oslibrary.in/brackets/) a plugin for Brackets.
