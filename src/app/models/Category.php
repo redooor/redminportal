@@ -3,38 +3,53 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
+/* Columns
+ *
+ * id               (increment)
+ * name             (string, 255)
+ * short_description (string, 255)
+ * long_description (text, nullable)
+ * active           (boolean, default true)
+ * options          (text, nullable)
+ * order            (integer, default 0)
+ * category_id      (integer, unsigned)
+ * created_at       (dateTime)
+ * updated_at       (dateTime)
+ *
+ */
+
 class Category extends Model
 {
     protected $table = 'categories';
     
-    public function category()
+    public function parentCategory()
     {
-        return $this->belongsTo('Redooor\Redminportal\Category');
+        return $this->belongsTo('Redooor\Redminportal\App\Models\Category', 'category_id');
     }
 
     public function categories()
     {
-        return $this->hasMany('Redooor\Redminportal\Category');
+        return $this->hasMany('Redooor\Redminportal\App\Models\Category');
     }
 
     public function products()
     {
-        return $this->hasMany('Redooor\Redminportal\Product');
+        return $this->hasMany('Redooor\Redminportal\App\Models\Product');
     }
 
     public function portfolios()
     {
-        return $this->hasMany('Redooor\Redminportal\Portfolio');
+        return $this->hasMany('Redooor\Redminportal\App\Models\Portfolio');
     }
 
     public function images()
     {
-        return $this->morphMany('Redooor\Redminportal\Image', 'imageable');
+        return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
     }
     
     public function coupons()
     {
-        return $this->belongsToMany('Redooor\Redminportal\Coupon', 'coupon_category');
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_category');
     }
 
     public function deleteAllImages()
@@ -67,12 +82,12 @@ class Category extends Model
         if ($this->categories->count() > 0) {
             $html .= "<ul>";
             if ($showActive) {
-                $categories = \Redooor\Redminportal\Category::where('category_id', $this->id)
+                $categories = $this->where('category_id', $this->id)
                     ->orderBy('order', 'desc')
                     ->orderBy('name')
                     ->get();
             } else {
-                $categories = \Redooor\Redminportal\Category::where('category_id', $this->id)
+                $categories = $this->where('category_id', $this->id)
                     ->where('active', true)
                     ->orderBy('order', 'desc')
                     ->orderBy('name')

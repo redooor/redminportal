@@ -165,8 +165,7 @@ It is recommended that contributors use Laravel Homestead for development becaus
 10. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
-        ?> composer dump-autoload
-        ?> php artisan migrate
+        ?> php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
         
     **NOTE: using --force will overwrite existing files**
 
@@ -202,13 +201,13 @@ It is recommended that contributors use Laravel Homestead for development becaus
 * In packages\redooor\redminportal folder, run 
 
         ?> composer update --prefer-dist -vvv --profile
-        ?> vendor/bin/phpunit /tests
+        ?> vendor/bin/phpunit tests/
 
     **NOTE: If you run out of memory while running the full tests, try running the tests by sub-folders.**
     
-        ?> vendor/bin/phpunit /tests/models
-        ?> vendor/bin/phpunit /tests/controllers
-        ?> vendor/bin/phpunit /tests/relationships
+        ?> vendor/bin/phpunit tests/models/
+        ?> vendor/bin/phpunit tests/controllers/
+        ?> vendor/bin/phpunit tests/relationships/
 
 # Versioning
 

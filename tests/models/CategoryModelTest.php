@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Category;
+use Redooor\Redminportal\App\Models\Category;
 
 class CategoryModelTest extends BaseModelTest
 {
