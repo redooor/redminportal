@@ -24,9 +24,9 @@ class RedminportalServiceProvider extends ServiceProvider {
         $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'redminportal');
         
         // Merging package's config with app's config
-        $this->mergeConfigFrom(__DIR__.'/config/image.php', 'image');
-        $this->mergeConfigFrom(__DIR__.'/config/menu.php', 'menu');
-        $this->mergeConfigFrom(__DIR__.'/config/translation.php', 'translation');
+        $this->mergeConfigFrom(__DIR__.'/config/image.php', 'redminportal::image');
+        $this->mergeConfigFrom(__DIR__.'/config/menu.php', 'redminportal::menu');
+        $this->mergeConfigFrom(__DIR__.'/config/translation.php', 'redminportal::translation');
         
         // Allow end users to publish and modify views
         $this->publishes([

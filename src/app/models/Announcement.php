@@ -26,36 +26,10 @@ class Announcement extends Model
             // Delete physical file, including all different sizes
             $parts = pathinfo($image->path);
 
-            $this->deleteFiles($parts['dirname']);
+            $image->deleteFiles($parts['dirname']);
 
             // Delete image model
             $image->delete();
-        }
-    }
-
-    public function deleteImageFolder($dir)
-    {
-        $this->deleteFiles($dir);
-    }
-
-    /*
-     * php delete function that deals with directories recursively
-     */
-    private function deleteFiles($target)
-    {
-        if (is_dir($target)) {
-            $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
-
-            foreach ($files as $file) {
-                $this->deleteFiles($file);
-            }
-
-            if (is_dir($target)) {
-                rmdir($target);
-            }
-
-        } elseif (is_file($target)) {
-            unlink($target);
         }
     }
 

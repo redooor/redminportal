@@ -59,10 +59,8 @@ class Category extends Model
         foreach ($this->images as $image) {
             // Delete physical file
             $filepath = $folder . $image->path;
-
-            if (File::exists($filepath)) {
-                File::delete($filepath);
-            }
+            
+            $image->deleteFiles($filepath);
 
             // Delete image model
             $image->delete();

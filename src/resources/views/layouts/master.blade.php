@@ -35,7 +35,7 @@
                             <li class="dropdown" id="navbar-menu-dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th"></span> {{ Lang::get('redminportal::menus.menu') }} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    @foreach (config('menu') as $menu)
+                                    @foreach (config('redminportal::menu') as $menu)
                                         @if(!$menu['hide'])
                                             @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
                                         @endif

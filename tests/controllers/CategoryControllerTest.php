@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Category;
+use Redooor\Redminportal\App\Models\Category;
 
 class CategoryControllerTest extends BaseControllerTest
 {
@@ -158,10 +158,9 @@ class CategoryControllerTest extends BaseControllerTest
      */
     public function testDetailFail404()
     {
-        $crawler = $this->client->request('GET', $this->page . '/detail/1');
+        $this->call('GET', $this->page . '/detail/1');
 
         $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
     }
     
     /**
@@ -171,7 +170,7 @@ class CategoryControllerTest extends BaseControllerTest
     {
         $this->testStoreCreatePass();
 
-        $this->client->request('GET', $this->page . '/detail/1');
+        $this->call('GET', $this->page . '/detail/1');
 
         $this->assertResponseOk();
         $this->assertViewHas('category');

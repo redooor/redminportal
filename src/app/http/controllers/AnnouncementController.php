@@ -1,14 +1,9 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-class AnnouncementController extends BaseController
+use Redooor\Redminportal\App\Models\Announcement;
+
+class AnnouncementController extends Controller
 {
-    protected $model;
-    
-    public function __construct(Announcement $announcement)
-    {
-        $this->model = $announcement;
-    }
-    
     public function getIndex()
     {
         $announcements = Announcement::paginate(20);

@@ -1,24 +1,31 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-class CategoryController extends BaseController
+use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Media;
+use Redooor\Redminportal\App\Models\Image;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+
+class CategoryController extends Controller
 {
-    protected $model;
-
-    public function __construct(Category $category)
-    {
-        $this->model = $category;
-    }
-
     public function getIndex()
     {
-        $categories = Category::where('category_id', 0)->orWhere('category_id', null)->orderBy('order', 'desc')->orderBy('name')->get();
+        $categories = Category::where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('order', 'desc')
+            ->orderBy('name')
+            ->get();
 
         return \View::make('redminportal::categories/view')->with('categories', $categories);
     }
 
     public function getCreate()
     {
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
         return \View::make('redminportal::categories/create')->with('categories', $categories);
     }
@@ -28,7 +35,7 @@ class CategoryController extends BaseController
         $category = Category::find($sid);
 
         if ($category == null) {
-            return \View::make('redminportal::pages/404');
+            return view('redminportal::pages.404');
         }
 
         return \View::make('redminportal::categories/detail')
@@ -42,7 +49,12 @@ class CategoryController extends BaseController
         $category = Category::find($sid);
 
         if ($category == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The category cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/categories')->withErrors($errors);
         }
 
         if (empty($category->options)) {
@@ -55,7 +67,11 @@ class CategoryController extends BaseController
             $category_cn = json_decode($category->options);
         }
 
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
         return \View::make('redminportal::categories/edit')
             ->with('category', $category)
@@ -112,9 +128,14 @@ class CategoryController extends BaseController
             
             // Check if there's an existing category with the same name under the same parent
             if (isset($sid)) {
-                $checkSameName = Category::where('name', $name)->where('category_id', (($parent_id == 0) ? null : $parent_id))->whereNotIn( 'id', [$sid])->count();
+                $checkSameName = Category::where('name', $name)
+                    ->where('category_id', (($parent_id == 0) ? null : $parent_id))
+                    ->whereNotIn('id', [$sid])
+                    ->count();
             } else {
-                $checkSameName = Category::where('name', $name)->where('category_id', (($parent_id == 0) ? null : $parent_id))->count();
+                $checkSameName = Category::where('name', $name)
+                    ->where('category_id', (($parent_id == 0) ? null : $parent_id))
+                    ->count();
             }
             
             if ($checkSameName > 0) {
@@ -150,7 +171,7 @@ class CategoryController extends BaseController
 
                 //set the name of the file
                 $originalFilename = $image->getClientOriginalName();
-                $filename = str_replace(' ', '', $name) . \Str::random(20) .'.'. \File::extension($originalFilename);
+                $filename = str_replace(' ', '', $name) . Str::random(20) .'.'. File::extension($originalFilename);
 
                 //Upload the file
                 $isSuccess = $image->move('assets/img/categories', $filename);
@@ -213,10 +234,7 @@ class CategoryController extends BaseController
             );
             return \Redirect::to('/admin/categories')->withErrors($errors);
         }
-
-        // Delete all images first
-        $category->deleteAllImages();
-
+        
         // Delete the category
         $category->delete();
 

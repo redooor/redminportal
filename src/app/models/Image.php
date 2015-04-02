@@ -24,17 +24,11 @@ class Image extends Model
         return $this->morphTo();
     }
     
-    public function remove()
+    public function delete()
     {
-        if ($this == null) {
-            return; // No such data found
-        }
-        
         // Remove original file
         $filename = $this->path;
-        if (File::exists($filename)) {
-            File::delete($filename);
-        }
+        $this->deleteFiles($filename);
          
         $imagine = new RImage;
         
@@ -43,12 +37,30 @@ class Image extends Model
         
         foreach (array_keys($defaultDimensions) as $key) {
             $filename_variant = $imagine->getUrl($filename, $key);
-            if (File::exists($filename_variant)) {
-                File::delete($filename_variant);
-            }
+            $this->deleteFiles($filename_variant);
         }
         
-        // Delete image model
-        $this->delete();
+        return parent::delete();
+    }
+    
+    /*
+     * php delete function that deals with directories recursively
+     */
+    public function deleteFiles($target)
+    {
+        if (is_dir($target)) {
+            $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
+
+            foreach ($files as $file) {
+                $this->deleteFiles($file);
+            }
+
+            if (is_dir($target)) {
+                rmdir($target);
+            }
+
+        } elseif (is_file($target)) {
+            unlink($target);
+        }
     }
 }
