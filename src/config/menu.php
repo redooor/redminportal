@@ -58,11 +58,6 @@ return array(
         'hide' => false
     ),
     array(
-        'name' => 'discounts',
-        'path' => 'admin/discounts',
-        'hide' => false
-    ),
-    array(
         'name' => 'coupons',
         'path' => 'admin/coupons',
         'hide' => false

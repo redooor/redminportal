@@ -26,16 +26,6 @@ class Pricelist extends Model
         return $this->belongsTo('Redooor\Redminportal\App\Models\Membership');
     }
     
-    /*
-     * Note to contributors: 
-     * Discount model will be removed from v0.2.0. 
-     * Please use Coupon model instead. 
-     */
-    public function discounts()
-    {
-        return $this->morphMany('Redooor\Redminportal\App\Models\Discount', 'discountable');
-    }
-    
     public function coupons()
     {
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_pricelist');

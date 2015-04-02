@@ -36,7 +36,7 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 
 ## Online Store (Physical Products)
 * Category
-* Discount
+* Coupon
 * Product
 * Promotion
 

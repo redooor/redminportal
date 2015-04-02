@@ -13,6 +13,7 @@
                 <li>Removed dependancy of Cartalyst/Sentry.</li>
                 <li>Use Laravel's Authentication instead of Cartalyst/Sentry.</li>
                 <li>Users and Groups tables should work with previous schema. (But need to add column remember_token in users table)</li>
+                <li>Drop Discount module support from v0.2.0 onwards (issue #63)</li>
                 <li>More coming... (developing)</li>
             </ol>
             <h3>Version 0.1.5</h3>
