@@ -17,8 +17,7 @@ class CreateTagsTable extends Migration
              // name limit to 64 characters
             $table->string('name', 64);
              // Tagable
-            $table->integer('tagable_id');
-            $table->string('tagable_type', 32);
+            $table->morphs('tagable');
              // created_at | updated_at DATETIME
             $table->timestamps();
         });

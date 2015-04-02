@@ -17,8 +17,7 @@ class CreateImagesTable extends Migration
              // path limit to 320 characters
             $table->string('path', 320);
              // Imageable
-            $table->integer('imageable_id');
-            $table->string('imageable_type', 255);
+            $table->morphs('imageable');
              // created_at | updated_at DATETIME
             $table->timestamps();
         });
