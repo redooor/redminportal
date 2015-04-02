@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Tag;
+use Redooor\Redminportal\App\Models\Tag;
 
 class TagModelTest extends BaseModelTest
 {

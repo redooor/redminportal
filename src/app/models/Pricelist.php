@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /*  Columns:
  * id (integer)
- * price (float)
+ * price (decimal, 8, 2, default 0)
  * module_id (integer)
  * membership_id (integer)
  * module_id, membership_id (unique)

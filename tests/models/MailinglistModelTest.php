@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Mailinglist;
+use Redooor\Redminportal\App\Models\Mailinglist;
 
 class MailinglistModelTest extends BaseModelTest
 {

@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Coupon;
+use Redooor\Redminportal\App\Models\Coupon;
 
 class CouponModelTest extends BaseModelTest
 {

@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Membership;
+use Redooor\Redminportal\App\Models\Membership;
 
 class MembershipModelTest extends BaseModelTest
 {

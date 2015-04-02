@@ -15,7 +15,7 @@ class CreatePricelistsTable extends Migration {
 		Schema::create('pricelists', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->float('price')->default(0);
+            $table->decimal('price', 8, 2)->default(0);
 			$table->integer('module_id')->unsigned();
 			$table->foreign('module_id')->references('id')->on('modules');
 			$table->integer('membership_id')->unsigned();

@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Product;
+use Redooor\Redminportal\App\Models\Product;
 
 class ProductModelTest extends BaseModelTest
 {

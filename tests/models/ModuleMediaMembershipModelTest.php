@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\ModuleMediaMembership;
+use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class ModuleMediaMembershipModelTest extends BaseModelTest
 {

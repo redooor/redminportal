@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Portfolio;
+use Redooor\Redminportal\App\Models\Portfolio;
 
 class PortfolioModelTest extends BaseModelTest
 {

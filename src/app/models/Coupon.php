@@ -21,8 +21,8 @@ use Illuminate\Database\Eloquent\Model;
     exclude_sale_item       (boolean, default: false)
     usage_limit_per_coupon_count    (integer, unsigned, default: 0)
 ***********************/
-class Coupon extends Model {
-
+class Coupon extends Model
+{
     protected $table = 'coupons';
     
     public function pricelists()
@@ -55,5 +55,4 @@ class Coupon extends Model {
         
         return parent::delete();
     }
-
 }

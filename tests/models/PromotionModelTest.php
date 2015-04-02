@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Promotion;
+use Redooor\Redminportal\App\Models\Promotion;
 
 class PromotionModelTest extends BaseModelTest
 {

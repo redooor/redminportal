@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Pricelist;
+use Redooor\Redminportal\App\Models\Pricelist;
 
 class PricelistModelTest extends BaseModelTest
 {

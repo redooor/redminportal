@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Image;
+use Redooor\Redminportal\App\Models\Image;
 
 class ImageModelTest extends BaseModelTest
 {

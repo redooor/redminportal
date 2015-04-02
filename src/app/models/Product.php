@@ -1,4 +1,4 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -18,40 +18,39 @@ use Illuminate\Support\Facades\File;
     created_at  (dateTime)
     updated_at  (dateTime)
 ***********************/
-class Product extends Model {
-
+class Product extends Model
+{
     protected $table = 'products';
     
     public function category()
     {
-        return $this->belongsTo('Redooor\Redminportal\Category');
+        return $this->belongsTo('Redooor\Redminportal\App\Models\Category');
     }
     
     public function images()
     {
-        return $this->morphMany('Redooor\Redminportal\Image', 'imageable');
+        return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
     }
     
     public function tags()
     {
-        return $this->morphMany('Redooor\Redminportal\Tag', 'tagable');
+        return $this->morphMany('Redooor\Redminportal\App\Models\Tag', 'tagable');
     }
     
     public function coupons()
     {
-        return $this->belongsToMany('Redooor\Redminportal\Coupon', 'coupon_product');
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_product');
     }
     
     public function deleteAllImages()
     {
         $folder = 'assets/img/products/';
         
-        foreach ($this->images as $image)
-        {
+        foreach ($this->images as $image) {
             // Delete physical file
             $filepath = $folder . $image->path;
             
-            if( File::exists($filepath) ) {
+            if (File::exists($filepath)) {
                 File::delete($filepath);
             }
             
@@ -62,10 +61,7 @@ class Product extends Model {
     
     public function deleteAllTags()
     {
-        foreach ($this->tags as $tag) 
-        {
-            $tag->delete();
-        }
+        $this->tags()->delete();
     }
     
     public function delete()
@@ -75,5 +71,4 @@ class Product extends Model {
         
         return parent::delete();
     }
-
 }

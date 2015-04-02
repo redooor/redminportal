@@ -2,16 +2,16 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-class CreateImagesTable extends Migration {
-
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('images', function($table) {
+class CreateImagesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('images', function($table) {
              // auto incremental id (PK)
             $table->increments('id');
              // path limit to 320 characters
@@ -22,16 +22,15 @@ class CreateImagesTable extends Migration {
              // created_at | updated_at DATETIME
             $table->timestamps();
         });
-	}
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('images');
-	}
-
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('images');
+    }
 }
