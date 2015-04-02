@@ -27,7 +27,12 @@ class GroupController extends Controller
         $group = Group::find($sid);
         
         if ($group == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The group cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/users')->withErrors($errors);
         }
         
         if (isset($group->permissions()->{'admin.view'})) {
@@ -60,11 +65,6 @@ class GroupController extends Controller
             ->with('checkbox_create', $checkbox_create)
             ->with('checkbox_delete', $checkbox_delete)
             ->with('checkbox_update', $checkbox_update);
-    }
-    
-    private function checkPermission($permission)
-    {
-        return ($permission == '1') ? true : false;
     }
     
     public function postStore()
@@ -190,8 +190,7 @@ class GroupController extends Controller
         
         $validation = \Validator::make($inputs, $rules);
 
-        if( ! $validation->passes() )
-        {
+        if ($validation->fails()) {
             return redirect('admin/groups')->withErrors($validation);
         }
         

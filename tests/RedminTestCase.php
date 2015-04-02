@@ -48,9 +48,10 @@ class RedminTestCase extends TestBenchTestCase
     /**
      * Points base path to testbench's fixture.
      */
+    /*
     protected function getApplicationPaths()
     {
-        $basePath = realpath(__DIR__.'/../vendor/orchestra/testbench/src/fixture');
+        $basePath = realpath(__DIR__.'/../vendor/orchestra/testbench/fixture');
 
         return array(
             'app'     => "{$basePath}/app",
@@ -59,13 +60,17 @@ class RedminTestCase extends TestBenchTestCase
             'storage' => "{$basePath}/app/storage",
         );
     }
+    */
     
     /**
      * Appends additional ServiceProvider for the test.
      */
     protected function getPackageProviders($app)
     {
-        return ['Redooor\Redminportal\RedminportalServiceProvider'];
+        return [
+            'Redooor\Redminportal\RedminportalServiceProvider',
+            'Illuminate\Html\HtmlServiceProvider'
+        ];
     }
 
     /**
@@ -74,7 +79,9 @@ class RedminTestCase extends TestBenchTestCase
     protected function getPackageAliases($app)
     {
         return [
-            'Redminportal' => 'Redooor\Redminportal\Facades\Redminportal'
+            'Redminportal' => 'Redooor\Redminportal\Facades\Redminportal',
+            'Form'      => 'Illuminate\Html\FormFacade',
+            'HTML'      => 'Illuminate\Html\HtmlFacade'
         ];
     }
 }

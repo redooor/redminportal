@@ -61,10 +61,10 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testEditFail404()
     {
-        $crawler = $this->client->request('GET', $this->page . '/edit/2');
+        $this->call('GET', $this->page . '/edit/2');
 
-        $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
+        $this->assertRedirectedTo($this->page);
+        $this->assertSessionHasErrors();
     }
     
     /**
@@ -97,7 +97,7 @@ class UserControllerTest extends BaseControllerTest
     {
         $this->call('GET', $this->page . '/activate/1');
 
-        $this->assertRedirectedTo($this->page);
+        $this->assertResponseStatus(302); // Redirected
     }
     
     /**
@@ -117,8 +117,8 @@ class UserControllerTest extends BaseControllerTest
     public function testDeactivatePass()
     {
         $this->call('GET', $this->page . '/deactivate/1');
-
-        $this->assertRedirectedTo($this->page);
+        
+        $this->assertResponseStatus(302); // Redirected
     }
     
     /**
@@ -135,9 +135,9 @@ class UserControllerTest extends BaseControllerTest
             'activated'  => true
         );
 
-        $this->call('POST', '/admin/promotions/store', $input);
+        $this->call('POST', '/admin/users/store', $input);
 
-        $this->assertRedirectedTo('/admin/promotions/create');
+        $this->assertRedirectedTo('/admin/users/create');
         $this->assertSessionHasErrors();
     }
     
@@ -146,7 +146,7 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testSortByPass()
     {
-        $this->client->request('GET', '/admin/users/sort/email/asc');
+        $this->call('GET', '/admin/users/sort/email/asc');
 
         $this->assertResponseOk();
         $this->assertViewHas('users');
@@ -157,7 +157,7 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testSortByValidationFail()
     {
-        $this->client->request('GET', '/admin/users/sort/->where("id", 5)/asc');
+        $this->call('GET', '/admin/users/sort/->where("id", 5)/asc');
 
         $this->assertRedirectedTo('/admin/users');
         $this->assertSessionHasErrors();
@@ -168,7 +168,7 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testSortByValidationOrderByFail()
     {
-        $this->client->request('GET', '/admin/users/sort/email/->where("id", 5)');
+        $this->call('GET', '/admin/users/sort/email/->where("id", 5)');
 
         $this->assertRedirectedTo('/admin/users');
         $this->assertSessionHasErrors();

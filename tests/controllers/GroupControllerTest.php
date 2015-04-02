@@ -59,7 +59,7 @@ class GroupControllerTest extends BaseControllerTest
      */
     public function testSortByPass()
     {
-        $this->client->request('GET', '/admin/groups/sort/email/asc');
+        $this->call('GET', '/admin/groups/sort/email/asc');
 
         $this->assertResponseOk();
         $this->assertViewHas('groups');
@@ -70,7 +70,7 @@ class GroupControllerTest extends BaseControllerTest
      */
     public function testSortByValidationFail()
     {
-        $this->client->request('GET', '/admin/groups/sort/->where("id", 5)/asc');
+        $this->call('GET', '/admin/groups/sort/->where("id", 5)/asc');
 
         $this->assertRedirectedTo('/admin/groups');
         $this->assertSessionHasErrors();
@@ -81,7 +81,7 @@ class GroupControllerTest extends BaseControllerTest
      */
     public function testSortByValidationOrderByFail()
     {
-        $this->client->request('GET', '/admin/groups/sort/email/->where("id", 5)');
+        $this->call('GET', '/admin/groups/sort/email/->where("id", 5)');
 
         $this->assertRedirectedTo('/admin/groups');
         $this->assertSessionHasErrors();

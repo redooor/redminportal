@@ -33,7 +33,12 @@ class UserController extends Controller
         $user = User::find($sid);
         
         if ($user == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The user cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/users')->withErrors($errors);
         }
         
         $roles = Group::orderBy('name')->lists('name', 'id');
@@ -247,8 +252,7 @@ class UserController extends Controller
         
         $validation = \Validator::make($inputs, $rules);
 
-        if( ! $validation->passes() )
-        {
+        if ($validation->fails()) {
             return redirect('admin/users')->withErrors($validation);
         }
         

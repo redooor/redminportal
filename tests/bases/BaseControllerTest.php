@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-class BaseControllerTest extends \RedminTestCase
+class BaseControllerTest extends RedminTestCase
 {
     protected $page;
     protected $viewhas;
@@ -34,7 +34,7 @@ class BaseControllerTest extends \RedminTestCase
      */
     public function testIndex()
     {
-        $this->client->request('GET', $this->page);
+        $this->call('GET', $this->page);
 
         $this->assertResponseOk();
         $this->assertViewHas($this->viewhas['plural']);
@@ -45,7 +45,7 @@ class BaseControllerTest extends \RedminTestCase
      */
     public function testCreatePass()
     {
-        $this->client->request('GET', $this->page . '/create');
+        $this->call('GET', $this->page . '/create');
 
         $this->assertResponseOk();
     }
@@ -65,10 +65,9 @@ class BaseControllerTest extends \RedminTestCase
      */
     public function testEditFail404()
     {
-        $crawler = $this->client->request('GET', $this->page . '/edit/1');
+        $this->call('GET', $this->page . '/edit/1');
 
-        $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
+        $this->assertResponseStatus(302); // Redirected
     }
     
     /**
@@ -78,7 +77,7 @@ class BaseControllerTest extends \RedminTestCase
     {
         $this->testStoreCreatePass();
 
-        $this->client->request('GET', $this->page . '/edit/1');
+        $this->call('GET', $this->page . '/edit/1');
 
         $this->assertResponseOk();
         $this->assertViewHas($this->viewhas['singular']);
@@ -118,9 +117,9 @@ class BaseControllerTest extends \RedminTestCase
     public function testDeletePass()
     {
         $this->testStoreCreatePass();
-
+        
         $this->call('GET', $this->page . '/delete/1');
 
-        $this->assertRedirectedTo($this->page);
+        $this->assertResponseStatus(302); // Redirected
     }
 }
