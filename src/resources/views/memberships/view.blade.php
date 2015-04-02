@@ -1,24 +1,26 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
 
     <div class="nav-controls text-right">
         @if (count($memberships) > 0)
         <span class="label label-default pull-left">
-            {{ $memberships->getFrom() . ' to ' . $memberships->getTo() . ' ( total ' . $memberships->getTotal() . ' )' }}
+            {{ $memberships->count() . ' to ' . $memberships->perPage() . ' ( total ' . $memberships->total() . ' )' }}
         </span>
         @endif
-        {{ HTML::link('admin/memberships/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        {!! HTML::link('admin/memberships/create', 'Create New', array('class' => 'btn btn-primary')) !!}
     </div>
 
     @if (count($memberships) > 0)
@@ -57,7 +59,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $memberships->links() }}
+        {!! $memberships->render() !!}
         </div>
     @else
         <div class="alert alert-info">No membership found</div>

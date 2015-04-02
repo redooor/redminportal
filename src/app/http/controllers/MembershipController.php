@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Models\Membership;
+use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class MembershipController extends Controller
 {
@@ -8,12 +9,12 @@ class MembershipController extends Controller
     {
         $memberships = Membership::orderBy('rank')->orderBy('name')->paginate(20);
 
-        return \View::make('redminportal::memberships/view')->with('memberships', $memberships);
+        return view('redminportal::memberships/view')->with('memberships', $memberships);
     }
 
     public function getCreate()
     {
-        return \View::make('redminportal::memberships/create');
+        return view('redminportal::memberships/create');
     }
 
     public function getEdit($sid)
@@ -22,10 +23,15 @@ class MembershipController extends Controller
         $membership = Membership::find($sid);
 
         if ($membership == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The membership cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/memberships')->withErrors($errors);
         }
 
-        return \View::make('redminportal::memberships/edit')
+        return view('redminportal::memberships/edit')
             ->with('membership', $membership);
     }
 

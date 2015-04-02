@@ -48,19 +48,17 @@ class RedminTestCase extends TestBenchTestCase
     /**
      * Points base path to testbench's fixture.
      */
-    /*
     protected function getApplicationPaths()
     {
         $basePath = realpath(__DIR__.'/../vendor/orchestra/testbench/fixture');
 
         return array(
             'app'     => "{$basePath}/app",
-            'public'  => realpath(__DIR__.'/fixture'),
+            'public'  => "{$basePath}/public",
             'base'    => $basePath,
-            'storage' => "{$basePath}/app/storage",
+            'storage' => "{$basePath}/storage",
         );
     }
-    */
     
     /**
      * Appends additional ServiceProvider for the test.

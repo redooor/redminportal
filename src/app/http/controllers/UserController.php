@@ -18,14 +18,14 @@ class UserController extends Controller
             'users' => $users
         );
 
-        return \View::make('redminportal::users/view', $data);
+        return view('redminportal::users/view', $data);
     }
 
     public function getCreate()
     {
         $roles = Group::orderBy('name')->lists('name', 'id');
         
-        return \View::make('redminportal::users/create')->with('roles', $roles);
+        return view('redminportal::users/create')->with('roles', $roles);
     }
     
     public function getEdit($sid)
@@ -55,7 +55,7 @@ class UserController extends Controller
             'group' => $group
         );
         
-        return \View::make('redminportal::users/edit', $data);
+        return view('redminportal::users/edit', $data);
     }
 
     public function postStore()
@@ -268,6 +268,6 @@ class UserController extends Controller
             'users' => $users
         );
         
-        return \View::make('redminportal::users/view', $data);
+        return view('redminportal::users/view', $data);
     }
 }

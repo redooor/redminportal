@@ -11,7 +11,7 @@ class GroupController extends Controller
         
         $groups = Group::orderBy($sortBy, $orderBy)->paginate(20);
 
-        return \View::make('redminportal::groups/view')
+        return view('redminportal::groups/view')
             ->with('sortBy', $sortBy)
             ->with('orderBy', $orderBy)
             ->with('groups', $groups);
@@ -19,7 +19,7 @@ class GroupController extends Controller
 
     public function getCreate()
     {
-        return \View::make('redminportal::groups/create');
+        return view('redminportal::groups/create');
     }
     
     public function getEdit($sid)
@@ -32,7 +32,7 @@ class GroupController extends Controller
                 'editError',
                 "The group cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/users')->withErrors($errors);
+            return redirect('/admin/groups')->withErrors($errors);
         }
         
         if (isset($group->permissions()->{'admin.view'})) {
@@ -59,7 +59,7 @@ class GroupController extends Controller
             $checkbox_update = false;
         }
         
-        return \View::make('redminportal::groups/edit')
+        return view('redminportal::groups/edit')
             ->with('group', $group)
             ->with('checkbox_view', $checkbox_view)
             ->with('checkbox_create', $checkbox_create)
@@ -200,7 +200,7 @@ class GroupController extends Controller
 
         $groups = Group::orderBy($sortBy, $orderBy)->paginate(20);
 
-        return \View::make('redminportal::groups/view')
+        return view('redminportal::groups/view')
             ->with('sortBy', $sortBy)
             ->with('orderBy', $orderBy)
             ->with('groups', $groups);
