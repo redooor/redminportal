@@ -17,7 +17,7 @@
 	<div class="nav-controls text-right">
 		@if (count($users) > 0)
 		<span class="label label-default pull-left">
-			{{ $users->count() . ' to ' . $users->perPage() . ' ( total ' . $users->total() . ' )' }}
+			{{ $users->firstItem() . ' to ' . $users->lastItem() . ' ( total ' . $users->total() . ' )' }}
 		</span>
 		@endif
         <a href="{{ URL::to('admin/users/create') }}" class="btn btn-primary">Create New</a>
@@ -51,7 +51,14 @@
                             @endif
                         </a>
                     </th>
-					<th>Groups</th>
+                    <th>
+                        <a href="{{ URL::to('admin/users/sort') . '/group/' . ($sortBy == 'group' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            Groups
+                            @if ($sortBy == 'group')
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
+                            @endif
+                        </a>
+                    </th>
                     <th>
                         <a href="{{ URL::to('admin/users/sort') . '/activated/' . ($sortBy == 'activated' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Activated

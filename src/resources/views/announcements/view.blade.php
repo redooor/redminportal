@@ -4,7 +4,7 @@
     <div class="nav-controls text-right">
         @if (count($announcements) >0)
         <span class="label label-default pull-left">
-            {{ $announcements->getFrom() . ' to ' . $announcements->getTo() . ' ( total ' . $announcements->getTotal() . ' )' }}
+            {{ $announcements->firstItem() . ' to ' . $announcements->lastItem() . ' ( total ' . $announcements->total() . ' )' }}
         </span>
         @endif
         {{ HTML::link('admin/announcements/create', 'Create New', array('class' => 'btn btn-primary')) }}

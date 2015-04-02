@@ -17,7 +17,7 @@
     <div class="nav-controls text-right">
         @if (count($memberships) > 0)
         <span class="label label-default pull-left">
-            {{ $memberships->count() . ' to ' . $memberships->perPage() . ' ( total ' . $memberships->total() . ' )' }}
+            {{ $memberships->firstItem() . ' to ' . $memberships->lastItem() . ' ( total ' . $memberships->total() . ' )' }}
         </span>
         @endif
         {!! HTML::link('admin/memberships/create', 'Create New', array('class' => 'btn btn-primary')) !!}

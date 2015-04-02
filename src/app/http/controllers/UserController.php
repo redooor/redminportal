@@ -75,13 +75,11 @@ class UserController extends Controller
         }
 
         $validation = \Validator::make(\Input::all(), $rules);
-
+        
+        $path = (isset($sid) ? 'admin/users/edit/' . $sid : 'admin/users/create');
+        
         if ($validation->fails()) {
-            if (isset($sid)) {
-                return redirect('admin/users/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return redirect('admin/users/create')->withErrors($validation)->withInput();
-            }
+            return redirect($path)->withErrors($validation)->withInput();
         }
 
         $first_name    = \Input::get('first_name');
@@ -91,88 +89,53 @@ class UserController extends Controller
         $role         = \Input::get('role');
         $activated     = (\Input::get('activated') == '' ? false : true);
         
-        if (isset($sid)) {
-            $user = User::find($sid);
-            
-            if ($user == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The user cannot be found because it does not exist or may have been deleted."
-                );
-                return redirect('/admin/users')->withErrors($errors);
-            }
-            
-            // Edit existing
-            $user->email = $email;
-            if ($password != '') {
-                $user->password = $password;
-            }
-            $user->first_name = $first_name;
-            $user->last_name = $last_name;
-            $user->activated = $activated;
-            
-            // Update the user
-            if (! $user->save()) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The user cannot be updated due to some problem. Please try again."
-                );
-                return redirect('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
-            }
-            
-            // Find user's group
-            $old_group = $user->groups()->first();
-            $new_group = Group::find($role);
-            
-            if ($new_group == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The user cannot be updated because the selected group cannot be found. Please try again."
-                );
-                return redirect('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
-            }
-            
-            // Assign the group to the user
-            if ($old_group == null) {
-                $user->groups()->save($new_group);
-            } elseif ($old_group->id != $new_group->id) {
-                $user->groups()->detach();
-                $user->groups()->save($new_group);
-            }
-            
-        } else {
-            $user = new User;
-            $user->email = $email;
+        $user = (isset($sid) ? User::find($sid) : new User);
+        
+        if ($user == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The user cannot be found or created. Please try again later."
+            );
+            return redirect('/admin/users')->withErrors($errors);
+        }
+        
+        // Save or Update
+        $user->email = $email;
+        if ($password != '') {
             $user->password = $password;
-            $user->first_name = $first_name;
-            $user->last_name = $last_name;
-            $user->activated = $activated;
-            
-            // Update the user
-            if (! $user->save()) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The user cannot be updated due to some problem. Please try again."
-                );
-                return redirect('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
-            }
-            
-            $new_group = Group::find($role);
-            
-            if ($new_group == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The user cannot be updated because the selected group cannot be found. Please try again."
-                );
-                return redirect('admin/users/edit/' . $sid)->withErrors($errors)->withInput();
-            }
-            
-            // Assign new group
+        }
+        $user->first_name = $first_name;
+        $user->last_name = $last_name;
+        $user->activated = $activated;
+        
+        if (! $user->save()) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The user cannot be updated due to some problem. Please try again."
+            );
+            return redirect($path)->withErrors($errors)->withInput();
+        }
+        
+        // Find user's group
+        $old_group = $user->groups()->first();
+        $new_group = Group::find($role);
+
+        if ($new_group == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The user cannot be updated because the selected group cannot be found. Please try again."
+            );
+            return redirect($path)->withErrors($errors)->withInput();
+        }
+
+        // Assign the group to the user
+        if ($old_group == null) {
+            $user->groups()->save($new_group);
+        } elseif ($old_group->id != $new_group->id) {
+            $user->groups()->detach();
             $user->groups()->save($new_group);
         }
 
@@ -259,8 +222,16 @@ class UserController extends Controller
         if ($orderBy != 'asc' && $orderBy != 'desc') {
             $orderBy = 'asc';
         }
-
-        $users = User::orderBy($sortBy, $orderBy)->paginate(20);
+        
+        if ($sortBy == 'group') {
+            $users = User::LeftJoin('users_groups', 'users_groups.user_id', '=', 'users.id')
+                ->LeftJoin('groups', 'groups.id', '=', 'users_groups.group_id')
+                ->select('users.*', 'groups.name')
+                ->orderBy('groups.name', $orderBy)
+                ->paginate(20);
+        } else {
+            $users = User::orderBy($sortBy, $orderBy)->paginate(20);
+        }
         
         $data = array(
             'sortBy' => $sortBy,

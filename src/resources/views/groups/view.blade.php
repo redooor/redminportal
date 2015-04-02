@@ -17,7 +17,7 @@
 	<div class="nav-controls text-right">
 		@if (count($groups) > 0)
 		<span class="label label-default pull-left">
-			{{ $groups->count() . ' to ' . $groups->perPage() . ' ( total ' . $groups->total() . ' )' }}
+			{{ $groups->firstItem() . ' to ' . $groups->lastItem() . ' ( total ' . $groups->total() . ' )' }}
 		</span>
 		@endif
         <a href="{{ URL::to('admin/groups/create') }}" class="btn btn-primary">Create New</a>
