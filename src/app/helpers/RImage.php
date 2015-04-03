@@ -1,10 +1,10 @@
 <?php namespace Redooor\Redminportal\App\Helpers;
  
-use \Config;
-use \File;
-use \Log;
-use \Imagine\Image\ImageInterface;
-use \Imagine\Image\Box;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\Box;
 
 class RImage
 {
@@ -25,6 +25,11 @@ class RImage
      * @return void
      */
     public function __construct()
+    {
+        $this->setLibrary();
+    }
+    
+    protected function setLibrary()
     {
         if (! $this->imagine) {
             $this->library = Config::get('redminportal::image.library', 'gd');
@@ -163,7 +168,7 @@ class RImage
             $quality = isset($dimension[3]) ?  (int) $dimension[3] : Config::get('redminportal::image.quality');
      
             // Run resizer
-            $img = $this->resize($url, $width, $height, $crop, $quality);
+            $this->resize($url, $width, $height, $crop, $quality);
         }
     }
     
@@ -184,7 +189,7 @@ class RImage
         $width   = (int) $dimension[0];
         $height  = isset($dimension[1]) ?  (int) $dimension[1] : $width;
         $crop    = isset($dimension[2]) ? (bool) $dimension[2] : false;
-        $quality = isset($dimension[3]) ?  (int) $dimension[3] : Config::get('redminportal::image.quality');
+        //$quality = isset($dimension[3]) ?  (int) $dimension[3] : Config::get('redminportal::image.quality');
 
         // URL info
         $info = pathinfo($url);
@@ -196,11 +201,11 @@ class RImage
 
         // Directories and file names
         $fileName       = $info['basename'];
-        $sourceDirPath  = public_path() . '/' . $info['dirname'];
-        $sourceFilePath = $sourceDirPath . '/' . $fileName;
+        //$sourceDirPath  = public_path() . '/' . $info['dirname'];
+        //$sourceFilePath = $sourceDirPath . '/' . $fileName;
         $targetDirName  = $width . 'x' . $height . ($crop ? '_crop' : '');
-        $targetDirPath  = $sourceDirPath . '/' . $targetDirName . '/';
-        $targetFilePath = $targetDirPath . $fileName;
+        //$targetDirPath  = $sourceDirPath . '/' . $targetDirName . '/';
+        //$targetFilePath = $targetDirPath . $fileName;
         $targetUrl      = asset($info['dirname'] . '/' . $targetDirName . '/' . $fileName);
         $relativeUrl    = $info['dirname'] . '/' . $targetDirName . '/' . $fileName;
 

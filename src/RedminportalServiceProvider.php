@@ -2,31 +2,23 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class RedminportalServiceProvider extends ServiceProvider {
-
-	/**
-	 * Bootstrap the application services.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-        //$this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
-        //\Event::listen('Excel', 'Maatwebsite\Excel\ExcelServiceProvider');
-        
+class RedminportalServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
         // Get routes
-		include __DIR__.'/app/Http/routes.php';
+        include __DIR__.'/app/Http/routes.php';
         
         // Get views
         $this->loadViewsFrom(__DIR__.'/resources/views', 'redminportal');
         
         // Establish Translator Namespace
         $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'redminportal');
-        
-        // Merging package's config with app's config
-        $this->mergeConfigFrom(__DIR__.'/config/image.php', 'redminportal::image');
-        $this->mergeConfigFrom(__DIR__.'/config/menu.php', 'redminportal::menu');
-        $this->mergeConfigFrom(__DIR__.'/config/translation.php', 'redminportal::translation');
         
         // Allow end users to publish and modify views
         $this->publishes([
@@ -49,21 +41,55 @@ class RedminportalServiceProvider extends ServiceProvider {
         $this->publishes([
             __DIR__.'/database/migrations/' => base_path('database/migrations/vendor/redooor/redminportal/')
         ], 'migrations');
-	}
+    }
 
-	/**
-	 * Register the application services.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		$this->app->booting(function()
-        {
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        // Load autoload for package development environment only
+        $autoloader = __DIR__ . '/../vendor/autoload.php';
+        if (file_exists($autoloader)) {
+            require_once $autoloader;
+        }
+        
+        $this->app->register('Illuminate\Html\HtmlServiceProvider');
+        $this->app->register('Orchestra\Imagine\ImagineServiceProvider');
+        $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
+        
+        $this->app->booting(function() {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
             $loader->alias('Redminportal', 'Redooor\Redminportal\Facades\Redminportal');
-			//$loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
+            $loader->alias('Form', 'Illuminate\Html\FormFacade');
+            $loader->alias('HTML', 'Illuminate\Html\HtmlFacade');
+            $loader->alias('Imagine', 'Orchestra\Imagine\Facade');
+            $loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
         });
-	}
+        
+        $this->registerResources('image');
+        $this->registerResources('menu');
+        $this->registerResources('translation');
+    }
+    
+    /**
+     * Register the package resources.
+     *
+     * @return void
+     */
+    protected function registerResources($name)
+    {
+        $userConfigFile    = config_path('vendor/redooor/redminportal/' . $name . '.php');
+        $packageConfigFile = __DIR__.'/config/' . $name . '.php';
+        $config            = $this->app['files']->getRequire($packageConfigFile);
 
+        if (file_exists($userConfigFile)) {
+            $userConfig = $this->app['files']->getRequire($userConfigFile);
+            $config     = array_replace_recursive($config, $userConfig);
+        }
+
+        $this->app['config']->set('redminportal::' . $name, $config);
+    }
 }

@@ -5,7 +5,7 @@ A Laravel 5.0 package as a **backend** administrating tool for Content Managemen
 Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
 # Table of Content
-1. [RedminPortal by Redooor](#redminportal-by-redooor)
+1. [Compatibility](#compatibility)
 2. [Models and Features](#models-and-features)
 3. [Installation guide for Users](#installation-guide-for-users)
 4. [Installation guide for Contributors](#installation-guide-for-contributors)
@@ -17,6 +17,13 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 10. [External Libraries Used](#external-libraries-used)
 11. [Change log](#change-log)
 12. [Upgrade Guide](#upgrade-guide)
+
+#Compatibility
+
+| Laravel | RedminPortal |
+|:-------:|:------------:|
+| 4.2     | 0.1.x        |
+| 5.0     | 0.2.x        |
 
 # Important note
 
@@ -114,14 +121,7 @@ It is recommended that contributors use Laravel Homestead for development becaus
     
     `composer update --prefer-dist -vvv --profile`
     
-5. Now open [root]'s composer.json file, under "require" add "illuminate/html" like this:
-
-        "require": {
-            "laravel/framework": "5.0.*",
-            "illuminate/html": "~5.0"
-        },
-
-6. Then add Redooor\Redminportal source to [root]'s composer.json under "autoload" like this:
+5. Then add Redooor\Redminportal source to [root]'s composer.json under "autoload" like this:
 
         "autoload": {
             "classmap": [
@@ -133,55 +133,45 @@ It is recommended that contributors use Laravel Homestead for development becaus
             }
         },
 
-7. Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
+6. Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
 
         "minimum-stability": "dev",
         "prefer-stable": true
 
-8. Then cd to [root]'s folder and run:
+7. Then cd to [root]'s folder and run:
 
     `composer update --prefer-dist -vvv --profile`
 
-9. Now, edit your [root]\config\app.php providers and alias array like this:
+8. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
             'Illuminate\Foundation\Providers\ArtisanServiceProvider',
             ... omitted ...
             
-            // Add these 2 lines
+            // Add this line
             'Redooor\Redminportal\RedminportalServiceProvider',
-            'Illuminate\Html\HtmlServiceProvider'
         ),
-        
-        'aliases' => [
-            ... omitted ...
-            
-            // Add these 2 lines
-            'Form'=> 'Illuminate\Html\FormFacade',
-            'HTML'=> 'Illuminate\Html\HtmlFacade',
 
-        ],
-
-10. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
+9. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
         ?> php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
         
     **NOTE: using --force will overwrite existing files**
 
-11. Run the following in a terminal to seed the database with initial admin username and password:
+10. Run the following in a terminal to seed the database with initial admin username and password:
 
         ?> php artisan db:seed --class="RedminSeeder"
         
         Username/password: admin@admin.com/admin
 
-12. Publish package assets by running this in a terminal:
+11. Publish package assets by running this in a terminal:
 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
         
     **NOTE: using --force will overwrite existing files**
 
-13. Publish package config by running this in a terminal:
+12. Publish package config by running this in a terminal:
 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" --force
         

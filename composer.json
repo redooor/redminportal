@@ -15,8 +15,8 @@
         "laravel/framework": "5.0.*",
 		"illuminate/html": "~5.0",
         "doctrine/dbal": "~2.3",
-        "imagine/imagine": "0.5.*",
-        "maatwebsite/excel": "1.*",
+        "orchestra/imagine": "3.0.*",
+        "maatwebsite/excel": "~2.0",
         "phansys/getid3": "2.1.*@dev"
     },
     "require-dev": {
@@ -27,8 +27,6 @@
 	},
     "autoload": {
         "classmap": [
-            "src",
-            "src/database/seeds",
             "tests/bases",
             "tests/RedminTestCase.php"
         ],
