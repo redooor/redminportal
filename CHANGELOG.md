@@ -1,12 +1,12 @@
 # Change log
 
-1. [Version 0.2.0](version-0.2.0-under-development)
-2. [Version 0.1.5](version-0.1.5)
-3. [Version 0.1.4](version-0.1.4)
-4. [Version 0.1.3](version-0.1.3)
-5. [Version 0.1.2](version-0.1.2)
-6. [Version 0.1.1](version-0.1.1)
-7. [Version 0.1.0](version-0.1.0)
+1. [Version 0.2.0 Under Development](version-020-under-development)
+2. [Version 0.1.5](version-015)
+3. [Version 0.1.4](version-014)
+4. [Version 0.1.3](version-013)
+5. [Version 0.1.2](version-012)
+6. [Version 0.1.1](version-011)
+7. [Version 0.1.0](version-010)
 
 ## Version 0.2.0 (Under Development)
 Branch: develop. Focus on supporting Laravel 5.0 and making sure all models and controllers work.
