@@ -3,6 +3,7 @@
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Media;
 use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 
@@ -40,7 +41,7 @@ class CategoryController extends Controller
 
         return \View::make('redminportal::categories/detail')
             ->with('category', $category)
-            ->with('imageUrl', 'assets/img/categories/');
+            ->with('imagine', new RImage);
     }
 
     public function getEdit($sid)
@@ -76,13 +77,15 @@ class CategoryController extends Controller
         return \View::make('redminportal::categories/edit')
             ->with('category', $category)
             ->with('category_cn', $category_cn)
-            ->with('imageUrl', 'assets/img/categories/')
+            ->with('imagine', new RImage)
             ->with('categories', $categories);
     }
 
     public function postStore()
     {
         $sid = \Input::get('id');
+        
+        $return_path = (isset($sid) ? 'admin/categories/edit/' . $sid : 'admin/categories/create');
 
         /*
          * Validate
@@ -95,106 +98,98 @@ class CategoryController extends Controller
         );
 
         $validation = \Validator::make(\Input::all(), $rules);
+        
+        if ($validation->fails()) {
+            return redirect($return_path)->withErrors($validation)->withInput();
+        }
+        
+        $name               = \Input::get('name');
+        $short_description  = \Input::get('short_description');
+        $long_description   = \Input::get('long_description');
+        $image              = \Input::file('image');
+        $active             = (\Input::get('active') == '' ? false : true);
+        $order              = \Input::get('order');
+        $parent_id          = \Input::get('parent_id');
 
-        if ($validation->passes()) {
-            $name               = \Input::get('name');
-            $short_description  = \Input::get('short_description');
-            $long_description   = \Input::get('long_description');
-            $image              = \Input::file('image');
-            $active             = (\Input::get('active') == '' ? false : true);
-            $order              = \Input::get('order');
-            $parent_id          = \Input::get('parent_id');
+        $cn_name               = \Input::get('cn_name');
+        $cn_short_description  = \Input::get('cn_short_description');
+        $cn_long_description   = \Input::get('cn_long_description');
 
-            $cn_name               = \Input::get('cn_name');
-            $cn_short_description  = \Input::get('cn_short_description');
-            $cn_long_description   = \Input::get('cn_long_description');
+        $options = array(
+            'name'                  => $cn_name,
+            'short_description'     => $cn_short_description,
+            'long_description'      => $cn_long_description
+        );
 
-            $options = array(
-                'name'                  => $cn_name,
-                'short_description'     => $cn_short_description,
-                'long_description'      => $cn_long_description
+        $category = (isset($sid) ? Category::find($sid) : new Category);
+
+        if ($category == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The category cannot be found because it does not exist or may have been deleted."
             );
-            
-            $category = (isset($sid) ? Category::find($sid) : new Category);
-            
-            if ($category == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The category cannot be found because it does not exist or may have been deleted."
-                );
-                return \Redirect::to('/admin/categories')->withErrors($errors);
-            }
-            
-            // Check if there's an existing category with the same name under the same parent
-            if (isset($sid)) {
-                $checkSameName = Category::where('name', $name)
-                    ->where('category_id', (($parent_id == 0) ? null : $parent_id))
-                    ->whereNotIn('id', [$sid])
-                    ->count();
-            } else {
-                $checkSameName = Category::where('name', $name)
-                    ->where('category_id', (($parent_id == 0) ? null : $parent_id))
-                    ->count();
-            }
-            
-            if ($checkSameName > 0) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'nameError',
-                    "The category cannot be added because there's an existing category with the same name."
-                );
-                if (isset($sid)) {
-                    return \Redirect::to('admin/categories/edit/' . $sid)->withErrors($errors)->withInput();
-                } else {
-                    return \Redirect::to('admin/categories/create')->withErrors($errors)->withInput();
-                }
-            }
-
-            $category->name = $name;
-            $category->short_description = $short_description;
-            $category->long_description = $long_description;
-            $category->active = $active;
-            $category->order = $order;
-            $category->options = json_encode($options);
-
-            // Check if parent_id is equal to this->id. If 0, save as null
-            $category->category_id = ($sid == $parent_id) ? null : (($parent_id == 0) ? null : $parent_id);
-
-            $category->save();
-
-            if (\Input::hasFile('image')) {
-                // Delete all existing images for edit
-                if (isset($sid)) {
-                    $category->deleteAllImages();
-                }
-
-                //set the name of the file
-                $originalFilename = $image->getClientOriginalName();
-                $filename = str_replace(' ', '', $name) . Str::random(20) .'.'. File::extension($originalFilename);
-
-                //Upload the file
-                $isSuccess = $image->move('assets/img/categories', $filename);
-
-                if ($isSuccess) {
-                    // create photo
-                    $newimage = new Image;
-                    $newimage->path = $filename;
-
-                    // save photo to the loaded model
-                    $category->images()->save($newimage);
-                }
-            }
-            //if it validate
-        } else {
-            if (isset($sid)) {
-                return \Redirect::to('admin/categories/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return \Redirect::to('admin/categories/create')->withErrors($validation)->withInput();
-            }
+            return redirect('/admin/categories')->withErrors($errors);
         }
 
-        return \Redirect::to('admin/categories');
+        // Check if there's an existing category with the same name under the same parent
+        if (isset($sid)) {
+            $checkSameName = Category::where('name', $name)
+                ->where('category_id', (($parent_id == 0) ? null : $parent_id))
+                ->whereNotIn('id', [$sid])
+                ->count();
+        } else {
+            $checkSameName = Category::where('name', $name)
+                ->where('category_id', (($parent_id == 0) ? null : $parent_id))
+                ->count();
+        }
+
+        if ($checkSameName > 0) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'nameError',
+                "The category cannot be added because there's an existing category with the same name."
+            );
+
+            return redirect($return_path)->withErrors($errors)->withInput();
+        }
+
+        $category->name = $name;
+        $category->short_description = $short_description;
+        $category->long_description = $long_description;
+        $category->active = $active;
+        $category->order = $order;
+        $category->options = json_encode($options);
+
+        // Check if parent_id is equal to this->id. If 0, save as null
+        $category->category_id = ($sid == $parent_id) ? null : (($parent_id == 0) ? null : $parent_id);
+
+        $category->save();
+
+        if (\Input::hasFile('image')) {
+            // Delete all existing images for edit
+            if (isset($sid)) {
+                // Delete all images
+                foreach ($category->images as $img) {
+                    $img->delete();
+                }
+            }
+
+            //Upload the file
+            $helper_image = new RImage;
+            $filename = $helper_image->upload($image, 'categories/' . $category->id, true);
+
+            if ($filename) {
+                // create photo
+                $newimage = new Image;
+                $newimage->path = $filename;
+
+                // save photo to the loaded model
+                $category->images()->save($newimage);
+            }
+        }
+        
+        return redirect('admin/categories');
     }
 
     public function getDelete($sid)
@@ -208,7 +203,7 @@ class CategoryController extends Controller
                 'deleteError',
                 "The category cannot be found because it does not exist or may have been deleted."
             );
-            return \Redirect::to('/admin/categories')->withErrors($errors);
+            return redirect('/admin/categories')->withErrors($errors);
         }
 
         // Find if there's any child
@@ -221,7 +216,7 @@ class CategoryController extends Controller
                 "The category '" . $category->name .
                 "' cannot be deleted because it has " . $children . " children categories."
             );
-            return \Redirect::to('/admin/categories')->withErrors($errors);
+            return redirect('/admin/categories')->withErrors($errors);
         }
 
         // Check in use by media
@@ -232,12 +227,12 @@ class CategoryController extends Controller
                 'deleteError',
                 "The category '" . $category->name . "' cannot be deleted because it is in used."
             );
-            return \Redirect::to('/admin/categories')->withErrors($errors);
+            return redirect('/admin/categories')->withErrors($errors);
         }
         
         // Delete the category
         $category->delete();
 
-        return \Redirect::to('admin/categories');
+        return redirect('admin/categories');
     }
 }

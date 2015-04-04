@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
+use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Helpers\RHelper;
 
 /* Columns
  *
@@ -52,21 +54,6 @@ class Category extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_category');
     }
 
-    public function deleteAllImages()
-    {
-        $folder = 'assets/img/categories/';
-
-        foreach ($this->images as $image) {
-            // Delete physical file
-            $filepath = $folder . $image->path;
-            
-            $image->deleteFiles($filepath);
-
-            // Delete image model
-            $image->delete();
-        }
-    }
-
     public static function getAllActiveOrdered()
     {
         return Category::where('active', '=', '1')->orderBy('order', 'desc')->orderBy('name')->get();
@@ -109,9 +96,17 @@ class Category extends Model
         
         // Delete main category will delete all sub categories
         $this->categories()->delete();
-
+        
         // Delete all images
-        $this->deleteAllImages();
+        foreach ($this->images as $image) {
+            $image->delete();
+        }
+        
+        // Delete category's images folder
+        $upload_dir = \Config::get('redminportal::image.upload_dir');
+        $deleteFolder = new Image;
+        $cat_path = RHelper::joinPaths($upload_dir, 'categories/' . $this->id);
+        $deleteFolder->deleteFiles($cat_path);
 
         return parent::delete();
     }

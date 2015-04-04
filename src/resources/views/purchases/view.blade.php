@@ -49,7 +49,7 @@
                     @endif
                     <td>{{ $purchase->pricelist->module->name }}</td>
                     <td>{{ $purchase->pricelist->membership->name }}</td>
-                    <td>{{ Rhelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
+                    <td>{{ RHelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
                     <td>{{ $purchase->payment_status }}</td>
                     <td>{{ $purchase->transaction_id }}</td>
                     <td>{{ $purchase->created_at }}</td>

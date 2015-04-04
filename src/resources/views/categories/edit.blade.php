@@ -110,7 +110,7 @@
                 <div class='row'>
                     @foreach( $category->images as $image )
                     <div class='col-md-3'>
-                        {!! HTML::image($imageUrl . $image->path, $category->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                        {!! HTML::image($imagine->getUrl($image->path), $category->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
                     </div>
                     @endforeach
                 </div>

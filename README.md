@@ -140,8 +140,10 @@ It is recommended that contributors use Laravel Homestead for development becaus
 
 7. Then cd to [root]'s folder and run:
 
-    `composer update --prefer-dist -vvv --profile`
+    `composer update --prefer-dist -vvv --profile --no-dev`
 
+    **NOTE: the [root]'s phpunit dependency will clash with the package's phpunit. "`--no-dev`" ensures that it is not installed on [root]. You can also choose to remove phpunit from `require` inside the [root]'s composer.json.**
+    
 8. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(

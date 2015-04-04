@@ -29,7 +29,7 @@ class Image extends Model
         // Remove original file
         $filename = $this->path;
         $this->deleteFiles($filename);
-         
+        
         $imagine = new RImage;
         
         // Remove all dimenions

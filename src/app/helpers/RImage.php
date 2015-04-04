@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
+use Redooor\Redminportal\App\Helpers\RHelper;
 
 class RImage
 {
@@ -94,8 +95,8 @@ class RImage
                 if (! File::exists($targetFilePath) or
                     (File::lastModified($targetFilePath) < File::lastModified($sourceFilePath))) {
                     $this->imagine->open($sourceFilePath)
-                                  ->thumbnail($size, $mode)
-                                  ->save($targetFilePath, array('quality' => $quality));
+                        ->thumbnail($size, $mode)
+                        ->save($targetFilePath, array('quality' => $quality));
                 }
             } catch (\Exception $e) {
                 Log::error('[IMAGE SERVICE] Failed to resize image "' . $url . '" [' . $e->getMessage() . ']');
@@ -132,7 +133,7 @@ class RImage
             // Get file info and try to move
             $destination = Config::get('redminportal::image.upload_path') . $dir;
             $filename    = $file->getClientOriginalName();
-            $path        = Config::get('redminportal::image.upload_dir') . '/' . $dir . '/' . $filename;
+            $path        = RHelper::joinPaths(Config::get('redminportal::image.upload_dir'), $dir, $filename);
             $uploaded    = $file->move($destination, $filename);
      
             if ($uploaded) {
@@ -182,6 +183,9 @@ class RImage
     {
         // Get default dimensions
         $defaultDimensions = Config::get('redminportal::image.dimensions');
+        
+        // Get upload path
+        $upload_path = Config::get('redminportal::image.upload_path');
 
         $dimension = $defaultDimensions[$size];
 
@@ -189,7 +193,6 @@ class RImage
         $width   = (int) $dimension[0];
         $height  = isset($dimension[1]) ?  (int) $dimension[1] : $width;
         $crop    = isset($dimension[2]) ? (bool) $dimension[2] : false;
-        //$quality = isset($dimension[3]) ?  (int) $dimension[3] : Config::get('redminportal::image.quality');
 
         // URL info
         $info = pathinfo($url);
@@ -201,13 +204,9 @@ class RImage
 
         // Directories and file names
         $fileName       = $info['basename'];
-        //$sourceDirPath  = public_path() . '/' . $info['dirname'];
-        //$sourceFilePath = $sourceDirPath . '/' . $fileName;
         $targetDirName  = $width . 'x' . $height . ($crop ? '_crop' : '');
-        //$targetDirPath  = $sourceDirPath . '/' . $targetDirName . '/';
-        //$targetFilePath = $targetDirPath . $fileName;
-        $targetUrl      = asset($info['dirname'] . '/' . $targetDirName . '/' . $fileName);
-        $relativeUrl    = $info['dirname'] . '/' . $targetDirName . '/' . $fileName;
+        $targetUrl      = RHelper::joinPaths($upload_path . $info['dirname'], $targetDirName, $fileName);
+        $relativeUrl    = RHelper::joinPaths($info['dirname'], $targetDirName, $fileName);
 
         return ($fullUrl ? $targetUrl : $relativeUrl);
     }
