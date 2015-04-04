@@ -93,7 +93,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $modules->render() }}
+        {!! $modules->render() !!}
         </div>
     @else
         <div class="alert alert-info">No module found</div>

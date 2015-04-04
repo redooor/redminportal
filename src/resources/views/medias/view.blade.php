@@ -111,7 +111,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $medias->render() }}
+        {!! $medias->render() !!}
         </div>
     @else
         <div class="alert alert-info">No media found</div>

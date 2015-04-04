@@ -95,7 +95,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $products->render() }}
+        {!! $products->render() !!}
         </div>
     @else
         <div class="alert alert-info">No product found</div>

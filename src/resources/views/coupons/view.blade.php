@@ -130,7 +130,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $coupons->render() }}
+        {!! $coupons->render() !!}
         </div>
     @else
         <div class="alert alert-info">No coupon found</div>

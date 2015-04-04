@@ -71,7 +71,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $purchases->render() }}
+        {!! $purchases->render() !!}
         </div>
     @else
         <div class="alert alert-info">No purchase found</div>

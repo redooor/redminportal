@@ -79,7 +79,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $promotions->render() }}
+        {!! $promotions->render() !!}
         </div>
     @else
         <div class="alert alert-info">No promotion found</div>

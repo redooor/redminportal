@@ -68,7 +68,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $announcements->render() }}
+        {!! $announcements->render() !!}
         </div>
     @else
         <div class="alert alert-info">No announcement found</div>

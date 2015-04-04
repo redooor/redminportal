@@ -66,7 +66,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $portfolios->render() }}
+        {!! $portfolios->render() !!}
         </div>
     @else
         <div class="alert alert-info">No portfolio found</div>
