@@ -17,5 +17,6 @@ return array(
     'portfolios' => 'Portfolios',
     'purchases' => 'Purchases',
     'mailinglist' => 'Mailing List',
-    'coupons' => 'Coupons'
+    'coupons' => 'Coupons',
+    'announcements' => 'Announcements'
 );

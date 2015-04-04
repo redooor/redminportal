@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Redooor\Redminportal\App\Helpers\RHelper;
 
 /* Columns
  *
@@ -19,20 +20,7 @@ class Announcement extends Model
     {
         return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
     }
-
-    public function deleteAllImages()
-    {
-        foreach ($this->images as $image) {
-            // Delete physical file, including all different sizes
-            $parts = pathinfo($image->path);
-
-            $image->deleteFiles($parts['dirname']);
-
-            // Delete image model
-            $image->delete();
-        }
-    }
-
+    
     public static function validate($input)
     {
         $rules = array(
@@ -46,7 +34,17 @@ class Announcement extends Model
     
     public function delete()
     {
-        $this->deleteAllImages();
+        // Delete all images
+        foreach ($this->images as $image) {
+            $image->delete();
+        }
+        
+        // Delete assets images folder
+        $upload_dir = \Config::get('redminportal::image.upload_dir');
+        $deleteFolder = new Image;
+        $cat_path = RHelper::joinPaths($upload_dir, 'announcements/' . $this->id);
+        $deleteFolder->deleteFiles($cat_path);
+        
         return parent::delete();
     }
 }

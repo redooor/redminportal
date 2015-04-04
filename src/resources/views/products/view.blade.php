@@ -15,7 +15,7 @@
     <div class="nav-controls text-right">
         @if (count($products) > 0)
         <span class="label label-default pull-left">
-            {{ $products->getFrom() . ' to ' . $products->getTo() . ' ( total ' . $products->getTotal() . ' )' }}
+            {{ $products->firstItem() . ' to ' . $products->lastItem() . ' ( total ' . $products->total() . ' )' }}
         </span>
         @endif
         {{ HTML::link('admin/products/create', 'Create New', array('class' => 'btn btn-primary')) }}
@@ -95,7 +95,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $products->links() }}
+        {{ $products->render() }}
         </div>
     @else
         <div class="alert alert-info">No product found</div>

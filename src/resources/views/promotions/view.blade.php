@@ -15,7 +15,7 @@
     <div class="nav-controls text-right">
         @if (count($promotions) > 0)
         <span class="label label-default pull-left">
-            {{ $promotions->getFrom() . ' to ' . $promotions->getTo() . ' ( total ' . $promotions->getTotal() . ' )' }}
+            {{ $promotions->firstItem() . ' to ' . $promotions->lastItem() . ' ( total ' . $promotions->total() . ' )' }}
         </span>
         @endif
         {{ HTML::link('admin/promotions/create', 'Create New', array('class' => 'btn btn-primary')) }}
@@ -79,7 +79,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $promotions->links() }}
+        {{ $promotions->render() }}
         </div>
     @else
         <div class="alert alert-info">No promotion found</div>

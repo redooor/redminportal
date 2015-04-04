@@ -4,7 +4,7 @@
     <div class="nav-controls text-right">
         @if (count($portfolios) > 0)
         <span class="label label-default pull-left">
-            {{ $portfolios->getFrom() . ' to ' . $portfolios->getTo() . ' ( total ' . $portfolios->getTotal() . ' )' }}
+            {{ $portfolios->firstItem() . ' to ' . $portfolios->lastItem() . ' ( total ' . $portfolios->total() . ' )' }}
         </span>
         @endif
         {{ HTML::link('admin/portfolios/create', 'Create New', array('class' => 'btn btn-primary')) }}
@@ -66,7 +66,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $portfolios->links() }}
+        {{ $portfolios->render() }}
         </div>
     @else
         <div class="alert alert-info">No portfolio found</div>

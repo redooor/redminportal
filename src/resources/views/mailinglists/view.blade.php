@@ -15,7 +15,7 @@
     <div class="nav-controls text-right">
         @if (count($mailinglists) > 0)
         <span class="label label-default pull-left">
-            {{ $mailinglists->getFrom() . ' to ' . $mailinglists->getTo() . ' ( total ' . $mailinglists->getTotal() . ' )' }}
+            {{ $mailinglists->firstItem() . ' to ' . $mailinglists->lastItem() . ' ( total ' . $mailinglists->total() . ' )' }}
         </span>
         @endif
         <button class="btn btn-default" data-toggle="modal" data-target="#export-csv">Export CSV</button>
@@ -105,7 +105,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $mailinglists->links() }}
+        {{ $mailinglists->render() }}
         </div>
     @else
         <div class="alert alert-info">No mailing list found</div>

@@ -8,10 +8,11 @@
 
 Route::group(['namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefix' => 'admin'], function () {
     Route::get('/', 'PageController@home');
-    Route::controller('users', 'UserController');
+    Route::controller('announcements', 'AnnouncementController');
+    Route::controller('categories', 'CategoryController');
     Route::controller('groups', 'GroupController');
     Route::controller('memberships', 'MembershipController');
-    Route::controller('categories', 'CategoryController');
+    Route::controller('users', 'UserController');
 });
 
 /*
@@ -24,7 +25,7 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth.sentry'), function()
     
     Route::controller('products',         'Redooor\Redminportal\ProductController');
     Route::controller('promotions',       'Redooor\Redminportal\PromotionController');
-    Route::controller('announcements', 'AnnouncementController');
+    
     Route::controller('portfolios',       'Redooor\Redminportal\PortfolioController');
     Route::controller('medias',           'Redooor\Redminportal\MediaController');
     Route::controller('modules',          'Redooor\Redminportal\ModuleController');

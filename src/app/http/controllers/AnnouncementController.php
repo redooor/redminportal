@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Models\Announcement;
+use Redooor\Redminportal\App\Helpers\RImage;
 
 class AnnouncementController extends Controller
 {
@@ -8,12 +9,12 @@ class AnnouncementController extends Controller
     {
         $announcements = Announcement::paginate(20);
         
-        return \View::make('redminportal::announcements/view')->with('announcements', $announcements);
+        return view('redminportal::announcements/view')->with('announcements', $announcements);
     }
     
     public function getCreate()
     {
-        return \View::make('redminportal::announcements/create');
+        return view('redminportal::announcements/create');
     }
     
     public function getEdit($sid)
@@ -22,7 +23,12 @@ class AnnouncementController extends Controller
         $announcement = Announcement::find($sid);
         
         if ($announcement == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The announcement cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/announcements')->withErrors($errors);
         }
         
         if (empty($announcement->options)) {
@@ -35,15 +41,15 @@ class AnnouncementController extends Controller
             $announcement_cn = json_decode($announcement->options);
         }
         
-        return \View::make('redminportal::announcements/edit')
+        return view('redminportal::announcements/edit')
             ->with('announcement', $announcement)
-            ->with('imagine', new Helper\Image());
+            ->with('imagine', new RImage);
     }
     
     public function postStore()
     {
         $sid = \Input::get('id');
-        
+            
         $validation = Announcement::validate(\Input::all());
         
         if ($validation->passes()) {
@@ -60,7 +66,7 @@ class AnnouncementController extends Controller
                     'editError',
                     "The Announcement cannot be found because it does not exist or may have been deleted."
                 );
-                return \Redirect::to('/admin/announcements')->withErrors($errors);
+                return redirect('/admin/announcements')->withErrors($errors);
             }
 
             $announcement->title = $title;
@@ -70,11 +76,8 @@ class AnnouncementController extends Controller
             $announcement->save();
             
             if (\Input::hasFile('image')) {
-                // Delete all existing images for edit
-                //if(isset($sid)) $announcement->deleteAllImages();
-                
                 //Upload the file
-                $helper_image = new Helper\Image();
+                $helper_image = new RImage;
                 $filename = $helper_image->upload($image, 'announcements/' . $announcement->id, true);
                 
                 if ($filename) {
@@ -89,13 +92,13 @@ class AnnouncementController extends Controller
         //if it validate
         } else {
             if (isset($sid)) {
-                return \Redirect::to('admin/announcements/edit/' . $sid)->withErrors($validation)->withInput();
+                return redirect('admin/announcements/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
-                return \Redirect::to('admin/announcements/create')->withErrors($validation)->withInput();
+                return redirect('admin/announcements/create')->withErrors($validation)->withInput();
             }
         }
         
-        return \Redirect::to('admin/announcements');
+        return redirect('admin/announcements');
     }
     
     public function getDelete($sid)
@@ -106,16 +109,13 @@ class AnnouncementController extends Controller
         if ($announcement == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return \Redirect::to('/admin/announcements')->withErrors($errors);
+            return redirect('/admin/announcements')->withErrors($errors);
         }
-        
-        // Delete all images
-        $announcement->deleteAllImages();
         
         // Delete the announcement
         $announcement->delete();
 
-        return \Redirect::to('admin/announcements');
+        return redirect('admin/announcements');
     }
     
     public function getImgremove($sid)
@@ -125,13 +125,13 @@ class AnnouncementController extends Controller
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return \Redirect::to('/admin/announcements')->withErrors($errors);
+            return redirect('/admin/announcements')->withErrors($errors);
         }
         
         $announcement_id = $image->imageable_id;
         
         $image->remove();
         
-        return \Redirect::to('admin/announcements/edit/' . $announcement_id);
+        return redirect('admin/announcements/edit/' . $announcement_id);
     }
 }

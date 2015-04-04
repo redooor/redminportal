@@ -1,5 +1,7 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Redooor\Redminportal\App\Models\Announcement;
+
 class AnnouncementControllerTest extends BaseControllerTest
 {
     /**

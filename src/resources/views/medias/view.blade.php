@@ -15,7 +15,7 @@
     <div class="nav-controls text-right">
         @if (count($medias) > 0)
         <span class="label label-default pull-left">
-            {{ $medias->getFrom() . ' to ' . $medias->getTo() . ' ( total ' . $medias->getTotal() . ' )' }}
+            {{ $medias->firstItem() . ' to ' . $medias->lastItem() . ' ( total ' . $medias->total() . ' )' }}
         </span>
         @endif
         <a id="rd-media-get-all-duration" class="btn btn-default">Get Durations</a>
@@ -111,7 +111,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $medias->links() }}
+        {{ $medias->render() }}
         </div>
     @else
         <div class="alert alert-info">No media found</div>

@@ -15,7 +15,7 @@
     <div class="nav-controls text-right">
         @if (count($coupons) > 0)
         <span class="label label-default pull-left">
-            {{ $coupons->getFrom() . ' to ' . $coupons->getTo() . ' ( total ' . $coupons->getTotal() . ' )' }}
+            {{ $coupons->firstItem() . ' to ' . $coupons->lastItem() . ' ( total ' . $coupons->total() . ' )' }}
         </span>
         <br>
         @endif
@@ -121,7 +121,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $coupons->links() }}
+        {{ $coupons->render() }}
         </div>
     @else
         <div class="alert alert-info">No coupon found</div>

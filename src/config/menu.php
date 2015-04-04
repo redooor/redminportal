@@ -43,7 +43,7 @@ return array(
         'hide' => false
     ),
     array(
-        'name' => 'news',
+        'name' => 'announcements',
         'path' => 'admin/announcements',
         'hide' => false
     ),

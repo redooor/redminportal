@@ -15,7 +15,7 @@
     <div class="nav-controls text-right">
         @if (count($purchases) > 0)
         <span class="label label-default pull-left">
-            {{ $purchases->getFrom() . ' to ' . $purchases->getTo() . ' ( total ' . $purchases->getTotal() . ' )' }}
+            {{ $purchases->firstItem() . ' to ' . $purchases->lastItem() . ' ( total ' . $purchases->total() . ' )' }}
         </span>
         @endif
         <button class="btn btn-default" data-toggle="modal" data-target="#export-csv">Export CSV</button>
@@ -71,7 +71,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $purchases->links() }}
+        {{ $purchases->render() }}
         </div>
     @else
         <div class="alert alert-info">No purchase found</div>
