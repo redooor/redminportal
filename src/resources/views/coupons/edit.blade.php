@@ -4,33 +4,35 @@
     <div class="row">
         <div class="col-md-12">
             <ol class="breadcrumb">
-                <li><a href="{{ URL::to('admin') }}">Home</a></li>
-                <li><a href="{{ URL::to('admin/coupons') }}">Coupons</a></li>
-                <li class="active">Create</li>
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::forms.home') }}</a></li>
+                <li><a href="{{ URL::to('admin/coupons') }}">{{ Lang::get('redminportal::forms.coupons') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::forms.edit') }}</li>
             </ol>
         </div>
     </div>
-
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
     
-    {{ Form::open(array('action' => 'Redooor\Redminportal\CouponController@postStore', 'role' => 'form', 'id' => 'form_add')) }}
-        {{ Form::hidden('id', $coupon->id) }}
+    {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\CouponController@postStore', 'role' => 'form', 'id' => 'form_add')) !!}
+        {!! Form::hidden('id', $coupon->id) !!}
         <div class='row'>
             <div class="col-md-3 col-md-push-9">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class='form-actions'>
-                            {{ HTML::link('admin/coupons', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link'))}}
-                            {{ Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary pull-right')) }}
+                            {!! HTML::link('admin/coupons', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link'))!!}
+                            {!! Form::submit(Lang::get('redminportal::buttons.save_changes'), array('class' => 'btn btn-primary pull-right')) !!}
                         </div>
                     </div>
                 </div>
@@ -46,19 +48,19 @@
                             <div class="form-group">
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.coupon_code') }}</label>
                                 <div class="col-md-8">
-                                    {{ Form::text('code', $coupon->code, array('class' => 'form-control')) }}
+                                    {!! Form::text('code', $coupon->code, array('class' => 'form-control')) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.description') . ' (' . Lang::get('redminportal::forms.optional') . ')' }}</label>
                                 <div class="col-md-8">
-                                    {{ Form::textarea('description', $coupon->description, array('class' => 'form-control', 'rows' => '3')) }}
+                                    {!! Form::textarea('description', $coupon->description, array('class' => 'form-control', 'rows' => '3')) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.amount') }}</label>
                                 <div class="col-md-8">
-                                    {{ Form::text('amount', $coupon->amount, array('class' => 'form-control')) }}
+                                    {!! Form::text('amount', $coupon->amount, array('class' => 'form-control')) !!}
                                 </div>
                             </div>
                             <div class="form-group">
@@ -66,7 +68,7 @@
                                 <div class="col-md-8">
                                     <div class="checkbox">
                                         <label>
-                                            {{ Form::checkbox('is_percent', $coupon->is_percent, $coupon->is_percent, array('id' => 'is_percent', 'name' => 'is_percent')) }}
+                                            {!! Form::checkbox('is_percent', $coupon->is_percent, $coupon->is_percent, array('id' => 'is_percent', 'name' => 'is_percent')) !!}
                                             <i>{{ Lang::get('redminportal::forms.discount_explanation') }}</i>
                                         </label>
                                     </div>
@@ -76,7 +78,7 @@
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.start_date') }}</label>
                                 <div class="col-md-8">
                                     <div class="input-group date datepicker" id='start-date'>
-                                        {{ Form::input('text', 'start_date', date("d/m/Y h:i A", strtotime($coupon->start_date)), array('class' => 'form-control')) }}
+                                        {!! Form::input('text', 'start_date', date("d/m/Y h:i A", strtotime($coupon->start_date)), array('class' => 'form-control')) !!}
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
                                 </div>
@@ -85,7 +87,7 @@
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.expiry_date') }}</label>
                                 <div class="col-md-8">
                                     <div class="input-group date datepicker" id='end-date'>
-                                        {{ Form::input('text', 'end_date', date("d/m/Y h:i A", strtotime($coupon->end_date)), array('class' => 'form-control')) }}
+                                        {!! Form::input('text', 'end_date', date("d/m/Y h:i A", strtotime($coupon->end_date)), array('class' => 'form-control')) !!}
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
                                 </div>
@@ -102,7 +104,7 @@
                                 <div class="col-md-8">
                                     <div class="checkbox">
                                         <label>
-                                            {{ Form::checkbox('multiple_coupons', $coupon->multiple_coupons, $coupon->multiple_coupons, array('id' => 'multiple_coupons')) }}
+                                            {!! Form::checkbox('multiple_coupons', $coupon->multiple_coupons, $coupon->multiple_coupons, array('id' => 'multiple_coupons')) !!}
                                             <i>{{ Lang::get('redminportal::forms.multiple_coupons_explanation') }}</i>
                                         </label>
                                     </div>
@@ -113,7 +115,7 @@
                                 <div class="col-md-8">
                                     <div class="checkbox">
                                         <label>
-                                            {{ Form::checkbox('exclude_sale_item', $coupon->exclude_sale_item, $coupon->exclude_sale_item, array('id' => 'exclude_sale_item')) }}
+                                            {!! Form::checkbox('exclude_sale_item', $coupon->exclude_sale_item, $coupon->exclude_sale_item, array('id' => 'exclude_sale_item')) !!}
                                             <i>{{ Lang::get('redminportal::forms.exclude_sale_item_explanation') }}</i>
                                         </label>
                                     </div>
@@ -122,13 +124,13 @@
                             <div class="form-group">
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.min_spent') }}</label>
                                 <div class="col-md-8">
-                                    {{ Form::text('min_spent', $coupon->min_spent, array('class' => 'form-control')) }}
+                                    {!! Form::text('min_spent', $coupon->min_spent, array('class' => 'form-control')) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.max_spent') }}</label>
                                 <div class="col-md-8">
-                                    {{ Form::text('max_spent', $coupon->max_spent, array('class' => 'form-control')) }}
+                                    {!! Form::text('max_spent', $coupon->max_spent, array('class' => 'form-control')) !!}
                                 </div>
                             </div>
                             <div class="form-group">
@@ -137,21 +139,21 @@
                                     <h4>{{ Lang::get('redminportal::forms.categories') }}</h4>
                                     @if (count($categories) > 0)
                                     <p></p>
-                                    {{ Form::select('category_id', $categories, $category_id, array('class' => 'form-control', 'id' => 'category_id', 'multiple', 'name' => 'category_id[]')) }}
+                                    {!! Form::select('category_id', $categories, $category_id, array('class' => 'form-control', 'id' => 'category_id', 'multiple', 'name' => 'category_id[]')) !!}
                                     @else
                                     <div class="alert alert-warning">No category</div>
                                     @endif
                                     <h4>{{ Lang::get('redminportal::forms.products') }}</h4>
                                     @if (count($products) > 0)
                                     <p></p>
-                                    {{ Form::select('product_id', $products, $product_id, array('class' => 'form-control', 'id' => 'product_id', 'multiple', 'name' => 'product_id[]')) }}
+                                    {!! Form::select('product_id', $products, $product_id, array('class' => 'form-control', 'id' => 'product_id', 'multiple', 'name' => 'product_id[]')) !!}
                                     @else
                                     <div class="alert alert-warning">No product</div>
                                     @endif
                                     <h4>{{ Lang::get('redminportal::forms.membership_modules') }}</h4>
                                     @if (count($membermodules) > 0)
                                     <p></p>
-                                    {{ Form::select('pricelist_id', $membermodules, $pricelist_id, array('class' => 'form-control', 'id' => 'pricelist_id', 'multiple', 'name' => 'pricelist_id[]')) }}
+                                    {!! Form::select('pricelist_id', $membermodules, $pricelist_id, array('class' => 'form-control', 'id' => 'pricelist_id', 'multiple', 'name' => 'pricelist_id[]')) !!}
                                     @else
                                     <div class="alert alert-warning">No membership/module</div>
                                     @endif
@@ -168,13 +170,13 @@
                             <div class="form-group">
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.usage_limit_per_coupon') }}</label>
                                 <div class="col-md-8">
-                                    {{ Form::text('usage_limit_per_coupon', $coupon->usage_limit_per_coupon, array('class' => 'form-control')) }}
+                                    {!! Form::text('usage_limit_per_coupon', $coupon->usage_limit_per_coupon, array('class' => 'form-control')) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.usage_limit_per_user') }}</label>
                                 <div class="col-md-8">
-                                    {{ Form::text('usage_limit_per_user', $coupon->usage_limit_per_user, array('class' => 'form-control')) }}
+                                    {!! Form::text('usage_limit_per_user', $coupon->usage_limit_per_user, array('class' => 'form-control')) !!}
                                 </div>
                             </div>
                         </div>
@@ -182,7 +184,7 @@
                 </div>
 	        </div>
         </div>
-    {{ Form::close() }}
+    {!! Form::close() !!}
 @stop
 
 @section('footer')

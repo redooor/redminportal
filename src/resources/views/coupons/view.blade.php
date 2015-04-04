@@ -1,15 +1,25 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::forms.home') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::forms.coupons') }}</li>
+            </ol>
+        </div>
     </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
 
     <div class="nav-controls text-right">
@@ -17,9 +27,8 @@
         <span class="label label-default pull-left">
             {{ $coupons->firstItem() . ' to ' . $coupons->lastItem() . ' ( total ' . $coupons->total() . ' )' }}
         </span>
-        <br>
         @endif
-        {{ HTML::link('admin/coupons/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        {!! HTML::link('admin/coupons/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
     </div>
     
     @if (count($coupons) > 0)
@@ -30,7 +39,7 @@
                         <a href="{{ URL::to('admin/coupons/sort') . '/code/' . ($sortBy == 'code' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Coupon Code
                             @if ($sortBy == 'code')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -38,7 +47,7 @@
                         <a href="{{ URL::to('admin/coupons/sort') . '/amount/' . ($sortBy == 'amount' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Coupon Amount
                             @if ($sortBy == 'amount')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -46,7 +55,7 @@
                         <a href="{{ URL::to('admin/coupons/sort') . '/start_date/' . ($sortBy == 'start_date' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Coupon Start Date
                             @if ($sortBy == 'start_date')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -54,7 +63,7 @@
                         <a href="{{ URL::to('admin/coupons/sort') . '/end_date/' . ($sortBy == 'end_date' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Coupon Expiry Date
                             @if ($sortBy == 'end_date')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -62,7 +71,7 @@
                         <a href="{{ URL::to('admin/coupons/sort') . '/usage_limit_per_coupon/' . ($sortBy == 'usage_limit_per_coupon' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Usage Limit Per Coupon
                             @if ($sortBy == 'usage_limit_per_coupon')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -70,7 +79,7 @@
                         <a href="{{ URL::to('admin/coupons/sort') . '/usage_limit_per_user/' . ($sortBy == 'usage_limit_per_user' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Usage Limit Per User
                             @if ($sortBy == 'usage_limit_per_user')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>

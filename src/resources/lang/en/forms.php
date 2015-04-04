@@ -27,4 +27,8 @@ return array(
     'categories' => 'Categories',
     'products' => 'Products',
     'membership_modules' => 'Membership/Modules',
+    'home' => 'Home',
+    'create' => 'Create',
+    'edit' => 'Edit',
+    'coupons' => 'Coupons'
 );

@@ -1,10 +1,10 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Pricelist;
-use Redooor\Redminportal\Module;
-use Redooor\Redminportal\Membership;
-use Redooor\Redminportal\Category;
-use Redooor\Redminportal\Product;
+use Redooor\Redminportal\App\Models\Pricelist;
+use Redooor\Redminportal\App\Models\Module;
+use Redooor\Redminportal\App\Models\Membership;
+use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Product;
 
 class CouponControllerTest extends BaseControllerTest
 {
