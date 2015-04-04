@@ -59,7 +59,7 @@ class MailinglistControllerTest extends BaseControllerTest
      */
     public function testSortByPass()
     {
-        $this->client->request('GET', '/admin/mailinglists/sort/email/asc');
+        $this->call('GET', '/admin/mailinglists/sort/email/asc');
 
         $this->assertResponseOk();
         $this->assertViewHas('mailinglists');
@@ -70,7 +70,7 @@ class MailinglistControllerTest extends BaseControllerTest
      */
     public function testSortByValidationFail()
     {
-        $this->client->request('GET', '/admin/mailinglists/sort/->where("id", 5)/asc');
+        $this->call('GET', '/admin/mailinglists/sort/->where("id", 5)/asc');
 
         $this->assertRedirectedTo('/admin/mailinglists');
         $this->assertSessionHasErrors();
@@ -81,7 +81,7 @@ class MailinglistControllerTest extends BaseControllerTest
      */
     public function testSortByValidationOrderByFail()
     {
-        $this->client->request('GET', '/admin/mailinglists/sort/email/->where("id", 5)');
+        $this->call('GET', '/admin/mailinglists/sort/email/->where("id", 5)');
 
         $this->assertRedirectedTo('/admin/mailinglists');
         $this->assertSessionHasErrors();

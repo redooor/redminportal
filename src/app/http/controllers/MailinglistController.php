@@ -1,19 +1,14 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-class MailinglistController extends BaseController {
+use Redooor\Redminportal\App\Models\Mailinglist;
 
-    protected $model;
-
-    public function __construct(Mailinglist $mailinglist)
-    {
-        $this->model = $mailinglist;
-    }
-
+class MailinglistController extends Controller
+{
     public function getIndex()
     {
         $mailinglists = Mailinglist::orderBy('email')->paginate(20);
 
-        return \View::make('redminportal::mailinglists/view')
+        return view('redminportal::mailinglists/view')
             ->with('sortBy', 'email')
             ->with('orderBy', 'asc')
             ->with('mailinglists', $mailinglists);
@@ -33,9 +28,8 @@ class MailinglistController extends BaseController {
         
         $validation = \Validator::make($inputs, $rules);
 
-        if( ! $validation->passes() )
-        {
-            return \Redirect::to('admin/mailinglists')->withErrors($validation);
+        if ($validation->fails()) {
+            return redirect('admin/mailinglists')->withErrors($validation);
         }
         
         if ($orderBy != 'asc' && $orderBy != 'desc') {
@@ -44,7 +38,7 @@ class MailinglistController extends BaseController {
 
         $mailinglists = Mailinglist::orderBy($sortBy, $orderBy)->paginate(20);
 
-        return \View::make('redminportal::mailinglists/view')
+        return view('redminportal::mailinglists/view')
             ->with('sortBy', $sortBy)
             ->with('orderBy', $orderBy)
             ->with('mailinglists', $mailinglists);
@@ -52,36 +46,44 @@ class MailinglistController extends BaseController {
 
     public function getCreate()
     {
-        return \View::make('redminportal::mailinglists/create');
+        return view('redminportal::mailinglists/create');
     }
 
-    public function getEdit($id)
+    public function getEdit($sid)
     {
         // Find the mailinglist using the user id
-        $mailinglist = Mailinglist::find($id);
+        $mailinglist = Mailinglist::find($sid);
 
         // No such id
         if ($mailinglist == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The mailing detail cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('admin/mailinglists')->withErrors($errors);
         }
 
-        return \View::make('redminportal::mailinglists/edit')
+        return view('redminportal::mailinglists/edit')
             ->with('mailinglist', $mailinglist);
     }
 
     public function postStore()
     {
-        $id = \Input::get('id');
+        $sid = \Input::get('id');
 
-        if (isset($id)) {
+        if (isset($sid)) {
             // Find the mailinglist using the user id
-            $mailinglist = Mailinglist::find($id);
+            $mailinglist = Mailinglist::find($sid);
 
             // No such id
             if ($mailinglist == null) {
                 $errors = new \Illuminate\Support\MessageBag;
-                $errors->add('storeError', "We are having problem editing this entry. It may have already been deleted.");
-                return \Redirect::to('admin/mailinglists')->withErrors($errors);
+                $errors->add(
+                    'storeError',
+                    "We are having problem editing this entry. It may have already been deleted."
+                );
+                return redirect('admin/mailinglists')->withErrors($errors);
             }
         }
 
@@ -89,21 +91,20 @@ class MailinglistController extends BaseController {
          * Validate
          */
         $rules = array(
-            'email'          => 'required|unique:mailinglists,email' . (isset($id) ? ',' . $id : ''),
+            'email'          => 'required|unique:mailinglists,email' . (isset($sid) ? ',' . $sid : ''),
             'first_name'     => 'required',
             'last_name'      => 'required'
         );
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if( $validation->passes() )
-        {
+        if ($validation->passes()) {
             $email       = \Input::get('email');
             $first_name  = \Input::get('first_name');
             $last_name   = \Input::get('last_name');
-            $active      = (\Input::get('active') == '' ? FALSE : TRUE);
+            $active      = (\Input::get('active') == '' ? false : true);
 
-            $mailinglist = (isset($id) ? Mailinglist::find($id) : new Mailinglist);
+            $mailinglist = (isset($sid) ? Mailinglist::find($sid) : new Mailinglist);
             $mailinglist->email = $email;
             $mailinglist->first_name = $first_name;
             $mailinglist->last_name = $last_name;
@@ -111,36 +112,31 @@ class MailinglistController extends BaseController {
 
             $mailinglist->save();
 
-        }//if it validate
-        else {
-            if(isset($id))
-            {
-                return \Redirect::to('admin/mailinglists/edit/' . $id)->withErrors($validation)->withInput();
-            }
-            else
-            {
-                return \Redirect::to('admin/mailinglists/create')->withErrors($validation)->withInput();
+        } else {
+            if (isset($sid)) {
+                return redirect('admin/mailinglists/edit/' . $sid)->withErrors($validation)->withInput();
+            } else {
+                return redirect('admin/mailinglists/create')->withErrors($validation)->withInput();
             }
         }
 
-        return \Redirect::to('admin/mailinglists');
+        return redirect('admin/mailinglists');
     }
 
-    public function getDelete($id)
+    public function getDelete($sid)
     {
         // Find the mailinglist using the user id
-        $mailinglist = Mailinglist::find($id);
+        $mailinglist = Mailinglist::find($sid);
 
         // Delete the mailinglist
         if ($mailinglist == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "We are having problem deleting this entry. It may have already been deleted.");
-            return \Redirect::to('admin/mailinglists')->withErrors($errors);
+            return redirect('admin/mailinglists')->withErrors($errors);
         }
 
         $mailinglist->delete();
 
-        return \Redirect::to('admin/mailinglists');
+        return redirect('admin/mailinglists');
     }
-
 }

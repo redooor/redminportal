@@ -1,15 +1,17 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
 
     <div class="nav-controls text-right">
@@ -19,7 +21,7 @@
         </span>
         @endif
         <button class="btn btn-default" data-toggle="modal" data-target="#export-csv">Export CSV</button>
-        {{ HTML::link('admin/mailinglists/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        {!! HTML::link('admin/mailinglists/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
     </div>
 
     @if (count($mailinglists) > 0)
@@ -30,7 +32,7 @@
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/email/' . ($sortBy == 'email' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Email
                             @if ($sortBy == 'email')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -38,7 +40,7 @@
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/first_name/' . ($sortBy == 'first_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             First Name
                             @if ($sortBy == 'first_name')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -46,7 +48,7 @@
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/last_name/' . ($sortBy == 'last_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Last Name
                             @if ($sortBy == 'last_name')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -54,7 +56,7 @@
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/active/' . ($sortBy == 'active' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Active
                             @if ($sortBy == 'active')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -62,7 +64,7 @@
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Updated
                             @if ($sortBy == 'updated_at')
-                            {{ ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') }}
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
                         </a>
                     </th>
@@ -105,7 +107,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {{ $mailinglists->render() }}
+        {!! $mailinglists->render() !!}
         </div>
     @else
         <div class="alert alert-info">No mailing list found</div>
@@ -113,7 +115,7 @@
     <div id="export-csv" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
-                {{ Form::open(array('action' => 'Redooor\Redminportal\ReportController@postMailinglist', 'report' => 'form')) }}
+                {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\ReportController@postMailinglist', 'report' => 'form')) !!}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title">Export to CSV</h4>
@@ -122,16 +124,16 @@
                     <div class='row'>
                         <div class="col-md-12">
                             <div class="form-group">
-                                {{ Form::label('start_date', 'Start Date') }}
+                                {!! Form::label('start_date', 'Start Date') !!}
                                 <div class="input-group" id='start-date'>
-                                    {{ Form::input('text', 'start_date', Input::old('start_date'), array('class' => 'form-control datepicker', 'readonly')) }}
+                                    {!! Form::input('text', 'start_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                {{ Form::label('end_date', 'End Date') }}
+                                {!! Form::label('end_date', 'End Date') !!}
                                 <div class="input-group" id='end-date'>
-                                    {{ Form::input('text', 'end_date', Input::old('end_date'), array('class' => 'form-control datepicker', 'readonly')) }}
+                                    {!! Form::input('text', 'end_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                             </div>
@@ -141,9 +143,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    {{ Form::submit('Download CSV', array('class' => 'btn btn-primary')) }}
+                    {!! Form::submit('Download CSV', array('class' => 'btn btn-primary')) !!}
                 </div>
-                {{ Form::close() }}
+                {!! Form::close() !!}
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->

@@ -1,6 +1,9 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-class ReportController extends BaseController
+use Redooor\Redminportal\App\Models\Mailinglist;
+use Redooor\Redminportal\App\Models\UserPricelist;
+
+class ReportController extends Controller
 {
     public function getIndex()
     {
