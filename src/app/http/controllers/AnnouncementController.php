@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Models\Announcement;
+use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class AnnouncementController extends Controller
@@ -130,7 +131,7 @@ class AnnouncementController extends Controller
         
         $announcement_id = $image->imageable_id;
         
-        $image->remove();
+        $image->delete();
         
         return redirect('admin/announcements/edit/' . $announcement_id);
     }
