@@ -52,7 +52,7 @@
                     <td class='hide'>{{ $product->long_description }}</td>
                     <td>
                         @foreach ($product->tags as $tag)
-                        <span class="label label-info">{{ $tag->id }}.{{ $tag->name }}</span>
+                        <span class="label label-info">{{ $tag->name }}</span>
                         @endforeach
                     </td>
                     <td>

@@ -156,14 +156,7 @@ class ProductController extends Controller
 
                 // Save tags
                 foreach (explode(',', $tags) as $tagName) {
-                    $checkTag = Tag::where('name', $tagName)->first();
-                    if ($checkTag) {
-                        $product->tags()->attach($checkTag);
-                    } else {
-                        $newTag = new Tag;
-                        $newTag->name = strtolower($tagName);
-                        $product->tags()->save($newTag);
-                    }
+                    Tag::addTag($product, $tagName);
                 }
             }
 

@@ -222,14 +222,11 @@ class ModuleController extends BaseController
 
             if (! empty($tags)) {
                 // Delete old tags
-                $module->deleteAllTags();
+                $module->tags()->detach();
 
                 // Save tags
                 foreach (explode(',', $tags) as $tagName) {
-                    $newTag = new Tag;
-                    $tagName_trim = trim($tagName); // Trim space from beginning and end
-                    $newTag->name = strtolower($tagName_trim);
-                    $module->tags()->save($newTag);
+                    Tag::addTag($module, $tagName);
                 }
             }
 

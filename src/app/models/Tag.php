@@ -31,4 +31,23 @@ class Tag extends Model
     {
         return $this->morphedByMany('Redooor\Redminportal\App\Models\Module', 'taggable');
     }
+    
+    public static function addTag($model, $name)
+    {
+        if ($model == null || empty($name)) {
+            return false;
+        }
+        
+        $checkTag = Tag::where('name', $name)->first();
+        if ($checkTag) {
+            $model->tags()->attach($checkTag);
+        } else {
+            $newTag = new Tag;
+            $name_trimmed = trim($name); // Trim space from beginning and end
+            $newTag->name = strtolower($name_trimmed);
+            $model->tags()->save($newTag);
+        }
+        
+        return true;
+    }
 }

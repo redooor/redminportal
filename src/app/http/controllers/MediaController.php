@@ -145,17 +145,14 @@ class MediaController extends BaseController
 
             // Create or save changes
             $media->save();
-
+            
             if (! empty($tags)) {
                 // Delete old tags
-                $media->deleteAllTags();
+                $media->tags()->detach();
 
                 // Save tags
                 foreach (explode(',', $tags) as $tagName) {
-                    $newTag = new Tag;
-                    $tagName_trim = trim($tagName); // Trim space from beginning and end
-                    $newTag->name = strtolower($tagName_trim);
-                    $media->tags()->save($newTag);
+                    Tag::addTag($media, $tagName);
                 }
             }
 
