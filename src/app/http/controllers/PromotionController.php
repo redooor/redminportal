@@ -1,33 +1,24 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File;
+use Redooor\Redminportal\App\Models\Promotion;
+use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\View;
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
 use DateTime;
 
-class PromotionController extends BaseController
+class PromotionController extends Controller
 {
-    protected $model;
-    
-    public function __construct(Promotion $promotion)
-    {
-        $this->model = $promotion;
-    }
-    
     public function getIndex()
     {
         $promotions = Promotion::paginate(20);
         
-        return View::make('redminportal::promotions/view')->with('promotions', $promotions);
+        return view('redminportal::promotions/view')->with('promotions', $promotions);
     }
     
     public function getCreate()
     {
-        return View::make('redminportal::promotions/create');
+        return view('redminportal::promotions/create');
     }
     
     public function getEdit($sid)
@@ -36,7 +27,12 @@ class PromotionController extends BaseController
         $promotion = Promotion::find($sid);
         
         if ($promotion == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The promotion cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/promotions')->withErrors($errors);
         }
         
         if (empty($promotion->options)) {
@@ -49,12 +45,12 @@ class PromotionController extends BaseController
             $promotion_cn = json_decode($promotion->options);
         }
         
-        return View::make('redminportal::promotions/edit')
+        return view('redminportal::promotions/edit')
             ->with('promotion', $promotion)
             ->with('promotion_cn', $promotion_cn)
-            ->with('imageUrl', 'assets/img/promotions/')
             ->with('start_date', new DateTime($promotion->start_date))
-            ->with('end_date', new DateTime($promotion->end_date));
+            ->with('end_date', new DateTime($promotion->end_date))
+            ->with('imagine', new RImage);
     }
     
     public function postStore()
@@ -100,7 +96,7 @@ class PromotionController extends BaseController
                     'editError',
                     "The promotion cannot be found because it does not exist or may have been deleted."
                 );
-                return \Redirect::to('/admin/promotions')->withErrors($errors);
+                return redirect('/admin/promotions')->withErrors($errors);
             }
             
             $promotion->name = $name;
@@ -114,23 +110,15 @@ class PromotionController extends BaseController
             $promotion->save();
             
             if (Input::hasFile('image')) {
-                // Delete all existing images for edit
-                if (isset($sid)) {
-                    $promotion->deleteAllImages();
-                }
-                
-                //set the name of the file
-                $originalFilename = $image->getClientOriginalName();
-                $filename = 'promo' . date("dmY") . '_' . Str::random(20) .'.'. File::extension($originalFilename);
-                
                 //Upload the file
-                $isSuccess = $image->move('assets/img/promotions', $filename);
-                
-                if ($isSuccess) {
+                $helper_image = new RImage;
+                $filename = $helper_image->upload($image, 'promotions/' . $promotion->id, true);
+
+                if ($filename) {
                     // create photo
                     $newimage = new Image;
                     $newimage->path = $filename;
-                    
+
                     // save photo to the loaded model
                     $promotion->images()->save($newimage);
                 }
@@ -138,13 +126,13 @@ class PromotionController extends BaseController
         //if it validate
         } else {
             if (isset($sid)) {
-                return Redirect::to('admin/promotions/edit/' . $sid)->withErrors($validation)->withInput();
+                return redirect('admin/promotions/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
-                return Redirect::to('admin/promotions/create')->withErrors($validation)->withInput();
+                return redirect('admin/promotions/create')->withErrors($validation)->withInput();
             }
         }
         
-        return Redirect::to('admin/promotions');
+        return redirect('admin/promotions');
     }
     
     public function getDelete($sid)
@@ -155,15 +143,29 @@ class PromotionController extends BaseController
         if ($promotion == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
-            return \Redirect::to('admin/promotions')->withErrors($errors);
+            return redirect('admin/promotions')->withErrors($errors);
         }
-        
-        // Delete all images
-        $promotion->deleteAllImages();
         
         // Delete the promotion
         $promotion->delete();
 
-        return Redirect::to('admin/promotions');
+        return redirect('admin/promotions');
+    }
+    
+    public function getImgremove($sid)
+    {
+        $image = Image::find($sid);
+
+        if ($image == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('deleteError', "The image cannot be deleted at this time.");
+            return redirect('/admin/promotions')->withErrors($errors);
+        }
+
+        $model_id = $image->imageable_id;
+
+        $image->delete();
+
+        return redirect('admin/promotions/edit/' . $model_id);
     }
 }

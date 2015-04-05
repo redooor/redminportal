@@ -16,6 +16,7 @@ Route::group(['namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefi
     Route::controller('memberships', 'MembershipController');
     Route::controller('portfolios', 'PortfolioController');
     Route::controller('products', 'ProductController');
+    Route::controller('promotions', 'PromotionController');
     Route::controller('reports', 'ReportController');
     Route::controller('users', 'UserController');
 });
@@ -25,20 +26,9 @@ Route::controller('login', 'Redooor\Redminportal\LoginController');
 Route::get('logout', 'Redooor\Redminportal\LoginController@getLogout');
 
 Route::group(array('prefix' => 'admin', 'before' => 'auth.sentry'), function()
-{
-    
-    
-    
-    Route::controller('promotions',       'Redooor\Redminportal\PromotionController');
-    
-    
+{   
     Route::controller('medias',           'Redooor\Redminportal\MediaController');
     Route::controller('modules',          'Redooor\Redminportal\ModuleController');
-    
     Route::controller('purchases',        'Redooor\Redminportal\PurchaseController');
-    
-    
-    
-    
 });
 */

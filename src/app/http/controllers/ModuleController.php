@@ -105,7 +105,6 @@ class ModuleController extends BaseController
         return \View::make('redminportal::modules/edit')
             ->with('module', $module)
             ->with('module_cn', $module_cn)
-            ->with('imageUrl', 'assets/img/modules/')
             ->with('categories', $categories)
             ->with('tagString', $tagString)
             ->with('pricelists', $pricelists);

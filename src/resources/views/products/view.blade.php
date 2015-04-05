@@ -20,7 +20,7 @@
             {{ $products->firstItem() . ' to ' . $products->lastItem() . ' ( total ' . $products->total() . ' )' }}
         </span>
         @endif
-        {!! HTML::link('admin/products/create', 'Create New', array('class' => 'btn btn-primary')) !!}
+        {!! HTML::link('admin/products/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
     </div>
 
     @if (count($products) > 0)

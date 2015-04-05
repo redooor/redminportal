@@ -80,7 +80,6 @@ class ProductController extends Controller
         return view('redminportal::products/edit')
             ->with('product', $product)
             ->with('product_cn', $product_cn)
-            ->with('imageUrl', 'assets/img/products/')
             ->with('categories', $categories)
             ->with('tagString', $tagString)
             ->with('imagine', new RImage);
@@ -213,10 +212,10 @@ class ProductController extends Controller
             return redirect('/admin/products')->withErrors($errors);
         }
 
-        $portfolio_id = $image->imageable_id;
+        $model_id = $image->imageable_id;
 
         $image->delete();
 
-        return redirect('admin/products/edit/' . $portfolio_id);
+        return redirect('admin/products/edit/' . $model_id);
     }
 }

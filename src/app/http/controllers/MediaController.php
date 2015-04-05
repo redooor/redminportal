@@ -60,7 +60,6 @@ class MediaController extends BaseController
         return \View::make('redminportal::medias/edit')
             ->with('media', $media)
             ->with('media_cn', $media_cn)
-            ->with('imageUrl', 'assets/img/medias/')
             ->with('categories', $categories)
             ->with('tagString', $tagString);
     }
