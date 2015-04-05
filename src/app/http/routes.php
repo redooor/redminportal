@@ -15,6 +15,7 @@ Route::group(['namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefi
     Route::controller('mailinglists', 'MailinglistController');
     Route::controller('memberships', 'MembershipController');
     Route::controller('portfolios', 'PortfolioController');
+    Route::controller('products', 'ProductController');
     Route::controller('reports', 'ReportController');
     Route::controller('users', 'UserController');
 });
@@ -27,7 +28,7 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth.sentry'), function()
 {
     
     
-    Route::controller('products',         'Redooor\Redminportal\ProductController');
+    
     Route::controller('promotions',       'Redooor\Redminportal\PromotionController');
     
     

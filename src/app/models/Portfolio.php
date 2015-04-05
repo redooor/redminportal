@@ -38,7 +38,7 @@ class Portfolio extends Model
             $image->delete();
         }
         
-        // Delete category's images folder
+        // Delete asset images folder
         $upload_dir = \Config::get('redminportal::image.upload_dir');
         $deleteFolder = new Image;
         $url_path = RHelper::joinPaths($upload_dir, $this->table, $this->id);

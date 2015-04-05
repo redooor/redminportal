@@ -1,14 +1,14 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File;
+use Redooor\Redminportal\App\Models\Product;
+use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Models\Tag;
+use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\View;
-use Cartalyst\Sentry\Facades\Laravel\Sentry;
 
-class ProductController extends BaseController
+class ProductController extends Controller
 {
     protected $model;
 
@@ -19,16 +19,22 @@ class ProductController extends BaseController
 
     public function getIndex()
     {
-        $products = Product::orderBy('category_id')->orderBy('name')->paginate(20);
+        $products = Product::orderBy('category_id')
+            ->orderBy('name')
+            ->paginate(20);
 
-        return View::make('redminportal::products/view')->with('products', $products);
+        return view('redminportal::products/view')->with('products', $products);
     }
 
     public function getCreate()
     {
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
-        return View::make('redminportal::products/create')->with('categories', $categories);
+        return view('redminportal::products/create')->with('categories', $categories);
     }
 
     public function getEdit($sid)
@@ -38,10 +44,19 @@ class ProductController extends BaseController
 
         // No such id
         if ($product == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The product cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/products')->withErrors($errors);
         }
 
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
         $tagString = "";
         foreach ($product->tags as $tag) {
@@ -62,12 +77,13 @@ class ProductController extends BaseController
             $product_cn = json_decode($product->options);
         }
 
-        return View::make('redminportal::products/edit')
+        return view('redminportal::products/edit')
             ->with('product', $product)
             ->with('product_cn', $product_cn)
             ->with('imageUrl', 'assets/img/products/')
             ->with('categories', $categories)
-            ->with('tagString', $tagString);
+            ->with('tagString', $tagString)
+            ->with('imagine', new RImage);
     }
 
     public function postStore()
@@ -119,7 +135,7 @@ class ProductController extends BaseController
                     'editError',
                     "The product cannot be found because it does not exist or may have been deleted."
                 );
-                return \Redirect::to('/admin/products')->withErrors($errors);
+                return redirect('/admin/products')->withErrors($errors);
             }
             
             $product->name = $name;
@@ -136,30 +152,27 @@ class ProductController extends BaseController
 
             if (! empty($tags)) {
                 // Delete old tags
-                $product->deleteAllTags();
+                $product->tags()->detach();
 
                 // Save tags
                 foreach (explode(',', $tags) as $tagName) {
-                    $newTag = new Tag;
-                    $newTag->name = strtolower($tagName);
-                    $product->tags()->save($newTag);
+                    $checkTag = Tag::where('name', $tagName)->first();
+                    if ($checkTag) {
+                        $product->tags()->attach($checkTag);
+                    } else {
+                        $newTag = new Tag;
+                        $newTag->name = strtolower($tagName);
+                        $product->tags()->save($newTag);
+                    }
                 }
             }
 
             if (Input::hasFile('image')) {
-                // Delete all existing images for edit
-                if (isset($sid)) {
-                    $product->deleteAllImages();
-                }
-
-                //set the name of the file
-                $originalFilename = $image->getClientOriginalName();
-                $filename = $sku . Str::random(20) .'.'. File::extension($originalFilename);
-
                 //Upload the file
-                $isSuccess = $image->move('assets/img/products', $filename);
+                $helper_image = new RImage;
+                $filename = $helper_image->upload($image, 'products/' . $product->id, true);
 
-                if ($isSuccess) {
+                if ($filename) {
                     // create photo
                     $newimage = new Image;
                     $newimage->path = $filename;
@@ -171,13 +184,13 @@ class ProductController extends BaseController
         //if it validate
         } else {
             if (isset($sid)) {
-                return Redirect::to('admin/products/edit/' . $sid)->withErrors($validation)->withInput();
+                return redirect('admin/products/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
-                return Redirect::to('admin/products/create')->withErrors($validation)->withInput();
+                return redirect('admin/products/create')->withErrors($validation)->withInput();
             }
         }
 
-        return Redirect::to('admin/products');
+        return redirect('admin/products');
     }
 
     public function getDelete($sid)
@@ -188,18 +201,29 @@ class ProductController extends BaseController
         if ($product == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
-            return \Redirect::to('admin/products')->withErrors($errors);
+            return redirect('admin/products')->withErrors($errors);
         }
-
-        // Delete all images first
-        $product->deleteAllImages();
-
-        // Delete all tags
-        $product->deleteAllTags();
-
+        
         // Delete the product
         $product->delete();
 
-        return Redirect::to('admin/products');
+        return redirect('admin/products');
+    }
+    
+    public function getImgremove($sid)
+    {
+        $image = Image::find($sid);
+
+        if ($image == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('deleteError', "The image cannot be deleted at this time.");
+            return redirect('/admin/products')->withErrors($errors);
+        }
+
+        $portfolio_id = $image->imageable_id;
+
+        $image->delete();
+
+        return redirect('admin/products/edit/' . $portfolio_id);
     }
 }

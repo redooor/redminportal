@@ -40,7 +40,7 @@ class Module extends Model
 
     public function tags()
     {
-        return $this->morphMany('Redooor\Redminportal\App\Models\Tag', 'tagable');
+        return $this->morphToMany('Redooor\Redminportal\App\Models\Tag', 'taggable');
     }
     
     public function memberships()
@@ -87,7 +87,8 @@ class Module extends Model
     
     public function delete()
     {
-        $this->tags()->delete();
+        // Remove all relationships
+        $this->tags()->detach();
         $this->deleteAllImages();
         $this->memberships()->detach();
         $this->medias()->detach();

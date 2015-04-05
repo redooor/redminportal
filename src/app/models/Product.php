@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\File;
+use Redooor\Redminportal\App\Helpers\RHelper;
 
 /*  Columns:
 ***********************
@@ -34,7 +34,7 @@ class Product extends Model
     
     public function tags()
     {
-        return $this->morphMany('Redooor\Redminportal\App\Models\Tag', 'tagable');
+        return $this->morphToMany('Redooor\Redminportal\App\Models\Tag', 'taggable');
     }
     
     public function coupons()
@@ -42,32 +42,22 @@ class Product extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_product');
     }
     
-    public function deleteAllImages()
-    {
-        $folder = 'assets/img/products/';
-        
-        foreach ($this->images as $image) {
-            // Delete physical file
-            $filepath = $folder . $image->path;
-            
-            if (File::exists($filepath)) {
-                File::delete($filepath);
-            }
-            
-            // Delete image model
-            $image->delete();
-        }
-    }
-    
-    public function deleteAllTags()
-    {
-        $this->tags()->delete();
-    }
-    
     public function delete()
     {
         // Remove all relationships
+        $this->tags()->detach();
         $this->coupons()->detach();
+        
+        // Delete all images
+        foreach ($this->images as $image) {
+            $image->delete();
+        }
+        
+        // Delete asset images folder
+        $upload_dir = \Config::get('redminportal::image.upload_dir');
+        $deleteFolder = new Image;
+        $url_path = RHelper::joinPaths($upload_dir, $this->table, $this->id);
+        $deleteFolder->deleteFiles($url_path);
         
         return parent::delete();
     }

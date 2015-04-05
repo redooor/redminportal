@@ -11,9 +11,7 @@ class TagModelTest extends BaseModelTest
     {
         $model = new Tag;
         $testcase = array(
-            'name' => 'This is a tag',
-            'tagable_id' => 1,
-            'tagable_type' => 'Type'
+            'name' => 'This is a tag'
         );
         
         parent::__construct($model, $testcase);

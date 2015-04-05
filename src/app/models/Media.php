@@ -42,7 +42,7 @@ class Media extends Model
     
     public function tags()
     {
-        return $this->morphMany('Redooor\Redminportal\App\Models\Tag', 'tagable');
+        return $this->morphToMany('Redooor\Redminportal\App\Models\Tag', 'taggable');
     }
     
     public function deleteAllImages()

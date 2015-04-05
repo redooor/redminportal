@@ -17,8 +17,18 @@ class Tag extends Model
 {
     protected $table = 'tags';
     
-    public function tagable()
+    public function products()
     {
-        return $this->morphTo();
+        return $this->morphedByMany('Redooor\Redminportal\App\Models\Product', 'taggable');
+    }
+    
+    public function medias()
+    {
+        return $this->morphedByMany('Redooor\Redminportal\App\Models\Media', 'taggable');
+    }
+    
+    public function modules()
+    {
+        return $this->morphedByMany('Redooor\Redminportal\App\Models\Module', 'taggable');
     }
 }

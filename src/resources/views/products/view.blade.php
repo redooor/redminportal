@@ -1,15 +1,17 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
     
     <div class="nav-controls text-right">
@@ -18,7 +20,7 @@
             {{ $products->firstItem() . ' to ' . $products->lastItem() . ' ( total ' . $products->total() . ' )' }}
         </span>
         @endif
-        {{ HTML::link('admin/products/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        {!! HTML::link('admin/products/create', 'Create New', array('class' => 'btn btn-primary')) !!}
     </div>
 
     @if (count($products) > 0)
@@ -49,8 +51,8 @@
                     <td>{{ $product->short_description }}</td>
                     <td class='hide'>{{ $product->long_description }}</td>
                     <td>
-                        @foreach( $product->tags as $tag)
-                        <span class="label label-info">{{ $tag->name }}</span>
+                        @foreach ($product->tags as $tag)
+                        <span class="label label-info">{{ $tag->id }}.{{ $tag->name }}</span>
                         @endforeach
                     </td>
                     <td>
