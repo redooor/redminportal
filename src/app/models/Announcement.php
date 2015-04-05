@@ -16,6 +16,8 @@ use Redooor\Redminportal\App\Helpers\RHelper;
 
 class Announcement extends Model
 {
+    protected $table = 'announcements';
+    
     public function images()
     {
         return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
@@ -42,8 +44,8 @@ class Announcement extends Model
         // Delete assets images folder
         $upload_dir = \Config::get('redminportal::image.upload_dir');
         $deleteFolder = new Image;
-        $cat_path = RHelper::joinPaths($upload_dir, 'announcements/' . $this->id);
-        $deleteFolder->deleteFiles($cat_path);
+        $url_path = RHelper::joinPaths($upload_dir, $this->table, $this->id);
+        $deleteFolder->deleteFiles($url_path);
         
         return parent::delete();
     }

@@ -105,8 +105,8 @@ class Category extends Model
         // Delete category's images folder
         $upload_dir = \Config::get('redminportal::image.upload_dir');
         $deleteFolder = new Image;
-        $cat_path = RHelper::joinPaths($upload_dir, 'categories/' . $this->id);
-        $deleteFolder->deleteFiles($cat_path);
+        $url_path = RHelper::joinPaths($upload_dir, $this->table, $this->id);
+        $deleteFolder->deleteFiles($url_path);
 
         return parent::delete();
     }
