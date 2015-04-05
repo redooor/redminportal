@@ -103,7 +103,7 @@ class UserController extends Controller
         // Save or Update
         $user->email = $email;
         if ($password != '') {
-            $user->password = $password;
+            $user->password = \Hash::make($password);
         }
         $user->first_name = $first_name;
         $user->last_name = $last_name;

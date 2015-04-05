@@ -1,36 +1,32 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-class LoginController extends BaseController
+use Auth;
+
+class LoginController extends Controller
 {
-    protected $model;
-
-    public function __construct(User $user)
-    {
-        $this->model = $user;
-    }
-
     public function getIndex()
     {
-        return \View::make('redminportal::users/login');
+        return view('redminportal::users/login');
     }
 
     public function getUnauthorized()
     {
-        return \View::make('redminportal::users/notauthorized');
+        return view('redminportal::users/notauthorized');
     }
 
     public function getLogout()
     {
         // Logs the user out
-        \Sentry::logout();
-        return \Redirect::to('/');
+        Auth::logout();
+        return redirect('/');
     }
 
     public function postLogin()
     {
-        /*
-         * Validate
-         */
+        if (Auth::check()) {
+            return redirect('/');
+        }
+        
         $rules = array(
             'email'     => 'required|email',
             'password'  => 'required',
@@ -38,34 +34,20 @@ class LoginController extends BaseController
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if ($validation->passes()) {
-            $email      = \Input::get('email');
-            $password   = \Input::get('password');
+        if ($validation->fails()) {
+            return redirect('admin')->withErrors($validation)->withInput();
+        }
+        
+        $email      = \Input::get('email');
+        $password   = \Input::get('password');
 
-            try {
-                $credentials = array(
-                    'email'    => $email,
-                    'password' => $password,
-                );
-
-                // Authenticate the user
-                \Sentry::authenticate($credentials, false);
-                
-            } catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add('invalid', "This user hasn't been activated. Please contact us for support.");
-
-                return \Redirect::to('admin')->withErrors($errors)->withInput();
-            } catch (\Exception $e) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add('invalid', "Oops, your email or password is incorrect.");
-
-                return \Redirect::to('admin')->withErrors($errors)->withInput();
-            }
-
-            return \Redirect::to('admin');
+        if (Auth::attempt(['email' => $email, 'password' => $password, 'activated' => 1])) {
+            return redirect()->intended('admin');
         }
 
-        return \Redirect::to('admin')->withErrors($validation)->withInput();
+        $errors = new \Illuminate\Support\MessageBag;
+        $errors->add('invalid', "Oops, your email or password is incorrect.");
+
+        return redirect('login')->withErrors($errors)->withInput();
     }
 }

@@ -1,16 +1,15 @@
 <?php namespace Redooor\Redminportal\Test;
 
-class ReportControllerTest extends \RedminTestCase
+class ReportControllerTest extends RedminTestCase
 {
     /**
      * Test (Pass): access getIndex
      */
     public function testIndex()
     {
-        $crawler = $this->client->request('GET', '/admin/reports');
+        $this->call('GET', '/admin/reports');
 
         $this->assertResponseOk();
-        $this->assertCount(1, $crawler->filter('h1:contains("Oops, 404!")'));
     }
     
     /**

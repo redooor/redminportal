@@ -15,7 +15,7 @@ class UserGroupSeeder extends Seeder
         
         $user = new User;
         $user->email        = 'admin@admin.com';
-        $user->password     = "admin";
+        $user->password     = \Hash::make("admin");
         $user->first_name   = 'System';
         $user->last_name    = 'Admin';
         $user->activated    = 1;

@@ -17,7 +17,7 @@ class LoginControllerTest extends RedminTestCase
      */
     public function testIndex()
     {
-        $this->client->request('GET', '/login');
+        $this->call('GET', '/login');
         $this->assertResponseOk();
     }
     
@@ -26,7 +26,7 @@ class LoginControllerTest extends RedminTestCase
      */
     public function testUnauthorized()
     {
-        $this->client->request('GET', '/login/unauthorized');
+        $this->call('GET', '/login/unauthorized');
         $this->assertResponseOk();
     }
     
@@ -35,7 +35,7 @@ class LoginControllerTest extends RedminTestCase
      */
     public function testLogout()
     {
-        $this->client->request('GET', '/logout');
+        $this->call('GET', '/logout');
         $this->assertRedirectedTo('/');
     }
     
@@ -66,7 +66,7 @@ class LoginControllerTest extends RedminTestCase
 
         $this->call('POST', '/login/login', $input);
 
-        $this->assertRedirectedTo('/admin');
+        $this->assertRedirectedTo('/login');
         $this->assertSessionHasErrors();
     }
 }

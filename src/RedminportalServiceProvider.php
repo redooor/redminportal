@@ -34,7 +34,8 @@ class RedminportalServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/image.php' => config_path('vendor/redooor/redminportal/image.php'),
             __DIR__.'/config/menu.php' => config_path('vendor/redooor/redminportal/menu.php'),
-            __DIR__.'/config/translation.php' => config_path('vendor/redooor/redminportal/translation.php')
+            __DIR__.'/config/translation.php' => config_path('vendor/redooor/redminportal/translation.php'),
+            __DIR__.'/config/auth.php' => config_path('vendor/redooor/redminportal/auth.php')
         ], 'config');
         
         // Publish your migrations
@@ -69,9 +70,12 @@ class RedminportalServiceProvider extends ServiceProvider
             $loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
         });
         
-        $this->registerResources('image');
-        $this->registerResources('menu');
-        $this->registerResources('translation');
+        $this->registerResources('image', 'redminportal::image');
+        $this->registerResources('menu', 'redminportal::menu');
+        $this->registerResources('translation', 'redminportal::translation');
+        
+        // Change Authentication model
+        $this->registerResources('auth', 'auth');
     }
     
     /**
@@ -79,7 +83,7 @@ class RedminportalServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerResources($name)
+    protected function registerResources($name, $setname)
     {
         $userConfigFile    = config_path('vendor/redooor/redminportal/' . $name . '.php');
         $packageConfigFile = __DIR__.'/config/' . $name . '.php';
@@ -90,6 +94,6 @@ class RedminportalServiceProvider extends ServiceProvider
             $config     = array_replace_recursive($config, $userConfig);
         }
 
-        $this->app['config']->set('redminportal::' . $name, $config);
+        $this->app['config']->set($setname, $config);
     }
 }

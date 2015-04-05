@@ -6,6 +6,9 @@
 |--------------------------------------------------------------------------
 */
 
+Route::controller('login', 'Redooor\Redminportal\App\Http\Controllers\LoginController');
+Route::get('logout', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getLogout');
+
 Route::group(['namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefix' => 'admin'], function () {
     Route::get('/', 'PageController@home');
     Route::controller('announcements', 'AnnouncementController');
@@ -23,15 +26,3 @@ Route::group(['namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefi
     Route::controller('reports', 'ReportController');
     Route::controller('users', 'UserController');
 });
-
-/*
-Route::controller('login', 'Redooor\Redminportal\LoginController');
-Route::get('logout', 'Redooor\Redminportal\LoginController@getLogout');
-
-Route::group(array('prefix' => 'admin', 'before' => 'auth.sentry'), function()
-{   
-    
-    
-    
-});
-*/
