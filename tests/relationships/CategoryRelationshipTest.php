@@ -1,9 +1,9 @@
-<?php
+<?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Category;
+use Redooor\Redminportal\App\Models\Category;
 
-class CategoryRelationshipTest extends \RedminTestCase {
-
+class CategoryRelationshipTest extends RedminTestCase
+{
     protected function createNew()
     {
         $model = new Category;
@@ -40,7 +40,7 @@ class CategoryRelationshipTest extends \RedminTestCase {
         foreach ($model->categories as $cat) {
             if ($cat->name == 'This is sub category') {
                 $this->assertTrue($cat->short_description == 'This is the body 1');
-            } else if ($cat->name == 'This is another sub category') {
+            } elseif ($cat->name == 'This is another sub category') {
                 $this->assertTrue($cat->short_description == 'This is the body 2');
             } else {
                 $this->assertTrue(false);
@@ -52,5 +52,4 @@ class CategoryRelationshipTest extends \RedminTestCase {
 
         $this->assertTrue(Category::where('category_id', $model->id)->count() == 0);
     }
-
 }
