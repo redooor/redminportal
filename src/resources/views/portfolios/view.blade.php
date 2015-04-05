@@ -1,13 +1,25 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+    @endif
     <div class="nav-controls text-right">
         @if (count($portfolios) > 0)
         <span class="label label-default pull-left">
             {{ $portfolios->firstItem() . ' to ' . $portfolios->lastItem() . ' ( total ' . $portfolios->total() . ' )' }}
         </span>
         @endif
-        {{ HTML::link('admin/portfolios/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        {!! HTML::link('admin/portfolios/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
     </div>
     
     @if (count($portfolios) > 0)

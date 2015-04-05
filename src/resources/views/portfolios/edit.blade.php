@@ -1,32 +1,34 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
 
-    {{ Form::open(array('files' => TRUE, 'action' => 'Redooor\Redminportal\PortfolioController@postStore', 'role' => 'form')) }}
-        {{ Form::hidden('id', $portfolio->id)}}
+    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\PortfolioController@postStore', 'role' => 'form')) !!}
+        {!! Form::hidden('id', $portfolio->id) !!}
 
     	<div class='row'>
             <div class="col-md-3 col-md-push-9">
                 <div class='form-actions text-right'>
-                    {{ HTML::link('admin/portfolios', 'Cancel', array('class' => 'btn btn-default'))}}
-                    {{ Form::submit('Save Changes', array('class' => 'btn btn-primary')) }}
+                    {!! HTML::link('admin/portfolios', 'Cancel', array('class' => 'btn btn-default')) !!}
+                    {!! Form::submit('Save Changes', array('class' => 'btn btn-primary')) !!}
                 </div>
                 <hr>
                 <div class='well well-small'>
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="active-checker">
-                                {{ Form::checkbox('active', $portfolio->active, $portfolio->active, array('id' => 'active-checker')) }} Active
+                                {!! Form::checkbox('active', $portfolio->active, $portfolio->active, array('id' => 'active-checker')) !!} Active
                             </label>
                         </div>
                     </div>
@@ -36,10 +38,10 @@
                         <div class="panel-title">Category</div>
                     </div>
                     <div class="panel-body">
-                        {{ Form::hidden('category_id', $portfolio->category_id, array('id' => 'category_id'))}}
+                        {!! Form::hidden('category_id', $portfolio->category_id, array('id' => 'category_id')) !!}
                         <ul class="redooor-hierarchy">
                         @foreach ($categories as $item)
-                            <li>{{ $item->printCategory() }}</li>
+                            <li>{!! $item->printCategory() !!}</li>
                         @endforeach
                         </ul>
                     </div>
@@ -48,7 +50,7 @@
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                       <div>
-                        <span class="btn btn-default btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span>{{ Form::file('image') }}</span>
+                        <span class="btn btn-default btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span>{!! Form::file('image') !!}</span>
                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
                       </div>
                     </div>
@@ -63,54 +65,66 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="lang-en">
                         <div class="form-group">
-                            {{ Form::label('name', 'Title') }}
-                            {{ Form::text('name', $portfolio->name, array('class' => 'form-control')) }}
+                            {!! Form::label('name', 'Title') !!}
+                            {!! Form::text('name', $portfolio->name, array('class' => 'form-control')) !!}
                         </div>
 
                         <div class="form-group">
-                            {{ Form::label('short_description', 'Summary') }}
-                            {{ Form::text('short_description', $portfolio->short_description, array('class' => 'form-control')) }}
+                            {!! Form::label('short_description', 'Summary') !!}
+                            {!! Form::text('short_description', $portfolio->short_description, array('class' => 'form-control')) !!}
                         </div>
 
                         <div class="form-group">
-                            {{ Form::label('long_description', 'Description') }}
-                            {{ Form::textarea('long_description', $portfolio->long_description, array('class' => 'form-control')) }}
+                            {!! Form::label('long_description', 'Description') !!}
+                            {!! Form::textarea('long_description', $portfolio->long_description, array('class' => 'form-control')) !!}
                         </div>
                     </div>
                     <div class="tab-pane" id="lang-sc">
                         <div class="form-group">
-                            {{ Form::label('cn_name', '标题') }}
-                            {{ Form::text('cn_name', $portfolio_cn->name, array('class' => 'form-control')) }}
+                            {!! Form::label('cn_name', '标题') !!}
+                            {!! Form::text('cn_name', $portfolio_cn->name, array('class' => 'form-control')) !!}
                         </div>
 
                         <div class="form-group">
-                            {{ Form::label('cn_short_description', '简介') }}
-                            {{ Form::text('cn_short_description', $portfolio_cn->short_description, array('class' => 'form-control')) }}
+                            {!! Form::label('cn_short_description', '简介') !!}
+                            {!! Form::text('cn_short_description', $portfolio_cn->short_description, array('class' => 'form-control')) !!}
                         </div>
 
                         <div class="form-group">
-                            {{ Form::label('cn_long_description', '内容') }}
-                            {{ Form::textarea('cn_long_description', $portfolio_cn->long_description, array('class' => 'form-control')) }}
+                            {!! Form::label('cn_long_description', '内容') !!}
+                            {!! Form::textarea('cn_long_description', $portfolio_cn->long_description, array('class' => 'form-control')) !!}
                         </div>
                     </div>
                 </div>
+                @if (count($portfolio->images) > 0)
                 <h4>Uploaded Photos</h4>
                 <div class='row'>
-                    @foreach( $portfolio->images as $image )
+                    @foreach ($portfolio->images as $image)
                     <div class='col-md-3'>
-                        <a href="{{ URL::to('admin/portfolios/imgremove/' . $image->id) }}" class="btn-confirm">
-                        {{ HTML::image($imagine->getUrl($image->path), $portfolio->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) }}
-                        </a>
+                        {!! HTML::image($imagine->getUrl($image->path), $portfolio->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                        <br><br>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{ URL::to('admin/portfolios/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
+                                <span class="glyphicon glyphicon-link"></span>
+                            </a>
+                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </a>
+                        </div>
                     </div>
                     @endforeach
                 </div>
+                @endif
             </div>
         </div>
-    {{ Form::close() }}
+    {!! Form::close() !!}
 @stop
 
 @section('footer')
-    <script src="{{ URL::to('packages/redooor/redminportal/assets/js/bootstrap-fileupload.js') }}"></script>
+    <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
     <script>
         !function ($) {
             $(function(){

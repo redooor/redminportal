@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Redooor\Redminportal\App\Helpers\RHelper;
 
 /* Columns
  *
@@ -30,48 +31,19 @@ class Portfolio extends Model
         return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
     }
     
-    public function deleteAllImages()
-    {
-        foreach ($this->images as $image) {
-            // Delete physical file, including all different sizes
-            $parts = pathinfo($image->path);
-            
-            $this->deleteFiles($parts['dirname']);
-            
-            // Delete image model
-            $image->delete();
-        }
-    }
-    
-    public function deleteImageFolder($dir)
-    {
-        $this->deleteFiles($dir);
-    }
-
-    /*
-     * php delete function that deals with directories recursively
-     */
-    private function deleteFiles($target)
-    {
-        if (is_dir($target)) {
-            $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
-            
-            foreach ($files as $file) {
-                $this->deleteFiles($file);
-            }
-            
-            if (is_dir($target)) {
-                rmdir($target);
-            }
-            
-        } elseif (is_file($target)) {
-            unlink($target);
-        }
-    }
-    
     public function delete()
     {
-        $this->deleteAllImages();
+        // Delete all images
+        foreach ($this->images as $image) {
+            $image->delete();
+        }
+        
+        // Delete category's images folder
+        $upload_dir = \Config::get('redminportal::image.upload_dir');
+        $deleteFolder = new Image;
+        $url_path = RHelper::joinPaths($upload_dir, $this->table, $this->id);
+        $deleteFolder->deleteFiles($url_path);
+        
         return parent::delete();
     }
 }

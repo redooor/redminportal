@@ -1,26 +1,30 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-class PortfolioController extends BaseController
+use Redooor\Redminportal\App\Models\Portfolio;
+use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Helpers\RImage;
+
+class PortfolioController extends Controller
 {
-    protected $model;
-
-    public function __construct(Portfolio $portfolio)
-    {
-        $this->model = $portfolio;
-    }
-
     public function getIndex()
     {
-        $portfolios = Portfolio::orderBy('category_id')->orderBy('name')->paginate(20);
+        $portfolios = Portfolio::orderBy('category_id')
+            ->orderBy('name')
+            ->paginate(20);
 
-        return \View::make('redminportal::portfolios/view')->with('portfolios', $portfolios);
+        return view('redminportal::portfolios/view')->with('portfolios', $portfolios);
     }
 
     public function getCreate()
     {
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
-        return \View::make('redminportal::portfolios/create')->with('categories', $categories);
+        return view('redminportal::portfolios/create')->with('categories', $categories);
     }
 
     public function getEdit($sid)
@@ -29,10 +33,19 @@ class PortfolioController extends BaseController
         $portfolio = Portfolio::find($sid);
 
         if ($portfolio == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The portfolio cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('admin/portfolios')->withErrors($errors);
         }
 
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
         if (empty($portfolio->options)) {
             $portfolio_cn = (object) array(
@@ -44,10 +57,10 @@ class PortfolioController extends BaseController
             $portfolio_cn = json_decode($portfolio->options);
         }
 
-        return \View::make('redminportal::portfolios/edit')
+        return view('redminportal::portfolios/edit')
             ->with('portfolio', $portfolio)
             ->with('portfolio_cn', $portfolio_cn)
-            ->with('imagine', new Helper\Image())
+            ->with('imagine', new RImage)
             ->with('categories', $categories);
     }
 
@@ -93,7 +106,7 @@ class PortfolioController extends BaseController
                     'editError',
                     "The portfolio cannot be found because it does not exist or may have been deleted."
                 );
-                return \Redirect::to('/admin/portfolios')->withErrors($errors);
+                return redirect('/admin/portfolios')->withErrors($errors);
             }
 
             $portfolio->name = $name;
@@ -106,11 +119,8 @@ class PortfolioController extends BaseController
             $portfolio->save();
 
             if (\Input::hasFile('image')) {
-                // Delete all existing images for edit
-                //if(isset($sid)) $portfolio->deleteAllImages();
-
                 //Upload the file
-                $helper_image = new Helper\Image();
+                $helper_image = new RImage;
                 $filename = $helper_image->upload($image, 'portfolios/' . $portfolio->id, true);
 
                 if ($filename) {
@@ -125,13 +135,13 @@ class PortfolioController extends BaseController
         //if it validate
         } else {
             if (isset($sid)) {
-                return \Redirect::to('admin/portfolios/edit/' . $sid)->withErrors($validation)->withInput();
+                return redirect('admin/portfolios/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
-                return \Redirect::to('admin/portfolios/create')->withErrors($validation)->withInput();
+                return redirect('admin/portfolios/create')->withErrors($validation)->withInput();
             }
         }
 
-        return \Redirect::to('admin/portfolios');
+        return redirect('admin/portfolios');
     }
 
     public function getDelete($sid)
@@ -142,20 +152,13 @@ class PortfolioController extends BaseController
         if ($portfolio == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return \Redirect::to('/admin/portfolios')->withErrors($errors);
+            return redirect('/admin/portfolios')->withErrors($errors);
         }
-
-        // Delete all images first
-        $portfolio->deleteAllImages();
-
-        // Delete image folder if still exist
-        $img_folder = \Config::get('redminportal::image.upload_path') . "/portfolios/" . $sid;
-        $portfolio->deleteImageFolder($img_folder);
-
+        
         // Delete the portfolio
         $portfolio->delete();
 
-        return \Redirect::to('admin/portfolios');
+        return redirect('admin/portfolios');
     }
 
     public function getImgremove($sid)
@@ -165,13 +168,13 @@ class PortfolioController extends BaseController
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return \Redirect::to('/admin/portfolios')->withErrors($errors);
+            return redirect('/admin/portfolios')->withErrors($errors);
         }
 
         $portfolio_id = $image->imageable_id;
 
-        $image->remove();
+        $image->delete();
 
-        return \Redirect::to('admin/portfolios/edit/' . $portfolio_id);
+        return redirect('admin/portfolios/edit/' . $portfolio_id);
     }
 }
