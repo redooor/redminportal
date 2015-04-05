@@ -28,13 +28,17 @@ If you have an idea for a new feature you would like to see added to RedminPorta
 
 Also ensure that your Pull Request satisfies the following coding standards:
 
-* [PSR 0 Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md)
-* [PSR 1 Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+* [PSR 4 Autoloader](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md)
+* [PSR 1 Basic Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 * [PSR 2 Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+
+As of RedminPortal 0.2.0, we're changing our autoloading standard from PSR-0 to PSR-4 in order to match the same in Laravel 5.0.
 
 Please use [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) to detect violations of coding standard.
 
 If you're using [Adobe Brackets](http://brackets.io), you may want to install this extension: [Brackets PHP Code Quality Tools](https://github.com/mikaeljorhult/brackets-php-code-quality-tools).
+
+Also read [Optional Development Tools](#optional-development-tools) below.
 
 # PHPUnit Test
 
