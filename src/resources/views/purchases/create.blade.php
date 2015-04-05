@@ -1,15 +1,17 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
 
     <div class="row">
@@ -18,47 +20,47 @@
             <hr>
         </div>
     </div>
-    {{ Form::open(array('files' => TRUE, 'action' => 'Redooor\Redminportal\PurchaseController@postStore', 'role' => 'form')) }}
+    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\PurchaseController@postStore', 'role' => 'form')) !!}
     <div class='row'>
         <div class="col-md-3 col-md-push-9">
             <div class="well well-small">
                 <div class='form-actions text-right'>
-                    {{ HTML::link('admin/purchases', 'Cancel', array('class' => 'btn btn-default'))}}
-                    {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+                    {!! HTML::link('admin/purchases', 'Cancel', array('class' => 'btn btn-default')) !!}
+                    {!! Form::submit('Create', array('class' => 'btn btn-primary')) !!}
                 </div>
             </div>
         </div>
         <div class="col-md-9 col-md-pull-3">
             <div class="form-group scrollable-dropdown-menu">
-                {{ Form::label('email', 'User Email') }}
-                {{ Form::text('email', Input::old('email'), array('class' => 'form-control typeahead', 'required')) }}
+                {!! Form::label('email', 'User Email') !!}
+                {!! Form::text('email', null, array('class' => 'form-control typeahead', 'required')) !!}
             </div>
             <div class="form-group">
-                {{ Form::label('pricelist_id', 'Module, Membership') }}
-                {{ Form::select('pricelist_id', $pricelists_select, Input::old('pricelist_id'), array('class' => 'form-control')) }}
+                {!! Form::label('pricelist_id', 'Module, Membership') !!}
+                {!! Form::select('pricelist_id', $pricelists_select, null, array('class' => 'form-control')) !!}
             </div>
             <div class="form-group">
-                {{ Form::label('payment_status', 'Payment Status') }}
-                {{ Form::select('payment_status', $payment_statuses, Input::old('payment_status'), array('class' => 'form-control')) }}
+                {!! Form::label('payment_status', 'Payment Status') !!}
+                {!! Form::select('payment_status', $payment_statuses, null, array('class' => 'form-control')) !!}
             </div>
             <div class="form-group">
-                {{ Form::label('paid', 'Paid') }}
+                {!! Form::label('paid', 'Paid') !!}
                 <div class="input-group">
                     <span class="input-group-addon">$</span>
-                    {{ Form::text('paid', Input::old('paid'), array('class' => 'form-control', 'required')) }}
+                    {!! Form::text('paid', null, array('class' => 'form-control', 'required')) !!}
                 </div>
             </div>
             <div class="form-group">
-                {{ Form::label('transaction_id', 'Transaction ID') }}
-                {{ Form::text('transaction_id', Input::old('transaction_id'), array('class' => 'form-control', 'required')) }}
+                {!! Form::label('transaction_id', 'Transaction ID') !!}
+                {!! Form::text('transaction_id', null, array('class' => 'form-control', 'required')) !!}
             </div>
         </div>
     </div>
-    {{ Form::close() }}
+    {!! Form::close() !!}
 @stop
 
 @section('footer')
-{{ HTML::script('packages/redooor/redminportal/assets/js/typeahead.bundle.js') }}
+{!! HTML::script('vendor/redooor/redminportal/js/typeahead.bundle.js') !!}
 <script>
     (function ($){
         $(function() {

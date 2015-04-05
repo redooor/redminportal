@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\File;
+use Redooor\Redminportal\App\Helpers\RHelper;
 
 /* Columns
  *
@@ -62,37 +62,32 @@ class Module extends Model
             'media_id'
         );
     }
-
-    public function deleteAllImages()
-    {
-        $folder = 'assets/img/modules/';
-
-        foreach ($this->images as $image) {
-            // Delete physical file
-            $filepath = $folder . $image->path;
-
-            if (File::exists($filepath)) {
-                File::delete($filepath);
-            }
-
-            // Delete image model
-            $image->delete();
-        }
-    }
-
-    public function deleteAllTags()
-    {
-        $this->tags()->delete();
-    }
     
     public function delete()
     {
         // Remove all relationships
-        $this->tags()->detach();
-        $this->deleteAllImages();
         $this->memberships()->detach();
         $this->medias()->detach();
         $this->pricelists()->delete();
+        
+        // Delete all media links
+        foreach (ModuleMediaMembership::where('module_id', $this->id)->get() as $mmm) {
+            $mmm->delete();
+        }
+        
+        // Remove all relationships
+        $this->tags()->detach();
+        
+        // Delete all images
+        foreach ($this->images as $image) {
+            $image->delete();
+        }
+        
+        // Delete asset images folder
+        $upload_dir = \Config::get('redminportal::image.upload_dir');
+        $deleteFolder = new Image;
+        $url_path = RHelper::joinPaths($upload_dir, $this->table, $this->id);
+        $deleteFolder->deleteFiles($url_path);
         
         return parent::delete();
     }

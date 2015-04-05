@@ -1,15 +1,17 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
 
     <div class="nav-controls text-right">
@@ -18,7 +20,7 @@
             {{ $modules->firstItem() . ' to ' . $modules->lastItem() . ' ( total ' . $modules->total() . ' )' }}
         </span>
         @endif
-        {{ HTML::link('admin/modules/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        {!! HTML::link('admin/modules/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
     </div>
 
     @if (count($modules) > 0)

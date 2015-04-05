@@ -1,14 +1,18 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-class ModuleController extends BaseController
+use Redooor\Redminportal\App\Models\Module;
+use Redooor\Redminportal\App\Models\Media;
+use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Membership;
+use Redooor\Redminportal\App\Models\ModuleMediaMembership;
+use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Models\Tag;
+use Redooor\Redminportal\App\Models\Pricelist;
+use Redooor\Redminportal\App\Models\UserPricelist;
+use Redooor\Redminportal\App\Helpers\RImage;
+
+class ModuleController extends Controller
 {
-    protected $model;
-
-    public function __construct(Module $module)
-    {
-        $this->model = $module;
-    }
-
     public function getIndex()
     {
         $modules = Module::orderBy('category_id')->orderBy('name')->paginate(20);
@@ -44,7 +48,11 @@ class ModuleController extends BaseController
 
     public function getCreate()
     {
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
         return \View::make('redminportal::modules/create')
             ->with('categories', $categories)
@@ -58,10 +66,19 @@ class ModuleController extends BaseController
 
         // No such id
         if ($module == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The module cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/modules')->withErrors($errors);
         }
 
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
         $tagString = "";
         foreach ($module->tags as $tag) {
@@ -107,7 +124,8 @@ class ModuleController extends BaseController
             ->with('module_cn', $module_cn)
             ->with('categories', $categories)
             ->with('tagString', $tagString)
-            ->with('pricelists', $pricelists);
+            ->with('pricelists', $pricelists)
+            ->with('imagine', new RImage);
     }
 
     public function postStore()
@@ -230,19 +248,11 @@ class ModuleController extends BaseController
             }
 
             if (\Input::hasFile('image')) {
-                // Delete all existing images for edit
-                if (isset($sid)) {
-                    $module->deleteAllImages();
-                }
-
-                //set the name of the file
-                $originalFilename = $image->getClientOriginalName();
-                $filename = $sku . \Str::random(20) .'.'. \File::extension($originalFilename);
-
                 //Upload the file
-                $isSuccess = $image->move('assets/img/modules', $filename);
+                $helper_image = new RImage;
+                $filename = $helper_image->upload($image, 'modules/' . $module->id, true);
 
-                if ($isSuccess) {
+                if ($filename) {
                     // create photo
                     $newimage = new Image;
                     $newimage->path = $filename;
@@ -286,26 +296,27 @@ class ModuleController extends BaseController
             );
             return \Redirect::to('admin/modules')->withErrors($errors);
         }
-
-        // Delete all images first
-        $module->deleteAllImages();
-
-        // Delete all tags
-        $module->deleteAllTags();
-
-        // Delete all pricelist
-        foreach (Pricelist::where('module_id', $sid)->get() as $pricelist) {
-            $pricelist->delete();
-        }
-
-        // Delete all media links
-        foreach (ModuleMediaMembership::where('module_id', $sid)->get() as $mmm) {
-            $mmm->delete();
-        }
-
+        
         // Delete the module
         $module->delete();
 
         return \Redirect::to('admin/modules');
+    }
+    
+    public function getImgremove($sid)
+    {
+        $image = Image::find($sid);
+
+        if ($image == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('deleteError', "The image cannot be deleted at this time.");
+            return redirect('/admin/modules')->withErrors($errors);
+        }
+
+        $model_id = $image->imageable_id;
+
+        $image->delete();
+
+        return redirect('admin/modules/edit/' . $model_id);
     }
 }

@@ -1,12 +1,12 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Pricelist;
-use Redooor\Redminportal\UserPricelist;
-use Redooor\Redminportal\Module;
-use Redooor\Redminportal\Membership;
+use Redooor\Redminportal\App\Models\Pricelist;
+use Redooor\Redminportal\App\Models\UserPricelist;
+use Redooor\Redminportal\App\Models\Module;
+use Redooor\Redminportal\App\Models\Membership;
 
-class PurchaseControllerTest extends BaseControllerTest {
-
+class PurchaseControllerTest extends BaseControllerTest
+{
     /**
      * Contructor
      */
@@ -85,7 +85,7 @@ class PurchaseControllerTest extends BaseControllerTest {
      */
     public function testEmails()
     {
-        $crawler = $this->client->request('GET', '/admin/purchases/emails');
+        $this->call('GET', '/admin/purchases/emails');
 
         $this->assertResponseOk();
     }
@@ -101,11 +101,12 @@ class PurchaseControllerTest extends BaseControllerTest {
     /**
      * Overwrite base functions, no edit for Purchase
      */
-    public function testStoreEdit() {
+    public function testStoreEdit()
+    {
         return;
     }
 
-    public function testStoreCreate_Failed_NoPricelist()
+    public function testStoreCreateFailedNoPricelist()
     {
         $input = array(
             'pricelist_id'   => 2,
@@ -120,7 +121,7 @@ class PurchaseControllerTest extends BaseControllerTest {
         $this->assertRedirectedTo('/admin/purchases/create');
     }
     
-    public function testStoreCreate_Failed_NoSuchUser()
+    public function testStoreCreateFailedNoSuchUser()
     {
         $input = array(
             'pricelist_id'   => 2,
@@ -134,5 +135,4 @@ class PurchaseControllerTest extends BaseControllerTest {
 
         $this->assertRedirectedTo('/admin/purchases/create');
     }
-
 }

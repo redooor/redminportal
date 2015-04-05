@@ -27,6 +27,7 @@
 	},
     "autoload": {
         "classmap": [
+            "src/database/seeds",
             "tests/bases",
             "tests/RedminTestCase.php"
         ],

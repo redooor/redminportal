@@ -1,15 +1,17 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
 
     <div class="nav-controls text-right">
@@ -19,7 +21,7 @@
         </span>
         @endif
         <button class="btn btn-default" data-toggle="modal" data-target="#export-csv">Export CSV</button>
-        {{ HTML::link('admin/purchases/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        {!! HTML::link('admin/purchases/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
     </div>
 
     @if (count($purchases) > 0)
@@ -49,7 +51,7 @@
                     @endif
                     <td>{{ $purchase->pricelist->module->name }}</td>
                     <td>{{ $purchase->pricelist->membership->name }}</td>
-                    <td>{{ RHelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
+                    <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
                     <td>{{ $purchase->payment_status }}</td>
                     <td>{{ $purchase->transaction_id }}</td>
                     <td>{{ $purchase->created_at }}</td>
@@ -79,7 +81,7 @@
     <div id="export-csv" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
-                {{ Form::open(array('action' => 'Redooor\Redminportal\ReportController@postPurchases', 'report' => 'form')) }}
+                {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\ReportController@postPurchases', 'report' => 'form')) !!}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title">Export to CSV</h4>
@@ -88,16 +90,16 @@
                     <div class='row'>
                         <div class="col-md-12">
                             <div class="form-group">
-                                {{ Form::label('start_date', 'Start Date') }}
+                                {!! Form::label('start_date', 'Start Date') !!}
                                 <div class="input-group" id='start-date'>
-                                    {{ Form::input('text', 'start_date', Input::old('start_date'), array('class' => 'form-control datepicker', 'readonly')) }}
+                                    {!! Form::input('text', 'start_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                {{ Form::label('end_date', 'End Date') }}
+                                {!! Form::label('end_date', 'End Date') !!}
                                 <div class="input-group" id='end-date'>
-                                    {{ Form::input('text', 'end_date', Input::old('end_date'), array('class' => 'form-control datepicker', 'readonly')) }}
+                                    {!! Form::input('text', 'end_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                             </div>
@@ -107,9 +109,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    {{ Form::submit('Download CSV', array('class' => 'btn btn-primary')) }}
+                    {!! Form::submit('Download CSV', array('class' => 'btn btn-primary')) !!}
                 </div>
-                {{ Form::close() }}
+                {!! Form::close() !!}
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->

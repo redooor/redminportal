@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Group;
 
-class SentrySeeder extends Seeder
+class UserGroupSeeder extends Seeder
 {
     public function run()
     {

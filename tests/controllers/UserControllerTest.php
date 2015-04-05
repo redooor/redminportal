@@ -9,7 +9,7 @@ class UserControllerTest extends BaseControllerTest
     {
         parent::setUp();
 
-        $this->seed('SentrySeeder');
+        $this->seed('RedminSeeder');
     }
     
     /**

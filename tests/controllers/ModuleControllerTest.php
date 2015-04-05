@@ -1,9 +1,9 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\Pricelist;
-use Redooor\Redminportal\Membership;
-use Redooor\Redminportal\Media;
-use Redooor\Redminportal\ModuleMediaMembership;
+use Redooor\Redminportal\App\Models\Pricelist;
+use Redooor\Redminportal\App\Models\Membership;
+use Redooor\Redminportal\App\Models\Media;
+use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class ModuleControllerTest extends BaseControllerTest
 {

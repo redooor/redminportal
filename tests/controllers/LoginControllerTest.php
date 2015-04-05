@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-class LoginControllerTest extends \RedminTestCase
+class LoginControllerTest extends RedminTestCase
 {
     /**
      * Initialize Setup with seed
@@ -9,7 +9,7 @@ class LoginControllerTest extends \RedminTestCase
     {
         parent::setUp();
 
-        $this->seed('SentrySeeder');
+        $this->seed('RedminSeeder');
     }
     
     /**

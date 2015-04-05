@@ -14,6 +14,6 @@ class RedminSeeder extends Seeder
     {
         Eloquent::unguard();
 
-        $this->call('SentrySeeder');
+        $this->call('UserGroupSeeder');
     }
 }
