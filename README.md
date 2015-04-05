@@ -193,7 +193,7 @@ It is recommended that contributors use Laravel Homestead for development becaus
 * In packages\redooor\redminportal folder, run 
 
         ?> composer update --prefer-dist -vvv --profile
-        ?> vendor/bin/phpunit tests/
+        ?> vendor/bin/phpunit
 
     **NOTE: If you run out of memory while running the full tests, try running the tests by sub-folders.**
     

@@ -44,6 +44,17 @@ Also read [Optional Development Tools](#optional-development-tools) below.
 
 Every method in controller or model must have a test case.
 
+* In packages\redooor\redminportal folder, run 
+
+        ?> composer update --prefer-dist -vvv --profile
+        ?> vendor/bin/phpunit
+
+    **NOTE: If you run out of memory while running the full tests, try running the tests by sub-folders.**
+    
+        ?> vendor/bin/phpunit tests/models/
+        ?> vendor/bin/phpunit tests/controllers/
+        ?> vendor/bin/phpunit tests/relationships/
+
 ## Model
 * All tests related to model must be store within tests/models folder. 
 * File name must be {ModelName}ModelTest.php.
