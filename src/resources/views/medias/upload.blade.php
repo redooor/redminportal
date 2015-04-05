@@ -3,11 +3,12 @@
 @section('content')
     <pre id="console" style="display:none;"></pre>
     <br />
-
+    
     <div id="container">
         <a class="btn btn-default pull-right" href="{{ URL::to('admin/medias') }}">Back</a>
         <a id="browse" class="btn btn-default" href="javascript:;">Browse...</a>
         <a id="start-upload" class="btn btn-primary" href="javascript:;" data-src="{{ URL::to('admin/medias/upload') . '/' . $media->id }}">Start Upload</a>
+        <input type="hidden" id="_token" name="_token" value="{{ \Crypt::encrypt(csrf_token()) }}"> 
     </div>
 
     <br />
@@ -25,14 +26,17 @@
 @stop
 
 @section('footer')
-    <script type="text/javascript" src="{{ URL::to('packages/redooor/redminportal/assets/js/plupload.full.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::to('vendor/redooor/redminportal/js/plupload.full.min.js') }}"></script>
     <script type="text/javascript">
         jQuery( document ).ready(function( $ ) {
+            var token = $('#_token').val();
+            
             var uploader = new plupload.Uploader({
                 browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
                 url: $('#start-upload').attr('data-src'),
                 chunk_size: '200kb',
-                max_retries: 3
+                max_retries: 3,
+                headers: { 'X-XSRF-TOKEN': token }
             });
 
             uploader.init();

@@ -1,28 +1,31 @@
-<?php namespace Redooor\Redminportal;
+<?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Models\Media;
+use Redooor\Redminportal\App\Models\ModuleMediaMembership;
+use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Models\Tag;
+use Redooor\Redminportal\App\Helpers\RImage;
 use \GetId3\GetId3Core as GetId3;
 
-class MediaController extends BaseController
+class MediaController extends Controller
 {
-    protected $model;
-
-    public function __construct(Media $media)
-    {
-        $this->model = $media;
-    }
-
     public function getIndex()
     {
         $medias = Media::orderBy('created_at', 'desc')->orderBy('category_id')->orderBy('name')->paginate(20);
 
-        return \View::make('redminportal::medias/view')->with('medias', $medias);
+        return view('redminportal::medias/view')->with('medias', $medias);
     }
 
     public function getCreate()
     {
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
-        return \View::make('redminportal::medias/create')
+        return view('redminportal::medias/create')
             ->with('categories', $categories);
     }
 
@@ -33,10 +36,19 @@ class MediaController extends BaseController
 
         // No such id
         if ($media == null) {
-            return \View::make('redminportal::pages/404');
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The media cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/medias')->withErrors($errors);
         }
 
-        $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
 
         $tagString = "";
         foreach ($media->tags as $tag) {
@@ -57,11 +69,12 @@ class MediaController extends BaseController
             $media_cn = json_decode($media->options);
         }
 
-        return \View::make('redminportal::medias/edit')
+        return view('redminportal::medias/edit')
             ->with('media', $media)
             ->with('media_cn', $media_cn)
             ->with('categories', $categories)
-            ->with('tagString', $tagString);
+            ->with('tagString', $tagString)
+            ->with('imagine', new RImage);
     }
 
     public function postStore()
@@ -111,7 +124,7 @@ class MediaController extends BaseController
                     'editError',
                     "The media cannot be found because it does not exist or may have been deleted."
                 );
-                return \Redirect::to('/admin/medias')->withErrors($errors);
+                return redirect('/admin/medias')->withErrors($errors);
             }
             
             $media->name = $name;
@@ -156,19 +169,11 @@ class MediaController extends BaseController
             }
 
             if (\Input::hasFile('image')) {
-                // Delete all existing images for edit
-                if (isset($sid)) {
-                    $media->deleteAllImages();
-                }
-
-                //set the name of the file
-                $originalFilename = $image->getClientOriginalName();
-                $filename = $sku . \Str::random(20) .'.'. \File::extension($originalFilename);
-
                 //Upload the file
-                $isSuccess = $image->move('assets/img/medias', $filename);
+                $helper_image = new RImage;
+                $filename = $helper_image->upload($image, 'medias/' . $media->id, true);
 
-                if ($isSuccess) {
+                if ($filename) {
                     // create photo
                     $newimage = new Image;
                     $newimage->path = $filename;
@@ -180,13 +185,13 @@ class MediaController extends BaseController
         //if it validate
         } else {
             if (isset($sid)) {
-                return \Redirect::to('admin/medias/edit/' . $sid)->withErrors($validation)->withInput();
+                return redirect('admin/medias/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
-                return \Redirect::to('admin/medias/create')->withErrors($validation)->withInput();
+                return redirect('admin/medias/create')->withErrors($validation)->withInput();
             }
         }
 
-        return \Redirect::to('admin/medias');
+        return redirect('admin/medias');
     }
 
     public function getDelete($sid)
@@ -197,7 +202,7 @@ class MediaController extends BaseController
         if ($media == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
-            return \Redirect::to('admin/medias')->withErrors($errors);
+            return redirect('admin/medias')->withErrors($errors);
         }
 
         // Check if used by Module
@@ -214,23 +219,14 @@ class MediaController extends BaseController
             if (! $orphan) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add('deleteError', "This media cannot be deleted because it is link to a module.");
-                return \Redirect::to('admin/medias')->withErrors($errors);
+                return redirect('admin/medias')->withErrors($errors);
             }
         }
-
-        // Delete old media
-        $media->deleteMediaFolder(public_path() . '/assets/medias/' . $media->category_id . '/' . $sid);
-
-        // Delete all images first
-        $media->deleteAllImages();
-
-        // Delete all tags
-        $media->deleteAllTags();
-
+        
         // Delete the media
         $media->delete();
 
-        return \Redirect::to('admin/medias');
+        return redirect('admin/medias');
     }
 
     public function getUploadform($sid)
@@ -238,13 +234,13 @@ class MediaController extends BaseController
         $media = Media::find($sid);
 
         if ($media == null) {
-            return \Redirect::to('admin/medias');
+            return redirect('admin/medias');
         }
 
-        return \View::make('redminportal::medias/upload')
+        return view('redminportal::medias/upload')
             ->with('media', $media);
     }
-
+    
     public function postUpload($sid)
     {
         $media = Media::find($sid);
@@ -271,7 +267,7 @@ class MediaController extends BaseController
         if (!file_exists($media_tmp_folder)) {
             mkdir($media_tmp_folder, 0777, true);
         }
-
+        
         // For Unit testing
         if ($fileName == 'foo113a.pdf') {
             die('{"OK": 1, "info": "Upload successful."}');
@@ -314,9 +310,10 @@ class MediaController extends BaseController
             $media->mimetype = $mime;
             $media->options = json_encode($this->retrieveId3Info($file));
             $media->save();
-
+            
+            $deleteFolder = new Image;
             // Delete old media
-            $media->deleteMediaFolder($media_folder);
+            $deleteFolder->deleteFiles($media_folder);
 
             // Create the directory
             if (!file_exists($media_folder)) {
@@ -326,7 +323,7 @@ class MediaController extends BaseController
             \File::move($filePath, $media_folder . "/$fileName");
 
             // Delete tmp media
-            $media->deleteMediaFolder($media_tmp_folder);
+            $deleteFolder->deleteFiles($media_tmp_folder);
         }
 
         die('{"OK": 1, "info": "Upload successful."}');
@@ -376,5 +373,22 @@ class MediaController extends BaseController
         }
 
         return $object;
+    }
+    
+    public function getImgremove($sid)
+    {
+        $image = Image::find($sid);
+
+        if ($image == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('deleteError', "The image cannot be deleted at this time.");
+            return redirect('/admin/medias')->withErrors($errors);
+        }
+
+        $model_id = $image->imageable_id;
+
+        $image->delete();
+
+        return redirect('admin/medias/edit/' . $model_id);
     }
 }

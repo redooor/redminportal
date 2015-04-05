@@ -1,31 +1,33 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
 
-    {{ Form::open(array('files' => TRUE, 'action' => 'Redooor\Redminportal\MediaController@postStore', 'role' => 'form')) }}
+    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\MediaController@postStore', 'role' => 'form')) !!}
 
     	<div class='row'>
             <div class="col-md-3 col-md-push-9">
 	    		<div class='form-actions text-right'>
-                    {{ HTML::link('admin/medias', 'Cancel', array('class' => 'btn btn-default'))}}
-                    {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+                    {!! HTML::link('admin/medias', 'Cancel', array('class' => 'btn btn-default')) !!}
+                    {!! Form::submit('Create', array('class' => 'btn btn-primary')) !!}
                 </div>
                 <hr>
                 <div class='well well-small'>
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="featured-checker">
-                                {{ Form::checkbox('featured', true, true, array('id' => 'featured-checker')) }} Featured
+                                {!! Form::checkbox('featured', true, true, array('id' => 'featured-checker')) !!} Featured
                             </label>
                         </div>
                     </div>
@@ -33,7 +35,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="active-checker">
-                                {{ Form::checkbox('active', true, true, array('id' => 'active-checker')) }} Active
+                                {!! Form::checkbox('active', true, true, array('id' => 'active-checker')) !!} Active
                             </label>
                         </div>
                     </div>
@@ -43,27 +45,27 @@
                         <div class="panel-title">Category</div>
                     </div>
                     <div class="panel-body">
-                        {{ Form::hidden('category_id', Input::old('category_id'), array('id' => 'category_id'))}}
+                        {!! Form::hidden('category_id', null, array('id' => 'category_id')) !!}
                         <ul class="redooor-hierarchy">
                         @foreach ($categories as $item)
-                            <li>{{ $item->printCategory() }}</li>
+                            <li>{!! $item->printCategory() !!}</li>
                         @endforeach
                         </ul>
                     </div>
                 </div>
 		        <div class="form-group">
-			        {{ Form::label('sku', 'SKU') }}
-			        {{ Form::text('sku', Input::old('sku'), array('class' => 'form-control')) }}
+			        {!! Form::label('sku', 'SKU') !!}
+			        {!! Form::text('sku', null, array('class' => 'form-control')) !!}
 		        </div>
 		        <div class="form-group">
-			        {{ Form::label('tags', 'Tags (separated by comma)') }}
-			        {{ Form::text('tags', Input::old('tags'), array('class' => 'form-control')) }}
+			        {!! Form::label('tags', 'Tags (separated by comma)') !!}
+			        {!! Form::text('tags', null, array('class' => 'form-control')) !!}
 		        </div>
 		        <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                       <div>
-                        <span class="btn btn-default btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span>{{ Form::file('image') }}</span>
+                        <span class="btn btn-default btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span>{!! Form::file('image') !!}</span>
                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
                       </div>
                     </div>
@@ -79,36 +81,36 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="lang-en">
                         <div class="form-group">
-                            {{ Form::label('name', 'Title') }}
-                            {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
+                            {!! Form::label('name', 'Title') !!}
+                            {!! Form::text('name', null, array('class' => 'form-control')) !!}
                         </div>
 
                         <div class="form-group">
-                            {{ Form::label('short_description', 'Summary') }}
-                            {{ Form::text('short_description', Input::old('short_description'), array('class' => 'form-control')) }}
+                            {!! Form::label('short_description', 'Summary') !!}
+                            {!! Form::text('short_description', null, array('class' => 'form-control')) !!}
                         </div>
 
                         <div class="form-group">
-                            {{ Form::label('long_description', 'Description') }}
-                            {{ Form::textarea('long_description', Input::old('long_description'), array('class' => 'form-control')) }}
+                            {!! Form::label('long_description', 'Description') !!}
+                            {!! Form::textarea('long_description', null, array('class' => 'form-control')) !!}
                         </div>
                     </div>
                     @foreach(\Config::get('redminportal::translation') as $translation)
                         @if($translation['lang'] != 'en')
                         <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
                             <div class="form-group">
-                                {{ Form::label($translation['lang'] . '_name', 'Title') }}
-                                {{ Form::text($translation['lang'] . '_name', Input::old($translation['lang'] . '_name'), array('class' => 'form-control')) }}
+                                {!! Form::label($translation['lang'] . '_name', 'Title') !!}
+                                {!! Form::text($translation['lang'] . '_name', null, array('class' => 'form-control')) !!}
                             </div>
 
                             <div class="form-group">
-                                {{ Form::label($translation['lang'] . '_short_description', 'Summary') }}
-                                {{ Form::text($translation['lang'] . '_short_description', Input::old($translation['lang'] . '_short_description'), array('class' => 'form-control')) }}
+                                {!! Form::label($translation['lang'] . '_short_description', 'Summary') !!}
+                                {!! Form::text($translation['lang'] . '_short_description', null, array('class' => 'form-control')) !!}
                             </div>
 
                             <div class="form-group">
-                                {{ Form::label($translation['lang'] . '_long_description', 'Description') }}
-                                {{ Form::textarea($translation['lang'] . '_long_description', Input::old($translation['lang'] . '_long_description'), array('class' => 'form-control')) }}
+                                {!! Form::label($translation['lang'] . '_long_description', 'Description') !!}
+                                {!! Form::textarea($translation['lang'] . '_long_description', null, array('class' => 'form-control')) !!}
                             </div>
                         </div>
                         @endif
@@ -116,11 +118,11 @@
                 </div>
 	        </div>
         </div>
-    {{ Form::close() }}
+    {!! Form::close() !!}
 @stop
 
 @section('footer')
-    <script src="{{ URL::to('packages/redooor/redminportal/assets/js/bootstrap-fileupload.js') }}"></script>
+    <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
     <script>
         !function ($) {
             $(function(){

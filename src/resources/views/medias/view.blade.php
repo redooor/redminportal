@@ -1,15 +1,17 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if($errors->has())
-    <div class='alert alert-danger'>
-        We encountered the following errors:
-        <ul>
-            @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @if (isset($errors))
+        @if($errors->has())
+        <div class='alert alert-danger'>
+            We encountered the following errors:
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     @endif
 
     <div class="nav-controls text-right">
@@ -19,7 +21,7 @@
         </span>
         @endif
         <a id="rd-media-get-all-duration" class="btn btn-default">Get Durations</a>
-        {{ HTML::link('admin/medias/create', 'Create New', array('class' => 'btn btn-primary')) }}
+        {!! HTML::link('admin/medias/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
     </div>
 
     @if (count($medias) > 0)
