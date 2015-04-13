@@ -41,10 +41,10 @@ module.exports = function (grunt) {
                     sourceMap: true,
                     outputSourceFiles: true,
                     sourceMapURL: '<%= pkg.name %>.css.map',
-                    sourceMapFilename: 'public/assets/css/<%= pkg.name %>.css.map'
+                    sourceMapFilename: 'src/public/css/<%= pkg.name %>.css.map'
                 },
-                src: 'src/less/redminportal.less',
-                dest: 'public/assets/css/<%= pkg.name %>.css'
+                src: 'src/resources/assets/less/redminportal.less',
+                dest: 'src/public/css/<%= pkg.name %>.css'
             }
         },
         autoprefixer: {
@@ -55,7 +55,7 @@ module.exports = function (grunt) {
                 options: {
                     map: true
                 },
-                src: 'public/assets/css/<%= pkg.name %>.css'
+                src: 'src/public/css/<%= pkg.name %>.css'
             }
         },
         cssmin: {
@@ -65,8 +65,8 @@ module.exports = function (grunt) {
                 noAdvanced: true
             },
             minifyCore: {
-                src: 'public/assets/css/<%= pkg.name %>.css',
-                dest: 'public/assets/css/<%= pkg.name %>.min.css'
+                src: 'src/public/css/<%= pkg.name %>.css',
+                dest: 'src/public/css/<%= pkg.name %>.min.css'
             }
         },
         usebanner: {
@@ -75,7 +75,7 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>'
             },
             files: {
-                src: 'public/assets/css/<%= pkg.name %>.css'
+                src: 'src/public/css/<%= pkg.name %>.css'
             }
         },
         copy: {
@@ -83,7 +83,7 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: 'bower_components/bootstrap/fonts/',
                 src: '**',
-                dest: 'public/assets/fonts/',
+                dest: 'src/public/fonts/',
                 flatten: true,
                 filter: 'isFile'
             },
@@ -91,39 +91,51 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: 'bower_components/jquery/dist/',
                 src: '**',
-                dest: 'public/assets/js/jquery/',
+                dest: 'src/public/js/jquery/',
                 flatten: true,
                 filter: 'isFile'
             },
             bootstrapjs: {
                 src: 'bower_components/bootstrap/dist/js/bootstrap.min.js',
-                dest: 'public/assets/js/bootstrap.min.js'
+                dest: 'src/public/js/bootstrap.min.js'
+            },
+            bootstrapcss: {
+                src: 'bower_components/bootstrap/dist/css/bootstrap.min.css',
+                dest: 'src/public/css/bootstrap.min.css'
             },
             jqueryui: {
                 expand: true,
                 cwd: 'bower_components/jquery-ui/themes/blitzer/',
                 src: '**',
-                dest: 'public/assets/css/jquery-ui/themes/blitzer/'
+                dest: 'src/public/css/jquery-ui/themes/blitzer/'
             },
             jqueryuijs: {
                 src: 'bower_components/jquery-ui/jquery-ui.min.js',
-                dest: 'public/assets/js/jquery-ui/jquery-ui.min.js'
+                dest: 'src/public/js/jquery-ui/jquery-ui.min.js'
             },
             momentjs: {
                 src: 'bower_components/moment/min/moment.min.js',
-                dest: 'public/assets/js/moment/moment.min.js'
+                dest: 'src/public/js/moment/moment.min.js'
             },
             datetimepickerjs: {
                 src: 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-                dest: 'public/assets/js/datetimepicker/bootstrap-datetimepicker.min.js'
+                dest: 'src/public/js/datetimepicker/bootstrap-datetimepicker.min.js'
             },
             datetimepickercss: {
                 src: 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
-                dest: 'public/assets/css/datetimepicker/bootstrap-datetimepicker.min.css'
+                dest: 'src/public/css/datetimepicker/bootstrap-datetimepicker.min.css'
+            },
+            redmaterialsjs: {
+                src: 'bower_components/redmaterials/dist/js/redmaterials.min.js',
+                dest: 'src/public/js/redmaterials.min.js'
+            },
+            redmaterialscss: {
+                src: 'bower_components/redmaterials/dist/css/redmaterials.min.css',
+                dest: 'src/public/css/redmaterials.min.css'
             }
         },
         watch: {
-            files: ['src/less/**/*.less'],
+            files: ['src/resources/assets/less/**/*.less'],
             tasks: 'default',
             options: {
                 livereload: true,
@@ -146,7 +158,7 @@ module.exports = function (grunt) {
     grunt.registerTask('less-compile', ['less:compileCore', 'autoprefixer:core', 'usebanner', 'cssmin:minifyCore']);
     
     // Distribute all assets to public folder
-    grunt.registerTask('dist-assets', ['copy:fonts', 'copy:jquery', 'copy:bootstrapjs', 'copy:jqueryui', 'copy:jqueryuijs', 'copy:momentjs', 'copy:datetimepickerjs', 'copy:datetimepickercss']);
+    grunt.registerTask('dist-assets', ['copy:fonts', 'copy:jquery', 'copy:bootstrapjs', 'copy:bootstrapcss', 'copy:jqueryui', 'copy:jqueryuijs', 'copy:momentjs', 'copy:datetimepickerjs', 'copy:datetimepickercss', 'copy:redmaterialsjs', 'copy:redmaterialscss']);
     
     // Default task, compile and distribute all assets to public folder
     grunt.registerTask('default', ['less-compile', 'dist-assets']);
