@@ -21,6 +21,8 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 3. Use Laravel's Authentication instead of Cartalyst/Sentry.
 4. Users and Groups tables should work with previous schema. (But need to add column remember_token to users table)
 5. Drop Discount module support from v0.2.0 onwards (issue #63).
+6. Changed UI to use [Redmaterials](http://redmaterials.redooor.com) theme.
+7. Removed Bootstrap from redminportal.css. It should be linked separately.
 
 ## Version 0.1.5
 The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.
