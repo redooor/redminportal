@@ -1,3 +1,7 @@
+![alt text][logo]
+
+[logo]: http://www.redooor.com/assets/img/redminportal_logo_sm.png "RedminPortal"
+
 # RedminPortal by Redooor
 
 A Laravel 5.0 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
