@@ -117,10 +117,24 @@
                 @if (isset($memberships))
                 <h3>Price List</h3>
                 <table class="table table-striped table-bordered">
+                    <tr>
+                        <th>Membership</th>
+                        <th>Price</th>
+                        <th>Enabled</th>
+                    </tr>
                     @foreach ($memberships as $membership)
                         <tr>
                             <td>{{ $membership->name }}</td>
                             <td>{{ Form::text('price_' . $membership->id, Input::old('price_' . $membership->id), array('class' => 'form-control')) }}</td>
+                            <td>
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label for="{{ 'price_active_' . $membership->id }}">
+                                            {{ Form::checkbox('price_active_' . $membership->id, true, true, array('id' => 'price_active_' . $membership->id)) }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                 </table>

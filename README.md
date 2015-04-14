@@ -181,8 +181,15 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # Change log
 
-## Under Development, Version 0.2.0 (latest master)
-Focus on supporting Laravel 5.0.
+## Under Development, Version 0.1.6 (latest v0.1 branch)
+Minor enhancement and bug fixes.
+
+### Enhancements:
+1. Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)
+2. Added UI for "active" column for module create and edit. (issue #78)
+
+### Bug fixes:
+1. Fixed missing columns in coupon_user table.
 
 ## Version 0.1.5
 The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.

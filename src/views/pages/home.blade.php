@@ -5,11 +5,17 @@
         <div class='col-md-8'>
             <h1>RedminPortal <small>by Redooor</small></h1>
             <h2><u>Change log</u></h2>
-            <h3>Under Development, Version 0.2.0 (latest master)</h3>
-            <p>Focus on supporting Laravel 5.0.</p>
-            <h4>New feature:</h4>
+            
+            <h3>Under Development, Version 0.1.6 (latest v0.1 branch)</h3>
+            <p>Minor enhancement and bug fixes.</p>
+            <h4>Enhancements:</h4>
             <ol>
-                <li>More coming... (developing)</li>
+                <li>Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)</li>
+                <li>Added UI for "active" column for module create and edit. (issue #78)</li>
+            </ol>
+            <h4>Bug fixes:</h4>
+            <ol>
+                <li>Fixed missing columns in coupon_user table.</li>
             </ol>
             <h3>Version 0.1.5</h3>
             <p>Focus on fixing bugs and cleaning up code. Improve assets management via Grunt and Bower. Add Coupon module.</p>
