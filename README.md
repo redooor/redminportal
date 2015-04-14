@@ -184,6 +184,9 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 ## Under Development, Version 0.1.6 (latest v0.1 branch)
 Minor enhancement and bug fixes.
 
+### Important:
+If you're upgrading from <= v0.1.5, please refer to the [Upgrade Guide](#upgrade-guide).
+
 ### Enhancements:
 1. Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)
 2. Added UI for "active" column for module create and edit. (issue #78)
@@ -313,6 +316,24 @@ The focus of this update was on cleaning up the code and making sure all tests p
 3. Translation capability can be turned on via config/translation.php file.
 
 # Upgrade Guide
+
+## Upgrading to v0.1.6 from v0.1.5
+
+### Run migrate
+
+Version 0.1.6 adds a new column "active" to "pricelists" table.
+
+**Caution**: Always backup your database before running this type of command.
+
+Run the following commands in a terminal to perform database migration for Redminportal:
+
+For users, run:
+
+    ?> php artisan migrate --package=redooor/redminportal
+
+For contributors, run:
+
+    ?> php artisan migrate --bench=redooor/redminportal
 
 ## Upgrading to v0.1.5 from <= v0.1.4
 
