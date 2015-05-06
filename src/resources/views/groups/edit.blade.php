@@ -26,36 +26,37 @@
                         {!! Form::label('name', 'Name') !!}
                         {!! Form::text('name', $group->name, array('class' => 'form-control', 'autofocus', 'required')) !!}
                     </div>
-
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label for="view">
-                                {!! Form::checkbox('view', 'yes', $checkbox_view, array('id' => 'view')) !!} View
-                            </label>
+                    <div class="well">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="view">
+                                    {!! Form::checkbox('view', 'yes', $checkbox_view, array('id' => 'view')) !!} View
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label for="create">
-                                {!! Form::checkbox('create', 'yes', $checkbox_create, array('id' => 'create')) !!} Create
-                            </label>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="create">
+                                    {!! Form::checkbox('create', 'yes', $checkbox_create, array('id' => 'create')) !!} Create
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label for="delete">
-                                {!! Form::checkbox('delete', 'yes', $checkbox_delete, array('id' => 'delete')) !!} Delete
-                            </label>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="delete">
+                                    {!! Form::checkbox('delete', 'yes', $checkbox_delete, array('id' => 'delete')) !!} Delete
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label for="update">
-                                {!! Form::checkbox('update', 'yes', $checkbox_update, array('id' => 'update')) !!} Update
-                            </label>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="update">
+                                    {!! Form::checkbox('update', 'yes', $checkbox_update, array('id' => 'update')) !!} Update
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>

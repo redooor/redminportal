@@ -93,7 +93,7 @@
                             @endif
                         </a>
                     </th>
-					<th>Action</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -117,10 +117,10 @@
 			        <td>@if ($user->last_login){{ date('d-M-y g:i a', strtotime($user->last_login)) }}@endif</td>
 			        <td>{{ date('d-M-y', strtotime($user->created_at)) }}</td>
 			        <td>{{ date('d-M-y', strtotime($user->updated_at)) }}</td>
-					<td>
-						<div class="btn-group">
-							<button type="button" class="btn btn-cyan btn-xs dropdown-toggle" data-toggle="dropdown">
-								<span class="glyphicon glyphicon-th-list"></span>
+					<td class="table-actions text-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-option-horizontal"></span>
 							</button>
 							<ul class="dropdown-menu pull-right" role="menu">
 								@if ($user->activated)

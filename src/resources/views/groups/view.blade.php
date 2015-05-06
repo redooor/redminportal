@@ -54,7 +54,7 @@
                             @endif
                         </a>
                     </th>
-                    <th>Action</th>
+                    <th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -74,10 +74,10 @@
                     </td>
 			        <td>{{ $group->created_at }}</td>
 			        <td>{{ $group->updated_at }}</td>
-                    <td>
+                    <td class="table-actions text-right">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-cyan btn-xs dropdown-toggle" data-toggle="dropdown">
-								<span class="glyphicon glyphicon-th-list"></span>
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-option-horizontal"></span>
 							</button>
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
