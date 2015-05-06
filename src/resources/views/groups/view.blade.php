@@ -1,30 +1,32 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::menus.groups') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
 
-	<div class="nav-controls text-right">
-		@if (count($groups) > 0)
-		<span class="label label-default pull-left">
-			{{ $groups->firstItem() . ' to ' . $groups->lastItem() . ' ( total ' . $groups->total() . ' )' }}
-		</span>
-		@endif
-        <a href="{{ URL::to('admin/groups/create') }}" class="btn btn-primary">Create New</a>
-	</div>
+    @include('redminportal::partials.errors')
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav-controls text-right">
+                <div class="btn-group" role="group">
+                @if (count($groups) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $groups->firstItem() . ' to ' . $groups->lastItem() . ' of ' . $groups->total() }}</a>
+                @endif
+                {!! HTML::link('admin/groups/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+            </div>
+            </div>
+        </div>
+    </div>
 
 	@if (count($groups) > 0)
-		<table class='table table-striped table-bordered'>
+		<table class='table table-striped table-bordered table-condensed'>
 			<thead>
 				<tr>
                     <th>
@@ -74,9 +76,9 @@
 			        <td>{{ $group->updated_at }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                Action <span class="caret"></span>
-                            </button>
+                            <button type="button" class="btn btn-cyan btn-xs dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-th-list"></span>
+							</button>
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
                                     <a href="{{ URL::to('admin/groups/edit/' . $group->id) }}">

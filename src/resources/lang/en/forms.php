@@ -30,5 +30,7 @@ return array(
     'create' => 'Create',
     'edit' => 'Edit',
     'create_user' => 'Create User',
-    'edit_user' => 'Edit User'
+    'edit_user' => 'Edit User',
+    'create_group' => 'Create Group',
+    'edit_group' => 'Edit Group',
 );
