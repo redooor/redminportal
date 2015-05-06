@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     {
         if (Schema::hasTable('users')) {
             // Add remember_token column to existing table
-            if (! Schema::hasColumn('remember_token ')) {
+            if (! Schema::hasColumn('users', 'remember_token')) {
                 Schema::table('users', function($table) {
                     $table->rememberToken();
                 });
