@@ -3,6 +3,11 @@
 return array(
 
     array(
+        'name' => 'dashboard',
+        'path' => 'admin',
+        'hide' => false
+    ),
+    array(
         'name' => 'users',
         'path' => 'admin/users',
         'hide' => false

@@ -21,7 +21,7 @@
     <body>
         <header id="header">
             <div class="navbar navbar-default navbar-fixed-top">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                             <span class="icon-bar"></span>
@@ -33,20 +33,12 @@
                         </a>
                     </div>
                     <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
-                            <li class="dropdown" id="navbar-menu-dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th"></span> {{ Lang::get('redminportal::menus.menu') }} <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    @foreach (config('redminportal::menu') as $menu)
-                                        @if(!$menu['hide'])
-                                            @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-                            </li>
-                            <li class="navbar-text navbar-menu-current hidden-xs">
-                                {{ Lang::get('redminportal::menus.location') }} <span class="glyphicon glyphicon-chevron-right"></span> <span id="navbar-menu-current-text">{{ Lang::get('redminportal::menus.home') }}</span>
-                            </li>
+                        <ul class="nav navbar-nav hidden-lg hidden-md hidden-sm">
+                            @foreach (config('redminportal::menu') as $menu)
+                                @if(!$menu['hide'])
+                                    @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
+                                @endif
+                            @endforeach
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{{ URL::to('logout') }}">{{ Lang::get('redminportal::menus.logout') }}</a></li>
@@ -58,8 +50,19 @@
         </header>
 
         <div id="main">
-            <div class="container">
-                @yield('content')
+            <div class="container-fluid">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <ul class="nav nav-sidebar">
+                        @foreach (config('redminportal::menu') as $menu)
+                            @if(!$menu['hide'])
+                                @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    @yield('content')
+                </div>
             </div>
         </div><!--End main-->
 
@@ -95,8 +98,6 @@
                         $('#confirm-delete').attr('href', $delete_url);
                         $('#confirm-modal').modal('show');
                     });
-                    var currentLocation = $("#navbar-menu-dropdown ul.dropdown-menu li.active a").html();
-                    $("#navbar-menu-current-text").html(currentLocation);
                 })
             }(window.jQuery);
         </script>

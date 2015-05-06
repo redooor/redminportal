@@ -4,41 +4,19 @@
     <div class="row">
         <div class="col-md-12">
             <ol class="breadcrumb">
-                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::forms.home') }}</a></li>
-                <li><a href="{{ URL::to('admin/coupons') }}">{{ Lang::get('redminportal::forms.coupons') }}</a></li>
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li><a href="{{ URL::to('admin/coupons') }}">{{ Lang::get('redminportal::menus.coupons') }}</a></li>
                 <li class="active">{{ Lang::get('redminportal::forms.edit') }}</li>
             </ol>
         </div>
     </div>
     
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-    @endif
+    @include('redminportal::partials.errors')
     
     {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\CouponController@postStore', 'role' => 'form', 'id' => 'form_add')) !!}
         {!! Form::hidden('id', $coupon->id) !!}
         <div class='row'>
-            <div class="col-md-3 col-md-push-9">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class='form-actions'>
-                            {!! HTML::link('admin/coupons', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link'))!!}
-                            {!! Form::submit(Lang::get('redminportal::buttons.save_changes'), array('class' => 'btn btn-primary pull-right')) !!}
-                        </div>
-                    </div>
-                </div>
-	        </div>
-
-	        <div class="col-md-9 col-md-pull-3">
+	        <div class="col-md-9">
                 <div class="form-horizontal">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -180,6 +158,14 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+	        </div>
+            <div class="col-md-3">
+                <div class="well">
+                    <div class='form-actions'>
+                        {!! HTML::link('admin/coupons', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link'))!!}
+                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary pull-right')) !!}
                     </div>
                 </div>
 	        </div>

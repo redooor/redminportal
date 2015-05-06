@@ -5,6 +5,7 @@ return array(
     'menu' => 'Menu',
     'location' => "You're at",
     'home' => 'Home',
+    'dashboard' => 'Dashboard',
     'users' => 'Users',
     'groups' => 'Groups',
     'memberships' => 'Memberships',

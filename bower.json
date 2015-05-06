@@ -35,5 +35,8 @@
     "jquery-ui": "~1.11.2",
     "eonasdan-bootstrap-datetimepicker": "~4.0.0",
     "redmaterials": "~0.0.1"
+  },
+  "resolutions": {
+    "redmaterials": "master"
   }
 }

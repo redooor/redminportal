@@ -146,18 +146,15 @@
             </ol>
         </div>
         <div class='col-md-4'>
-            <div class="panel">
-                <div class="panel-body">
-                    <img src="{{ URL::to('vendor/redooor/redminportal/img/redminportal_logo.png') }}" title="ReminPortal" class="img-responsive pull-right">
-                    <h3>Contribution</h3>
-                    <p>Source code at <a href="https://github.com/redooor/redminportal">Github</a></p>
-                    <h3>Maintenance</h3>
-                    <p>Maintained by the core team with the help of our contributors.</p>
-                    <h3>License</h3>
-                    <p>RedminPortal is open-sourced software licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
-                </div>
+            <div class="well well-sm shadow-depth-1">
+                <img src="{{ URL::to('vendor/redooor/redminportal/img/redminportal_logo.png') }}" title="ReminPortal" class="img-responsive pull-right">
+                <h3>Contribution</h3>
+                <p>Source code at <a href="https://github.com/redooor/redminportal">Github</a></p>
+                <h3>Maintenance</h3>
+                <p>Maintained by the core team with the help of our contributors.</p>
+                <h3>License</h3>
+                <p>RedminPortal is open-sourced software licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
             </div>
-            
         </div>
     </div>
 @stop

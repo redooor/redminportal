@@ -1,34 +1,36 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if ($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::menus.users') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
 
-	<div class="nav-controls text-right">
-		@if (count($users) > 0)
-		<span class="label label-default pull-left">
-			{{ $users->firstItem() . ' to ' . $users->lastItem() . ' ( total ' . $users->total() . ' )' }}
-		</span>
-		@endif
-        <a href="{{ URL::to('admin/users/create') }}" class="btn btn-primary">Create New</a>
-	</div>
+    @include('redminportal::partials.errors')
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav-controls text-right">
+                <div class="btn-group" role="group">
+                @if (count($users) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $users->firstItem() . ' to ' . $users->lastItem() . ' of ' . $users->total() }}</a>
+                @endif
+                {!! HTML::link('admin/users/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+            </div>
+            </div>
+        </div>
+    </div>
 
 	@if (count($users) > 0)
-		<table class='table table-striped table-bordered'>
+		<table class='table table-striped table-bordered table-condensed'>
 			<thead>
 				<tr>
 					<th>
-                        <a href="{{ URL::to('admin/users/sort') . '/email/' . ($sortBy == 'email' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/email/' . ($sortBy == 'email' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Email
                             @if ($sortBy == 'email')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
@@ -36,7 +38,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/users/sort') . '/first_name/' . ($sortBy == 'first_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/first_name/' . ($sortBy == 'first_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             First Name
                             @if ($sortBy == 'first_name')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
@@ -44,7 +46,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/users/sort') . '/last_name/' . ($sortBy == 'last_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/last_name/' . ($sortBy == 'last_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Last Name
                             @if ($sortBy == 'last_name')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
@@ -52,7 +54,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/users/sort') . '/group/' . ($sortBy == 'group' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/group/' . ($sortBy == 'group' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Groups
                             @if ($sortBy == 'group')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
@@ -60,7 +62,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/users/sort') . '/activated/' . ($sortBy == 'activated' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/activated/' . ($sortBy == 'activated' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Activated
                             @if ($sortBy == 'activated')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
@@ -68,7 +70,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/users/sort') . '/last_login/' . ($sortBy == 'last_login' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/last_login/' . ($sortBy == 'last_login' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Last Login
                             @if ($sortBy == 'last_login')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
@@ -76,7 +78,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/users/sort') . '/created_at/' . ($sortBy == 'created_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/created_at/' . ($sortBy == 'created_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Created
                             @if ($sortBy == 'created_at')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
@@ -84,7 +86,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/users/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
                             Updated
                             @if ($sortBy == 'updated_at')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
@@ -112,13 +114,13 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
 		            </td>
-			        <td>{{ $user->last_login }}</td>
-			        <td>{{ $user->created_at }}</td>
-			        <td>{{ $user->updated_at }}</td>
+			        <td>@if ($user->last_login){{ date('d-M-y g:i a', strtotime($user->last_login)) }}@endif</td>
+			        <td>{{ date('d-M-y', strtotime($user->created_at)) }}</td>
+			        <td>{{ date('d-M-y', strtotime($user->updated_at)) }}</td>
 					<td>
 						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-								Action <span class="caret"></span>
+							<button type="button" class="btn btn-cyan btn-xs dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-th-list"></span>
 							</button>
 							<ul class="dropdown-menu pull-right" role="menu">
 								@if ($user->activated)
