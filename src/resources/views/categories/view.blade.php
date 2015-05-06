@@ -1,21 +1,23 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::menus.categories') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
 
-    <div class="nav-controls text-right">
-        {!! HTML::link('admin/categories/create', 'Create New', array('class' => 'btn btn-primary')) !!}
+    @include('redminportal::partials.errors')
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav-controls text-right">
+                {!! HTML::link('admin/categories/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+            </div>
+        </div>
     </div>
 
     @if (count($categories) > 0)
