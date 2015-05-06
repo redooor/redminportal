@@ -33,4 +33,6 @@ return array(
     'edit_user' => 'Edit User',
     'create_group' => 'Create Group',
     'edit_group' => 'Edit Group',
+    'create_membership' => 'Create Membership',
+    'edit_membership' => 'Edit Membership',
 );

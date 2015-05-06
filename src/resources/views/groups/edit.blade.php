@@ -19,7 +19,7 @@
         <div class="col-md-9">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">{{ Lang::get('redminportal::forms.create_group') }}</h4>
+                    <h4 class="panel-title">{{ Lang::get('redminportal::forms.edit_group') }}</h4>
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
