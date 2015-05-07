@@ -45,4 +45,7 @@ return array(
     'edit_announcement' => 'Edit Announcement',
     'create_promotion' => 'Create Promotion',
     'edit_promotion' => 'Edit Promotion',
+    'create_product' => 'Create Product',
+    'edit_product' => 'Edit Product',
+    'product_properties' => 'Product Properties',
 );

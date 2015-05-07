@@ -1,29 +1,29 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li><a href="{{ URL::to('admin/products') }}">{{ Lang::get('redminportal::menus.products') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::forms.edit') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
+    
+    @include('redminportal::partials.errors')
 
     {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\ProductController@postStore', 'role' => 'form')) !!}
         {!! Form::hidden('id', $product->id) !!}
 
     	<div class='row'>
             <div class="col-md-3 col-md-push-9">
-                <div class='form-actions text-right'>
-                    {!! HTML::link('admin/products', 'Cancel', array('class' => 'btn btn-default')) !!}
-                    {!! Form::submit('Save Changes', array('class' => 'btn btn-primary')) !!}
+                <div class="well">
+                    <div class='form-actions'>
+                        {!! HTML::link('admin/products', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link'))!!}
+                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary pull-right')) !!}
+                    </div>
                 </div>
-                <hr>
                 <div class='well well-small'>
                     <div class="form-group">
                         <div class="checkbox">
@@ -54,21 +54,6 @@
                         </ul>
                     </div>
                 </div>
-                <div class="form-group">
-                    {!! Form::label('sku', 'SKU') !!}
-                    {!! Form::text('sku', $product->sku, array('class' => 'form-control')) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::label('price', 'Price') !!}
-                    <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        {!! Form::text('price', $product->price, array('class' => 'form-control')) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('tags', 'Tags (separated by comma)') !!}
-                    {!! Form::text('tags', $tagString, array('class' => 'form-control')) !!}
-                </div>
                 <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
@@ -81,64 +66,99 @@
             </div>
 
             <div class="col-md-9 col-md-pull-3">
-                <ul class="nav nav-tabs" id="lang-selector">
-                    <li class="active"><a href="#lang-en">English</a></li>
-                    <li><a href="#lang-sc">中文</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="lang-en">
-                        <div class="form-group">
-                            {!! Form::label('name', 'Title') !!}
-                            {!! Form::text('name', $product->name, array('class' => 'form-control')) !!}
-                        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.edit_product') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="nav nav-tabs" id="lang-selector">
+                            <li class="active"><a href="#lang-en">English</a></li>
+                            <li><a href="#lang-sc">中文</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="lang-en">
+                                <div class="form-group">
+                                    {!! Form::label('name', 'Title') !!}
+                                    {!! Form::text('name', $product->name, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('short_description', 'Summary') !!}
-                            {!! Form::text('short_description', $product->short_description, array('class' => 'form-control')) !!}
-                        </div>
+                                <div class="form-group">
+                                    {!! Form::label('short_description', 'Summary') !!}
+                                    {!! Form::text('short_description', $product->short_description, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('long_description', 'Description') !!}
-                            {!! Form::textarea('long_description', $product->long_description, array('class' => 'form-control')) !!}
+                                <div class="form-group">
+                                    {!! Form::label('long_description', 'Description') !!}
+                                    {!! Form::textarea('long_description', $product->long_description, array('class' => 'form-control')) !!}
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="lang-sc">
+                                <div class="form-group">
+                                    {!! Form::label('cn_name', '标题') !!}
+                                    {!! Form::text('cn_name', $product_cn->name, array('class' => 'form-control')) !!}
+                                </div>
+
+                                <div class="form-group">
+                                    {!! Form::label('cn_short_description', '简介') !!}
+                                    {!! Form::text('cn_short_description', $product_cn->short_description, array('class' => 'form-control')) !!}
+                                </div>
+
+                                <div class="form-group">
+                                    {!! Form::label('cn_long_description', '内容') !!}
+                                    {!! Form::textarea('cn_long_description', $product_cn->long_description, array('class' => 'form-control')) !!}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="lang-sc">
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.product_properties') }}</h4>
+                    </div>
+                    <div class="panel-body">
                         <div class="form-group">
-                            {!! Form::label('cn_name', '标题') !!}
-                            {!! Form::text('cn_name', $product_cn->name, array('class' => 'form-control')) !!}
+                            {!! Form::label('sku', 'SKU') !!}
+                            {!! Form::text('sku', $product->sku, array('class' => 'form-control')) !!}
                         </div>
-
                         <div class="form-group">
-                            {!! Form::label('cn_short_description', '简介') !!}
-                            {!! Form::text('cn_short_description', $product_cn->short_description, array('class' => 'form-control')) !!}
+                            {!! Form::label('price', 'Price') !!}
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                {!! Form::text('price', $product->price, array('class' => 'form-control')) !!}
+                            </div>
                         </div>
-
                         <div class="form-group">
-                            {!! Form::label('cn_long_description', '内容') !!}
-                            {!! Form::textarea('cn_long_description', $product_cn->long_description, array('class' => 'form-control')) !!}
+                            {!! Form::label('tags', 'Tags (separated by comma)') !!}
+                            {!! Form::text('tags', $tagString, array('class' => 'form-control')) !!}
                         </div>
                     </div>
                 </div>
                 @if (count($product->images) > 0)
-                <h4>Uploaded Photos</h4>
-                <div class='row'>
-                    @foreach ($product->images as $image)
-                    <div class='col-md-3'>
-                        {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
-                        <br><br>
-                        <div class="btn-group btn-group-sm">
-                            <a href="{{ URL::to('admin/products/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </a>
-                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
-                                <span class="glyphicon glyphicon-link"></span>
-                            </a>
-                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                            </a>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class='row'>
+                            @foreach ($product->images as $image)
+                            <div class='col-md-3'>
+                                {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                                <br><br>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ URL::to('admin/products/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
-                    @endforeach
                 </div>
                 @endif
             </div>
