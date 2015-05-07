@@ -1,30 +1,32 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::menus.products') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
+
+    @include('redminportal::partials.errors')
     
-    <div class="nav-controls text-right">
-        @if (count($products) > 0)
-        <span class="label label-default pull-left">
-            {{ $products->firstItem() . ' to ' . $products->lastItem() . ' ( total ' . $products->total() . ' )' }}
-        </span>
-        @endif
-        {!! HTML::link('admin/products/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav-controls text-right">
+                <div class="btn-group" role="group">
+                @if (count($products) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $products->firstItem() . ' to ' . $products->lastItem() . ' of ' . $products->total() }}</a>
+                @endif
+                {!! HTML::link('admin/products/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+            </div>
+            </div>
+        </div>
     </div>
 
     @if (count($products) > 0)
-        <table class='table table-striped table-bordered'>
+        <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
                     <th>Name</th>
@@ -32,13 +34,10 @@
                     <th>SKU</th>
                     <th>Price</th>
                     <th>Short Description</th>
-                    <th class='hide'>Long Description</th>
                     <th>Tags</th>
                     <th>Featured</th>
                     <th>Active</th>
-                    <th class='hide'>Photos</th>
-                    <th class='hide'>Updated</th>
-                    <th>Action</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -49,7 +48,6 @@
                     <td>{{ $product->sku }}</td>
                     <td>{{ $product->price }}</td>
                     <td>{{ $product->short_description }}</td>
-                    <td class='hide'>{{ $product->long_description }}</td>
                     <td>
                         @foreach ($product->tags as $tag)
                         <span class="label label-info">{{ $tag->name }}</span>
@@ -69,17 +67,11 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
-                    <td class='hide'>
-                        @foreach( $product->images as $image )
-                        {{ $image->path }}<br/>
-                        @endforeach
-                    </td>
-                    <td class='hide'>{{ $product->updated_at }}</td>
-                    <td>
+                    <td class="table-actions text-right">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                Action <span class="caret"></span>
-                            </button>
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-option-horizontal"></span>
+							</button>
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
                                     <a href="{{ URL::to('admin/products/edit/' . $product->id) }}">

@@ -1,31 +1,33 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::menus.purchases') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
 
-    <div class="nav-controls text-right">
-        @if (count($purchases) > 0)
-        <span class="label label-default pull-left">
-            {{ $purchases->firstItem() . ' to ' . $purchases->lastItem() . ' ( total ' . $purchases->total() . ' )' }}
-        </span>
-        @endif
-        <button class="btn btn-default" data-toggle="modal" data-target="#export-csv">Export CSV</button>
-        {!! HTML::link('admin/purchases/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
+    @include('redminportal::partials.errors')
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav-controls text-right">
+                <div class="btn-group" role="group">
+                @if (count($purchases) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $purchases->firstItem() . ' to ' . $purchases->lastItem() . ' of ' . $purchases->total() }}</a>
+                @endif
+                <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#export-csv">{{ Lang::get('redminportal::buttons.export_csv') }}</button>
+                {!! HTML::link('admin/purchases/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+            </div>
+            </div>
+        </div>
     </div>
 
     @if (count($purchases) > 0)
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped table-condensed">
             <thead>
                 <tr>
                     <th>User</th>
@@ -36,7 +38,7 @@
                     <th>Payment Status</th>
                     <th>Transaction ID</th>
                     <th>Purchased on</th>
-                    <th>Action</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -55,10 +57,10 @@
                     <td>{{ $purchase->payment_status }}</td>
                     <td>{{ $purchase->transaction_id }}</td>
                     <td>{{ $purchase->created_at }}</td>
-                    <td>
-						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-								Action <span class="caret"></span>
+                    <td class="table-actions text-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-option-horizontal"></span>
 							</button>
 							<ul class="dropdown-menu pull-right" role="menu">
 								<li>

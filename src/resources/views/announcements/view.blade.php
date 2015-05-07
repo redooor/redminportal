@@ -1,36 +1,39 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::menus.announcements') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
-    <div class="nav-controls text-right">
-        @if (count($announcements) >0)
-        <span class="label label-default pull-left">
-            {{ $announcements->firstItem() . ' to ' . $announcements->lastItem() . ' ( total ' . $announcements->total() . ' )' }}
-        </span>
-        @endif
-        {!! HTML::link('admin/announcements/create', 'Create New', array('class' => 'btn btn-primary')) !!}
     </div>
+
+    @include('redminportal::partials.errors')
     
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav-controls text-right">
+                <div class="btn-group" role="group">
+                @if (count($announcements) >0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $announcements->firstItem() . ' to ' . $announcements->lastItem() . ' of ' . $announcements->total() }}</a>
+                @endif
+                {!! HTML::link('admin/announcements/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+            </div>
+            </div>
+        </div>
+    </div>
+
     @if (count($announcements) >0)
-        <table class='table table-striped table-bordered'>
+        <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
                     <th>Title</th>
                     <th>Created At</th>
                     <th>Updated At</th>
                     <th>Private</th>
-                    <th>Action</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -46,11 +49,11 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
-                    <td>
-						<div class="btn-group">
-						  	<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-						    	Action <span class="caret"></span>
-						  	</button>
+                    <td class="table-actions text-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-option-horizontal"></span>
+							</button>
 						  	<ul class="dropdown-menu pull-right" role="menu">
 						        <li>
 						            <a href="{{ URL::to('admin/announcements/edit/' . $announcement->id) }}">

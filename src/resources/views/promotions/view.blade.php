@@ -1,37 +1,39 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::menus.promotions') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
 
-    <div class="nav-controls text-right">
-        @if (count($promotions) > 0)
-        <span class="label label-default pull-left">
-            {{ $promotions->firstItem() . ' to ' . $promotions->lastItem() . ' ( total ' . $promotions->total() . ' )' }}
-        </span>
-        @endif
-        {!! HTML::link('admin/promotions/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary')) !!}
+    @include('redminportal::partials.errors')
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="nav-controls text-right">
+                <div class="btn-group" role="group">
+                @if (count($promotions) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $promotions->firstItem() . ' to ' . $promotions->lastItem() . ' of ' . $promotions->total() }}</a>
+                @endif
+                {!! HTML::link('admin/promotions/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+            </div>
+            </div>
+        </div>
     </div>
     
     @if (count($promotions) > 0)
-        <table class='table table-striped table-bordered'>
+        <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
                     <th>Promotions and Events</th>
                     <th>Start</th>
                     <th>End</th>
                     <th>Active</th>
-                    <th>Action</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -39,16 +41,6 @@
                 <tr>
                     <td>
                         {{ $promotion->name }}
-                        <span class="hide">
-                            {{ $promotion->short_description }}
-                            {{ $promotion->long_description }}
-                            @foreach( $promotion->images as $image )
-                            {{ $image->path }}<br/>
-                            @endforeach
-                        </span>
-                        <span class="hide">
-                            {{ $promotion->updated_at }}
-                        </span>
                     </td>
                     <td>{{ $promotion->start_date }}</td>
                     <td>{{ $promotion->end_date }}</td>
@@ -59,11 +51,11 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
-                    <td>
-						<div class="btn-group">
-						  	<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-						    	Action <span class="caret"></span>
-						  	</button>
+                    <td class="table-actions text-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="glyphicon glyphicon-option-horizontal"></span>
+							</button>
 						  	<ul class="dropdown-menu pull-right" role="menu">
 						        <li>
 						            <a href="{{ URL::to('admin/promotions/edit/' . $promotion->id) }}">
