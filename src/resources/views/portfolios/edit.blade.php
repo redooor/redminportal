@@ -1,29 +1,29 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li><a href="{{ URL::to('admin/portfolios') }}">{{ Lang::get('redminportal::menus.portfolios') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::forms.edit') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
+    
+    @include('redminportal::partials.errors')
 
     {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\PortfolioController@postStore', 'role' => 'form')) !!}
         {!! Form::hidden('id', $portfolio->id) !!}
 
     	<div class='row'>
             <div class="col-md-3 col-md-push-9">
-                <div class='form-actions text-right'>
-                    {!! HTML::link('admin/portfolios', 'Cancel', array('class' => 'btn btn-default')) !!}
-                    {!! Form::submit('Save Changes', array('class' => 'btn btn-primary')) !!}
+                <div class="well">
+                    <div class='form-actions'>
+                        {!! HTML::link('admin/portfolios', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link'))!!}
+                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary pull-right')) !!}
+                    </div>
                 </div>
-                <hr>
                 <div class='well well-small'>
                     <div class="form-group">
                         <div class="checkbox">
@@ -58,64 +58,77 @@
             </div>
 
             <div class="col-md-9 col-md-pull-3">
-                <ul class="nav nav-tabs" id="lang-selector">
-                    <li class="active"><a href="#lang-en">English</a></li>
-                    <li><a href="#lang-sc">中文</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="lang-en">
-                        <div class="form-group">
-                            {!! Form::label('name', 'Title') !!}
-                            {!! Form::text('name', $portfolio->name, array('class' => 'form-control')) !!}
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('short_description', 'Summary') !!}
-                            {!! Form::text('short_description', $portfolio->short_description, array('class' => 'form-control')) !!}
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('long_description', 'Description') !!}
-                            {!! Form::textarea('long_description', $portfolio->long_description, array('class' => 'form-control')) !!}
-                        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.edit_portfolio') }}</h4>
                     </div>
-                    <div class="tab-pane" id="lang-sc">
-                        <div class="form-group">
-                            {!! Form::label('cn_name', '标题') !!}
-                            {!! Form::text('cn_name', $portfolio_cn->name, array('class' => 'form-control')) !!}
-                        </div>
+                    <div class="panel-body">
+                        <ul class="nav nav-tabs" id="lang-selector">
+                            <li class="active"><a href="#lang-en">English</a></li>
+                            <li><a href="#lang-sc">中文</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="lang-en">
+                                <div class="form-group">
+                                    {!! Form::label('name', 'Title') !!}
+                                    {!! Form::text('name', $portfolio->name, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('cn_short_description', '简介') !!}
-                            {!! Form::text('cn_short_description', $portfolio_cn->short_description, array('class' => 'form-control')) !!}
-                        </div>
+                                <div class="form-group">
+                                    {!! Form::label('short_description', 'Summary') !!}
+                                    {!! Form::text('short_description', $portfolio->short_description, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('cn_long_description', '内容') !!}
-                            {!! Form::textarea('cn_long_description', $portfolio_cn->long_description, array('class' => 'form-control')) !!}
+                                <div class="form-group">
+                                    {!! Form::label('long_description', 'Description') !!}
+                                    {!! Form::textarea('long_description', $portfolio->long_description, array('class' => 'form-control')) !!}
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="lang-sc">
+                                <div class="form-group">
+                                    {!! Form::label('cn_name', '标题') !!}
+                                    {!! Form::text('cn_name', $portfolio_cn->name, array('class' => 'form-control')) !!}
+                                </div>
+
+                                <div class="form-group">
+                                    {!! Form::label('cn_short_description', '简介') !!}
+                                    {!! Form::text('cn_short_description', $portfolio_cn->short_description, array('class' => 'form-control')) !!}
+                                </div>
+
+                                <div class="form-group">
+                                    {!! Form::label('cn_long_description', '内容') !!}
+                                    {!! Form::textarea('cn_long_description', $portfolio_cn->long_description, array('class' => 'form-control')) !!}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 @if (count($portfolio->images) > 0)
-                <h4>Uploaded Photos</h4>
-                <div class='row'>
-                    @foreach ($portfolio->images as $image)
-                    <div class='col-md-3'>
-                        {!! HTML::image($imagine->getUrl($image->path), $portfolio->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
-                        <br><br>
-                        <div class="btn-group btn-group-sm">
-                            <a href="{{ URL::to('admin/portfolios/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </a>
-                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
-                                <span class="glyphicon glyphicon-link"></span>
-                            </a>
-                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                            </a>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class='row'>
+                            @foreach ($portfolio->images as $image)
+                            <div class='col-md-3'>
+                                {!! HTML::image($imagine->getUrl($image->path), $portfolio->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                                <br><br>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ URL::to('admin/portfolios/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
-                    @endforeach
                 </div>
                 @endif
             </div>

@@ -37,4 +37,10 @@ return array(
     'edit_membership' => 'Edit Membership',
     'create_mailinglist' => 'Create Mailing List',
     'edit_mailinglist' => 'Edit Mailing List',
+    'create_purchase' => 'Create Purchase',
+    'create_portfolio' => 'Create Portfolio',
+    'edit_portfolio' => 'Edit Portfolio',
+    'uploaded_photos' => 'Uploaded Photos',
+    'create_announcement' => 'Create Announcement',
+    'edit_announcement' => 'Edit Announcement',
 );
