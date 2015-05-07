@@ -16,6 +16,7 @@
                 <li>Drop Discount module support from v0.2.0 onwards (issue #63)</li>
                 <li>Changed UI to use [Redmaterials](http://redmaterials.redooor.com) theme.</li>
                 <li>Removed Bootstrap from redminportal.css. It should be linked separately.</li>
+                <li>Consistent UI across all views (issue #76).</li>
                 <li>More coming... (developing)</li>
             </ol>
             <h3>Version 0.1.5</h3>
