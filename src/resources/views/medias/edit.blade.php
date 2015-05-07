@@ -1,29 +1,29 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li><a href="{{ URL::to('admin/medias') }}">{{ Lang::get('redminportal::menus.medias') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::forms.edit') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
+    
+    @include('redminportal::partials.errors')
 
     {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\MediaController@postStore', 'role' => 'form')) !!}
         {!! Form::hidden('id', $media->id) !!}
 
     	<div class='row'>
             <div class="col-md-3 col-md-push-9">
-                <div class='form-actions text-right'>
-                    {!! HTML::link('admin/medias', 'Cancel', array('class' => 'btn btn-default')) !!}
-                    {!! Form::submit('Save Changes', array('class' => 'btn btn-primary')) !!}
+                <div class="well">
+                    <div class='form-actions'>
+                        {!! HTML::link('admin/medias', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
+                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary btn-sm pull-right')) !!}
+                    </div>
                 </div>
-                <hr>
                 <div class='well well-small'>
                     <div class="form-group">
                         <div class="checkbox">
@@ -54,14 +54,6 @@
                         </ul>
                     </div>
                 </div>
-                <div class="form-group">
-                    {!! Form::label('sku', 'SKU') !!}
-                    {!! Form::text('sku', $media->sku, array('class' => 'form-control')) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::label('tags', 'Tags (separated by comma)') !!}
-                    {!! Form::text('tags', $tagString, array('class' => 'form-control')) !!}
-                </div>
                 <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
@@ -74,69 +66,97 @@
             </div>
 
             <div class="col-md-9 col-md-pull-3">
-                <ul class="nav nav-tabs" id="lang-selector">
-                    @foreach(\Config::get('redminportal::translation') as $translation)
-                    <li><a href="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
-                    @endforeach
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="lang-en">
-                        <div class="form-group">
-                            {!! Form::label('name', 'Title') !!}
-                            {!! Form::text('name', $media->name, array('class' => 'form-control')) !!}
-                        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.edit_media') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="nav nav-tabs" id="lang-selector">
+                            @foreach(\Config::get('redminportal::translation') as $translation)
+                            <li><a href="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
+                            @endforeach
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="lang-en">
+                                <div class="form-group">
+                                    {!! Form::label('name', 'Title') !!}
+                                    {!! Form::text('name', $media->name, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('short_description', 'Summary') !!}
-                            {!! Form::text('short_description', $media->short_description, array('class' => 'form-control')) !!}
-                        </div>
+                                <div class="form-group">
+                                    {!! Form::label('short_description', 'Summary') !!}
+                                    {!! Form::text('short_description', $media->short_description, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('long_description', 'Description') !!}
-                            {!! Form::textarea('long_description', $media->long_description, array('class' => 'form-control')) !!}
+                                <div class="form-group">
+                                    {!! Form::label('long_description', 'Description') !!}
+                                    {!! Form::textarea('long_description', $media->long_description, array('class' => 'form-control')) !!}
+                                </div>
+                            </div>
+                            @foreach(\Config::get('redminportal::translation') as $translation)
+                                @if($translation['lang'] != 'en')
+                                <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
+                                    <div class="form-group">
+                                        {!! Form::label($translation['lang'] . '_name', 'Title') !!}
+                                        {!! Form::text($translation['lang'] . '_name', $media_cn->name, array('class' => 'form-control')) !!}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {!! Form::label($translation['lang'] . '_short_description', 'Summary') !!}
+                                        {!! Form::text($translation['lang'] . '_short_description', $media_cn->short_description, array('class' => 'form-control')) !!}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {!! Form::label($translation['lang'] . '_long_description', 'Description') !!}
+                                        {!! Form::textarea($translation['lang'] . '_long_description', $media_cn->long_description, array('class' => 'form-control')) !!}
+                                    </div>
+                                </div>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
-                    @foreach(\Config::get('redminportal::translation') as $translation)
-                        @if($translation['lang'] != 'en')
-                        <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
-                            <div class="form-group">
-                                {!! Form::label($translation['lang'] . '_name', 'Title') !!}
-                                {!! Form::text($translation['lang'] . '_name', $media_cn->name, array('class' => 'form-control')) !!}
-                            </div>
-
-                            <div class="form-group">
-                                {!! Form::label($translation['lang'] . '_short_description', 'Summary') !!}
-                                {!! Form::text($translation['lang'] . '_short_description', $media_cn->short_description, array('class' => 'form-control')) !!}
-                            </div>
-
-                            <div class="form-group">
-                                {!! Form::label($translation['lang'] . '_long_description', 'Description') !!}
-                                {!! Form::textarea($translation['lang'] . '_long_description', $media_cn->long_description, array('class' => 'form-control')) !!}
-                            </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.media_properties') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            {!! Form::label('sku', 'SKU') !!}
+                            {!! Form::text('sku', $media->sku, array('class' => 'form-control')) !!}
                         </div>
-                        @endif
-                    @endforeach
+                        <div class="form-group">
+                            {!! Form::label('tags', 'Tags (separated by comma)') !!}
+                            {!! Form::text('tags', $tagString, array('class' => 'form-control')) !!}
+                        </div>
+                    </div>
                 </div>
                 @if(count($media->images) > 0)
-                <h4>Uploaded Photos</h4>
-                <div class='row'>
-                    @foreach( $media->images as $image )
-                    <div class='col-md-3'>
-                        {!! HTML::image($imagine->getUrl($image->path), $media->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
-                        <br><br>
-                        <div class="btn-group btn-group-sm">
-                            <a href="{{ URL::to('admin/medias/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </a>
-                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
-                                <span class="glyphicon glyphicon-link"></span>
-                            </a>
-                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                            </a>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class='row'>
+                            @foreach( $media->images as $image )
+                            <div class='col-md-3'>
+                                {!! HTML::image($imagine->getUrl($image->path), $media->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                                <br><br>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ URL::to('admin/medias/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
-                    @endforeach
                 </div>
                 @endif
             </div>

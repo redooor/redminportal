@@ -1,26 +1,43 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    <pre id="console" style="display:none;"></pre>
-    <br />
-    
-    <div id="container">
-        <a class="btn btn-default pull-right" href="{{ URL::to('admin/medias') }}">Back</a>
-        <a id="browse" class="btn btn-default" href="javascript:;">Browse...</a>
-        <a id="start-upload" class="btn btn-primary" href="javascript:;" data-src="{{ URL::to('admin/medias/upload') . '/' . $media->id }}">Start Upload</a>
-        <input type="hidden" id="_token" name="_token" value="{{ \Crypt::encrypt(csrf_token()) }}"> 
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li><a href="{{ URL::to('admin/medias') }}">{{ Lang::get('redminportal::menus.medias') }}</a></li>
+                <li><a href="{{ URL::to('admin/medias/edit/' . $media->id) }}">{{ Lang::get('redminportal::forms.edit') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::forms.upload') }}</li>
+            </ol>
+        </div>
     </div>
 
-    <br />
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ $media->name }}</h3>
+    <pre id="console" style="display:none;"></pre>
+    
+    <div class='row'>
+        <div class="col-md-3 col-md-push-9">
+            <div class="well">
+                <div class='form-actions'>
+                    {!! HTML::link('admin/medias', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
+                    <a id="start-upload" class="btn btn-primary btn-sm pull-right" href="javascript:;" data-src="{{ URL::to('admin/medias/upload') . '/' . $media->id }}">{{ Lang::get('redminportal::buttons.upload') }}</a>
+                </div>
+            </div>
+            <input type="hidden" id="_token" name="_token" value="{{ \Crypt::encrypt(csrf_token()) }}">
         </div>
-        <div class="panel-body">
-            <ul id="filelist"></ul>
-        </div>
-        <div class="panel-footer">
-            Existing file: <strong>{{ $media->path }}</strong> [{{ $media->mimetype }}]
+        <div class="col-md-9 col-md-pull-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{ $media->name }}</h4>
+                </div>
+                <div class="panel-body">
+                    <ul id="filelist"></ul>
+                    <br>
+                    <a id="browse" class="btn btn-primary btn-sm" href="javascript:;">Browse...</a>
+                </div>
+                <div class="panel-footer">
+                    Existing file: <strong>{{ $media->path }}</strong> [{{ $media->mimetype }}]
+                </div>
+            </div>
         </div>
     </div>
 @stop

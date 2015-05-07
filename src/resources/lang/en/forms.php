@@ -48,4 +48,8 @@ return array(
     'create_product' => 'Create Product',
     'edit_product' => 'Edit Product',
     'product_properties' => 'Product Properties',
+    'create_media' => 'Create Media',
+    'edit_media' => 'Edit Media',
+    'media_properties' => 'Media Properties',
+    'upload' => 'Upload',
 );

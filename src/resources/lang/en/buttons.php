@@ -8,4 +8,5 @@ return array(
     'save' => 'Save',
     'get_durations' => 'Get Durations',
     'export_csv' => 'Export CSV',
+    'upload' => 'Upload',
 );
