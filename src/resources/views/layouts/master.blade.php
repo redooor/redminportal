@@ -36,7 +36,7 @@
                         <ul class="nav navbar-nav hidden-lg hidden-md hidden-sm">
                             @foreach (config('redminportal::menu') as $menu)
                                 @if(!$menu['hide'])
-                                    @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
+                                    @if(Request::is($menu['path']) or Request::is($menu['path'] . '/*')) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
                                 @endif
                             @endforeach
                         </ul>
@@ -55,7 +55,7 @@
                     <ul class="nav nav-sidebar">
                         @foreach (config('redminportal::menu') as $menu)
                             @if(!$menu['hide'])
-                                @if(Request::is($menu['path'])) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
+                                @if(Request::is($menu['path']) or Request::is($menu['path'] . '/*')) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
                             @endif
                         @endforeach
                     </ul>

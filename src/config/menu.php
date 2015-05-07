@@ -4,7 +4,7 @@ return array(
 
     array(
         'name' => 'dashboard',
-        'path' => 'admin',
+        'path' => 'admin/dashboard',
         'hide' => false
     ),
     array(

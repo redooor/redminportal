@@ -10,7 +10,10 @@ Route::controller('login', 'Redooor\Redminportal\App\Http\Controllers\LoginContr
 Route::get('logout', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getLogout');
 
 Route::group(['namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefix' => 'admin'], function () {
-    Route::get('/', 'PageController@home');
+    Route::get('/', function() {
+        return redirect('admin/dashboard');
+    });
+    Route::get('dashboard', 'PageController@home');
     Route::controller('announcements', 'AnnouncementController');
     Route::controller('categories', 'CategoryController');
     Route::controller('coupons', 'CouponController');
