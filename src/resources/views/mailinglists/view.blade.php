@@ -86,7 +86,7 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
-                    <td>{{ $mailinglist->updated_at }}</td>
+                    <td>{{ date('d-M-y', strtotime($mailinglist->updated_at)) }}</td>
                     <td class="table-actions text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">

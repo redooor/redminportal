@@ -35,4 +35,6 @@ return array(
     'edit_group' => 'Edit Group',
     'create_membership' => 'Create Membership',
     'edit_membership' => 'Edit Membership',
+    'create_mailinglist' => 'Create Mailing List',
+    'edit_mailinglist' => 'Edit Mailing List',
 );
