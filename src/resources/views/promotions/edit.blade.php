@@ -1,29 +1,29 @@
 @extends('redminportal::layouts.master')
 
 @section('content')
-    @if (isset($errors))
-        @if($errors->has())
-        <div class='alert alert-danger'>
-            We encountered the following errors:
-            <ul>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
+                <li><a href="{{ URL::to('admin/promotions') }}">{{ Lang::get('redminportal::menus.promotions') }}</a></li>
+                <li class="active">{{ Lang::get('redminportal::forms.edit') }}</li>
+            </ol>
         </div>
-        @endif
-    @endif
+    </div>
+    
+    @include('redminportal::partials.errors')
 
     {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\PromotionController@postStore', 'role' => 'form')) !!}
         {!! Form::hidden('id', $promotion->id) !!}
 
     	<div class='row'>
     	    <div class="col-md-3 col-md-push-9">
-                <div class='form-actions text-right'>
-                    {!! HTML::link('admin/promotions', 'Cancel', array('class' => 'btn btn-default')) !!}
-                    {!! Form::submit('Save Changes', array('class' => 'btn btn-primary')) !!}
+                <div class="well">
+                    <div class='form-actions'>
+                        {!! HTML::link('admin/promotions', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link'))!!}
+                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary pull-right')) !!}
+                    </div>
                 </div>
-                <hr>
                 <div class='well well-sm'>
                     <div class="form-group">
                         <div class="checkbox">
@@ -33,18 +33,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    {!! Form::label('start_date', 'Start Date') !!}
-                    <div class="input-group" id='start-date'>
-                        {!! Form::input('text', 'start_date', $start_date->format('d/m/Y'), array('class' => 'form-control datepicker', 'readonly')) !!}
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                <div class="well well-sm">
+                    <div class="form-group">
+                        {!! Form::label('start_date', 'Start Date') !!}
+                        <div class="input-group" id='start-date'>
+                            {!! Form::input('text', 'start_date', $start_date->format('d/m/Y'), array('class' => 'form-control datepicker', 'readonly')) !!}
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('end_date', 'End Date') !!}
-                    <div class="input-group" id='end-date'>
-                        {!! Form::input('text', 'end_date', $end_date->format('d/m/Y'), array('class' => 'form-control datepicker', 'readonly')) !!}
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    <div class="form-group">
+                        {!! Form::label('end_date', 'End Date') !!}
+                        <div class="input-group" id='end-date'>
+                            {!! Form::input('text', 'end_date', $end_date->format('d/m/Y'), array('class' => 'form-control datepicker', 'readonly')) !!}
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
                     </div>
                 </div>
                 <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -56,72 +58,81 @@
                 </div>
             </div>
     	    <div class="col-md-9 col-md-pull-3">
-    	        <ul class="nav nav-tabs" id="lang-selector">
-                    <li class="active"><a href="#lang-en">English</a></li>
-                    <li><a href="#lang-sc">Chinese</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="lang-en">
-                        <div class="form-group">
-                            {!! Form::label('name', 'Title') !!}
-                            {!! Form::text('name', $promotion->name, array('class' => 'form-control')) !!}
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('short_description', 'Summary') !!}
-                            {!! Form::text('short_description', $promotion->short_description, array('class' => 'form-control')) !!}
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('long_description', 'Description') !!}
-                            {!! Form::textarea('long_description', $promotion->long_description, array('class' => 'form-control')) !!}
-                        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.edit_promotion') }}</h4>
                     </div>
-                    <div class="tab-pane" id="lang-sc">
-                        <div class="form-group">
-                            {!! Form::label('cn_name', '标题') !!}
-                            {!! Form::text('cn_name', $promotion_cn->name, array('class' => 'form-control')) !!}
-                        </div>
+                    <div class="panel-body">
+                        <ul class="nav nav-tabs" id="lang-selector">
+                            <li class="active"><a href="#lang-en">English</a></li>
+                            <li><a href="#lang-sc">Chinese</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="lang-en">
+                                <div class="form-group">
+                                    {!! Form::label('name', 'Title') !!}
+                                    {!! Form::text('name', $promotion->name, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('cn_short_description', '简介') !!}
-                            {!! Form::text('cn_short_description', $promotion_cn->short_description, array('class' => 'form-control')) !!}
-                        </div>
+                                <div class="form-group">
+                                    {!! Form::label('short_description', 'Summary') !!}
+                                    {!! Form::text('short_description', $promotion->short_description, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('cn_long_description', '内容') !!}
-                            {!! Form::textarea('cn_long_description', $promotion_cn->long_description, array('class' => 'form-control')) !!}
+                                <div class="form-group">
+                                    {!! Form::label('long_description', 'Description') !!}
+                                    {!! Form::textarea('long_description', $promotion->long_description, array('class' => 'form-control')) !!}
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="lang-sc">
+                                <div class="form-group">
+                                    {!! Form::label('cn_name', '标题') !!}
+                                    {!! Form::text('cn_name', $promotion_cn->name, array('class' => 'form-control')) !!}
+                                </div>
+
+                                <div class="form-group">
+                                    {!! Form::label('cn_short_description', '简介') !!}
+                                    {!! Form::text('cn_short_description', $promotion_cn->short_description, array('class' => 'form-control')) !!}
+                                </div>
+
+                                <div class="form-group">
+                                    {!! Form::label('cn_long_description', '内容') !!}
+                                    {!! Form::textarea('cn_long_description', $promotion_cn->long_description, array('class' => 'form-control')) !!}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 @if (count($promotion->images) > 0)
-                <h4>Uploaded Photos</h4>
-                <div class='row'>
-                    @foreach ($promotion->images as $image)
-                     <div class='col-md-3'>
-                        {!! HTML::image($imagine->getUrl($image->path), $promotion->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
-                        <br><br>
-                        <div class="btn-group btn-group-sm">
-                            <a href="{{ URL::to('admin/promotions/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </a>
-                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
-                                <span class="glyphicon glyphicon-link"></span>
-                            </a>
-                            <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                            </a>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class='row'>
+                            @foreach ($promotion->images as $image)
+                             <div class='col-md-3'>
+                                {!! HTML::image($imagine->getUrl($image->path), $promotion->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                                <br><br>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ URL::to('admin/promotions/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
-                    @endforeach
                 </div>
                 @endif
             </div>
     	</div>
-
-        <hr>
-
-
     {!! Form::close() !!}
 @stop
 

@@ -43,4 +43,6 @@ return array(
     'uploaded_photos' => 'Uploaded Photos',
     'create_announcement' => 'Create Announcement',
     'edit_announcement' => 'Edit Announcement',
+    'create_promotion' => 'Create Promotion',
+    'edit_promotion' => 'Edit Promotion',
 );
