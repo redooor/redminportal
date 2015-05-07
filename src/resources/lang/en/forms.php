@@ -57,4 +57,7 @@ return array(
     'module_properties' => 'Module Properties',
     'price_list' => 'Price List',
     'medias' => 'Medias',
+    'create_category' => 'Create Category',
+    'edit_category' => 'Edit Category',
+    'category_properties' => 'Category Properties',
 );
