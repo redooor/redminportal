@@ -19,8 +19,8 @@
             <div class="col-md-3 col-md-push-9">
                 <div class="well">
                     <div class='form-actions'>
-                        {!! HTML::link('admin/announcements', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link'))!!}
-                        {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary pull-right')) !!}
+                        {!! HTML::link('admin/announcements', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
+                        {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm pull-right')) !!}
                     </div>
                 </div>
                 <div class='well well-sm'>
