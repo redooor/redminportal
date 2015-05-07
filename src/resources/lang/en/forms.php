@@ -52,4 +52,9 @@ return array(
     'edit_media' => 'Edit Media',
     'media_properties' => 'Media Properties',
     'upload' => 'Upload',
+    'create_module' => 'Create Module',
+    'edit_module' => 'Edit Module',
+    'module_properties' => 'Module Properties',
+    'price_list' => 'Price List',
+    'medias' => 'Medias',
 );
