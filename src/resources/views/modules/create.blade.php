@@ -152,7 +152,7 @@
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label for="{{ 'price_active_' . $membership->id }}">
-                                                {!! Form::checkbox('price_active_' . $membership->id, true, true, array('id' => 'price_active_' . $membership->id)) !!}
+                                                {!! Form::checkbox('price_active_' . $membership->id, 'true', false, array('id' => 'price_active_' . $membership->id)) !!}
                                             </label>
                                         </div>
                                     </div>
