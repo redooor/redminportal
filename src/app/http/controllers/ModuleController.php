@@ -108,13 +108,15 @@ class ModuleController extends Controller
                 $pricelists[] = array(
                     'id'      => $membership->id,
                     'name'    => $membership->name,
-                    'price'   => ''
+                    'price'   => '',
+                    'active'  => false
                 );
             } else {
                 $pricelists[] = array(
                     'id'      => $membership->id,
                     'name'    => $membership->name,
-                    'price'   => $pricelist->price
+                    'price'   => $pricelist->price,
+                    'active'  => $pricelist->active
                 );
             }
         }
@@ -197,10 +199,12 @@ class ModuleController extends Controller
                     $pricelist->module_id = $module->id;
                     $pricelist->membership_id = $membership->id;
                 }
-
+                
+                $price_active = (\Input::get('price_active_' . $membership->id) == '' ? false : true);
                 $price = \Input::get('price_' . $membership->id);
 
                 if (! empty($price)) {
+                    $pricelist->active = $price_active;
                     $pricelist->price = $price;
                     $pricelist->save();
                 } else {

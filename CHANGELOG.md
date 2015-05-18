@@ -24,6 +24,8 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 6. Changed UI to use [Redmaterials](http://redmaterials.redooor.com) theme.
 7. Removed Bootstrap from redminportal.css. It should be linked separately.
 8. Consistent UI across all views (issue #76).
+9. Add active column to Pricelists table (issue #78).
+10. Add UI to views for additional active column in Pricelists table (issue #78).
 
 ## Version 0.1.5
 The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.

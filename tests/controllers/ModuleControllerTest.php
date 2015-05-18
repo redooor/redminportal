@@ -86,7 +86,8 @@ class ModuleControllerTest extends BaseControllerTest
             'cn_short_description'  => 'CN short body',
             'category_id'           => 1,
             'sku'                   => 'UNIQUESKU001',
-            'price_1'               => 99.99
+            'price_1'               => 99.99,
+            'price_active_1'        => true
         );
 
         $this->call('POST', '/admin/modules/store', $input);
@@ -99,6 +100,7 @@ class ModuleControllerTest extends BaseControllerTest
         $this->assertTrue($pricelist->module_id == 1);
         $this->assertTrue($pricelist->membership_id == 1);
         $this->assertTrue($pricelist->price == 99.99);
+        $this->assertTrue($pricelist->active == true);
     }
 
     /**
@@ -116,7 +118,8 @@ class ModuleControllerTest extends BaseControllerTest
             'cn_short_description'  => 'CN short body',
             'category_id'           => 1,
             'sku'                   => 'UNIQUESKU001',
-            'price_1'               => 88.88
+            'price_1'               => 88.88,
+            'price_active_1'        => false
         );
 
         $this->call('POST', '/admin/modules/store', $input);
@@ -129,6 +132,7 @@ class ModuleControllerTest extends BaseControllerTest
         $this->assertTrue($pricelist->module_id == 1);
         $this->assertTrue($pricelist->membership_id == 1);
         $this->assertTrue($pricelist->price == 88.88);
+        $this->assertTrue($pricelist->active == false);
     }
     
     /**
@@ -160,7 +164,8 @@ class ModuleControllerTest extends BaseControllerTest
             'category_id'           => 1,
             'sku'                   => 'UNIQUESKU001',
             'price_1'               => 99.99,
-            'media_checkbox'        => array('1_1')
+            'media_checkbox'        => array('1_1'),
+            'price_active_1'        => true
         );
 
         $this->call('POST', '/admin/modules/store', $input);
@@ -174,6 +179,7 @@ class ModuleControllerTest extends BaseControllerTest
         $this->assertTrue($pricelist->module_id == 1);
         $this->assertTrue($pricelist->membership_id == 1);
         $this->assertTrue($pricelist->price == 99.99);
+        $this->assertTrue($pricelist->active == true);
 
         $modMediaMembership = ModuleMediaMembership::where('module_id', 1)
             ->where('membership_id', 1)

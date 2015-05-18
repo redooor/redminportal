@@ -136,12 +136,30 @@
                         <h4 class="panel-title">{{ Lang::get('redminportal::forms.price_list') }}</h4>
                     </div>
                     <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Membership</th>
+                                <th>Price</th>
+                                <th>Enabled</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         @foreach ($memberships as $membership)
                             <tr>
                                 <td>{{ $membership->name }}</td>
                                 <td>{!! Form::text('price_' . $membership->id, null, array('class' => 'form-control')) !!}</td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label for="{{ 'price_active_' . $membership->id }}">
+                                                {!! Form::checkbox('price_active_' . $membership->id, true, true, array('id' => 'price_active_' . $membership->id)) !!}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
+                        </tbody>
                     </table>
                 </div>
                 @endif

@@ -17,6 +17,8 @@
                 <li>Changed UI to use [Redmaterials](http://redmaterials.redooor.com) theme.</li>
                 <li>Removed Bootstrap from redminportal.css. It should be linked separately.</li>
                 <li>Consistent UI across all views (issue #76).</li>
+                <li>Add active column to Pricelists table (issue #78).</li>
+                <li>Add UI to views for additional active column in Pricelists table (issue #78).</li>
                 <li>More coming... (developing)</li>
             </ol>
             <h3>Version 0.1.5</h3>

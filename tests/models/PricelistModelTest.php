@@ -13,7 +13,8 @@ class PricelistModelTest extends BaseModelTest
         $testcase = array(
             'price' => 0,
             'module_id' => 1,
-            'membership_id' => 1
+            'membership_id' => 1,
+            'active' => true
         );
         
         parent::__construct($model, $testcase);
