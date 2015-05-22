@@ -19,5 +19,7 @@ return array(
     'purchases' => 'Purchases',
     'mailinglist' => 'Mailing List',
     'coupons' => 'Coupons',
-    'announcements' => 'Announcements'
+    'announcements' => 'Announcements',
+    'digital' => 'Digital Store',
+    'physical' => 'Physical Store'
 );

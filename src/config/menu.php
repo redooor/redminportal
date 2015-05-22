@@ -18,28 +18,8 @@ return array(
         'hide' => false
     ),
     array(
-        'name' => 'memberships',
-        'path' => 'admin/memberships',
-        'hide' => false
-    ),
-    array(
         'name' => 'categories',
         'path' => 'admin/categories',
-        'hide' => false
-    ),
-    array(
-        'name' => 'modules',
-        'path' => 'admin/modules',
-        'hide' => false
-    ),
-    array(
-        'name' => 'medias',
-        'path' => 'admin/medias',
-        'hide' => false
-    ),
-    array(
-        'name' => 'products',
-        'path' => 'admin/products',
         'hide' => false
     ),
     array(
@@ -58,11 +38,6 @@ return array(
         'hide' => false
     ),
     array(
-        'name' => 'purchases',
-        'path' => 'admin/purchases',
-        'hide' => false
-    ),
-    array(
         'name' => 'coupons',
         'path' => 'admin/coupons',
         'hide' => false
@@ -72,5 +47,44 @@ return array(
         'path' => 'admin/mailinglists',
         'hide' => false
     ),
+    array(
+        'name' => 'physical',
+        'path' => '',
+        'hide' => false,
+        'children' => array(
+            array(
+                'name' => 'products',
+                'path' => 'admin/products',
+                'hide' => false
+            )
+        )
+    ),
+    array(
+        'name' => 'digital',
+        'path' => '',
+        'hide' => false,
+        'children' => array(
+            array(
+                'name' => 'memberships',
+                'path' => 'admin/memberships',
+                'hide' => false
+            ),
 
+            array(
+                'name' => 'modules',
+                'path' => 'admin/modules',
+                'hide' => false
+            ),
+            array(
+                'name' => 'medias',
+                'path' => 'admin/medias',
+                'hide' => false
+            ),
+            array(
+                'name' => 'purchases',
+                'path' => 'admin/purchases',
+                'hide' => false
+            )
+        )
+    )
 );

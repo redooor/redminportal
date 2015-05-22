@@ -77,15 +77,66 @@ footer,
   margin-bottom: 20px;
   margin-left: -20px;
 }
-.nav-sidebar > li > a {
-  padding-right: 20px;
-  padding-left: 20px;
+.nav-sidebar ul {
+  margin-right: -21px;
+  margin-left: -20px;
 }
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
+.nav-sidebar ul li {
+  list-style: none;
+  display: block;
+}
+.nav-sidebar li span {
+  display: block;
+  padding: 10px 20px;
+}
+.nav-sidebar li a {
+  display: block;
+  padding: 10px 20px;
+}
+.nav-sidebar li a:hover,
+.nav-sidebar li a:focus {
+  color: #23527c;
+  text-decoration: none;
+  background-color: #eee;
+}
+.nav-sidebar .active a,
+.nav-sidebar .active a:hover,
+.nav-sidebar .active a:focus {
   color: #fff;
   background-color: #428bca;
+}
+.navbar-nav li span {
+  padding: 10px 1.5em;
+  line-height: 23px;
+  position: relative;
+  display: block;
+}
+.navbar-nav ul {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.navbar-nav ul li {
+  list-style: none;
+  display: block;
+}
+.navbar-nav ul li a {
+  color: #777;
+  padding: 10px 1.5em;
+  line-height: 23px;
+  position: relative;
+  display: block;
+  text-decoration: none;
+}
+.navbar-nav ul li a:hover,
+.navbar-nav ul li a:focus {
+  color: #333;
+  background-color: transparent;
+}
+.navbar-nav ul li span {
+  padding: 10px 1.5em;
+  line-height: 23px;
+  position: relative;
+  display: block;
 }
 /* Block componenets */
 .block-header {

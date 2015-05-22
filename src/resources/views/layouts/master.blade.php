@@ -33,13 +33,7 @@
                         </a>
                     </div>
                     <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav hidden-lg hidden-md hidden-sm">
-                            @foreach (config('redminportal::menu') as $menu)
-                                @if(!$menu['hide'])
-                                    @if(Request::is($menu['path']) or Request::is($menu['path'] . '/*')) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
-                                @endif
-                            @endforeach
-                        </ul>
+                        {{ \Redooor\Redminportal\App\Helpers\Rhelper::printMenu(config('redminportal::menu'), 'nav navbar-nav hidden-lg hidden-md hidden-sm') }}
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{{ URL::to('logout') }}">{{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>
@@ -52,13 +46,7 @@
         <div id="main">
             <div class="container-fluid">
                 <div class="col-sm-3 col-md-2 sidebar">
-                    <ul class="nav nav-sidebar">
-                        @foreach (config('redminportal::menu') as $menu)
-                            @if(!$menu['hide'])
-                                @if(Request::is($menu['path']) or Request::is($menu['path'] . '/*')) <li class="active"> @else <li> @endif <a href="{{ URL::to($menu['path']) }}">{{ Lang::get('redminportal::menus.' . $menu['name']) }}</a></li>
-                            @endif
-                        @endforeach
-                    </ul>
+                    {{ \Redooor\Redminportal\App\Helpers\Rhelper::printMenu(config('redminportal::menu'), 'nav nav-sidebar') }}
                 </div>
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                     @yield('content')
