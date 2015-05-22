@@ -44,7 +44,7 @@
             @if (count($discounts) > 0)
                 @foreach ($discounts as $discount)
                     <tr>
-                        <td>{{ $discount->discountable->module->name }} ({{ $discount->discountable->membership->name }})</td>
+                        <td>{{ $discount->discountable->module->name or 'Deleted' }} ({{ $discount->discountable->membership->name or 'Deleted' }})</td>
                         <td>
                             {{ $discount->code }}
                         </td>
