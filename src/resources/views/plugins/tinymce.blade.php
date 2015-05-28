@@ -1,8 +1,9 @@
-<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+<script src="{{ URL::to('vendor/redooor/redminportal/js/tinymce/tinymce.min.js') }}"></script>
 <script>
     !function ($) {
         $(function(){
             tinymce.init({
+                skin: 'redooor',
                 selector:'textarea',
                 menubar:false,
                 plugins: "link image code",
