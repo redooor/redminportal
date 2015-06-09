@@ -88,17 +88,29 @@
                         <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
                             <div class="form-group">
                                 {{ Form::label($translation['lang'] . '_name', 'Title') }}
+                                @if ($translated)
                                 {{ Form::text($translation['lang'] . '_name', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->name : ''), array('class' => 'form-control')) }}
+                                @else
+                                {{ Form::text($translation['lang'] . '_name', null, array('class' => 'form-control')) }}
+                                @endif
                             </div>
 
                             <div class="form-group">
                                 {{ Form::label($translation['lang'] . '_short_description', 'Summary') }}
+                                @if ($translated)
                                 {{ Form::text($translation['lang'] . '_short_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->short_description : ''), array('class' => 'form-control')) }}
+                                @else
+                                {{ Form::text($translation['lang'] . '_short_description', null, array('class' => 'form-control')) }}
+                                @endif
                             </div>
 
                             <div class="form-group">
                                 {{ Form::label($translation['lang'] . '_long_description', 'Description') }}
+                                @if ($translated)
                                 {{ Form::textarea($translation['lang'] . '_long_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->long_description : ''), array('class' => 'form-control')) }}
+                                @else
+                                {{ Form::textarea($translation['lang'] . '_long_description', null, array('class' => 'form-control')) }}
+                                @endif
                             </div>
                         </div>
                         @endif
@@ -139,6 +151,11 @@
                     } else {
                         // Initialize No Parent
                         $('#parent_id').val(0);
+                        $('.redooor-hierarchy a').each(function() {
+                            if ($(this).attr('href') == '0') {
+                                $(this).addClass('active');
+                            }
+                        });
                     }
                 }
                 checkCategory();
