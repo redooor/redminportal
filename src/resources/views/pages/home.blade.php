@@ -22,7 +22,12 @@
                         <li>Add active column to Pricelists table (issue #78).</li>
                         <li>Add UI to views for additional active column in Pricelists table (issue #78).</li>
                         <li>Rearrange menu to split Physical product store and Digital product store (issue #52).</li>
+                        <li>Promotions, Products and Portfolios now allow translation (issue #9).</li>
                         <li>More coming... (developing)</li>
+                    </ol>
+                    <h4>Bug fixes:</h4>
+                    <ol>
+                        <li>Translation to support any language (issue #83).</li>
                     </ol>
                     <h3>Version 0.1.5</h3>
                     <p>Focus on fixing bugs and cleaning up code. Improve assets management via Grunt and Bower. Add Coupon module.</p>

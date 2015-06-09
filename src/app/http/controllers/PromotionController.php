@@ -36,18 +36,14 @@ class PromotionController extends Controller
         }
         
         if (empty($promotion->options)) {
-            $promotion_cn = (object) array(
-                'name'                  => $promotion->name,
-                'short_description'     => $promotion->short_description,
-                'long_description'      => $promotion->long_description
-            );
+            $translated = null;
         } else {
-            $promotion_cn = json_decode($promotion->options);
+            $translated = json_decode($promotion->options);
         }
         
         return view('redminportal::promotions/edit')
             ->with('promotion', $promotion)
-            ->with('promotion_cn', $promotion_cn)
+            ->with('translated', $translated)
             ->with('start_date', new DateTime($promotion->start_date))
             ->with('end_date', new DateTime($promotion->end_date))
             ->with('imagine', new RImage);
@@ -75,15 +71,19 @@ class PromotionController extends Controller
             $image              = Input::file('image');
             $active             = (Input::get('active') == '' ? false : true);
             
-            $cn_name               = Input::get('cn_name');
-            $cn_short_description  = Input::get('cn_short_description');
-            $cn_long_description   = Input::get('cn_long_description');
-            
-            $options = array(
-                'name'                  => $cn_name,
-                'short_description'     => $cn_short_description,
-                'long_description'      => $cn_long_description
-            );
+            $options = array();
+            $translations       = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+                $options[$lang] = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+            }
             
             $start_date = DateTime::createFromFormat('d/m/Y', Input::get('start_date'));
             $end_date   = DateTime::createFromFormat('d/m/Y', Input::get('end_date'));

@@ -82,7 +82,7 @@
 
                                 <div class="form-group">
                                     {!! Form::label('long_description', 'Description') !!}
-                                    {!! Form::textarea('long_description', null, array('class' => 'form-control')) !!}
+                                    {!! Form::textarea('long_description', null, array('class' => 'form-control', 'style' => 'height:200px')) !!}
                                 </div>
                             </div>
                             @foreach(\Config::get('redminportal::translation') as $translation)
@@ -100,7 +100,7 @@
 
                                     <div class="form-group">
                                         {!! Form::label($translation['lang'] . '_long_description', 'Description') !!}
-                                        {!! Form::textarea($translation['lang'] . '_long_description', null, array('class' => 'form-control')) !!}
+                                        {!! Form::textarea($translation['lang'] . '_long_description', null, array('class' => 'form-control', 'style' => 'height:200px')) !!}
                                     </div>
                                 </div>
                                 @endif

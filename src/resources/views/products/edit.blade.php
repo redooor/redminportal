@@ -72,8 +72,9 @@
                     </div>
                     <div class="panel-body">
                         <ul class="nav nav-tabs" id="lang-selector">
-                            <li class="active"><a href="#lang-en">English</a></li>
-                            <li><a href="#lang-sc">中文</a></li>
+                           @foreach(\Config::get('redminportal::translation') as $translation)
+                           <li><a href="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
+                           @endforeach
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="lang-en">
@@ -89,25 +90,41 @@
 
                                 <div class="form-group">
                                     {!! Form::label('long_description', 'Description') !!}
-                                    {!! Form::textarea('long_description', $product->long_description, array('class' => 'form-control')) !!}
+                                    {!! Form::textarea('long_description', $product->long_description, array('class' => 'form-control', 'style' => 'height:200px')) !!}
                                 </div>
                             </div>
-                            <div class="tab-pane" id="lang-sc">
-                                <div class="form-group">
-                                    {!! Form::label('cn_name', '标题') !!}
-                                    {!! Form::text('cn_name', $product_cn->name, array('class' => 'form-control')) !!}
-                                </div>
+                            @foreach(\Config::get('redminportal::translation') as $translation)
+                                @if($translation['lang'] != 'en')
+                                <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
+                                    <div class="form-group">
+                                        {!! Form::label($translation['lang'] . '_name', 'Title') !!}
+                                        @if ($translated)
+                                        {!! Form::text($translation['lang'] . '_name', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->name : ''), array('class' => 'form-control')) !!}
+                                        @else
+                                        {!! Form::text($translation['lang'] . '_name', null, array('class' => 'form-control')) !!}
+                                        @endif
+                                    </div>
 
-                                <div class="form-group">
-                                    {!! Form::label('cn_short_description', '简介') !!}
-                                    {!! Form::text('cn_short_description', $product_cn->short_description, array('class' => 'form-control')) !!}
-                                </div>
+                                    <div class="form-group">
+                                        {!! Form::label($translation['lang'] . '_short_description', 'Summary') !!}
+                                        @if ($translated)
+                                        {!! Form::text($translation['lang'] . '_short_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->short_description : ''), array('class' => 'form-control')) !!}
+                                        @else
+                                        {!! Form::text($translation['lang'] . '_short_description', null, array('class' => 'form-control')) !!}
+                                        @endif
+                                    </div>
 
-                                <div class="form-group">
-                                    {!! Form::label('cn_long_description', '内容') !!}
-                                    {!! Form::textarea('cn_long_description', $product_cn->long_description, array('class' => 'form-control')) !!}
+                                    <div class="form-group">
+                                        {!! Form::label($translation['lang'] . '_long_description', 'Description') !!}
+                                        @if ($translated)
+                                        {!! Form::textarea($translation['lang'] . '_long_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->long_description : ''), array('class' => 'form-control', 'style' => 'height:200px')) !!}
+                                        @else
+                                        {!! Form::textarea($translation['lang'] . '_long_description', null, array('class' => 'form-control', 'style' => 'height:200px')) !!}
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -171,6 +188,7 @@
     <script>
         !function ($) {
             $(function(){
+                $('#lang-selector li').first().addClass('active');
                 $('#lang-selector a').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');

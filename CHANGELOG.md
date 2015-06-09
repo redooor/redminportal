@@ -27,6 +27,10 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 9. Add active column to Pricelists table (issue #78).
 10. Add UI to views for additional active column in Pricelists table (issue #78).
 11. Rearrange menu to split Physical product store and Digital product store (issue #52).
+12. Promotions, Products and Portfolios now allow translation (issue #9).
+
+### Bug fixes:
+1. Translation to support any language (issue #83).
 
 ## Version 0.1.5
 The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.
