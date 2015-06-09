@@ -53,18 +53,14 @@ class ProductController extends BaseController
         }
 
         if (empty($product->options)) {
-            $product_cn = (object) array(
-                'name'                  => $product->name,
-                'short_description'     => $product->short_description,
-                'long_description'      => $product->long_description
-            );
+            $translated = null;
         } else {
-            $product_cn = json_decode($product->options);
+            $translated = json_decode($product->options);
         }
 
         return View::make('redminportal::products/edit')
             ->with('product', $product)
-            ->with('product_cn', $product_cn)
+            ->with('translated', $translated)
             ->with('imageUrl', 'assets/img/products/')
             ->with('categories', $categories)
             ->with('tagString', $tagString);
@@ -101,15 +97,19 @@ class ProductController extends BaseController
             $category_id        = Input::get('category_id');
             $tags               = Input::get('tags');
 
-            $cn_name               = Input::get('cn_name');
-            $cn_short_description  = Input::get('cn_short_description');
-            $cn_long_description   = Input::get('cn_long_description');
-
-            $options = array(
-                'name'                  => $cn_name,
-                'short_description'     => $cn_short_description,
-                'long_description'      => $cn_long_description
-            );
+            $options = array();
+            $translations       = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+                $options[$lang] = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+            }
 
             $product = (isset($sid) ? Product::find($sid) : new Product);
             

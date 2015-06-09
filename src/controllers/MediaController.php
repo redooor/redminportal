@@ -48,18 +48,14 @@ class MediaController extends BaseController
         }
 
         if (empty($media->options)) {
-            $media_cn = (object) array(
-                'name'                  => $media->name,
-                'short_description'     => $media->short_description,
-                'long_description'      => $media->long_description
-            );
+            $translated = null;
         } else {
-            $media_cn = json_decode($media->options);
+            $translated = json_decode($media->options);
         }
 
         return \View::make('redminportal::medias/edit')
             ->with('media', $media)
-            ->with('media_cn', $media_cn)
+            ->with('translated', $translated)
             ->with('imageUrl', 'assets/img/medias/')
             ->with('categories', $categories)
             ->with('tagString', $tagString);
@@ -93,16 +89,20 @@ class MediaController extends BaseController
             $active             = (\Input::get('active') == '' ? false : true);
             $category_id        = \Input::get('category_id');
             $tags               = \Input::get('tags');
-
-            $cn_name               = \Input::get('cn_name');
-            $cn_short_description  = \Input::get('cn_short_description');
-            $cn_long_description   = \Input::get('cn_long_description');
-
-            $options = array(
-                'name'                  => $cn_name,
-                'short_description'     => $cn_short_description,
-                'long_description'      => $cn_long_description
-            );
+            
+            $options = array();
+            $translations       = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+                $options[$lang] = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+            }
 
             $media = (isset($sid) ? Media::find($sid) : new Media);
             

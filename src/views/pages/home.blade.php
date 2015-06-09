@@ -8,14 +8,19 @@
             
             <h3>Under Development, Version 0.1.6 (latest v0.1 branch)</h3>
             <p>Minor enhancement and bug fixes.</p>
+            <h4>Important:</h4>
+            <p>If you're upgrading from &lt;= v0.1.5, please refer to the Upgrade Guide in README.md.</p>
+            <p>The translation enhancement in Category, Module, Media, Product, Promotion and Portfolio introduces a different way of storing the data. Translation data will be lost when you upgrade to v0.1.6.</p>
             <h4>Enhancements:</h4>
             <ol>
                 <li>Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)</li>
                 <li>Added UI for "active" column for module create and edit. (issue #78)</li>
+                <li>Promotions, Products and Portfolios now allow translation title, summary and description. (issue #84)</li>
             </ol>
             <h4>Bug fixes:</h4>
             <ol>
                 <li>Fixed missing columns in coupon_user table.</li>
+                <li>Translation only support Chinese cn now. (issue #82)</li>
             </ol>
             <h3>Version 0.1.5</h3>
             <p>Focus on fixing bugs and cleaning up code. Improve assets management via Grunt and Bower. Add Coupon module.</p>

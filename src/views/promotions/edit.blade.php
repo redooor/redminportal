@@ -55,9 +55,10 @@
             </div>
     	    <div class="col-md-9 col-md-pull-3">
     	        <ul class="nav nav-tabs" id="lang-selector">
-                    <li class="active"><a href="#lang-en">English</a></li>
-                    <li><a href="#lang-sc">Chinese</a></li>
-                </ul>
+                   @foreach(\Config::get('redminportal::translation') as $translation)
+                   <li><a href="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
+                   @endforeach
+               </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="lang-en">
                         <div class="form-group">
@@ -75,22 +76,26 @@
                             {{ Form::textarea('long_description', $promotion->long_description, array('class' => 'form-control')) }}
                         </div>
                     </div>
-                    <div class="tab-pane" id="lang-sc">
-                        <div class="form-group">
-                            {{ Form::label('cn_name', '标题') }}
-                            {{ Form::text('cn_name', $promotion_cn->name, array('class' => 'form-control')) }}
-                        </div>
+                    @foreach(\Config::get('redminportal::translation') as $translation)
+                        @if($translation['lang'] != 'en')
+                        <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
+                            <div class="form-group">
+                                {{ Form::label($translation['lang'] . '_name', 'Title') }}
+                                {{ Form::text($translation['lang'] . '_name', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->name : ''), array('class' => 'form-control')) }}
+                            </div>
 
-                        <div class="form-group">
-                            {{ Form::label('cn_short_description', '简介') }}
-                            {{ Form::text('cn_short_description', $promotion_cn->short_description, array('class' => 'form-control')) }}
-                        </div>
+                            <div class="form-group">
+                                {{ Form::label($translation['lang'] . '_short_description', 'Summary') }}
+                                {{ Form::text($translation['lang'] . '_short_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->short_description : ''), array('class' => 'form-control')) }}
+                            </div>
 
-                        <div class="form-group">
-                            {{ Form::label('cn_long_description', '内容') }}
-                            {{ Form::textarea('cn_long_description', $promotion_cn->long_description, array('class' => 'form-control')) }}
+                            <div class="form-group">
+                                {{ Form::label($translation['lang'] . '_long_description', 'Description') }}
+                                {{ Form::textarea($translation['lang'] . '_long_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->long_description : ''), array('class' => 'form-control')) }}
+                            </div>
                         </div>
-                    </div>
+                        @endif
+                    @endforeach
                 </div>
                 <h4>Uploaded Photos</h4>
                 <div class='row'>
@@ -124,6 +129,7 @@
                     $( "#start_date" ).datepicker( "show" );
                 });
 
+                $('#lang-selector li').first().addClass('active');
                 $('#lang-selector a').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');

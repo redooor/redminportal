@@ -46,20 +46,16 @@ class CategoryController extends BaseController
         }
 
         if (empty($category->options)) {
-            $category_cn = (object) array(
-                'name'                  => $category->name,
-                'short_description'     => $category->short_description,
-                'long_description'      => $category->long_description
-            );
+            $translated = null;
         } else {
-            $category_cn = json_decode($category->options);
+            $translated = json_decode($category->options);
         }
 
         $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
 
         return \View::make('redminportal::categories/edit')
             ->with('category', $category)
-            ->with('category_cn', $category_cn)
+            ->with('translated', $translated)
             ->with('imageUrl', 'assets/img/categories/')
             ->with('categories', $categories);
     }
@@ -88,16 +84,20 @@ class CategoryController extends BaseController
             $active             = (\Input::get('active') == '' ? false : true);
             $order              = \Input::get('order');
             $parent_id          = \Input::get('parent_id');
-
-            $cn_name               = \Input::get('cn_name');
-            $cn_short_description  = \Input::get('cn_short_description');
-            $cn_long_description   = \Input::get('cn_long_description');
-
-            $options = array(
-                'name'                  => $cn_name,
-                'short_description'     => $cn_short_description,
-                'long_description'      => $cn_long_description
-            );
+            
+            $options = array();
+            $translations       = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+                $options[$lang] = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+            }
             
             $category = (isset($sid) ? Category::find($sid) : new Category);
             

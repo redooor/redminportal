@@ -73,13 +73,9 @@ class ModuleController extends BaseController
         }
 
         if (empty($module->options)) {
-            $module_cn = (object) array(
-                'name'                  => $module->name,
-                'short_description'     => $module->short_description,
-                'long_description'      => $module->long_description
-            );
+            $translated = null;
         } else {
-            $module_cn = json_decode($module->options);
+            $translated = json_decode($module->options);
         }
 
         $pricelists = array();
@@ -106,7 +102,7 @@ class ModuleController extends BaseController
 
         return \View::make('redminportal::modules/edit')
             ->with('module', $module)
-            ->with('module_cn', $module_cn)
+            ->with('translated', $translated)
             ->with('imageUrl', 'assets/img/modules/')
             ->with('categories', $categories)
             ->with('tagString', $tagString)
@@ -138,16 +134,20 @@ class ModuleController extends BaseController
             $active             = (\Input::get('active') == '' ? false : true);
             $category_id        = \Input::get('category_id');
             $tags               = \Input::get('tags');
-
-            $cn_name               = \Input::get('cn_name');
-            $cn_short_description  = \Input::get('cn_short_description');
-            $cn_long_description   = \Input::get('cn_long_description');
-
-            $options = array(
-                'name'                  => $cn_name,
-                'short_description'     => $cn_short_description,
-                'long_description'      => $cn_long_description
-            );
+            
+            $options = array();
+            $translations       = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+                $options[$lang] = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+            }
 
             $module = (isset($sid) ? Module::find($sid) : new Module);
             

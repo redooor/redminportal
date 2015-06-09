@@ -35,18 +35,14 @@ class PortfolioController extends BaseController
         $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
 
         if (empty($portfolio->options)) {
-            $portfolio_cn = (object) array(
-                'name'                  => $portfolio->name,
-                'short_description'     => $portfolio->short_description,
-                'long_description'      => $portfolio->long_description
-            );
+            $translated = null;
         } else {
-            $portfolio_cn = json_decode($portfolio->options);
+            $translated = json_decode($portfolio->options);
         }
 
         return \View::make('redminportal::portfolios/edit')
             ->with('portfolio', $portfolio)
-            ->with('portfolio_cn', $portfolio_cn)
+            ->with('translated', $translated)
             ->with('imagine', new Helper\Image())
             ->with('categories', $categories);
     }
@@ -75,15 +71,19 @@ class PortfolioController extends BaseController
             $active             = (\Input::get('active') == '' ? false : true);
             $category_id        = \Input::get('category_id');
 
-            $cn_name               = \Input::get('cn_name');
-            $cn_short_description  = \Input::get('cn_short_description');
-            $cn_long_description   = \Input::get('cn_long_description');
-
-            $options = array(
-                'name'                  => $cn_name,
-                'short_description'     => $cn_short_description,
-                'long_description'      => $cn_long_description
-            );
+            $options = array();
+            $translations       = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+                $options[$lang] = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+            }
 
             $portfolio = (isset($sid) ? Portfolio::find($sid) : new Portfolio);
             

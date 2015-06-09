@@ -187,12 +187,16 @@ Minor enhancement and bug fixes.
 ### Important:
 If you're upgrading from <= v0.1.5, please refer to the [Upgrade Guide](#upgrade-guide).
 
+The translation enhancement in Category, Module, Media, Product, Promotion and Portfolio introduces a different way of storing the data. Translation data will be lost when you upgrade to v0.1.6.
+
 ### Enhancements:
 1. Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)
 2. Added UI for "active" column for module create and edit. (issue #78)
+3. Promotions, Products and Portfolios now allow translation title, summary and description. (issue #84)
 
 ### Bug fixes:
 1. Fixed missing columns in coupon_user table.
+2. Translation only support Chinese cn now. (issue #82)
 
 ## Version 0.1.5
 The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.
@@ -334,6 +338,27 @@ For users, run:
 For contributors, run:
 
     ?> php artisan migrate --bench=redooor/redminportal
+
+### Translation options
+
+The translation options in Category, Module, Media, Product, Promotion and Portfolio have been changed from:
+
+    $translated = json_decode($product->options);
+    $translated->name, $translated->short_description, $translated->long_description
+
+to (example cn as the language code)
+
+    $translated = json_decode($product->options);
+    $translated->cn->name, $translated->cn->short_description, $translated->cn->long_description
+
+You can add more languages in the translation config file at path
+
+    vendor\redooor\redminportal\src\config\translation.php
+
+or if you have published it to your root
+
+    root\app\config\packages\redooor\redminportal\translation.php
+    
 
 ## Upgrading to v0.1.5 from <= v0.1.4
 

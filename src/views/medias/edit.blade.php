@@ -99,17 +99,17 @@
                         <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
                             <div class="form-group">
                                 {{ Form::label($translation['lang'] . '_name', 'Title') }}
-                                {{ Form::text($translation['lang'] . '_name', $media_cn->name, array('class' => 'form-control')) }}
+                                {{ Form::text($translation['lang'] . '_name', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->name : ''), array('class' => 'form-control')) }}
                             </div>
 
                             <div class="form-group">
                                 {{ Form::label($translation['lang'] . '_short_description', 'Summary') }}
-                                {{ Form::text($translation['lang'] . '_short_description', $media_cn->short_description, array('class' => 'form-control')) }}
+                                {{ Form::text($translation['lang'] . '_short_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->short_description : ''), array('class' => 'form-control')) }}
                             </div>
 
                             <div class="form-group">
                                 {{ Form::label($translation['lang'] . '_long_description', 'Description') }}
-                                {{ Form::textarea($translation['lang'] . '_long_description', $media_cn->long_description, array('class' => 'form-control')) }}
+                                {{ Form::textarea($translation['lang'] . '_long_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->long_description : ''), array('class' => 'form-control')) }}
                             </div>
                         </div>
                         @endif
