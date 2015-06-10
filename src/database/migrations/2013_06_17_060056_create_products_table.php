@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration {
                 $table->string('sku', 255)->unique();
                 $table->string('short_description', 255);
                 $table->text('long_description')->nullable();
-                $table->float('price')->default(0);
+                $table->decimal('price', 8, 2)->default(0);
                 $table->boolean('featured')->default(FALSE);
                 $table->boolean('active')->default(TRUE);
                 $table->text('options')->nullable();
