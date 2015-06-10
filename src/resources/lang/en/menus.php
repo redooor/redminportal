@@ -20,6 +20,9 @@ return array(
     'mailinglist' => 'Mailing List',
     'coupons' => 'Coupons',
     'announcements' => 'Announcements',
-    'digital' => 'Digital Store',
-    'physical' => 'Physical Store'
+    'store' => 'Store',
+    'digital' => 'Digital',
+    'physical' => 'Physical',
+    'contents_management' => 'Contents Management',
+    'users_management' => 'Users Management'
 );
