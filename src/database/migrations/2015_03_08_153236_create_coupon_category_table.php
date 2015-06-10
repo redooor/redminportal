@@ -12,14 +12,16 @@ class CreateCouponCategoryTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('coupon_category', function(Blueprint $table)
-		{
-			$table->increments('id');
-            $table->integer('coupon_id')->unsigned();
-            $table->integer('category_id')->unsigned();
-            $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-		});
+        if (! Schema::hasTable('coupon_category')) {
+            Schema::create('coupon_category', function(Blueprint $table)
+            {
+                $table->increments('id');
+                $table->integer('coupon_id')->unsigned();
+                $table->integer('category_id')->unsigned();
+                $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('cascade');
+                $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            });
+        }
 	}
 
 	/**
@@ -29,7 +31,7 @@ class CreateCouponCategoryTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('coupon_category');
+		Schema::dropIfExists('coupon_category');
 	}
 
 }

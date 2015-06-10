@@ -12,19 +12,21 @@ class CreateUserPricelistsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_pricelists', function(Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('pricelist_id')->unsigned();
-            $table->foreign('pricelist_id')->references('id')->on('pricelists');
-            $table->unique(array('user_id', 'pricelist_id'));
-            $table->decimal('paid', 8, 2)->default(0);
-            $table->string('transaction_id')->default('Unknown')->nullable();
-            $table->string('payment_status')->default('Completed')->nullable();
-            $table->text('options')->nullable();
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('user_pricelists')) {
+            Schema::create('user_pricelists', function(Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id')->unsigned();
+                $table->foreign('user_id')->references('id')->on('users');
+                $table->integer('pricelist_id')->unsigned();
+                $table->foreign('pricelist_id')->references('id')->on('pricelists');
+                $table->unique(array('user_id', 'pricelist_id'));
+                $table->decimal('paid', 8, 2)->default(0);
+                $table->string('transaction_id')->default('Unknown')->nullable();
+                $table->string('payment_status')->default('Completed')->nullable();
+                $table->text('options')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -34,6 +36,6 @@ class CreateUserPricelistsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('user_pricelists');
+        Schema::dropIfExists('user_pricelists');
     }
 }

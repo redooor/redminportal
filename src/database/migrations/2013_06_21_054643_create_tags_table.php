@@ -11,11 +11,13 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function($table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('tags')) {
+            Schema::create('tags', function($table) {
+                $table->increments('id');
+                $table->string('name');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -25,6 +27,6 @@ class CreateTagsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('tags');
+        Schema::dropIfExists('tags');
     }
 }

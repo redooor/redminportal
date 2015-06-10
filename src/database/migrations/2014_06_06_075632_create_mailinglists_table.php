@@ -12,14 +12,16 @@ class CreateMailinglistsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mailinglists', function(Blueprint $table) {
-            $table->increments('id');
-            $table->string('email', 255)->unique();
-            $table->string('first_name', 255);
-            $table->string('last_name', 255);
-            $table->boolean('active')->default(true);
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('mailinglists')) {
+            Schema::create('mailinglists', function(Blueprint $table) {
+                $table->increments('id');
+                $table->string('email', 255)->unique();
+                $table->string('first_name', 255);
+                $table->string('last_name', 255);
+                $table->boolean('active')->default(true);
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -29,6 +31,6 @@ class CreateMailinglistsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('mailinglists');
+        Schema::dropIfExists('mailinglists');
     }
 }

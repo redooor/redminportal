@@ -12,14 +12,16 @@ class CreateCouponPricelistTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('coupon_pricelist', function(Blueprint $table)
-		{
-			$table->increments('id');
-            $table->integer('coupon_id')->unsigned();
-            $table->integer('pricelist_id')->unsigned();
-            $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('cascade');
-            $table->foreign('pricelist_id')->references('id')->on('pricelists')->onDelete('cascade');
-		});
+        if (! Schema::hasTable('coupon_pricelist')) {
+            Schema::create('coupon_pricelist', function(Blueprint $table)
+            {
+                $table->increments('id');
+                $table->integer('coupon_id')->unsigned();
+                $table->integer('pricelist_id')->unsigned();
+                $table->foreign('coupon_id')->references('id')->on('coupons')->onDelete('cascade');
+                $table->foreign('pricelist_id')->references('id')->on('pricelists')->onDelete('cascade');
+            });
+        }
 	}
 
 	/**
@@ -29,7 +31,7 @@ class CreateCouponPricelistTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('coupon_pricelist');
+		Schema::dropIfExists('coupon_pricelist');
 	}
 
 }

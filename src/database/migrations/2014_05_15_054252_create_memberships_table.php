@@ -12,13 +12,15 @@ class CreateMembershipsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('memberships', function(Blueprint $table)
-		{
-			$table->increments('id');
-			$table->string('name', 255);
-			$table->integer('rank')->default(0);
-			$table->timestamps();
-		});
+        if (! Schema::hasTable('memberships')) {
+            Schema::create('memberships', function(Blueprint $table)
+            {
+                $table->increments('id');
+                $table->string('name', 255);
+                $table->integer('rank')->default(0);
+                $table->timestamps();
+            });
+        }
 	}
 
 	/**
@@ -28,7 +30,7 @@ class CreateMembershipsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('memberships');
+		Schema::dropIfExists('memberships');
 	}
 
 }

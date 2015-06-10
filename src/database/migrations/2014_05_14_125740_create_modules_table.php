@@ -12,19 +12,21 @@ class CreateModulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('modules', function(Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 255);
-            $table->string('sku', 255)->unique()->nullable();
-            $table->string('short_description', 255);
-            $table->text('long_description')->nullable();
-            $table->boolean('featured')->default(false);
-            $table->boolean('active')->default(true);
-            $table->text('options')->nullable();
-            $table->integer('category_id')->nullable()->unsigned();
-            $table->foreign('category_id')->references('id')->on('categories');
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('modules')) {
+            Schema::create('modules', function(Blueprint $table) {
+                $table->increments('id');
+                $table->string('name', 255);
+                $table->string('sku', 255)->unique()->nullable();
+                $table->string('short_description', 255);
+                $table->text('long_description')->nullable();
+                $table->boolean('featured')->default(false);
+                $table->boolean('active')->default(true);
+                $table->text('options')->nullable();
+                $table->integer('category_id')->nullable()->unsigned();
+                $table->foreign('category_id')->references('id')->on('categories');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -34,6 +36,6 @@ class CreateModulesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('modules');
+        Schema::dropIfExists('modules');
     }
 }

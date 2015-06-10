@@ -11,16 +11,18 @@ class CreateImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('images', function($table) {
-             // auto incremental id (PK)
-            $table->increments('id');
-             // path limit to 320 characters
-            $table->string('path', 320);
-             // Imageable
-            $table->morphs('imageable');
-             // created_at | updated_at DATETIME
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('images')) {
+            Schema::create('images', function($table) {
+                 // auto incremental id (PK)
+                $table->increments('id');
+                 // path limit to 320 characters
+                $table->string('path', 320);
+                 // Imageable
+                $table->morphs('imageable');
+                 // created_at | updated_at DATETIME
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -30,6 +32,6 @@ class CreateImagesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('images');
+        Schema::dropIfExists('images');
     }
 }

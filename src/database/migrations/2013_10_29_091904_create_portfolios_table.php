@@ -12,18 +12,20 @@ class CreatePortfoliosTable extends Migration
      */
     public function up()
     {
-        Schema::create('portfolios', function(Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 255);
-            $table->string('short_description', 255);
-            $table->text('long_description')->nullable();
-            $table->boolean('active')->default(true);
-            $table->text('options')->nullable();
-            $table->integer('category_id')->nullable()->unsigned();
-            $table->foreign('category_id')->references('id')->on('categories');
-             // created_at | updated_at DATETIME
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('portfolios')) {
+            Schema::create('portfolios', function(Blueprint $table) {
+                $table->increments('id');
+                $table->string('name', 255);
+                $table->string('short_description', 255);
+                $table->text('long_description')->nullable();
+                $table->boolean('active')->default(true);
+                $table->text('options')->nullable();
+                $table->integer('category_id')->nullable()->unsigned();
+                $table->foreign('category_id')->references('id')->on('categories');
+                 // created_at | updated_at DATETIME
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -33,6 +35,6 @@ class CreatePortfoliosTable extends Migration
      */
     public function down()
     {
-        Schema::drop('portfolios');
+        Schema::dropIfExists('portfolios');
     }
 }

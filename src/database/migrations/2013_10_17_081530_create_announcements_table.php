@@ -12,14 +12,16 @@ class CreateAnnouncementsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('announcements', function(Blueprint $table)
-		{
-			$table->increments('id');
-            $table->string('title', 255);
-            $table->text('content');
-            $table->boolean('private')->default(TRUE);
-            $table->timestamps();
-		});
+        if (! Schema::hasTable('announcements')) {
+            Schema::create('announcements', function(Blueprint $table)
+            {
+                $table->increments('id');
+                $table->string('title', 255);
+                $table->text('content');
+                $table->boolean('private')->default(TRUE);
+                $table->timestamps();
+            });
+        }
 	}
 
 	/**
@@ -29,7 +31,7 @@ class CreateAnnouncementsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('announcements');
+		Schema::dropIfExists('announcements');
 	}
 
 }
