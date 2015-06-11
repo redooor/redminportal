@@ -24,5 +24,7 @@ return array(
     'digital' => 'Digital',
     'physical' => 'Physical',
     'contents_management' => 'Contents Management',
-    'users_management' => 'Users Management'
+    'users_management' => 'Users Management',
+    'posts' => 'Posts',
+    'pages' => 'Pages',
 );

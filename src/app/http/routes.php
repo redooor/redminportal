@@ -28,4 +28,5 @@ Route::group(['middleware' => 'Redooor\Redminportal\App\Http\Middleware\Authenti
     Route::controller('purchases', 'PurchaseController');
     Route::controller('reports', 'ReportController');
     Route::controller('users', 'UserController');
+    Route::controller('posts', 'PostController');
 });

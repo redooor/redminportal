@@ -30,8 +30,8 @@
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
+                    <th>Created</th>
+                    <th>Updated</th>
                     <th>Private</th>
                     <th></th>
                 </tr>
@@ -40,8 +40,8 @@
             @foreach ($announcements as $announcement)
                 <tr>
                     <td>{{ $announcement->title }}</td>
-                    <td>{{ $announcement->created_at }}</td>
-                    <td>{{ $announcement->updated_at }}</td>
+                    <td>{{ date('d-M-y', strtotime($announcement->created_at)) }}</td>
+                    <td>{{ date('d-M-y', strtotime($announcement->updated_at)) }}</td>
                     <td>
                         @if ($announcement->private)
                             <span class="label label-success"><span class='glyphicon glyphicon-ok'></span></span>

@@ -40,28 +40,27 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 ## User Management
 * User
 * Group
+* Mailinglist
 
 ## Content Management
 * Announcement
+* Post
 * Portfolio
+* Promotion
 
 ## Online Store (Physical Products)
 * Category
 * Coupon
 * Product
-* Promotion
 
-## Membership Subscription (Downloadable Products)
+## Membership Subscription (Digital Products)
 * Category
-* Discount
+* Coupon
 * Media
 * Membership
 * Module
 * ModuleMediaMembership
 * Purchase
-
-## Customer Management
-* Mailinglist
 
 ## Morphs
 * Image

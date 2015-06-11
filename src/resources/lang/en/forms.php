@@ -60,4 +60,11 @@ return array(
     'create_category' => 'Create Category',
     'edit_category' => 'Edit Category',
     'category_properties' => 'Category Properties',
+    'private' => 'Private',
+    'featured' => 'Featured',
+    'create_post' => 'Create Post',
+    'edit_post' => 'Edit Post',
+    'title' => 'Title',
+    'slug' => 'Slug',
+    'content' => 'Content',
 );

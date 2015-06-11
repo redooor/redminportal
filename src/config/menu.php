@@ -35,18 +35,23 @@ return array(
         'hide' => false,
         'children' => array(
             array(
-                'name' => 'promotions',
-                'path' => 'admin/promotions',
-                'hide' => false
-            ),
-            array(
                 'name' => 'announcements',
                 'path' => 'admin/announcements',
                 'hide' => false
             ),
             array(
+                'name' => 'posts',
+                'path' => 'admin/posts',
+                'hide' => false
+            ),
+            array(
                 'name' => 'portfolios',
                 'path' => 'admin/portfolios',
+                'hide' => false
+            ),
+            array(
+                'name' => 'promotions',
+                'path' => 'admin/promotions',
                 'hide' => false
             )
         )
