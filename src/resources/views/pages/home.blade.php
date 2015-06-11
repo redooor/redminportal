@@ -24,6 +24,7 @@
                         <li>Rearrange menu to split Physical product store and Digital product store (issue #52).</li>
                         <li>Promotions, Products and Portfolios now allow translation (issue #9).</li>
                         <li>Use Laravel authentication, removed Sentry dependency (issue #81).</li>
+                        <li>Allow multiple Category images (issue #79).</li>
                         <li>More coming... (developing)</li>
                     </ol>
                     <h4>Bug fixes:</h4>

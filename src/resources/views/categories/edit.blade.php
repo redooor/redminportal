@@ -142,6 +142,18 @@
                             @foreach( $category->images as $image )
                             <div class='col-md-3'>
                                 {!! HTML::image($imagine->getUrl($image->path), $category->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                                <br><br>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ URL::to('admin/categories/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                    </a>
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                </div>
                             </div>
                             @endforeach
                         </div>

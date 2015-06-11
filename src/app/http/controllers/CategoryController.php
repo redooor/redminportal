@@ -167,14 +167,6 @@ class CategoryController extends Controller
         $category->save();
 
         if (\Input::hasFile('image')) {
-            // Delete all existing images for edit
-            if (isset($sid)) {
-                // Delete all images
-                foreach ($category->images as $img) {
-                    $img->delete();
-                }
-            }
-
             //Upload the file
             $helper_image = new RImage;
             $filename = $helper_image->upload($image, 'categories/' . $category->id, true);
@@ -234,5 +226,22 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect('admin/categories');
+    }
+    
+    public function getImgremove($sid)
+    {
+        $image = Image::find($sid);
+
+        if ($image == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('deleteError', "The image cannot be deleted at this time.");
+            return redirect('/admin/categories')->withErrors($errors);
+        }
+
+        $model_id = $image->imageable_id;
+
+        $image->delete();
+
+        return redirect('admin/categories/edit/' . $model_id);
     }
 }
