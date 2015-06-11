@@ -114,7 +114,7 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
         ),
 
 4. Then run `php artisan dump-autoload` in a terminal.
-5. Run the following commands in a terminal to perform database migration for both Redminportal and Sentry:
+5. Run the following commands in a terminal to perform database migration for Redminportal:
 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
         ?> php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
@@ -138,6 +138,16 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" --force
         
     **NOTE: using --force will overwrite existing files**
+    
+9. Add redmin.auth middleware to to [root]\app\Http\Kernel.php under $routeMiddleware like this:
+
+        protected $routeMiddleware = [
+            'auth' => 'App\Http\Middleware\Authenticate',
+            ... omitted ...
+            
+            // Add this line
+            'redmin.auth' => 'Redooor\Redminportal\App\Http\Middleware\Authenticate',
+        ];
 
 # Installation guide for Contributors
 
@@ -208,6 +218,16 @@ It is recommended that contributors use Laravel Homestead for development becaus
         
     **NOTE: using --force will overwrite existing files**
 
+13. Add redmin.auth middleware to to [root]\app\Http\Kernel.php under $routeMiddleware like this:
+
+        protected $routeMiddleware = [
+            'auth' => 'App\Http\Middleware\Authenticate',
+            ... omitted ...
+            
+            // Add this line
+            'redmin.auth' => 'Redooor\Redminportal\App\Http\Middleware\Authenticate',
+        ];
+        
 ## Install Grunt and Bower dependencies
 
 1. You need to have nodejs installed

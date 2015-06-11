@@ -1,5 +1,7 @@
-@extends('redminportal::layouts.master')
+@extends('redminportal::layouts.plain')
 
 @section('content')
-    <p>You're not authorized to view this page.</p>
+    <div class="alert alert-danger">
+        <p>You're not authorized to view this page.</p>
+    </div>
 @stop

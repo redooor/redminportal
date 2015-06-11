@@ -6,6 +6,17 @@ Version 0.2.0 is **NOT** backward compatible.
 
 Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
+### Authentication to RedminPortal dashboard
+Add redmin.auth middleware to to [root]\app\Http\Kernel.php under $routeMiddleware like this:
+
+        protected $routeMiddleware = [
+            'auth' => 'App\Http\Middleware\Authenticate',
+            ... omitted ...
+            
+            // Add this line
+            'redmin.auth' => 'Redooor\Redminportal\App\Http\Middleware\Authenticate',
+        ];
+
 ## Upgrading to v0.1.5 from <= v0.1.4
 
 ### Change config:menu

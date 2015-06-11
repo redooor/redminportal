@@ -28,6 +28,7 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 10. Add UI to views for additional active column in Pricelists table (issue #78).
 11. Rearrange menu to split Physical product store and Digital product store (issue #52).
 12. Promotions, Products and Portfolios now allow translation (issue #9).
+13. Use Laravel authentication, removed Sentry dependency (issue #81).
 
 ### Bug fixes:
 1. Translation to support any language (issue #83).
