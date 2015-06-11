@@ -9,7 +9,7 @@
 Route::controller('login', 'Redooor\Redminportal\App\Http\Controllers\LoginController');
 Route::get('logout', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getLogout');
 
-Route::group(['middleware' => 'redmin.auth', 'namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefix' => 'admin'], function () {
+Route::group(['middleware' => 'Redooor\Redminportal\App\Http\Middleware\Authenticate', 'namespace' => 'Redooor\Redminportal\App\Http\Controllers', 'prefix' => 'admin'], function () {
     Route::get('/', function() {
         return redirect('admin/dashboard');
     });
