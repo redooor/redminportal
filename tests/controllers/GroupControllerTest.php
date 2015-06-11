@@ -19,7 +19,7 @@ class GroupControllerTest extends BaseControllerTest
                 'user'  => true
             ),
             'edit' => array(
-                'id'   => 1,
+                'id'   => 3,
                 'name'  => 'This is another group name',
                 'admin' => true,
                 'user'  => false
@@ -35,6 +35,17 @@ class GroupControllerTest extends BaseControllerTest
     public function __destruct()
     {
         parent::__destruct();
+    }
+    
+    /**
+     * Test (Fail): access getEdit, return 404
+     */
+    public function testEditFail404()
+    {
+        $this->call('GET', $this->page . '/edit/3');
+
+        $this->assertRedirectedTo($this->page);
+        $this->assertSessionHasErrors();
     }
     
     /**

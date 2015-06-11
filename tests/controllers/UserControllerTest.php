@@ -3,16 +3,6 @@
 class UserControllerTest extends BaseControllerTest
 {
     /**
-     * Initialize Setup with seed
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->seed('RedminSeeder');
-    }
-    
-    /**
      * Contructor
      */
     public function __construct()

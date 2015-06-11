@@ -1,10 +1,25 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Auth;
+use Redooor\Redminportal\App\Models\User;
+
 class BaseControllerTest extends RedminTestCase
 {
     protected $page;
     protected $viewhas;
     protected $input;
+    
+    /**
+     * Initialize Setup with seed
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->seed('RedminSeeder');
+        
+        Auth::loginUsingId(1);
+    }
     
     /**
      * Contructor.

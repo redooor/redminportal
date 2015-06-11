@@ -1,5 +1,7 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Auth;
+
 class LoginControllerTest extends RedminTestCase
 {
     /**
@@ -10,6 +12,8 @@ class LoginControllerTest extends RedminTestCase
         parent::setUp();
 
         $this->seed('RedminSeeder');
+        
+        Auth::loginUsingId(1);
     }
     
     /**
@@ -44,6 +48,8 @@ class LoginControllerTest extends RedminTestCase
      */
     public function testStoreCreatePass()
     {
+        Auth::logout();
+        
         $input = array(
             'email' => 'admin@admin.com',
             'password' => 'admin'
@@ -59,6 +65,8 @@ class LoginControllerTest extends RedminTestCase
      */
     public function testStoreCreateFailWrongPassword()
     {
+        Auth::logout();
+        
         $input = array(
             'email' => 'admin@admin.com',
             'password' => 'wrong'

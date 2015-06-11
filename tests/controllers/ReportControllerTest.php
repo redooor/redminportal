@@ -1,7 +1,21 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Auth;
+
 class ReportControllerTest extends RedminTestCase
 {
+    /**
+     * Initialize Setup with seed
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->seed('RedminSeeder');
+        
+        Auth::loginUsingId(1);
+    }
+    
     /**
      * Test (Pass): access getIndex
      */
