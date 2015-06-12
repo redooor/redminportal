@@ -31,6 +31,7 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 13. Use Laravel authentication, removed Sentry dependency (issue #81).
 14. Allow multiple Category images (issue #79).
 15. Add Post Model and Controller (issue #73).
+16. Revamp Translation implementation for Category, Media, Module, Portfolio, Product and Promotion (issue #85).
 
 ### Bug fixes:
 1. Translation to support any language (issue #83).

@@ -42,6 +42,11 @@ class Product extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_product');
     }
     
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
+    }
+    
     public function delete()
     {
         // Remove all relationships
@@ -52,6 +57,9 @@ class Product extends Model
         foreach ($this->images as $image) {
             $image->delete();
         }
+        
+        // Delete all translations
+        $this->translations()->delete();
         
         // Delete asset images folder
         $upload_dir = \Config::get('redminportal::image.upload_dir');

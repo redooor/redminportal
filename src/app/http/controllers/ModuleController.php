@@ -6,6 +6,7 @@ use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Models\Pricelist;
 use Redooor\Redminportal\App\Models\UserPricelist;
@@ -88,11 +89,10 @@ class ModuleController extends Controller
 
             $tagString .= $tag->name;
         }
-
-        if (empty($module->options)) {
-            $translated = null;
-        } else {
-            $translated = json_decode($module->options);
+        
+        $translated = array();
+        foreach ($module->translations as $translation) {
+            $translated[$translation->lang] = json_decode($translation->content);
         }
 
         $pricelists = array();
@@ -152,20 +152,6 @@ class ModuleController extends Controller
             $category_id        = \Input::get('category_id');
             $tags               = \Input::get('tags');
 
-            $options = array();
-            $translations       = \Config::get('redminportal::translation');
-            foreach ($translations as $translation) {
-                $lang = $translation['lang'];
-                if ($lang == 'en') {
-                    continue;
-                }
-                $options[$lang] = array(
-                    'name'                  => \Input::get($lang . '_name'),
-                    'short_description'     => \Input::get($lang . '_short_description'),
-                    'long_description'      => \Input::get($lang . '_long_description')
-                );
-            }
-
             $module = (isset($sid) ? Module::find($sid) : new Module);
             
             if ($module == null) {
@@ -183,11 +169,36 @@ class ModuleController extends Controller
             $module->long_description = $long_description;
             $module->featured = $featured;
             $module->active = $active;
-            $module->options = json_encode($options);
             $module->category_id = $category_id;
 
             // Create or save changes
             $module->save();
+            
+            // Save translations
+            $translations = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+
+                $translated_content = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+
+                // Check if lang exist
+                $translated_model = $module->translations->where('lang', $lang)->first();
+                if ($translated_model == null) {
+                    $translated_model = new Translation;
+                }
+
+                $translated_model->lang = $lang;
+                $translated_model->content = json_encode($translated_content);
+
+                $module->translations()->save($translated_model);
+            }
 
             // Save pricelist
             foreach (Membership::all() as $membership) {

@@ -32,12 +32,20 @@ class Promotion extends Model
         return Promotion::where('active', '=', '1')->orderBy('start_date', 'desc')->orderBy('name')->get();
     }
     
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
+    }
+    
     public function delete()
     {
         // Delete all images
         foreach ($this->images as $image) {
             $image->delete();
         }
+        
+        // Delete all translations
+        $this->translations()->delete();
         
         // Delete asset images folder
         $upload_dir = \Config::get('redminportal::image.upload_dir');

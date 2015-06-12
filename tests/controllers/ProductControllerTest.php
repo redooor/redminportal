@@ -19,7 +19,10 @@ class ProductControllerTest extends BaseControllerTest
                 'cn_name'               => 'CN name',
                 'cn_short_description'  => 'CN short body',
                 'category_id'           => 1,
-                'sku'                   => 'UNIQUESKU001'
+                'sku'                   => 'UNIQUESKU001',
+                'cn_name' => 'This is cn name',
+                'cn_short_description' => 'This is cn short description',
+                'cn_long_description' => 'This is cn long description'
             ),
             'edit' => array(
                 'id'   => 1,
@@ -28,7 +31,10 @@ class ProductControllerTest extends BaseControllerTest
                 'cn_name'               => 'CN name',
                 'cn_short_description'  => 'CN short body',
                 'category_id'           => 1,
-                'sku'                   => 'UNIQUESKU001'
+                'sku'                   => 'UNIQUESKU001',
+                'cn_name' => 'This is cn name',
+                'cn_short_description' => 'This is cn short description',
+                'cn_long_description' => 'This is cn long description'
             )
         );
         

@@ -81,10 +81,13 @@ or if you have published it to your root
 
     root\config\packages\redooor\redminportal\translation.php
     
-To use it, get the model and use json_decode to convert it into an object, like this:
+To use it, get the model's translations and use json_decode to convert content into an object, like this:
 
-    $translated = json_decode($product->options);
-    $translated->cn->name, $translated->cn->short_description, $translated->cn->long_description
+    foreach ($product->translations as $translation) {
+        $lang = $translation->lang;
+        $translated = json_decode($translation->content);
+        var_dump($translated->name, $translated->short_description, $translated->long_description);
+    }
 
 
 # Installation guide for Users

@@ -49,6 +49,11 @@ class Category extends Model
         return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
     }
     
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
+    }
+    
     public function coupons()
     {
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_category');
@@ -101,6 +106,9 @@ class Category extends Model
         foreach ($this->images as $image) {
             $image->delete();
         }
+        
+        // Delete all translations
+        $this->translations()->delete();
         
         // Delete category's images folder
         $upload_dir = \Config::get('redminportal::image.upload_dir');

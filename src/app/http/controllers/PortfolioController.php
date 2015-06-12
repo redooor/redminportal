@@ -3,6 +3,7 @@
 use Redooor\Redminportal\App\Models\Portfolio;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class PortfolioController extends Controller
@@ -47,10 +48,9 @@ class PortfolioController extends Controller
             ->orderBy('name')
             ->get();
 
-        if (empty($portfolio->options)) {
-            $translated = null;
-        } else {
-            $translated = json_decode($portfolio->options);
+        $translated = array();
+        foreach ($portfolio->translations as $translation) {
+            $translated[$translation->lang] = json_decode($translation->content);
         }
 
         return view('redminportal::portfolios/edit')
@@ -84,20 +84,6 @@ class PortfolioController extends Controller
             $active             = (\Input::get('active') == '' ? false : true);
             $category_id        = \Input::get('category_id');
 
-            $options = array();
-            $translations       = \Config::get('redminportal::translation');
-            foreach ($translations as $translation) {
-                $lang = $translation['lang'];
-                if ($lang == 'en') {
-                    continue;
-                }
-                $options[$lang] = array(
-                    'name'                  => \Input::get($lang . '_name'),
-                    'short_description'     => \Input::get($lang . '_short_description'),
-                    'long_description'      => \Input::get($lang . '_long_description')
-                );
-            }
-
             $portfolio = (isset($sid) ? Portfolio::find($sid) : new Portfolio);
             
             if ($portfolio == null) {
@@ -114,9 +100,34 @@ class PortfolioController extends Controller
             $portfolio->long_description = $long_description;
             $portfolio->active = $active;
             $portfolio->category_id = $category_id;
-            $portfolio->options = json_encode($options);
 
             $portfolio->save();
+            
+            // Save translations
+            $translations = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+
+                $translated_content = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+
+                // Check if lang exist
+                $translated_model = $portfolio->translations->where('lang', $lang)->first();
+                if ($translated_model == null) {
+                    $translated_model = new Translation;
+                }
+
+                $translated_model->lang = $lang;
+                $translated_model->content = json_encode($translated_content);
+
+                $portfolio->translations()->save($translated_model);
+            }
 
             if (\Input::hasFile('image')) {
                 //Upload the file

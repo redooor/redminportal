@@ -40,6 +40,11 @@ class Media extends Model
         return $this->morphToMany('Redooor\Redminportal\App\Models\Tag', 'taggable');
     }
     
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
+    }
+    
     public function delete()
     {
         // Remove all relationships
@@ -49,6 +54,9 @@ class Media extends Model
         foreach ($this->images as $image) {
             $image->delete();
         }
+        
+        // Delete all translations
+        $this->translations()->delete();
         
         // Delete asset images folder
         $upload_dir = \Config::get('redminportal::image.upload_dir');
