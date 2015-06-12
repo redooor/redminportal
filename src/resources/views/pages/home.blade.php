@@ -28,6 +28,8 @@
                         <li>Add Post Model and Controller (issue #73).</li>
                         <li>Revamp Translation implementation for Category, Media, Module, Portfolio, Product and Promotion (issue #85).</li>
                         <li>Add Page model and Controller (issue #74).</li>
+                        <li>Save orders for products (issue #51).</li>
+                        <li>Download orders in CSV format.</li>
                         <li>More coming... (developing)</li>
                     </ol>
                     <h4>Bug fixes:</h4>

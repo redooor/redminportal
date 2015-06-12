@@ -62,6 +62,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_user');
     }
     
+    public function orders()
+    {
+        return $this->hasMany('Redooor\Redminportal\App\Models\Order');
+    }
+    
     public function delete()
     {
         $this->groups()->detach();

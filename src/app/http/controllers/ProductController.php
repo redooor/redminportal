@@ -207,6 +207,13 @@ class ProductController extends Controller
             return redirect('admin/products')->withErrors($errors);
         }
         
+        // Check if there's any order related to this product
+        if (count($product->orders) > 0) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('deleteError', "You cannot delete this product because it has been ordered. Please delete the order first.");
+            return redirect('admin/products')->withErrors($errors);
+        }
+        
         // Delete the product
         $product->delete();
 

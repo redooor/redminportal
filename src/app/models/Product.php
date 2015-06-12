@@ -42,6 +42,11 @@ class Product extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_product');
     }
     
+    public function orders()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Order', 'order_product');
+    }
+    
     public function translations()
     {
         return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
@@ -52,6 +57,7 @@ class Product extends Model
         // Remove all relationships
         $this->tags()->detach();
         $this->coupons()->detach();
+        $this->orders()->detach();
         
         // Delete all images
         foreach ($this->images as $image) {

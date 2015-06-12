@@ -27,4 +27,5 @@ return array(
     'users_management' => 'Users Management',
     'posts' => 'Posts',
     'pages' => 'Pages',
+    'orders' => 'Orders',
 );

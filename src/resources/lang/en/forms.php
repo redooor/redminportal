@@ -69,4 +69,5 @@ return array(
     'content' => 'Content',
     'create_page' => 'Create Page',
     'edit_page' => 'Edit Page',
+    'create_order' => 'Create Order',
 );

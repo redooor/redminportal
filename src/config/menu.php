@@ -85,6 +85,11 @@ return array(
                         'name' => 'products',
                         'path' => 'admin/products',
                         'hide' => false
+                    ),
+                    array(
+                        'name' => 'orders',
+                        'path' => 'admin/orders',
+                        'hide' => false
                     )
                 )
             ),
