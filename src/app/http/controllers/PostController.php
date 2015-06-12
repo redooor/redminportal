@@ -3,6 +3,7 @@
 use Redooor\Redminportal\App\Models\Post;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class PostController extends Controller
@@ -39,6 +40,11 @@ class PostController extends Controller
             );
             return redirect('admin/posts')->withErrors($errors);
         }
+        
+        $translated = array();
+        foreach ($post->translations as $translation) {
+            $translated[$translation->lang] = json_decode($translation->content);
+        }
 
         $categories = Category::where('active', true)
             ->where('category_id', 0)
@@ -48,6 +54,7 @@ class PostController extends Controller
         
         return view('redminportal::posts/edit')
             ->with('post', $post)
+            ->with('translated', $translated)
             ->with('imagine', new RImage)
             ->with('categories', $categories);
     }
@@ -98,6 +105,32 @@ class PostController extends Controller
             }
 
             $post->save();
+            
+            // Save translations
+            $translations = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+
+                $translated_content = array(
+                    'title'     => \Input::get($lang . '_title'),
+                    'slug'      => str_replace(' ', '_', \Input::get($lang . '_slug')),
+                    'content'   => \Input::get($lang . '_content')
+                );
+
+                // Check if lang exist
+                $translated_model = $post->translations->where('lang', $lang)->first();
+                if ($translated_model == null) {
+                    $translated_model = new Translation;
+                }
+
+                $translated_model->lang = $lang;
+                $translated_model->content = json_encode($translated_content);
+
+                $post->translations()->save($translated_model);
+            }
 
             if (\Input::hasFile('image')) {
                 //Upload the file

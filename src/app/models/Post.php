@@ -30,12 +30,20 @@ class Post extends Model
         return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
     }
     
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
+    }
+    
     public function delete()
     {
         // Delete all images
         foreach ($this->images as $image) {
             $image->delete();
         }
+        
+        // Delete all translations
+        $this->translations()->delete();
         
         // Delete asset images folder
         $upload_dir = \Config::get('redminportal::image.upload_dir');

@@ -74,19 +74,60 @@
                         <h4 class="panel-title">{{ Lang::get('redminportal::forms.edit_post') }}</h4>
                     </div>
                     <div class="panel-body">
-                        <div class="form-group">
-                            {!! Form::label('title', Lang::get('redminportal::forms.title')) !!}
-                            {!! Form::text('title', $post->title, array('class' => 'form-control')) !!}
-                        </div>
+                        <ul class="nav nav-tabs" id="lang-selector">
+                           @foreach(\Config::get('redminportal::translation') as $translation)
+                           <li><a href="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
+                           @endforeach
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="lang-en">
+                                <div class="form-group">
+                                    {!! Form::label('title', Lang::get('redminportal::forms.title')) !!}
+                                    {!! Form::text('title', $post->title, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('slug', Lang::get('redminportal::forms.slug')) !!}
-                            {!! Form::text('slug', $post->slug, array('class' => 'form-control')) !!}
-                        </div>
+                                <div class="form-group">
+                                    {!! Form::label('slug', Lang::get('redminportal::forms.slug')) !!}
+                                    {!! Form::text('slug', $post->slug, array('class' => 'form-control')) !!}
+                                </div>
 
-                        <div class="form-group">
-                            {!! Form::label('content', Lang::get('redminportal::forms.content')) !!}
-                            {!! Form::textarea('content', $post->content, array('class' => 'form-control', 'style' => 'height:400px')) !!}
+                                <div class="form-group">
+                                    {!! Form::label('content', Lang::get('redminportal::forms.content')) !!}
+                                    {!! Form::textarea('content', $post->content, array('class' => 'form-control', 'style' => 'height:400px')) !!}
+                                </div>
+                            </div>
+                            @foreach(\Config::get('redminportal::translation') as $translation)
+                                @if($translation['lang'] != 'en')
+                                <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
+                                    <div class="form-group">
+                                        {!! Form::label($translation['lang'] . '_title', Lang::get('redminportal::forms.title')) !!}
+                                        @if ($translated)
+                                        {!! Form::text($translation['lang'] . '_title', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->title : ''), array('class' => 'form-control')) !!}
+                                        @else
+                                        {!! Form::text($translation['lang'] . '_title', null, array('class' => 'form-control')) !!}
+                                        @endif
+                                    </div>
+
+                                    <div class="form-group">
+                                        {!! Form::label($translation['lang'] . '_slug', Lang::get('redminportal::forms.slug')) !!}
+                                        @if ($translated)
+                                        {!! Form::text($translation['lang'] . '_slug', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->slug : ''), array('class' => 'form-control')) !!}
+                                        @else
+                                        {!! Form::text($translation['lang'] . '_slug', null, array('class' => 'form-control')) !!}
+                                        @endif
+                                    </div>
+
+                                    <div class="form-group">
+                                        {!! Form::label($translation['lang'] . '_content', Lang::get('redminportal::forms.content')) !!}
+                                        @if ($translated)
+                                        {!! Form::textarea($translation['lang'] . '_content', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->content : ''), array('class' => 'form-control', 'style' => 'height:400px')) !!}
+                                        @else
+                                        {!! Form::textarea($translation['lang'] . '_content', null, array('class' => 'form-control', 'style' => 'height:400px')) !!}
+                                        @endif
+                                    </div>
+                                </div>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -99,7 +140,7 @@
                         <div class='row'>
                             @foreach ($post->images as $image)
                             <div class='col-md-3'>
-                                {!! HTML::image($imagine->getUrl($image->path), $post->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                                {!! HTML::image($imagine->getUrl($image->path), $post->title, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
                                     <a href="{{ URL::to('admin/posts/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
@@ -128,6 +169,11 @@
     <script>
         !function ($) {
             $(function(){
+                $('#lang-selector li').first().addClass('active');
+                $('#lang-selector a').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
                 // On load, check if previous category exists for error message
                 function checkCategory() {
                     $selected_val = $('#category_id').val();

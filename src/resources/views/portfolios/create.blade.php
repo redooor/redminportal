@@ -63,10 +63,10 @@
                 </div>
                 <div class="panel-body">
                     <ul class="nav nav-tabs" id="lang-selector">
-                           @foreach(\Config::get('redminportal::translation') as $translation)
-                           <li><a href="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
-                           @endforeach
-                        </ul>
+                       @foreach(\Config::get('redminportal::translation') as $translation)
+                       <li><a href="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
+                       @endforeach
+                    </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="lang-en">
                             <div class="form-group">

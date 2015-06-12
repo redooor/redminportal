@@ -21,7 +21,10 @@ class PostControllerTest extends BaseControllerTest
                 'content' => 'This is the body',
                 'private' => false,
                 'featured' => true,
-                'category_id' => 1
+                'category_id' => 1,
+                'cn_title' => 'This is cn title',
+                'cn_slug' => 'This is cn slug',
+                'cn_content' => 'This is cn content'
             ),
             'edit' => array(
                 'id'        => 1,
@@ -30,7 +33,10 @@ class PostControllerTest extends BaseControllerTest
                 'content' => 'This is the body',
                 'private' => false,
                 'featured' => true,
-                'category_id' => 1
+                'category_id' => 1,
+                'cn_title' => 'This is cn title',
+                'cn_slug' => 'This is cn slug',
+                'cn_content' => 'This is cn content'
             )
         );
         
