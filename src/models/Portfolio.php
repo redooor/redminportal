@@ -15,6 +15,11 @@ class Portfolio extends Model {
         return $this->morphMany('Redooor\Redminportal\Image', 'imageable');
     }
     
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\Translation', 'translatable');
+    }
+    
     public function deleteAllImages()
     {
         foreach ($this->images as $image)
@@ -54,6 +59,14 @@ class Portfolio extends Model {
         } elseif(is_file($target)) {
             unlink( $target );  
         }
+    }
+    
+    public function delete()
+    {
+        // Delete all translations
+        $this->translations()->delete();
+
+        return parent::delete();
     }
 
 }

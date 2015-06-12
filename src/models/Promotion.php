@@ -10,6 +10,11 @@ class Promotion extends Model {
         return $this->morphMany('Redooor\Redminportal\Image', 'imageable');
     }
     
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\Translation', 'translatable');
+    }
+    
     public function deleteAllImages()
     {
         $folder = 'assets/img/promotions/';
@@ -31,6 +36,14 @@ class Promotion extends Model {
     public static function getAllActiveOrdered()
     {
         return Promotion::where('active', '=', '1')->orderBy('start_date', 'desc')->orderBy('name')->get();
+    }
+    
+    public function delete()
+    {
+        // Delete all translations
+        $this->translations()->delete();
+
+        return parent::delete();
     }
 
 }

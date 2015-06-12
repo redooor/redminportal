@@ -16,6 +16,7 @@
                 <li>Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)</li>
                 <li>Added UI for "active" column for module create and edit. (issue #78)</li>
                 <li>Promotions, Products and Portfolios now allow translation title, summary and description. (issue #84)</li>
+                <li>Revamp Translation implementation for Category, Media, Module, Portfolio, Product and Promotion (issue #86).</li>
             </ol>
             <h4>Bug fixes:</h4>
             <ol>

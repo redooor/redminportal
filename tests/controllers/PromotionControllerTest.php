@@ -22,7 +22,10 @@ class PromotionControllerTest extends BaseControllerTest
                 'cn_long_description'   => 'CN long body',
                 'start_date'            => '29/02/2016',
                 'end_date'              => '29/02/2016',
-                'active'                => true
+                'active'                => true,
+                'cn_name' => 'This is cn name',
+                'cn_short_description' => 'This is cn short description',
+                'cn_long_description' => 'This is cn long description'
             ),
             'edit' => array(
                 'id'   => 1,
@@ -34,7 +37,10 @@ class PromotionControllerTest extends BaseControllerTest
                 'cn_long_description'   => 'CN long body',
                 'start_date'            => '29/02/2016',
                 'end_date'              => '29/02/2016',
-                'active'                => true
+                'active'                => true,
+                'cn_name' => 'This is cn name',
+                'cn_short_description' => 'This is cn short description',
+                'cn_long_description' => 'This is cn long description'
             )
         );
         

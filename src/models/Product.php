@@ -42,6 +42,11 @@ class Product extends Model {
         return $this->belongsToMany('Redooor\Redminportal\Coupon', 'coupon_product');
     }
     
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\Translation', 'translatable');
+    }
+    
     public function deleteAllImages()
     {
         $folder = 'assets/img/products/';
@@ -72,6 +77,9 @@ class Product extends Model {
     {
         // Remove all relationships
         $this->coupons()->detach();
+        
+        // Delete all translations
+        $this->translations()->delete();
         
         return parent::delete();
     }

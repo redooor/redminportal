@@ -89,7 +89,7 @@
                             <div class="form-group">
                                 {{ Form::label($translation['lang'] . '_name', 'Title') }}
                                 @if ($translated)
-                                {{ Form::text($translation['lang'] . '_name', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->name : ''), array('class' => 'form-control')) }}
+                                {{ Form::text($translation['lang'] . '_name', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->name : ''), array('class' => 'form-control')) }}
                                 @else
                                 {{ Form::text($translation['lang'] . '_name', null, array('class' => 'form-control')) }}
                                 @endif
@@ -98,7 +98,7 @@
                             <div class="form-group">
                                 {{ Form::label($translation['lang'] . '_short_description', 'Summary') }}
                                 @if ($translated)
-                                {{ Form::text($translation['lang'] . '_short_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->short_description : ''), array('class' => 'form-control')) }}
+                                {{ Form::text($translation['lang'] . '_short_description', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->short_description : ''), array('class' => 'form-control')) }}
                                 @else
                                 {{ Form::text($translation['lang'] . '_short_description', null, array('class' => 'form-control')) }}
                                 @endif
@@ -107,7 +107,7 @@
                             <div class="form-group">
                                 {{ Form::label($translation['lang'] . '_long_description', 'Description') }}
                                 @if ($translated)
-                                {{ Form::textarea($translation['lang'] . '_long_description', (property_exists($translated, $translation['lang']) ? $translated->$translation['lang']->long_description : ''), array('class' => 'form-control')) }}
+                                {{ Form::textarea($translation['lang'] . '_long_description', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->long_description : ''), array('class' => 'form-control')) }}
                                 @else
                                 {{ Form::textarea($translation['lang'] . '_long_description', null, array('class' => 'form-control')) }}
                                 @endif

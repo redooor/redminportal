@@ -47,10 +47,9 @@ class MediaController extends BaseController
             $tagString .= $tag->name;
         }
 
-        if (empty($media->options)) {
-            $translated = null;
-        } else {
-            $translated = json_decode($media->options);
+        $translated = array();
+        foreach ($media->translations as $translation) {
+            $translated[$translation->lang] = json_decode($translation->content);
         }
 
         return \View::make('redminportal::medias/edit')
@@ -90,20 +89,6 @@ class MediaController extends BaseController
             $category_id        = \Input::get('category_id');
             $tags               = \Input::get('tags');
             
-            $options = array();
-            $translations       = \Config::get('redminportal::translation');
-            foreach ($translations as $translation) {
-                $lang = $translation['lang'];
-                if ($lang == 'en') {
-                    continue;
-                }
-                $options[$lang] = array(
-                    'name'                  => \Input::get($lang . '_name'),
-                    'short_description'     => \Input::get($lang . '_short_description'),
-                    'long_description'      => \Input::get($lang . '_long_description')
-                );
-            }
-
             $media = (isset($sid) ? Media::find($sid) : new Media);
             
             if ($media == null) {
@@ -121,7 +106,6 @@ class MediaController extends BaseController
             $media->long_description = $long_description;
             $media->featured = $featured;
             $media->active = $active;
-            $media->options = json_encode($options);
 
             if (isset($sid)) {
                 // Check if category has changed
@@ -145,6 +129,32 @@ class MediaController extends BaseController
 
             // Create or save changes
             $media->save();
+            
+            // Save translations
+            $translations = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+
+                $translated_content = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+
+                // Check if lang exist
+                $translated_model = $media->translations()->where('lang', $lang)->first();
+                if ($translated_model == null) {
+                    $translated_model = new Translation;
+                }
+
+                $translated_model->lang = $lang;
+                $translated_model->content = json_encode($translated_content);
+
+                $media->translations()->save($translated_model);
+            }
 
             if (! empty($tags)) {
                 // Delete old tags

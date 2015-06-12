@@ -24,6 +24,11 @@ class Module extends Model {
     {
         return $this->morphMany('Redooor\Redminportal\Tag', 'tagable');
     }
+    
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\Translation', 'translatable');
+    }
 
     public function deleteAllImages()
     {
@@ -49,6 +54,14 @@ class Module extends Model {
         {
             $tag->delete();
         }
+    }
+    
+    public function delete()
+    {
+        // Delete all translations
+        $this->translations()->delete();
+
+        return parent::delete();
     }
 
 }

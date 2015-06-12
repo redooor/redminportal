@@ -36,6 +36,11 @@ class Category extends Model {
     {
         return $this->belongsToMany('Redooor\Redminportal\Coupon', 'coupon_category');
     }
+    
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\Translation', 'translatable');
+    }
 
     public function deleteAllImages()
     {
@@ -98,6 +103,9 @@ class Category extends Model {
 
         // Delete all images
         $this->deleteAllImages();
+        
+        // Delete all translations
+        $this->translations()->delete();
 
         return parent::delete();
     }

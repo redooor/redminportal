@@ -52,10 +52,9 @@ class ProductController extends BaseController
             $tagString .= $tag->name;
         }
 
-        if (empty($product->options)) {
-            $translated = null;
-        } else {
-            $translated = json_decode($product->options);
+        $translated = array();
+        foreach ($product->translations as $translation) {
+            $translated[$translation->lang] = json_decode($translation->content);
         }
 
         return View::make('redminportal::products/edit')
@@ -97,20 +96,6 @@ class ProductController extends BaseController
             $category_id        = Input::get('category_id');
             $tags               = Input::get('tags');
 
-            $options = array();
-            $translations       = \Config::get('redminportal::translation');
-            foreach ($translations as $translation) {
-                $lang = $translation['lang'];
-                if ($lang == 'en') {
-                    continue;
-                }
-                $options[$lang] = array(
-                    'name'                  => \Input::get($lang . '_name'),
-                    'short_description'     => \Input::get($lang . '_short_description'),
-                    'long_description'      => \Input::get($lang . '_long_description')
-                );
-            }
-
             $product = (isset($sid) ? Product::find($sid) : new Product);
             
             if ($product == null) {
@@ -130,9 +115,34 @@ class ProductController extends BaseController
             $product->featured = $featured;
             $product->active = $active;
             $product->category_id = $category_id;
-            $product->options = json_encode($options);
 
             $product->save();
+            
+            // Save translations
+            $translations = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+
+                $translated_content = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+
+                // Check if lang exist
+                $translated_model = $product->translations()->where('lang', $lang)->first();
+                if ($translated_model == null) {
+                    $translated_model = new Translation;
+                }
+
+                $translated_model->lang = $lang;
+                $translated_model->content = json_encode($translated_content);
+
+                $product->translations()->save($translated_model);
+            }
 
             if (! empty($tags)) {
                 // Delete old tags

@@ -193,6 +193,7 @@ The translation enhancement in Category, Module, Media, Product, Promotion and P
 1. Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)
 2. Added UI for "active" column for module create and edit. (issue #78)
 3. Promotions, Products and Portfolios now allow translation title, summary and description. (issue #84)
+4. Revamp Translation implementation for Category, Media, Module, Portfolio, Product and Promotion (issue #86).
 
 ### Bug fixes:
 1. Fixed missing columns in coupon_user table.
@@ -325,7 +326,7 @@ The focus of this update was on cleaning up the code and making sure all tests p
 
 ### Run migrate
 
-Version 0.1.6 adds a new column "active" to "pricelists" table.
+Version 0.1.6 adds a new column "active" to "pricelists" table and a new table "translations".
 
 **Caution**: Always backup your database before running this type of command.
 
@@ -346,10 +347,13 @@ The translation options in Category, Module, Media, Product, Promotion and Portf
     $translated = json_decode($product->options);
     $translated->name, $translated->short_description, $translated->long_description
 
-to (example cn as the language code)
+to (get all translations for a product)
 
-    $translated = json_decode($product->options);
-    $translated->cn->name, $translated->cn->short_description, $translated->cn->long_description
+    foreach ($product->translations as $translation) {
+        $lang = $translation->lang;
+        $translated = json_decode($translation->content);
+        var_dump($translated->name, $translated->short_description, $translated->long_description);
+    }
 
 You can add more languages in the translation config file at path
 

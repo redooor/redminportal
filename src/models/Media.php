@@ -25,6 +25,11 @@ class Media extends Model {
         return $this->morphMany('Redooor\Redminportal\Tag', 'tagable');
     }
     
+    public function translations()
+    {
+        return $this->morphMany('Redooor\Redminportal\Translation', 'translatable');
+    }
+    
     public function deleteAllImages()
     {
         $folder = 'assets/img/medias/';
@@ -76,6 +81,14 @@ class Media extends Model {
         } elseif(is_file($target)) {
             unlink( $target );  
         }
+    }
+    
+    public function delete()
+    {
+        // Delete all translations
+        $this->translations()->delete();
+
+        return parent::delete();
     }
 
 }

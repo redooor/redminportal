@@ -39,10 +39,9 @@ class PromotionController extends BaseController
             return \View::make('redminportal::pages/404');
         }
         
-        if (empty($promotion->options)) {
-            $translated = null;
-        } else {
-            $translated = json_decode($promotion->options);
+        $translated = array();
+        foreach ($promotion->translations as $translation) {
+            $translated[$translation->lang] = json_decode($translation->content);
         }
         
         return View::make('redminportal::promotions/edit')
@@ -75,20 +74,6 @@ class PromotionController extends BaseController
             $image              = Input::file('image');
             $active             = (Input::get('active') == '' ? false : true);
             
-            $options = array();
-            $translations       = \Config::get('redminportal::translation');
-            foreach ($translations as $translation) {
-                $lang = $translation['lang'];
-                if ($lang == 'en') {
-                    continue;
-                }
-                $options[$lang] = array(
-                    'name'                  => \Input::get($lang . '_name'),
-                    'short_description'     => \Input::get($lang . '_short_description'),
-                    'long_description'      => \Input::get($lang . '_long_description')
-                );
-            }
-            
             $start_date = DateTime::createFromFormat('d/m/Y', Input::get('start_date'));
             $end_date   = DateTime::createFromFormat('d/m/Y', Input::get('end_date'));
             
@@ -109,9 +94,34 @@ class PromotionController extends BaseController
             $promotion->short_description = $short_description;
             $promotion->long_description = $long_description;
             $promotion->active = $active;
-            $promotion->options = json_encode($options);
             
             $promotion->save();
+            
+            // Save translations
+            $translations = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+
+                $translated_content = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+
+                // Check if lang exist
+                $translated_model = $promotion->translations()->where('lang', $lang)->first();
+                if ($translated_model == null) {
+                    $translated_model = new Translation;
+                }
+
+                $translated_model->lang = $lang;
+                $translated_model->content = json_encode($translated_content);
+
+                $promotion->translations()->save($translated_model);
+            }
             
             if (Input::hasFile('image')) {
                 // Delete all existing images for edit

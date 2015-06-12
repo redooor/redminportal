@@ -45,10 +45,9 @@ class CategoryController extends BaseController
             return \View::make('redminportal::pages/404');
         }
 
-        if (empty($category->options)) {
-            $translated = null;
-        } else {
-            $translated = json_decode($category->options);
+        $translated = array();
+        foreach ($category->translations as $translation) {
+            $translated[$translation->lang] = json_decode($translation->content);
         }
 
         $categories = Category::where('active', true)->where('category_id', 0)->orWhere('category_id', null)->orderBy('name')->get();
@@ -84,20 +83,6 @@ class CategoryController extends BaseController
             $active             = (\Input::get('active') == '' ? false : true);
             $order              = \Input::get('order');
             $parent_id          = \Input::get('parent_id');
-            
-            $options = array();
-            $translations       = \Config::get('redminportal::translation');
-            foreach ($translations as $translation) {
-                $lang = $translation['lang'];
-                if ($lang == 'en') {
-                    continue;
-                }
-                $options[$lang] = array(
-                    'name'                  => \Input::get($lang . '_name'),
-                    'short_description'     => \Input::get($lang . '_short_description'),
-                    'long_description'      => \Input::get($lang . '_long_description')
-                );
-            }
             
             $category = (isset($sid) ? Category::find($sid) : new Category);
             
@@ -135,12 +120,37 @@ class CategoryController extends BaseController
             $category->long_description = $long_description;
             $category->active = $active;
             $category->order = $order;
-            $category->options = json_encode($options);
 
             // Check if parent_id is equal to this->id. If 0, save as null
             $category->category_id = ($sid == $parent_id) ? null : (($parent_id == 0) ? null : $parent_id);
 
             $category->save();
+            
+            // Save translations
+            $translations = \Config::get('redminportal::translation');
+            foreach ($translations as $translation) {
+                $lang = $translation['lang'];
+                if ($lang == 'en') {
+                    continue;
+                }
+
+                $translated_content = array(
+                    'name'                  => \Input::get($lang . '_name'),
+                    'short_description'     => \Input::get($lang . '_short_description'),
+                    'long_description'      => \Input::get($lang . '_long_description')
+                );
+
+                // Check if lang exist
+                $translated_model = $category->translations()->where('lang', $lang)->first();
+                if ($translated_model == null) {
+                    $translated_model = new Translation;
+                }
+
+                $translated_model->lang = $lang;
+                $translated_model->content = json_encode($translated_content);
+
+                $category->translations()->save($translated_model);
+            }
 
             if (\Input::hasFile('image')) {
                 // Delete all existing images for edit
