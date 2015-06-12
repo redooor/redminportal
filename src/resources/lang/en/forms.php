@@ -67,4 +67,6 @@ return array(
     'title' => 'Title',
     'slug' => 'Slug',
     'content' => 'Content',
+    'create_page' => 'Create Page',
+    'edit_page' => 'Edit Page',
 );

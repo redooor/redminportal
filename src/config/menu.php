@@ -40,6 +40,11 @@ return array(
                 'hide' => false
             ),
             array(
+                'name' => 'pages',
+                'path' => 'admin/pages',
+                'hide' => false
+            ),
+            array(
                 'name' => 'posts',
                 'path' => 'admin/posts',
                 'hide' => false

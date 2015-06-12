@@ -9,7 +9,6 @@ use Redooor\Redminportal\App\Helpers\RHelper;
  * title        (string, 255)
  * slug         (string, 255)
  * content      (text)
- * featured     (boolean, default true)
  * private      (boolean, default true)
  * category_id  (integer, unsigned)
  * created_at   (dateTime)
@@ -17,9 +16,9 @@ use Redooor\Redminportal\App\Helpers\RHelper;
  *
  */
 
-class Post extends Model
+class Page extends Model
 {
-    protected $table = 'posts';
+    protected $table = 'pages';
     
     public function category()
     {

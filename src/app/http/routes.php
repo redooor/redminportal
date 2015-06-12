@@ -13,7 +13,7 @@ Route::group(['middleware' => 'Redooor\Redminportal\App\Http\Middleware\Authenti
     Route::get('/', function() {
         return redirect('admin/dashboard');
     });
-    Route::get('dashboard', 'PageController@home');
+    Route::get('dashboard', 'HomeController@home');
     Route::controller('announcements', 'AnnouncementController');
     Route::controller('categories', 'CategoryController');
     Route::controller('coupons', 'CouponController');
@@ -29,4 +29,5 @@ Route::group(['middleware' => 'Redooor\Redminportal\App\Http\Middleware\Authenti
     Route::controller('reports', 'ReportController');
     Route::controller('users', 'UserController');
     Route::controller('posts', 'PostController');
+    Route::controller('pages', 'PageController');
 });
