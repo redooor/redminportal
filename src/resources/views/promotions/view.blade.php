@@ -32,7 +32,7 @@
                     <th>Promotions and Events</th>
                     <th>Start</th>
                     <th>End</th>
-                    <th>Active</th>
+                    <th>{{ Lang::get('redminportal::forms.active') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -59,11 +59,11 @@
 						  	<ul class="dropdown-menu pull-right" role="menu">
 						        <li>
 						            <a href="{{ URL::to('admin/promotions/edit/' . $promotion->id) }}">
-						                <i class="glyphicon glyphicon-edit"></i>Edit</a>
+						                <i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
 						        </li>
 						        <li>
 						            <a href="{{ URL::to('admin/promotions/delete/' . $promotion->id) }}" class="btn-confirm">
-						                <i class="glyphicon glyphicon-remove"></i>Delete</a>
+						                <i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
 						        </li>
 						  	</ul>
 						</div>

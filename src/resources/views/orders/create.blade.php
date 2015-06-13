@@ -23,7 +23,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group scrollable-dropdown-menu">
-                        {!! Form::label('email', 'User Email') !!}
+                        {!! Form::label('email', Lang::get('redminportal::forms.email')) !!}
                         {!! Form::text('email', null, array('class' => 'form-control typeahead', 'required')) !!}
                     </div>
                     <div class="form-group">

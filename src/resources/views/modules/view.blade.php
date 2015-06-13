@@ -29,16 +29,16 @@
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>{{ Lang::get('redminportal::forms.name') }}</th>
                     <th>Category</th>
                     <th>SKU</th>
                     <th>Short Description</th>
                     <th class='hide'>Long Description</th>
                     <th>Tags</th>
                     <th>Featured</th>
-                    <th>Active</th>
+                    <th>{{ Lang::get('redminportal::forms.active') }}</th>
                     <th class='hide'>Photos</th>
-                    <th class='hide'>Updated</th>
+                    <th class='hide'>{{ Lang::get('redminportal::forms.updated') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -83,11 +83,11 @@
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
                                     <a href="{{ URL::to('admin/modules/edit/' . $module->id) }}">
-                                        <i class="glyphicon glyphicon-edit"></i>Edit</a>
+                                        <i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                 </li>
                                 <li>
                                     <a href="{{ URL::to('admin/modules/delete/' . $module->id) }}" class="btn-confirm">
-                                        <i class="glyphicon glyphicon-remove"></i>Delete</a>
+                                        <i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                 </li>
                             </ul>
                         </div>

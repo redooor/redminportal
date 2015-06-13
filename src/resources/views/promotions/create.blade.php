@@ -27,21 +27,21 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="active-checker">
-                                {!! Form::checkbox('active', true, true, array('id' => 'active-checker')) !!} Active
+                                {!! Form::checkbox('active', true, true, array('id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="well well-sm">
                     <div class="form-group">
-                        {!! Form::label('start_date', 'Start Date') !!}
+                        {!! Form::label('start_date', Lang::get('redminportal::forms.start_date')) !!}
                         <div class="input-group" id='start-date'>
                             {!! Form::input('text', 'start_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        {!! Form::label('end_date', 'End Date') !!}
+                        {!! Form::label('end_date', Lang::get('redminportal::forms.end_date')) !!}
                         <div class="input-group" id='end-date'>
                             {!! Form::input('text', 'end_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>

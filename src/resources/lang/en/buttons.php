@@ -11,4 +11,10 @@ return array(
     'upload' => 'Upload',
     'edit' => 'Edit',
     'delete' => 'Delete',
+    'activate' => 'Activate',
+    'deactivate' => 'Deactivate',
+    'delete_no' => 'No, no!',
+    'delete_yes' => 'Yes, delete',
+    'close' => 'Close',
+    'download_csv' => 'Download CSV',
 );

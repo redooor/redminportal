@@ -23,11 +23,11 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group scrollable-dropdown-menu">
-                        {!! Form::label('email', 'User Email') !!}
+                        {!! Form::label('email', Lang::get('redminportal::forms.email')) !!}
                         {!! Form::text('email', null, array('class' => 'form-control typeahead', 'required')) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('pricelist_id', 'Module, Membership') !!}
+                        {!! Form::label('pricelist_id', Lang::get('redminportal::forms.module_membership')) !!}
                         {!! Form::select('pricelist_id', $pricelists_select, null, array('class' => 'form-control')) !!}
                     </div>
                     <div class="form-group">

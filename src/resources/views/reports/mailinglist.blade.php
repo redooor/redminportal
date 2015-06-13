@@ -2,11 +2,11 @@
     @if (count($data))
     <table>
         <tr>
-            <th>Email</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Active</th>
-            <th>Updated</th>
+            <th>{{ Lang::get('redminportal::forms.email') }}</th>
+            <th>{{ Lang::get('redminportal::forms.first_name') }}</th>
+            <th>{{ Lang::get('redminportal::forms.last_name') }}</th>
+            <th>{{ Lang::get('redminportal::forms.active') }}</th>
+            <th>{{ Lang::get('redminportal::forms.updated') }}</th>
         </tr>
         @foreach ($data as $item)
             <tr>

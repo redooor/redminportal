@@ -3,8 +3,8 @@
     <table>
         <tr>
             <th>User</th>
-            <th>Email</th>
-            <th>Module Name</th>
+            <th>{{ Lang::get('redminportal::forms.email') }}</th>
+            <th>{{ Lang::get('redminportal::forms.module_name') }}</th>
             <th>Membership</th>
             <th>Paid</th>
             <th>Payment Status</th>

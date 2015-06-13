@@ -31,7 +31,7 @@
 				<tr>
 					<th>
                         <a class="block-header" href="{{ URL::to('admin/users/sort') . '/email/' . ($sortBy == 'email' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Email
+                            {{ Lang::get('redminportal::forms.email') }}
                             @if ($sortBy == 'email')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -39,7 +39,7 @@
                     </th>
                     <th>
                         <a class="block-header" href="{{ URL::to('admin/users/sort') . '/first_name/' . ($sortBy == 'first_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            First Name
+                            {{ Lang::get('redminportal::forms.first_name') }}
                             @if ($sortBy == 'first_name')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -47,7 +47,7 @@
                     </th>
                     <th>
                         <a class="block-header" href="{{ URL::to('admin/users/sort') . '/last_name/' . ($sortBy == 'last_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Last Name
+                            {{ Lang::get('redminportal::forms.last_name') }}
                             @if ($sortBy == 'last_name')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -79,7 +79,7 @@
                     </th>
                     <th>
                         <a class="block-header" href="{{ URL::to('admin/users/sort') . '/created_at/' . ($sortBy == 'created_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Created
+                            {{ Lang::get('redminportal::forms.created') }}
                             @if ($sortBy == 'created_at')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -87,7 +87,7 @@
                     </th>
                     <th>
                         <a class="block-header" href="{{ URL::to('admin/users/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Updated
+                            {{ Lang::get('redminportal::forms.updated') }}
                             @if ($sortBy == 'updated_at')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -126,21 +126,21 @@
 								@if ($user->activated)
 									<li>
 										<a href="{{ URL::to('admin/users/deactivate/' . $user->id) }}">
-											<i class="glyphicon glyphicon-eye-close"></i>Deactivate</a>
+											<i class="glyphicon glyphicon-eye-close"></i>{{ Lang::get('redminportal::buttons.deactivate') }}</a>
 									</li>
 								@else
 									<li>
 										<a href="{{ URL::to('admin/users/activate/' . $user->id) }}">
-											<i class="glyphicon glyphicon-eye-open"></i>Activate</a>
+											<i class="glyphicon glyphicon-eye-open"></i>{{ Lang::get('redminportal::buttons.activate') }}</a>
 									</li>
 								@endif
 								<li>
 									<a href="{{ URL::to('admin/users/edit/' . $user->id) }}">
-										<i class="glyphicon glyphicon-edit"></i>Edit</a>
+										<i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
 								</li>
                                 <li>
 									<a href="{{ URL::to('admin/users/delete/' . $user->id) }}" class="btn-confirm">
-										<i class="glyphicon glyphicon-remove"></i>Delete</a>
+										<i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
 								</li>
 							</ul>
 						</div>

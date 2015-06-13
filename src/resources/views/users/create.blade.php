@@ -22,17 +22,17 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        {!! Form::label('first_name', 'First Name') !!}
+                        {!! Form::label('first_name', Lang::get('redminportal::forms.first_name')) !!}
                         {!! Form::text('first_name', null, array('class' => 'form-control', 'autofocus', 'required')) !!}
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('last_name', 'Last Name') !!}
+                        {!! Form::label('last_name', Lang::get('redminportal::forms.last_name')) !!}
                         {!! Form::text('last_name', null, array('class' => 'form-control', 'required')) !!}
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('email', 'Email') !!}
+                        {!! Form::label('email', Lang::get('redminportal::forms.email')) !!}
                         {!! Form::email('email', null, array('class' => 'form-control', 'required')) !!}
                     </div>
 

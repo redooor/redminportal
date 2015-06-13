@@ -31,7 +31,7 @@
 				<tr>
                     <th>
                         <a href="{{ URL::to('admin/groups/sort') . '/name/' . ($sortBy == 'name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Name
+                            {{ Lang::get('redminportal::forms.name') }}
                             @if ($sortBy == 'name')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -40,7 +40,7 @@
 					<th>Permissions</th>
 					<th>
                         <a href="{{ URL::to('admin/groups/sort') . '/created_at/' . ($sortBy == 'created_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Created
+                            {{ Lang::get('redminportal::forms.created') }}
                             @if ($sortBy == 'created_at')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -48,7 +48,7 @@
                     </th>
 					<th>
                         <a href="{{ URL::to('admin/groups/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Updated
+                            {{ Lang::get('redminportal::forms.updated') }}
                             @if ($sortBy == 'updated_at')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -82,11 +82,11 @@
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
                                     <a href="{{ URL::to('admin/groups/edit/' . $group->id) }}">
-                                        <i class="glyphicon glyphicon-edit"></i>Edit</a>
+                                        <i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                 </li>
                                 <li>
                                     <a href="{{ URL::to('admin/groups/delete/' . $group->id) }}" class="btn-confirm">
-                                        <i class="glyphicon glyphicon-remove"></i>Delete</a>
+                                        <i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -99,6 +99,6 @@
 		{!! $groups->render() !!}
         </div>
 	@else
-		<div class="alert alert-info">No group found</div>
+		<div class="alert alert-info">{{ Lang::get('redminportal::messages.no_group_found') }}</div>
 	@endif
 @stop

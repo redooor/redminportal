@@ -24,11 +24,11 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            {!! Form::label('name', 'Name') !!}
+                            {!! Form::label('name', Lang::get('redminportal::forms.name')) !!}
                             {!! Form::text('name', $membership->name, array('class' => 'form-control', 'required', 'autofocus')) !!}
                         </div>
                         <div class="form-group">
-                            {!! Form::label('rank', 'Rank') !!}
+                            {!! Form::label('rank', Lang::get('redminportal::forms.rank')) !!}
                             {!! Form::input('number', 'rank', $membership->rank, array('class' => 'form-control', 'min' => '0', 'required')) !!}
                         </div>
                     </div>

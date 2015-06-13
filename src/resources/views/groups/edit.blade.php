@@ -23,14 +23,14 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        {!! Form::label('name', 'Name') !!}
+                        {!! Form::label('name', Lang::get('redminportal::forms.name')) !!}
                         {!! Form::text('name', $group->name, array('class' => 'form-control', 'autofocus', 'required')) !!}
                     </div>
                     <div class="well">
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="view">
-                                    {!! Form::checkbox('view', 'yes', $checkbox_view, array('id' => 'view')) !!} View
+                                    {!! Form::checkbox('view', 'yes', $checkbox_view, array('id' => 'view')) !!} {{ Lang::get('redminportal::forms.view') }}
                                 </label>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="create">
-                                    {!! Form::checkbox('create', 'yes', $checkbox_create, array('id' => 'create')) !!} Create
+                                    {!! Form::checkbox('create', 'yes', $checkbox_create, array('id' => 'create')) !!} {{ Lang::get('redminportal::forms.create') }}
                                 </label>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="delete">
-                                    {!! Form::checkbox('delete', 'yes', $checkbox_delete, array('id' => 'delete')) !!} Delete
+                                    {!! Form::checkbox('delete', 'yes', $checkbox_delete, array('id' => 'delete')) !!} {{ Lang::get('redminportal::forms.delete') }}
                                 </label>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="update">
-                                    {!! Form::checkbox('update', 'yes', $checkbox_update, array('id' => 'update')) !!} Update
+                                    {!! Form::checkbox('update', 'yes', $checkbox_update, array('id' => 'update')) !!} {{ Lang::get('redminportal::forms.update') }}
                                 </label>
                             </div>
                         </div>

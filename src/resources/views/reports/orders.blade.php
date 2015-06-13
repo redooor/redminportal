@@ -3,7 +3,7 @@
     <table>
         <tr>
             <th>User</th>
-            <th>Email</th>
+            <th>{{ Lang::get('redminportal::forms.email') }}</th>
             <th>Paid</th>
             <th>Payment Status</th>
             <th>Transaction ID</th>

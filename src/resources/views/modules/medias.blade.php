@@ -2,7 +2,7 @@
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>{{ Lang::get('redminportal::forms.name') }}</th>
                 <th>Description</th>
                 @foreach ($memberships as $membership)
                     <th>{{ $membership->name }}</th>

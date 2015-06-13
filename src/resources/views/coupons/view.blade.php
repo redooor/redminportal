@@ -31,7 +31,7 @@
                 <tr>
                     <th>
                         <a href="{{ URL::to('admin/coupons/sort') . '/code/' . ($sortBy == 'code' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Coupon Code
+                            {{ Lang::get('redminportal::forms.coupon_code') }}
                             @if ($sortBy == 'code')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -39,7 +39,7 @@
                     </th>
                     <th>
                         <a href="{{ URL::to('admin/coupons/sort') . '/amount/' . ($sortBy == 'amount' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Coupon Amount
+                            {{ Lang::get('redminportal::forms.amount') }}
                             @if ($sortBy == 'amount')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -47,7 +47,7 @@
                     </th>
                     <th>
                         <a href="{{ URL::to('admin/coupons/sort') . '/start_date/' . ($sortBy == 'start_date' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Coupon Start Date
+                            {{ Lang::get('redminportal::forms.start_date') }}
                             @if ($sortBy == 'start_date')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -55,7 +55,7 @@
                     </th>
                     <th>
                         <a href="{{ URL::to('admin/coupons/sort') . '/end_date/' . ($sortBy == 'end_date' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Coupon Expiry Date
+                            {{ Lang::get('redminportal::forms.expiry_date') }}
                             @if ($sortBy == 'end_date')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -63,7 +63,7 @@
                     </th>
                     <th>
                         <a href="{{ URL::to('admin/coupons/sort') . '/usage_limit_per_coupon/' . ($sortBy == 'usage_limit_per_coupon' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Usage Limit Per Coupon
+                            {{ Lang::get('redminportal::forms.usage_limit_per_coupon') }}
                             @if ($sortBy == 'usage_limit_per_coupon')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -71,7 +71,7 @@
                     </th>
                     <th>
                         <a href="{{ URL::to('admin/coupons/sort') . '/usage_limit_per_user/' . ($sortBy == 'usage_limit_per_user' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Usage Limit Per User
+                            {{ Lang::get('redminportal::forms.usage_limit_per_user') }}
                             @if ($sortBy == 'usage_limit_per_user')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -110,11 +110,11 @@
                                 <ul class="dropdown-menu pull-right" role="menu">
                                     <li>
                                         <a href="{{ URL::to('admin/coupons/edit/' . $coupon->id) }}">
-                                            <i class="glyphicon glyphicon-edit"></i>Edit</a>
+                                            <i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                     </li>
                                     <li>
                                         <a href="{{ URL::to('admin/coupons/delete/' . $coupon->id) }}" class="btn-confirm">
-                                            <i class="glyphicon glyphicon-remove"></i>Delete</a>
+                                            <i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -127,7 +127,7 @@
         {!! $coupons->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No coupon found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_coupon_found') }}</div>
     @endif
 @stop
 

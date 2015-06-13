@@ -32,7 +32,7 @@
                 <tr>
                     <th>
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/email/' . ($sortBy == 'email' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Email
+                            {{ Lang::get('redminportal::forms.email') }}
                             @if ($sortBy == 'email')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -40,7 +40,7 @@
                     </th>
                     <th>
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/first_name/' . ($sortBy == 'first_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            First Name
+                            {{ Lang::get('redminportal::forms.first_name') }}
                             @if ($sortBy == 'first_name')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -48,7 +48,7 @@
                     </th>
                     <th>
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/last_name/' . ($sortBy == 'last_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Last Name
+                            {{ Lang::get('redminportal::forms.last_name') }}
                             @if ($sortBy == 'last_name')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -56,7 +56,7 @@
                     </th>
                     <th>
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/active/' . ($sortBy == 'active' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Active
+                            {{ Lang::get('redminportal::forms.active') }}
                             @if ($sortBy == 'active')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -64,7 +64,7 @@
                     </th>
                     <th>
                         <a href="{{ URL::to('admin/mailinglists/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Updated
+                            {{ Lang::get('redminportal::forms.updated') }}
                             @if ($sortBy == 'updated_at')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -95,11 +95,11 @@
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
                                     <a href="{{ URL::to('admin/mailinglists/edit/' . $mailinglist->id) }}">
-                                        <i class="glyphicon glyphicon-edit"></i>Edit</a>
+                                        <i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                 </li>
                                 <li>
                                     <a href="{{ URL::to('admin/mailinglists/delete/' . $mailinglist->id) }}" class="btn-confirm">
-                                        <i class="glyphicon glyphicon-remove"></i>Delete</a>
+                                        <i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -112,40 +112,40 @@
         {!! $mailinglists->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No mailing list found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_mailinglist_found') }}</div>
     @endif
     <div id="export-csv" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\ReportController@postMailinglist', 'report' => 'form')) !!}
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Export to CSV</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ Lang::get('redminportal::buttons.close') }}</span></button>
+                    <h4 class="modal-title">{{ Lang::get('redminportal::messages.export_to_csv') }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class='row'>
                         <div class="col-md-12">
                             <div class="form-group">
-                                {!! Form::label('start_date', 'Start Date') !!}
+                                {!! Form::label('start_date', Lang::get('redminportal::forms.start_date')) !!}
                                 <div class="input-group" id='start-date'>
                                     {!! Form::input('text', 'start_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                {!! Form::label('end_date', 'End Date') !!}
+                                {!! Form::label('end_date', Lang::get('redminportal::forms.end_date')) !!}
                                 <div class="input-group" id='end-date'>
                                     {!! Form::input('text', 'end_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                             </div>
-                            <p class="help-block">Leave the dates empty to download all.</p>
+                            <p class="help-block">{{ Lang::get('redminportal::messages.leave_all_blank_to_download_all') }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    {!! Form::submit('Download CSV', array('class' => 'btn btn-primary')) !!}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ Lang::get('redminportal::buttons.close') }}</button>
+                    {!! Form::submit(Lang::get('redminportal::buttons.download_csv'), array('class' => 'btn btn-primary')) !!}
                 </div>
                 {!! Form::close() !!}
             </div><!-- /.modal-content -->

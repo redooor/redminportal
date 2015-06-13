@@ -24,17 +24,17 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            {!! Form::label('first_name', 'First Name') !!}
+                            {!! Form::label('first_name', Lang::get('redminportal::forms.first_name')) !!}
                             {!! Form::text('first_name', $mailinglist->first_name, array('class' => 'form-control', 'required', 'autofocus')) !!}
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('last_name', 'Last Name') !!}
+                            {!! Form::label('last_name', Lang::get('redminportal::forms.last_name')) !!}
                             {!! Form::text('last_name', $mailinglist->last_name, array('class' => 'form-control', 'required')) !!}
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('email', 'Email') !!}
+                            {!! Form::label('email', Lang::get('redminportal::forms.email')) !!}
                             {!! Form::email('email', $mailinglist->email, array('class' => 'form-control', 'required')) !!}
                         </div>
                         
@@ -42,7 +42,7 @@
                             <div class="form-group">
                                 <div class="checkbox">
                                     <label for="active-checker">
-                                        {!! Form::checkbox('active', $mailinglist->active, $mailinglist->active, array('id' => 'active-checker')) !!} Active
+                                        {!! Form::checkbox('active', $mailinglist->active, $mailinglist->active, array('id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
                                     </label>
                                 </div>
                             </div>

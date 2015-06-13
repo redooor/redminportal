@@ -59,14 +59,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Confirm delete?</h4>
+                        <h4 class="modal-title">{{ Lang::get('redminportal::messages.confirm_delete') }}</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure you want to delete this?</p>
+                        <p>{{ Lang::get('redminportal::messages.are_you_sure_you_want_to_delete') }}</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">No, no!</button>
-                        <a href="#" id="confirm-delete" class="btn btn-danger">Yes, delete</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ Lang::get('redminportal::buttons.delete_no') }}</button>
+                        <a href="#" id="confirm-delete" class="btn btn-danger">{{ Lang::get('redminportal::buttons.delete_yes') }}</a>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->

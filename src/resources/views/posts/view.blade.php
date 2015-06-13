@@ -32,8 +32,8 @@
                     <th>Title</th>
                     <th>Category</th>
                     <th>Slug</th>
-                    <th>Created</th>
-                    <th>Updated</th>
+                    <th>{{ Lang::get('redminportal::forms.created') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.updated') }}</th>
                     <th>Featured</th>
                     <th>Private</th>
                     <th></th>
@@ -69,11 +69,11 @@
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
                                     <a href="{{ URL::to('admin/posts/edit/' . $post->id) }}">
-                                        <i class="glyphicon glyphicon-edit"></i>Edit</a>
+                                        <i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                 </li>
                                 <li>
                                     <a href="{{ URL::to('admin/posts/delete/' . $post->id) }}" class="btn-confirm">
-                                        <i class="glyphicon glyphicon-remove"></i>Delete</a>
+                                        <i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                 </li>
                             </ul>
                         </div>
