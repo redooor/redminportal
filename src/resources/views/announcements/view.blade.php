@@ -29,10 +29,10 @@
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Created</th>
-                    <th>Updated</th>
-                    <th>Private</th>
+                    <th>{{ Lang::get('redminportal::forms.title') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.created') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.updated') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.private') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -57,11 +57,11 @@
 						  	<ul class="dropdown-menu pull-right" role="menu">
 						        <li>
 						            <a href="{{ URL::to('admin/announcements/edit/' . $announcement->id) }}">
-						                <i class="glyphicon glyphicon-edit"></i>Edit</a>
+						                <i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
 						        </li>
 						        <li>
 						            <a href="{{ URL::to('admin/announcements/delete/' . $announcement->id) }}" class="btn-confirm">
-						                <i class="glyphicon glyphicon-remove"></i>Delete</a>
+						                <i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
 						        </li>
 						  	</ul>
 						</div>
@@ -74,6 +74,6 @@
         {!! $announcements->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No announcement found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_announcement_found') }}</div>
     @endif
 @stop

@@ -9,4 +9,6 @@ return array(
     'get_durations' => 'Get Durations',
     'export_csv' => 'Export CSV',
     'upload' => 'Upload',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
 );

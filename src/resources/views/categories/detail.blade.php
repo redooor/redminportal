@@ -6,11 +6,11 @@
         </h4>
     </div>
     <ul class="list-group">
-        <li class="list-group-item"><strong>Updated at:</strong><br>{{ $category->updated_at }}</li>
-        <li class="list-group-item"><strong>Parent:</strong><br>@if($category->category_id > 0){{ $category->parentCategory->name }}@else{{ "None" }}@endif</li>
-        <li class="list-group-item"><strong>Order number:</strong><br>{{ $category->order }}</li>
-        <li class="list-group-item"><strong>Short Description:</strong><br>{{ $category->short_description }}</li>
-        <li class="list-group-item"><strong>Long Description:</strong><br>{!! $category->long_description !!}</li>
+        <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.updated') }}:</strong><br>{{ $category->updated_at }}</li>
+        <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.parent_category') }}:</strong><br>@if($category->category_id > 0){{ $category->parentCategory->name }}@else{{ "None" }}@endif</li>
+        <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.priority_order') }}:</strong><br>{{ $category->order }}</li>
+        <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.summary') }}:</strong><br>{{ $category->short_description }}</li>
+        <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.description') }}:</strong><br>{!! $category->long_description !!}</li>
         @if($category->images()->count() > 0)
         <li class="list-group-item">
             @foreach( $category->images as $image )
@@ -20,7 +20,7 @@
         @endif
     </ul>
     <div class="panel-footer text-right">
-        <a href="{{ URL::to('admin/categories/edit/' . $category->id) }}" class="btn btn-primary"><i class="glyphicon glyphicon-edit"></i>Edit</a>
-        <a href="{{ URL::to('admin/categories/delete/' . $category->id) }}" class="btn btn-danger btn-confirm"><i class="glyphicon glyphicon-remove"></i>Delete</a>
+        <a href="{{ URL::to('admin/categories/edit/' . $category->id) }}" class="btn btn-primary"><i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
+        <a href="{{ URL::to('admin/categories/delete/' . $category->id) }}" class="btn btn-danger btn-confirm"><i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
     </div>
 </div>

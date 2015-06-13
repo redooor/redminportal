@@ -28,7 +28,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="private-checker">
-                                {!! Form::checkbox('private', $announcement->private, $announcement->private, array('id' => 'private-checker')) !!} Private
+                                {!! Form::checkbox('private', $announcement->private, $announcement->private, array('id' => 'private-checker')) !!} {{ Lang::get('redminportal::forms.private') }}
                             </label>
                         </div>
                     </div>
@@ -36,8 +36,8 @@
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                     <div>
-                        <span class="btn btn-default btn-file"><span class="fileupload-new">Upload photo</span><span class="fileupload-exists">Change</span>{!! Form::file('image') !!}</span>
-                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>{!! Form::file('image') !!}</span>
+                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
                     </div>
                 </div>
             </div>
@@ -48,11 +48,11 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            {!! Form::label('title', 'Title') !!}
+                            {!! Form::label('title', Lang::get('redminportal::forms.title')) !!}
                             {!! Form::text('title', $announcement->title, array('class' => 'form-control')) !!}
                         </div>
                         <div class="form-group">
-                            {!! Form::label('content', 'Content') !!}
+                            {!! Form::label('content', Lang::get('redminportal::forms.content')) !!}
                             {!! Form::textarea('content', $announcement->content, array('class' => 'form-control')) !!}
                         </div>
                     </div>

@@ -27,19 +27,19 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="active-checker">
-                                {!! Form::checkbox('active', true, true, array('id' => 'active-checker')) !!} Active
+                                {!! Form::checkbox('active', true, true, array('id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-title">Parent Category</div>
+                        <div class="panel-title">{{ Lang::get('redminportal::forms.parent_category') }}</div>
                     </div>
                     <div class="panel-body">
                         {!! Form::hidden('parent_id', null, array('id' => 'parent_id')) !!}
                         <ul class="redooor-hierarchy">
-                            <li><a href="0" class="active"><span class='glyphicon glyphicon-chevron-right'></span> No Parent</a></li>
+                            <li><a href="0" class="active"><span class='glyphicon glyphicon-chevron-right'></span> {{ Lang::get('redminportal::forms.no_parent') }}</a></li>
                         @foreach ($categories as $item)
                             <li>{!! $item->printCategory() !!}</li>
                         @endforeach
@@ -50,8 +50,8 @@
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                       <div>
-                        <span class="btn btn-default btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span>{!! Form::file('image') !!}</span>
-                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>{!! Form::file('image') !!}</span>
+                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
                       </div>
                     </div>
                 </div>
@@ -71,17 +71,17 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="lang-en">
                                 <div class="form-group">
-                                    {!! Form::label('name', 'Title') !!}
+                                    {!! Form::label('name', Lang::get('redminportal::forms.title')) !!}
                                     {!! Form::text('name', null, array('class' => 'form-control', 'required')) !!}
                                 </div>
 
                                 <div class="form-group">
-                                    {!! Form::label('short_description', 'Summary') !!}
+                                    {!! Form::label('short_description', Lang::get('redminportal::forms.summary')) !!}
                                     {!! Form::text('short_description', null, array('class' => 'form-control', 'required')) !!}
                                 </div>
 
                                 <div class="form-group">
-                                    {!! Form::label('long_description', 'Description') !!}
+                                    {!! Form::label('long_description', Lang::get('redminportal::forms.description')) !!}
                                     {!! Form::textarea('long_description', null, array('class' => 'form-control', 'style' => 'height:200px')) !!}
                                 </div>
                             </div>
@@ -89,17 +89,17 @@
                                 @if($translation['lang'] != 'en')
                                 <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
                                     <div class="form-group">
-                                        {!! Form::label($translation['lang'] . '_name', 'Title') !!}
+                                        {!! Form::label($translation['lang'] . '_name', Lang::get('redminportal::forms.title')) !!}
                                         {!! Form::text($translation['lang'] . '_name', null, array('class' => 'form-control')) !!}
                                     </div>
 
                                     <div class="form-group">
-                                        {!! Form::label($translation['lang'] . '_short_description', 'Summary') !!}
+                                        {!! Form::label($translation['lang'] . '_short_description', Lang::get('redminportal::forms.summary')) !!}
                                         {!! Form::text($translation['lang'] . '_short_description', null, array('class' => 'form-control')) !!}
                                     </div>
 
                                     <div class="form-group">
-                                        {!! Form::label($translation['lang'] . '_long_description', 'Description') !!}
+                                        {!! Form::label($translation['lang'] . '_long_description', Lang::get('redminportal::forms.description')) !!}
                                         {!! Form::textarea($translation['lang'] . '_long_description', null, array('class' => 'form-control', 'style' => 'height:200px')) !!}
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            {!! Form::label('order', 'Priority Order') !!}
+                            {!! Form::label('order', Lang::get('redminportal::forms.priority_order')) !!}
                             {!! Form::input('number', 'order', '0', array('class' => 'form-control', 'min' => '0', 'required')) !!}
                         </div>
                     </div>

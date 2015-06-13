@@ -36,12 +36,14 @@
             <div class="col-md-8">
                 <div class="rdpt-preloader"><img src="{{ URL::to('vendor/redooor/redminportal/img/Preloader_2.gif') }}" class="img-circle"/></div>
                 <div id="category-detail">
-                    <p><span class="label label-info"><span class="glyphicon glyphicon-chevron-left"></span> Select category to view detail</span></p>
+                    <div class="alert alert-info">
+                        <span class="glyphicon glyphicon-chevron-left"></span> {{ Lang::get('redminportal::messages.select_category_to_view_detail') }}
+                    </div>
                 </div>
             </div>
         </div>
     @else
-        <div class="alert alert-info">No category found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_category_found') }}</div>
     @endif
 @stop
 
