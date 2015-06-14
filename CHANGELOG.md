@@ -1,15 +1,22 @@
 # Change log
 
-1. [Version 0.2.0 Under Development](#version-020-under-development)
-2. [Version 0.1.5](#version-015)
-3. [Version 0.1.4](#version-014)
-4. [Version 0.1.3](#version-013)
-5. [Version 0.1.2](#version-012)
-6. [Version 0.1.1](#version-011)
-7. [Version 0.1.0](#version-010)
+1. [Version 0.3.0 Under Development](#version-030-under-development)
+2. [Version 0.2.0](#version-020)
+3. [Version 0.1.5](#version-015)
+4. [Version 0.1.4](#version-014)
+5. [Version 0.1.3](#version-013)
+6. [Version 0.1.2](#version-012)
+7. [Version 0.1.1](#version-011)
+8. [Version 0.1.0](#version-010)
 
-## Version 0.2.0 (Under Development)
-Branch: develop. Focus on supporting Laravel 5.0 and making sure all models and controllers work.
+## Version 0.3.0 (Under Development)
+Branch: develop. Focus on supporting Laravel 5.1.
+
+Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
+Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+
+## Version 0.2.0
+Focus on supporting Laravel 5.0 and making sure all models and controllers work.
 
 Version 0.2.0 is **NOT** backward compatible.
 
