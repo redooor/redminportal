@@ -30,15 +30,13 @@
             <thead>
                 <tr>
                     <th>{{ Lang::get('redminportal::forms.name') }}</th>
-                    <th>Category</th>
-                    <th>SKU</th>
-                    <th>Short Description</th>
-                    <th class='hide'>Long Description</th>
-                    <th>Tags</th>
-                    <th>Featured</th>
+                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.sku') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.summary') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.tags') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.featured') }}</th>
                     <th>{{ Lang::get('redminportal::forms.active') }}</th>
-                    <th class='hide'>Photos</th>
-                    <th class='hide'>{{ Lang::get('redminportal::forms.updated') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.updated') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -49,7 +47,6 @@
                     <td>{{ $module->category->name }}</td>
                     <td>{{ $module->sku }}</td>
                     <td>{{ $module->short_description }}</td>
-                    <td class='hide'>{{ $module->long_description }}</td>
                     <td>
                         @foreach( $module->tags as $tag)
                         <span class="label label-info">{{ $tag->name }}</span>
@@ -69,12 +66,7 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
-                    <td class='hide'>
-                        @foreach( $module->images as $image )
-                        {{ $image->path }}<br/>
-                        @endforeach
-                    </td>
-                    <td class='hide'>{{ $module->updated_at }}</td>
+                    <td>{{ date('d-M-y', strtotime($module->updated_at)) }}</td>
                     <td class="table-actions text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
@@ -100,6 +92,6 @@
         {!! $modules->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No module found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_module_found') }}</div>
     @endif
 @stop

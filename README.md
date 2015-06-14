@@ -92,6 +92,10 @@ To use it, get the model's translations and use json_decode to convert content i
 
 # Installation guide for Users
 
+You can install Laravel version 5.0 using the command:
+
+    composer create-project laravel/laravel redmindemo 5.0.*
+
 1. Add Redminportal to composer.json of a new Laravel application, under "require". Like this:
 
         "require": {
@@ -147,6 +151,11 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
 It is recommended that contributors use Laravel Homestead for development because it will provide the same development environment for all of us. Read more about Laravel Homestead [here](http://laravel.com/docs/master/homestead).
 
 1. Install Laravel 5.0 using [this guide](http://laravel.com/docs/5.0/installation). We'll call this the [root].
+
+You can install Laravel version 5.0 using the command:
+
+    composer create-project laravel/laravel redmindemo 5.0.*
+
 2. Create a folder named "packages" inside the [root] folder.
 3. Clone the Redooor\Redminportal repository into [root]\packages\redooor\redminportal folder.
 4. Open a terminal, cd to [root]\packages\redooor\redminportal folder then run:

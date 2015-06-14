@@ -55,7 +55,7 @@
                     </th>
                     <th>
                         <a class="block-header" href="{{ URL::to('admin/users/sort') . '/group/' . ($sortBy == 'group' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Groups
+                            {{ Lang::get('redminportal::forms.groups') }}
                             @if ($sortBy == 'group')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -63,7 +63,7 @@
                     </th>
                     <th>
                         <a class="block-header" href="{{ URL::to('admin/users/sort') . '/activated/' . ($sortBy == 'activated' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Activated
+                            {{ Lang::get('redminportal::forms.activated') }}
                             @if ($sortBy == 'activated')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -71,7 +71,7 @@
                     </th>
                     <th>
                         <a class="block-header" href="{{ URL::to('admin/users/sort') . '/last_login/' . ($sortBy == 'last_login' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            Last Login
+                            {{ Lang::get('redminportal::forms.last_login') }}
                             @if ($sortBy == 'last_login')
                             {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
                             @endif
@@ -153,6 +153,6 @@
 		{!! $users->render() !!}
         </div>
 	@else
-		<div class="alert alert-info">No user found</div>
+		<div class="alert alert-info">{{ Lang::get('redminportal::messages.no_user_found') }}</div>
 	@endif
 @stop

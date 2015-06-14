@@ -30,12 +30,12 @@
             <thead>
                 <tr>
                     <th>{{ Lang::get('redminportal::forms.name') }}</th>
-                    <th>Category</th>
-                    <th>SKU</th>
-                    <th>Price</th>
-                    <th>Short Description</th>
-                    <th>Tags</th>
-                    <th>Featured</th>
+                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.sku') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.price') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.summary') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.tags') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.featured') }}</th>
                     <th>{{ Lang::get('redminportal::forms.active') }}</th>
                     <th></th>
                 </tr>
@@ -92,6 +92,6 @@
         {!! $products->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No product found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_product_found') }}</div>
     @endif
 @stop

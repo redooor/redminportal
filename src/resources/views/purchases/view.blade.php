@@ -33,11 +33,11 @@
                     <th>User</th>
                     <th>{{ Lang::get('redminportal::forms.email') }}</th>
                     <th>{{ Lang::get('redminportal::forms.module_name') }}</th>
-                    <th>Membership</th>
-                    <th>Paid</th>
-                    <th>Payment Status</th>
-                    <th>Transaction ID</th>
-                    <th>Purchased on</th>
+                    <th>{{ Lang::get('redminportal::forms.membership') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.paid') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.payment_status') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.transaction_id') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.purchased_on') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -78,7 +78,7 @@
         {!! $purchases->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No purchase found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_purchase_found') }}</div>
     @endif
     <div id="export-csv" class="modal fade">
         <div class="modal-dialog">

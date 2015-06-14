@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>{{ Lang::get('redminportal::forms.name') }}</th>
-                <th>Description</th>
+                <th>{{ Lang::get('redminportal::forms.description') }}</th>
                 @foreach ($memberships as $membership)
                     <th>{{ $membership->name }}</th>
                 @endforeach
@@ -26,5 +26,5 @@
         </tbody>
     </table>
 @else
-    <div class="well">There's no media in this category.</div>
+    <div class="well">{{ Lang::get('redminportal::messages.no_media_in_this_category') }}</div>
 @endif

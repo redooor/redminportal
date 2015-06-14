@@ -4,12 +4,12 @@
         <tr>
             <th>User</th>
             <th>{{ Lang::get('redminportal::forms.email') }}</th>
-            <th>Paid</th>
-            <th>Payment Status</th>
-            <th>Transaction ID</th>
-            <th>Purchased on</th>
-            <th>Product</th>
-            <th>SKU</th>
+            <th>{{ Lang::get('redminportal::forms.paid') }}</th>
+            <th>{{ Lang::get('redminportal::forms.payment_status') }}</th>
+            <th>{{ Lang::get('redminportal::forms.transaction_id') }}</th>
+            <th>{{ Lang::get('redminportal::forms.ordered_on') }}</th>
+            <th>{{ Lang::get('redminportal::forms.products') }}</th>
+            <th>{{ Lang::get('redminportal::forms.sku') }}</th>
         </tr>
         @foreach($data as $order)
             @foreach($order->products as $product)

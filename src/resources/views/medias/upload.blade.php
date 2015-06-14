@@ -32,10 +32,10 @@
                 <div class="panel-body">
                     <ul id="filelist"></ul>
                     <br>
-                    <a id="browse" class="btn btn-primary btn-sm" href="javascript:;">Browse...</a>
+                    <a id="browse" class="btn btn-primary btn-sm" href="javascript:;">{{ Lang::get('redminportal::forms.browse_file') }}</a>
                 </div>
                 <div class="panel-footer">
-                    Existing file: <strong>{{ $media->path }}</strong> [{{ $media->mimetype }}]
+                    {{ Lang::get('redminportal::forms.existing_file') }}: <strong>{{ $media->path }}</strong> [{{ $media->mimetype }}]
                 </div>
             </div>
         </div>

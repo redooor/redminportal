@@ -64,6 +64,6 @@
         {!! $memberships->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No membership found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_membership_found') }}</div>
     @endif
 @stop

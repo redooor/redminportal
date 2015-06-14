@@ -29,13 +29,13 @@
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Slug</th>
+                    <th>{{ Lang::get('redminportal::forms.title') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.slug') }}</th>
                     <th>{{ Lang::get('redminportal::forms.created') }}</th>
                     <th>{{ Lang::get('redminportal::forms.updated') }}</th>
-                    <th>Featured</th>
-                    <th>Private</th>
+                    <th>{{ Lang::get('redminportal::forms.featured') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.private') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -86,6 +86,6 @@
         {!! $posts->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No post found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_post_found') }}</div>
     @endif
 @stop

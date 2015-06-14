@@ -32,11 +32,11 @@
                 <tr>
                     <th>User</th>
                     <th>{{ Lang::get('redminportal::forms.email') }}</th>
-                    <th>Paid</th>
-                    <th>Payment Status</th>
-                    <th>Transaction ID</th>
-                    <th>Ordered on</th>
-                    <th>Products</th>
+                    <th>{{ Lang::get('redminportal::forms.paid') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.payment_status') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.transaction_id') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.ordered_on') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.products') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -89,7 +89,7 @@
         {!! $orders->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No order found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_order_found') }}</div>
     @endif
     <div id="export-csv" class="modal fade">
         <div class="modal-dialog">

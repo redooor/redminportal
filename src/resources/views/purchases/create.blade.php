@@ -31,18 +31,18 @@
                         {!! Form::select('pricelist_id', $pricelists_select, null, array('class' => 'form-control')) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('payment_status', 'Payment Status') !!}
+                        {!! Form::label('payment_status', Lang::get('redminportal::forms.payment_status')) !!}
                         {!! Form::select('payment_status', $payment_statuses, null, array('class' => 'form-control')) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('paid', 'Paid') !!}
+                        {!! Form::label('paid', Lang::get('redminportal::forms.paid')) !!}
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
                             {!! Form::text('paid', null, array('class' => 'form-control', 'required')) !!}
                         </div>
                     </div>
                     <div class="form-group">
-                        {!! Form::label('transaction_id', 'Transaction ID') !!}
+                        {!! Form::label('transaction_id', Lang::get('redminportal::forms.transaction_id')) !!}
                         {!! Form::text('transaction_id', null, array('class' => 'form-control', 'required')) !!}
                     </div>
                 </div>

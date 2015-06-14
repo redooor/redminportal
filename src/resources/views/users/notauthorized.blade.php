@@ -2,6 +2,6 @@
 
 @section('content')
     <div class="alert alert-danger">
-        <p>You're not authorized to view this page.</p>
+        <p>{{ Lang::get('redminportal::messages.not_authorized_to_view_this_page') }}</p>
     </div>
 @stop

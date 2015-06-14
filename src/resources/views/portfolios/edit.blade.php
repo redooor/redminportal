@@ -35,7 +35,7 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-title">Category</div>
+                        <div class="panel-title">{{ Lang::get('redminportal::forms.category') }}</div>
                     </div>
                     <div class="panel-body">
                         {!! Form::hidden('category_id', $portfolio->category_id, array('id' => 'category_id')) !!}
@@ -50,8 +50,8 @@
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                       <div>
-                        <span class="btn btn-default btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span>{!! Form::file('image') !!}</span>
-                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>{!! Form::file('image') !!}</span>
+                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
                       </div>
                     </div>
                 </div>
@@ -71,17 +71,17 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="lang-en">
                                 <div class="form-group">
-                                    {!! Form::label('name', 'Title') !!}
+                                    {!! Form::label('name', Lang::get('redminportal::forms.title')) !!}
                                     {!! Form::text('name', $portfolio->name, array('class' => 'form-control')) !!}
                                 </div>
 
                                 <div class="form-group">
-                                    {!! Form::label('short_description', 'Summary') !!}
+                                    {!! Form::label('short_description', Lang::get('redminportal::forms.summary')) !!}
                                     {!! Form::text('short_description', $portfolio->short_description, array('class' => 'form-control')) !!}
                                 </div>
 
                                 <div class="form-group">
-                                    {!! Form::label('long_description', 'Description') !!}
+                                    {!! Form::label('long_description', Lang::get('redminportal::forms.description')) !!}
                                     {!! Form::textarea('long_description', $portfolio->long_description, array('class' => 'form-control', 'style' => 'height:200px')) !!}
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
                                 @if($translation['lang'] != 'en')
                                 <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
                                     <div class="form-group">
-                                        {!! Form::label($translation['lang'] . '_name', 'Title') !!}
+                                        {!! Form::label($translation['lang'] . '_name', Lang::get('redminportal::forms.title')) !!}
                                         @if ($translated)
                                         {!! Form::text($translation['lang'] . '_name', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->name : ''), array('class' => 'form-control')) !!}
                                         @else
@@ -98,7 +98,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        {!! Form::label($translation['lang'] . '_short_description', 'Summary') !!}
+                                        {!! Form::label($translation['lang'] . '_short_description', Lang::get('redminportal::forms.summary')) !!}
                                         @if ($translated)
                                         {!! Form::text($translation['lang'] . '_short_description', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->short_description : ''), array('class' => 'form-control')) !!}
                                         @else
@@ -107,7 +107,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        {!! Form::label($translation['lang'] . '_long_description', 'Description') !!}
+                                        {!! Form::label($translation['lang'] . '_long_description', Lang::get('redminportal::forms.description')) !!}
                                         @if ($translated)
                                         {!! Form::textarea($translation['lang'] . '_long_description', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->long_description : ''), array('class' => 'form-control', 'style' => 'height:200px')) !!}
                                         @else

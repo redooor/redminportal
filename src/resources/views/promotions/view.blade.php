@@ -29,9 +29,9 @@
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>Promotions and Events</th>
-                    <th>Start</th>
-                    <th>End</th>
+                    <th>{{ Lang::get('redminportal::forms.promotion_and_events') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.start_date') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.end_date') }}</th>
                     <th>{{ Lang::get('redminportal::forms.active') }}</th>
                     <th></th>
                 </tr>
@@ -76,6 +76,6 @@
         {!! $promotions->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No promotion found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_promotion_found') }}</div>
     @endif
 @stop

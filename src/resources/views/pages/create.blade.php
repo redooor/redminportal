@@ -34,13 +34,13 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title">Category</div>
+                    <div class="panel-title">{{ Lang::get('redminportal::forms.category') }}</div>
                 </div>
                 <div class="panel-body">
                     {!! Form::hidden('category_id', null, array('id' => 'category_id')) !!}
                     <ul class="redooor-hierarchy">
                         <li>
-                            <a href="0" class="active"><span class="glyphicon glyphicon-chevron-right"></span> No Category</a>
+                            <a href="0" class="active"><span class="glyphicon glyphicon-chevron-right"></span> {{ Lang::get('redminportal::forms.no_category') }}</a>
                         </li>
                     @foreach ($categories as $item)
                         <li>{!! $item->printCategory() !!}</li>
@@ -52,8 +52,8 @@
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                   <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                   <div>
-                    <span class="btn btn-default btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span>{!! Form::file('image') !!}</span>
-                    <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Remove</a>
+                    <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>{!! Form::file('image') !!}</span>
+                    <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
                   </div>
                 </div>
             </div>

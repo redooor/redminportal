@@ -30,9 +30,10 @@
             <thead>
                 <tr>
                     <th>{{ Lang::get('redminportal::forms.name') }}</th>
-                    <th>Category</th>
-                    <th>Short Description</th>
+                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.summary') }}</th>
                     <th>{{ Lang::get('redminportal::forms.active') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.updated') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -49,6 +50,7 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
+                    <td>{{ date('d-M-y', strtotime($portfolio->updated_at)) }}</td>
                     <td class="table-actions text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
@@ -74,6 +76,6 @@
         {!! $portfolios->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No portfolio found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_portfolio_found') }}</div>
     @endif
 @stop

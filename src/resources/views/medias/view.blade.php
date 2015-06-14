@@ -31,14 +31,14 @@
             <thead>
                 <tr>
                     <th>{{ Lang::get('redminportal::forms.name') }}</th>
-                    <th>Category</th>
-                    <th>SKU</th>
-                    <th>Short Description</th>
-                    <th>Tags</th>
-                    <th>Featured</th>
+                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.sku') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.summary') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.tags') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.featured') }}</th>
                     <th>{{ Lang::get('redminportal::forms.active') }}</th>
-                    <th>Media File</th>
-                    <th>Duration</th>
+                    <th>{{ Lang::get('redminportal::forms.media_file') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.duration') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -108,7 +108,7 @@
         {!! $medias->render() !!}
         </div>
     @else
-        <div class="alert alert-info">No media found</div>
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_media_found') }}</div>
     @endif
 @stop
 

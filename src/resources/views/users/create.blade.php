@@ -37,27 +37,27 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('password', 'Password') !!}
+                        {!! Form::label('password', Lang::get('redminportal::forms.password')) !!}
                         {!! Form::password('password', array('class' => 'form-control', 'required')) !!}
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('password_confirmation', 'Re-enter Password') !!}
+                        {!! Form::label('password_confirmation', Lang::get('redminportal::forms.reenter_password')) !!}
                         {!! Form::password('password_confirmation', array('class' => 'form-control', 'required')) !!}
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('role', 'Role') !!}
+                        {!! Form::label('role', Lang::get('redminportal::forms.role')) !!}
                         {!! Form::select('role', $roles, null, array('class' => 'form-control')) !!}
                     </div>
                     <div class="well">
                         <div class="form-group">
                             <div class="checkbox">
                                 <label for="activated-checker">
-                                    {!! Form::checkbox('activated', 'yes', true, array('id' => 'activated-checker')) !!} Activate Now
+                                    {!! Form::checkbox('activated', 'yes', true, array('id' => 'activated-checker')) !!} {{ Lang::get('redminportal::forms.activate_now') }}
                                 </label>
                             </div>
-                            <p class="help-block">Allow user to log in to this account</p>
+                            <p class="help-block">{{ Lang::get('redminportal::messages.allow_user_to_login_this_account') }}</p>
                         </div>
                     </div>
                 </div>
