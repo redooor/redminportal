@@ -52,6 +52,7 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 * Category
 * Coupon
 * Product
+* Order
 
 ## Membership Subscription (Digital Products)
 * Category
@@ -108,7 +109,7 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
         "minimum-stability": "dev",
         "prefer-stable": true
 
-2. Then run `php composer install` in a terminal.
+2. Then run `php composer update` in a terminal.
 3. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
@@ -119,7 +120,7 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
             'Redooor\Redminportal\RedminportalServiceProvider',
         ),
 
-4. Then run `php artisan dump-autoload` in a terminal.
+4. Then run `php composer dump-autoload` in a terminal.
 5. Run the following commands in a terminal to perform database migration for Redminportal:
 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
