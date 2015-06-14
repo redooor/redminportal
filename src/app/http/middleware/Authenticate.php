@@ -53,6 +53,10 @@ class Authenticate {
         if ($user != null) {
             $group = $user->groups()->where('name', 'Admin')->first();
             if ($group != null) {
+                // Save login time
+                $user->last_login = date('Y-m-d H:i:s');
+                $user->save();
+                
                 return $next($request);
             }
         }
