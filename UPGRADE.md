@@ -5,8 +5,8 @@
 Supports Laravel 5.1.
 Version 0.3.0 should be backward compatible to Version 0.2.0 but not Version 0.1.*.
 
-Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
-Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+* Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
+* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
 Edit your [root]\config\app.php providers and alias array like this:
 

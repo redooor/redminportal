@@ -10,13 +10,14 @@
 8. [Version 0.1.0](#version-010)
 
 ## Version 0.3.0
-Branch: develop. Focus on supporting Laravel 5.1.
+Focus on supporting Laravel 5.1.
 
-Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
-Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+* Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
+* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
 ### Important:
 Version 0.3.0 should be backward compatible to Version 0.2.0.
+
 If you're upgrading from v0.2.*, please refer to the [Upgrade Guide](#upgrade-guide).
 
 ### New feature:
