@@ -7,7 +7,11 @@
                 <div class="panel-body">
                     <h1>RedminPortal <small>by Redooor</small></h1>
                     <h2><u>Change log</u></h2>
-                    <h3>Under Development, Version 0.2.0 (latest master)</h3>
+                    <h3>Version 0.3.0</h3>
+                    <p>Focus on supporting Laravel 5.1 (issue #87).</p>
+                    <h4>Important:</h4>
+                    <p>If you're upgrading from v0.2.0, please refer to the Upgrade Guide in README.md.</p>
+                    <h3>Version 0.2.0</h3>
                     <p>Focus on supporting Laravel 5.0.</p>
                     <h4>New feature:</h4>
                     <ol>
@@ -30,7 +34,6 @@
                         <li>Add Page model and Controller (issue #74).</li>
                         <li>Save orders for products (issue #51).</li>
                         <li>Download orders in CSV format.</li>
-                        <li>More coming... (developing)</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>

@@ -4,8 +4,9 @@
 
 # RedminPortal by Redooor
 
-A Laravel 5.0 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
+A Laravel 5.1 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
 
+Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
 Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
 # Table of Content
@@ -28,11 +29,14 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 |:-------:|:------------:|
 | 4.2     | 0.1.x        |
 | 5.0     | 0.2.x        |
+| 5.1     | 0.3.x        |
 
 # Important note
 
-Version 0.2.0 is **NOT** backward compatible.
+Version 0.3.0 is backward compatible to Version 0.2.0.
+Version 0.2.0 is **NOT** backward compatible to Version 0.1.*.
 
+Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
 Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
 # Models and Features
@@ -93,15 +97,15 @@ To use it, get the model's translations and use json_decode to convert content i
 
 # Installation guide for Users
 
-You can install Laravel version 5.0 using the command:
+You can install Laravel version 5.1 using the command:
 
-    composer create-project laravel/laravel redmindemo 5.0.*
+    composer create-project laravel/laravel myproject 5.1.*
 
 1. Add Redminportal to composer.json of a new Laravel application, under "require". Like this:
 
         "require": {
-            "laravel/framework": "5.0.*",
-            "redooor/redminportal": "0.2.*"
+            "laravel/framework": "5.1.*",
+            "redooor/redminportal": "0.3.*"
         },
 
 Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
@@ -113,11 +117,11 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
 3. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
-            'Illuminate\Foundation\Providers\ArtisanServiceProvider',
+            Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
             ... omitted ...
             
             // Add this line
-            'Redooor\Redminportal\RedminportalServiceProvider',
+            Redooor\Redminportal\RedminportalServiceProvider::class,
         ),
 
 4. Then run `php composer dump-autoload` in a terminal.
@@ -151,11 +155,11 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
 
 It is recommended that contributors use Laravel Homestead for development because it will provide the same development environment for all of us. Read more about Laravel Homestead [here](http://laravel.com/docs/master/homestead).
 
-1. Install Laravel 5.0 using [this guide](http://laravel.com/docs/5.0/installation). We'll call this the [root].
+1. Install Laravel 5.1 using [this guide](http://laravel.com/docs/5.1/installation). We'll call this the [root].
 
-You can install Laravel version 5.0 using the command:
+You can install Laravel version 5.1 using the command:
 
-    composer create-project laravel/laravel redmindemo 5.0.*
+    composer create-project laravel/laravel myproject 5.1.*
 
 2. Create a folder named "packages" inside the [root] folder.
 3. Clone the Redooor\Redminportal repository into [root]\packages\redooor\redminportal folder.
@@ -189,11 +193,11 @@ You can install Laravel version 5.0 using the command:
 8. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
-            'Illuminate\Foundation\Providers\ArtisanServiceProvider',
+            Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
             ... omitted ...
             
             // Add this line
-            'Redooor\Redminportal\RedminportalServiceProvider',
+            Redooor\Redminportal\RedminportalServiceProvider::class,
         ),
 
 9. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
