@@ -11,12 +11,14 @@ class CreateTaggablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('taggables', function($table) {
-            $table->integer('tag_id')->unsigned();
-            $table->integer('taggable_id')->unsigned();
-            $table->string('taggable_type');
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('taggables')) {
+            Schema::create('taggables', function($table) {
+                $table->integer('tag_id')->unsigned();
+                $table->integer('taggable_id')->unsigned();
+                $table->string('taggable_type');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
