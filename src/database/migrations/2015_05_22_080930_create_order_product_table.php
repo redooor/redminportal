@@ -12,6 +12,12 @@ class CreateOrderProductTable extends Migration {
 	 */
 	public function up()
 	{
+        // Legacy support, default type MyISAM doesn't support foreign key
+        // Convert table to InnoDB
+        if (Schema::hasTable('products')) {
+            DB::statement('ALTER TABLE products ENGINE = InnoDB');
+        }
+        
         if (! Schema::hasTable('order_product')) {
             Schema::create('order_product', function(Blueprint $table)
             {
