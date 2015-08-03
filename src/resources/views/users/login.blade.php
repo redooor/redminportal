@@ -17,6 +17,7 @@
     @endif
     <div class="col-md-6 col-md-offset-3">
     {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\LoginController@postLogin')) !!}
+        <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
         <div class="panel panel-default">
             <div class="panel-body">
                 <h2>{{ Lang::get('redminportal::messages.signin') }}</h2>
