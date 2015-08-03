@@ -3,6 +3,7 @@
 ## Upgrading to v0.3.0 from v0.2.*
 
 Supports Laravel 5.1.
+
 Version 0.3.0 should be backward compatible to Version 0.2.0 but not Version 0.1.*.
 
 * Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
@@ -21,9 +22,18 @@ Edit your [root]\config\app.php providers and alias array like this:
 ## Upgrading to v0.2.0 from <= v0.1.*
 
 Supports Laravel 5.0.
-Version 0.2.0 is **NOT** backward compatible.
+
+Version 0.2.0 is generally **NOT** backward compatible.
 
 Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+
+However, the migrations are generally designed to be forgiving. It will check for existance before creating the tables.
+
+Additionally, you may run this migration to upgrade the tags table to the new one.
+
+1. Copy the file in vendor\redooor\redminportal\database\upgrades.
+2. Paste them in [root]\database\migrations.
+3. Run `php artisan migrate` at the [root] directory.
 
 ## Upgrading to v0.1.5 from <= v0.1.4
 
