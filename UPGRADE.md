@@ -29,9 +29,9 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 
 However, the migrations are generally designed to be forgiving. It will check for existance before creating the tables.
 
-Additionally, you may run this migration to upgrade the tags table to the new one.
+Additionally, you may run this migration to upgrade the tags and images table to the new one.
 
-1. Copy the file in vendor\redooor\redminportal\database\upgrades.
+1. Copy the files in vendor\redooor\redminportal\database\upgrades.
 2. Paste them in [root]\database\migrations.
 3. Run `php artisan migrate` at the [root] directory.
 
