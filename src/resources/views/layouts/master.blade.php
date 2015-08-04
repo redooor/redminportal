@@ -28,14 +28,16 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a href="{{ URL::to('admin') }}" class="navbar-brand">
-                            <img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal" class="redooor-nav-logo"> RedminPortal
+                        <a href="#" class="navbar-brand sidebar-toggle hidden-xs">
+                            <span class="glyphicon glyphicon-menu-hamburger"></span>
                         </a>
+                        <a href="{{ URL::to('admin') }}" class="navbar-brand visible-xs"><img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal" class="redooor-nav-logo"> RedminPortal</a>
                     </div>
                     <div class="navbar-collapse collapse">
                         {{ \Redooor\Redminportal\App\Helpers\Rhelper::printMenu(config('redminportal::menu'), 'nav navbar-nav hidden-lg hidden-md hidden-sm') }}
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="{{ URL::to('logout') }}">{{ Lang::get('redminportal::menus.logout') }}</a></li>
+                            <li><a class="btn btn-link hidden-xs" href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')">{{ Lang::get('redminportal::menus.logout') }} <i class="glyphicon glyphicon-log-out"></i></a></li>
+                            <li><a class="visible-xs" href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')">{{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
 
@@ -45,11 +47,16 @@
 
         <div id="main">
             <div class="container-fluid">
-                <div class="col-sm-3 col-md-2 sidebar">
-                    {{ \Redooor\Redminportal\App\Helpers\Rhelper::printMenu(config('redminportal::menu'), 'nav nav-sidebar') }}
-                </div>
-                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                    @yield('content')
+                <div id="sidebar-wrapper">
+                    <div id="sidebar">
+                        <a href="{{ URL::to('admin') }}" class="redooor-nav-logo"><img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal"> RedminPortal</a>
+                        <hr>
+                        {{ \Redooor\Redminportal\App\Helpers\Rhelper::printMenu(config('redminportal::menu'), 'nav nav-sidebar') }}
+                    </div>
+                    <div id="sidebar-overlay" class="sidebar-toggle"></div>
+                    <div class="main-content">
+                        @yield('content')
+                    </div>
                 </div>
             </div>
         </div><!--End main-->
@@ -85,6 +92,14 @@
                         $delete_url = $(this).attr('href');
                         $('#confirm-delete').attr('href', $delete_url);
                         $('#confirm-modal').modal('show');
+                    });
+                    $(document).on('click', '.sidebar-toggle', function(e) {
+                        e.preventDefault();
+                        if ($('#sidebar-wrapper').hasClass('active')) {
+                            $('#sidebar-wrapper').removeClass('active');
+                        } else {
+                            $('#sidebar-wrapper').addClass('active');
+                        }
                     });
                 })
             }(window.jQuery);
