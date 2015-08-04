@@ -95,7 +95,7 @@ class RedminportalServiceProvider extends ServiceProvider
 
         if (file_exists($userConfigFile)) {
             $userConfig = $this->app['files']->getRequire($userConfigFile);
-            $config     = array_replace_recursive($config, $userConfig);
+            $config     = $userConfig;
         }
 
         $this->app['config']->set($setname, $config);
