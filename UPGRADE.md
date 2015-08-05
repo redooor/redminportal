@@ -31,6 +31,8 @@ However, the migrations are generally designed to be forgiving. It will check fo
 
 Additionally, you may run this migration to upgrade the tags and images table to the new one.
 
+**Before you begin, ALWAYS backup your database and public\assets\img folder.**
+
 1. Copy the files in vendor\redooor\redminportal\database\upgrades.
 2. Paste them in [root]\database\migrations.
 3. Run `php artisan migrate` at the [root] directory.
