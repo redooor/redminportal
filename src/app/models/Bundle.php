@@ -10,7 +10,7 @@ use Redooor\Redminportal\App\Helpers\RHelper;
     sku                 (string, 255)
     short_description   (string, 255)
     long_description    (text, nullable)
-    price               (float, 0)
+    price               (decimal(8,2), 0)
     featured            (boolean, false)
     active              (boolean, true)
     options             (text, nullable)
@@ -18,9 +18,9 @@ use Redooor\Redminportal\App\Helpers\RHelper;
     created_at  (dateTime)
     updated_at  (dateTime)
 ***********************/
-class Product extends Model
+class Bundle extends Model
 {
-    protected $table = 'products';
+    protected $table = 'bundles';
     
     public function category()
     {
@@ -37,19 +37,14 @@ class Product extends Model
         return $this->morphToMany('Redooor\Redminportal\App\Models\Tag', 'taggable');
     }
     
-    public function coupons()
+    public function pricelists()
     {
-        return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_product');
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Pricelist', 'bundle_pricelist');
     }
     
-    public function bundles()
+    public function products()
     {
-        return $this->belongsToMany('Redooor\Redminportal\App\Models\Bundle', 'bundle_product');
-    }
-    
-    public function orders()
-    {
-        return $this->belongsToMany('Redooor\Redminportal\App\Models\Order', 'order_product');
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Product', 'bundle_product');
     }
     
     public function translations()
@@ -61,9 +56,8 @@ class Product extends Model
     {
         // Remove all relationships
         $this->tags()->detach();
-        $this->coupons()->detach();
-        $this->bundles()->detach();
-        $this->orders()->detach();
+        $this->pricelists()->detach();
+        $this->products()->detach();
         
         // Delete all images
         foreach ($this->images as $image) {

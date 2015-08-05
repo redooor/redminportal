@@ -31,10 +31,16 @@ class Pricelist extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_pricelist');
     }
     
+    public function bundles()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Bundle', 'bundle_pricelist');
+    }
+    
     public function delete()
     {
         // Remove all relationships
         $this->coupons()->detach();
+        $this->bundles()->detach();
         
         return parent::delete();
     }

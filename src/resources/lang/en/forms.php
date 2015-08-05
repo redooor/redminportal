@@ -114,4 +114,8 @@ return array(
     'groups' => 'Groups',
     'activated' => 'Activated',
     'last_login' => 'Last Login',
+    'create_bundle' => 'Create Bundle',
+    'edit_bundle' => 'Edit Bundle',
+    'bundle_properties' => 'Bundle Properties',
+    'bundle_items' => 'Bundled Items',
 );

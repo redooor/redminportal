@@ -28,4 +28,5 @@ return array(
     'posts' => 'Posts',
     'pages' => 'Pages',
     'orders' => 'Orders',
+    'bundles' => 'Bundles',
 );

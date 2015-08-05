@@ -18,6 +18,8 @@ return array(
     'no_promotion_found' => 'No Promotion Found',
     'no_purchase_found' => 'No Purchase Found',
     'no_user_found' => 'No User Found',
+    'no_bundle_found' => 'No Bundle Found',
+    'no_pricelist_found' => 'No Membership/Module Found',
     'select_category_to_view_detail' => 'Select category to view detail',
     'confirm_delete' => 'Confirm delete?',
     'are_you_sure_you_want_to_delete' => 'Are you sure you want to delete this?',
@@ -29,4 +31,5 @@ return array(
     'allow_user_to_login_this_account' => 'Allow user to log in to this account.',
     'leave_password_empty_to_keep_existing_password' => 'Leave the password field empty to keep existing password.',
     'not_authorized_to_view_this_page' => "You're not authorized to view this page.",
+    'allow_select_multiple' => 'You can select multiple items by holding Ctrl/Cmd + click.',
 );
