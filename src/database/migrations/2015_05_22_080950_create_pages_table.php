@@ -12,12 +12,6 @@ class CreatePagesTable extends Migration {
 	 */
 	public function up()
 	{
-        // Legacy support, default type MyISAM doesn't support foreign key
-        // Convert table to InnoDB
-        if (Schema::hasTable('categories')) {
-            DB::statement('ALTER TABLE categories ENGINE = InnoDB');
-        }
-        
         if (! Schema::hasTable('pages')) {
             Schema::create('pages', function(Blueprint $table)
             {
