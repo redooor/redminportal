@@ -6,11 +6,11 @@
             <h1>RedminPortal <small>by Redooor</small></h1>
             <h2><u>Change log</u></h2>
             
-            <h3>Under Development, Version 0.1.6 (latest v0.1 branch)</h3>
+            <h3>Version 0.1.6</h3>
             <p>Minor enhancement and bug fixes.</p>
             <h4>Important:</h4>
             <p>If you're upgrading from &lt;= v0.1.5, please refer to the Upgrade Guide in README.md.</p>
-            <p>The translation enhancement in Category, Module, Media, Product, Promotion and Portfolio introduces a different way of storing the data. Translation data will be lost when you upgrade to v0.1.6.</p>
+            <p>The translation enhancement in Category, Module, Media, Product, Promotion and Portfolio introduces a different way of storing the data. <strong>Translation data will be lost when you upgrade to v0.1.6.</strong></p>
             <h4>Enhancements:</h4>
             <ol>
                 <li>Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)</li>

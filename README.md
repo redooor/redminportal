@@ -17,7 +17,10 @@ A Laravel 4 package as a **backend** administrating tool for Content Management 
 
 # Important note
 
-If you're upgrading from version 0.1.4 or below, please refer to the [Upgrade Guide](#upgrade-guide).
+The development of this branch has ceased.
+Please refer to the master branch for latest release.
+
+If you're upgrading from version 0.1.5 or below, please refer to the [Upgrade Guide](#upgrade-guide).
 
 # Models and Features
 
@@ -181,13 +184,15 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # Change log
 
-## Under Development, Version 0.1.6 (latest v0.1 branch)
+## Version 0.1.6
 Minor enhancement and bug fixes.
 
 ### Important:
 If you're upgrading from <= v0.1.5, please refer to the [Upgrade Guide](#upgrade-guide).
 
-The translation enhancement in Category, Module, Media, Product, Promotion and Portfolio introduces a different way of storing the data. Translation data will be lost when you upgrade to v0.1.6.
+The translation enhancement in Category, Module, Media, Product, Promotion and Portfolio introduces a different way of storing the data. 
+
+**Translation data will be lost when you upgrade to v0.1.6.**
 
 ### Enhancements:
 1. Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)
