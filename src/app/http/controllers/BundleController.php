@@ -39,6 +39,7 @@ class BundleController extends Controller
 
         $pricelists = Pricelist::join('modules', 'modules.id', '=', 'pricelists.module_id')
             ->join('memberships', 'memberships.id', '=', 'pricelists.membership_id')
+            ->where('pricelists.active', true)
             ->orderBy('modules.name')
             ->orderBy('memberships.rank', 'desc')
             ->select('pricelists.*')
@@ -82,6 +83,7 @@ class BundleController extends Controller
 
         $pricelists = Pricelist::join('modules', 'modules.id', '=', 'pricelists.module_id')
             ->join('memberships', 'memberships.id', '=', 'pricelists.membership_id')
+            ->where('pricelists.active', true)
             ->orderBy('modules.name')
             ->orderBy('memberships.rank', 'desc')
             ->select('pricelists.*')

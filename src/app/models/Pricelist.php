@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * module_id (integer)
  * membership_id (integer)
  * module_id, membership_id (unique)
+ * active (bool)
  * created_at (date)
  * updated_at (date)
  */
