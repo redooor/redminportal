@@ -36,7 +36,7 @@
                     <th>{{ Lang::get('redminportal::forms.payment_status') }}</th>
                     <th>{{ Lang::get('redminportal::forms.transaction_id') }}</th>
                     <th>{{ Lang::get('redminportal::forms.ordered_on') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.products') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.items') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -62,7 +62,12 @@
 							<ul class="dropdown-menu pull-right" role="menu">
                                 @foreach ($order->products as $product)
 								<li>
-									<a href="">{{ $product->name }} [{{ $product->sku }}]</a>
+									<a href="">{{ $product->name }}<br><span class="label label-primary">{{ $product->sku }}</span></a>
+								</li>
+                                @endforeach
+                                @foreach ($order->bundles as $bundle)
+								<li>
+                                    <a href="">{{ $bundle->name }}<br><span class="label label-primary">{{ $bundle->sku }}</span></a>
 								</li>
                                 @endforeach
 							</ul>

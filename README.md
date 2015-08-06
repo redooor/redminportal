@@ -64,6 +64,7 @@ Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 * Coupon
 * Product
 * Order
+* Bundle
 
 ## Membership Subscription (Digital Products)
 * Category
@@ -73,6 +74,7 @@ Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 * Module
 * ModuleMediaMembership
 * Purchase
+* Bundle
 
 ## Morphs
 * Image

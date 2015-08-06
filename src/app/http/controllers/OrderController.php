@@ -3,6 +3,7 @@
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
+use Redooor\Redminportal\App\Models\Bundle;
 
 class OrderController extends Controller
 {
@@ -23,6 +24,7 @@ class OrderController extends Controller
     public function getCreate()
     {
         $products = Product::orderBy('name')->lists('name', 'id');
+        $bundles = Bundle::orderBy('name')->lists('name', 'id');
 
         $payment_statuses = array(
             'Completed'     => 'Completed',
@@ -34,6 +36,7 @@ class OrderController extends Controller
 
         return view('redminportal::orders/create')
             ->with('products', $products)
+            ->with('bundles', $bundles)
             ->with('payment_statuses', $payment_statuses);
     }
     
@@ -53,7 +56,8 @@ class OrderController extends Controller
         $sid = \Input::get('id');
 
         $rules = array(
-            'product_id'        => 'required',
+            'product_id'        => 'required_without:bundle_id',
+            'bundle_id'         => 'required_without:product_id',
             'transaction_id'    => 'required',
             'payment_status'    => 'required',
             'paid'              => 'numeric',
@@ -73,21 +77,33 @@ class OrderController extends Controller
         $paid           = \Input::get('paid');
         $email          = \Input::get('email');
         
-        $save_to_order = array();
+        $apply_to_models = array();
+        
+        // Save products to order
         $products = \Input::get('product_id');
         if (count($products) > 0) {
             foreach ($products as $item) {
                 $model = Product::find($item);
                 if ($model != null) {
-                    $save_to_order[] = $model;
+                    $apply_to_models[] = $model;
+                }
+            }
+        }
+        // Save bundles to order
+        $bundles = \Input::get('bundle_id');
+        if (count($bundles) > 0) {
+            foreach ($bundles as $item) {
+                $model = Bundle::find($item);
+                if ($model != null) {
+                    $apply_to_models[] = $model;
                 }
             }
         }
 
-        // No product to add
-        if (count($save_to_order) == 0) {
+        // No product/bundle to add
+        if (count($apply_to_models) == 0) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('productError', "The Products selected may have been deleted. Please try again.");
+            $errors->add('productError', "The items selected may have been deleted. Please try again.");
             return redirect($redirect_url)->withErrors($errors)->withInput();
         }
         
@@ -108,8 +124,8 @@ class OrderController extends Controller
         $new_order->save();
         
         // Save the products
-        foreach ($save_to_order as $product) {
-            $new_order->products()->save($product);
+        foreach ($apply_to_models as $apply_to_model) {
+            $apply_to_model->orders()->save($new_order);
         }
         
         return redirect('admin/orders');

@@ -173,8 +173,11 @@
                             @else
                             <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_pricelist_found') }}</div>
                             @endif
-                            <p class="help-block">{{ Lang::get('redminportal::messages.allow_select_multiple') }}</p>
                         </div>
+                    </div>
+                    <div class="panel-footer">
+                        <p class="help-block">{{ Lang::get('redminportal::messages.allow_select_multiple') }}</p>
+                        <p class="help-block">{{ Lang::get('redminportal::messages.how_to_deselect_multiple') }}</p>
                     </div>
                 </div>
                 @if (count($bundle->images) > 0)

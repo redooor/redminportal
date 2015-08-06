@@ -1,13 +1,28 @@
 # Change log
 
-1. [Version 0.3.0](#version-030)
-2. [Version 0.2.0](#version-020)
-3. [Version 0.1.5](#version-015)
-4. [Version 0.1.4](#version-014)
-5. [Version 0.1.3](#version-013)
-6. [Version 0.1.2](#version-012)
-7. [Version 0.1.1](#version-011)
-8. [Version 0.1.0](#version-010)
+* [Version 0.3.1](#version-031)
+* [Version 0.3.0](#version-030)
+* [Version 0.2.0](#version-020)
+* [Version 0.1.5](#version-015)
+* [Version 0.1.4](#version-014)
+* [Version 0.1.3](#version-013)
+* [Version 0.1.2](#version-012)
+* [Version 0.1.1](#version-011)
+* [Version 0.1.0](#version-010)
+
+## Version 0.3.1
+New Bundle module and improvement to UI.
+
+### New feature:
+1. Bundle module allow bundling physical and digital products on a single price (issue #94).
+
+### Enhancement:
+1. Added migrations to upgrade database from v0.1 to v0.2/v0.3 (issue #89).
+2. Sidebar is now off-canvas (issue #91).
+
+### Bug fixes:
+1. Resolves TokenMismatchException issue on login (issue #88).
+2. User config file will override the default package config file (issue #90).
 
 ## Version 0.3.0
 Focus on supporting Laravel 5.1.

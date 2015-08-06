@@ -118,4 +118,6 @@ return array(
     'edit_bundle' => 'Edit Bundle',
     'bundle_properties' => 'Bundle Properties',
     'bundle_items' => 'Bundled Items',
+    'bundles' => 'Bundles',
+    'items' => 'Items',
 );

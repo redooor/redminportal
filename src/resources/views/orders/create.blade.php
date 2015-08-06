@@ -43,12 +43,24 @@
                     </div>
                     <div class="form-group">
                         @if (count($products) > 0)
-                            {!! Form::label('product_id', 'Product') !!}
+                            {!! Form::label('product_id', Lang::get('redminportal::forms.products')) !!}
                             {!! Form::select('product_id', $products, null, array('class' => 'form-control', 'id' => 'product_id', 'multiple', 'name' => 'product_id[]')) !!}
                         @else
                             <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_product_found') }}</div>
                         @endif
                     </div>
+                    <div class="form-group">
+                        @if (count($bundles) > 0)
+                            {!! Form::label('bundle_id', Lang::get('redminportal::forms.bundles')) !!}
+                            {!! Form::select('bundle_id', $bundles, null, array('class' => 'form-control', 'id' => 'bundle_id', 'multiple', 'name' => 'bundle_id[]')) !!}
+                        @else
+                            <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_bundle_found') }}</div>
+                        @endif
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <p class="help-block">{{ Lang::get('redminportal::messages.allow_select_multiple') }}</p>
+                    <p class="help-block">{{ Lang::get('redminportal::messages.how_to_deselect_multiple') }}</p>
                 </div>
             </div>
         </div>

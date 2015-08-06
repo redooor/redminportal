@@ -52,12 +52,18 @@ class Bundle extends Model
         return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
     }
     
+    public function orders()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Order', 'bundle_order');
+    }
+    
     public function delete()
     {
         // Remove all relationships
         $this->tags()->detach();
         $this->pricelists()->detach();
         $this->products()->detach();
+        $this->orders()->detach();
         
         // Delete all images
         foreach ($this->images as $image) {

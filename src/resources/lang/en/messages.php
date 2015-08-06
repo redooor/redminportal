@@ -32,4 +32,5 @@ return array(
     'leave_password_empty_to_keep_existing_password' => 'Leave the password field empty to keep existing password.',
     'not_authorized_to_view_this_page' => "You're not authorized to view this page.",
     'allow_select_multiple' => 'You can select multiple items by holding Ctrl/Cmd + click.',
+    'how_to_deselect_multiple' => 'To deselect your selection, hold Ctrl/Cmd + click the item.',
 );
