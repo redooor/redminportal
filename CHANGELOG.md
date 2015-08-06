@@ -69,6 +69,26 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 ### Bug fixes:
 1. Translation to support any language (issue #83).
 
+## Version 0.1.6
+Minor enhancement and bug fixes.
+
+### Important:
+If you're upgrading from <= v0.1.5, please refer to the [Upgrade Guide](#upgrade-guide).
+
+The translation enhancement in Category, Module, Media, Product, Promotion and Portfolio introduces a different way of storing the data. 
+
+**Translation data will be lost when you upgrade to v0.1.6.**
+
+### Enhancements:
+1. Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)
+2. Added UI for "active" column for module create and edit. (issue #78)
+3. Promotions, Products and Portfolios now allow translation title, summary and description. (issue #84)
+4. Revamp Translation implementation for Category, Media, Module, Portfolio, Product and Promotion (issue #86).
+
+### Bug fixes:
+1. Fixed missing columns in coupon_user table.
+2. Translation only support Chinese cn now. (issue #82)
+
 ## Version 0.1.5
 The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.
 
