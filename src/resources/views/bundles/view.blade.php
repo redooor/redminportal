@@ -75,8 +75,8 @@
                     <td>{{ $bundle->name }}</td>
                     <td>{{ $bundle->category->name or 'No category' }}</td>
                     <td>{{ $bundle->sku }}</td>
-                    <td>{{ number_format($bundle->price) }}</td>
-                    <td>{{ number_format($bundle->totalvalue()) }}</td>
+                    <td>{{ number_format($bundle->price, 2) }}</td>
+                    <td>{{ number_format($bundle->totalvalue(), 2) }}</td>
                     <td>{{ $bundle->short_description }}</td>
                     <td>
                         @foreach ($bundle->tags as $tag)
