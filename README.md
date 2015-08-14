@@ -117,12 +117,15 @@ You can install Laravel version 5.1 using the command:
             "redooor/redminportal": "0.3.*"
         },
 
-Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
+    Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
 
         "minimum-stability": "dev",
         "prefer-stable": true
 
-2. Then run `php composer update` in a terminal.
+2. Then run `php composer update [--prefer-dist]` in a terminal.
+
+    Use `--prefer-dist` to include only essential files (i.e. exclude tests).
+
 3. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
