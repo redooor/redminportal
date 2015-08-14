@@ -57,6 +57,15 @@ class Bundle extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Order', 'bundle_order');
     }
     
+    public function totalvalue()
+    {
+        $totalvalue = 0;
+        
+        $totalvalue = $this->pricelists->sum('price') + $this->products->sum('price');
+        
+        return $totalvalue;
+    }
+    
     public function delete()
     {
         // Remove all relationships

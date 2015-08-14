@@ -47,6 +47,7 @@
                         </a>
                     </th>
                     <th>{{ Lang::get('redminportal::forms.price') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.total_value') }}</th>
                     <th>{{ Lang::get('redminportal::forms.summary') }}</th>
                     <th>{{ Lang::get('redminportal::forms.tags') }}</th>
                     <th>
@@ -74,7 +75,8 @@
                     <td>{{ $bundle->name }}</td>
                     <td>{{ $bundle->category->name or 'No category' }}</td>
                     <td>{{ $bundle->sku }}</td>
-                    <td>{{ $bundle->price }}</td>
+                    <td>{{ number_format($bundle->price) }}</td>
+                    <td>{{ number_format($bundle->totalvalue()) }}</td>
                     <td>{{ $bundle->short_description }}</td>
                     <td>
                         @foreach ($bundle->tags as $tag)

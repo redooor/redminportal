@@ -27,7 +27,7 @@ return array(
     'restricted_to' => 'Restricted To',
     'categories' => 'Categories',
     'products' => 'Products',
-    'membership_modules' => 'Membership/Modules',
+    'membership_modules' => 'Module/Memberships',
     'create' => 'Create',
     'edit' => 'Edit',
     'create_user' => 'Create User',
@@ -120,4 +120,5 @@ return array(
     'bundle_items' => 'Bundled Items',
     'bundles' => 'Bundles',
     'items' => 'Items',
+    'total_value' => 'Total Value',
 );
