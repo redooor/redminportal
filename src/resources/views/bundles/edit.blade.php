@@ -228,6 +228,7 @@
                     $selected_val = $('#category_id').val();
                     if ($selected_val == '') {
                         $selected_val = '0';
+                        $('#category_id').val('0');
                     }
                     $('.redooor-hierarchy a').each(function() {
                         if ($(this).attr('href') == $selected_val) {
