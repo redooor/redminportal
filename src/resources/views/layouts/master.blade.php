@@ -48,9 +48,10 @@
         <div id="main">
             <div class="container-fluid">
                 <div id="sidebar-wrapper">
-                    <div id="sidebar">
-                        <a href="{{ URL::to('admin') }}" class="redooor-nav-logo"><img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal"> RedminPortal</a>
-                        <hr>
+                    <div id="sidebar" class="shadow-depth-1">
+                        <div id="sidebar-title">
+                            <a href="{{ URL::to('admin') }}" class="redooor-nav-logo"><img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal"> RedminPortal</a>
+                        </div>
                         {{ \Redooor\Redminportal\App\Helpers\Rhelper::printMenu(config('redminportal::menu'), 'nav nav-sidebar') }}
                     </div>
                     <div id="sidebar-overlay" class="sidebar-toggle"></div>

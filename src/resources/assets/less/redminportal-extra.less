@@ -72,17 +72,20 @@ footer,
         bottom: 0;
         left: -240px;
         z-index: 1032;
-        padding: 20px;
         display: block;
         overflow-x: hidden;
         overflow-y: auto;
         /* Scrollable contents if viewport is shorter than content. */
         background-color: #f5f5f5;
-        border-right: 1px solid #eee;
         transition: .3s ease all;
+    }
+    #sidebar-title {
+        position: relative;
+        padding: 20px;
+        background-color: #2196F3;
         .redooor-nav-logo {
             font-size: 24px;
-            color: #777;
+            color: #fff;
             &:hover, &:focus {
                 text-decoration: none;
             }
@@ -125,27 +128,32 @@ footer,
 
 /* Sidebar navigation */
 .nav-sidebar {
-    margin-right: -21px;
-    /* 20px padding + 1px border */
-    
-    margin-bottom: 20px;
-    margin-left: -20px;
+    li.nav-sub-header {
+        &:before {
+            content: '';
+            display: block;
+            border-top: 1px solid #ddd;
+        }
+        span {
+            font-weight: 200;
+            color: #FF5722;
+        }
+    }
 }
 
 .nav-sidebar ul {
-    margin-right: -21px;
-    margin-left: -20px;
+    padding: 0;
 }
 
 .nav-sidebar ul li {
     list-style: none;
     display: block;
+    padding: 0;
 }
 
 .nav-sidebar li span {
     display: block;
     padding: 10px 20px;
-    font-weight: bold;
 }
 
 .nav-sidebar li a {

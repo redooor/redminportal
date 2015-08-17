@@ -50,9 +50,9 @@ class RHelper
         foreach ($menus as $menu) {
             if  (!$menu['hide']) {
                 if  (!array_key_exists('path', $menu)) {
-                    echo '<li><span>' . \Lang::get('redminportal::menus.' . $menu['name']) . '</span>';
+                    echo '<li class="nav-sub-header"><span>' . \Lang::get('redminportal::menus.' . $menu['name']) . '</span>';
                 } else if ($menu['path'] == '') {
-                    echo '<li><span>' . \Lang::get('redminportal::menus.' . $menu['name']) . '</span>';
+                    echo '<li class="nav-sub-header"><span>' . \Lang::get('redminportal::menus.' . $menu['name']) . '</span>';
                 } else {
                     if (\Request::is($menu['path']) or \Request::is($menu['path'] . '/*')) {
                         echo '<li class="active">';
