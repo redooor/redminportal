@@ -192,11 +192,13 @@ class CouponController extends Controller
             return redirect($url)->withErrors($errors)->withInput();
         }
 
-        // Check if max spent is less than min spent
-        if ((float)$max_spent < (float)$min_spent) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('spentRangeError', "Max spent cannot be less than Min spent.");
-            return redirect($url)->withErrors($errors)->withInput();
+        // Check if max spent is less than min spent, only if both not null
+        if ($max_spent and $min_spent) {
+            if ((float)$max_spent < (float)$min_spent) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add('spentRangeError', "Max spent cannot be less than Min spent.");
+                return redirect($url)->withErrors($errors)->withInput();
+            }
         }
 
         $apply_to_models = array();
