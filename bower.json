@@ -34,6 +34,7 @@
     "bootstrap": "~3.3.4",
     "jquery-ui": "~1.11.2",
     "eonasdan-bootstrap-datetimepicker": "~4.0.0",
-    "redmaterials": "master"
+    "redmaterials": "master",
+    "font-awesome": "~4.4.0"
   }
 }

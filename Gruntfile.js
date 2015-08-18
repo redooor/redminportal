@@ -132,6 +132,18 @@ module.exports = function (grunt) {
             redmaterialscss: {
                 src: 'bower_components/redmaterials/dist/css/redmaterials.min.css',
                 dest: 'src/public/css/redmaterials.min.css'
+            },
+            fontawesomefonts: {
+                expand: true,
+                cwd: 'bower_components/font-awesome/fonts/',
+                src: '**',
+                dest: 'src/public/fonts/',
+                flatten: true,
+                filter: 'isFile'
+            },
+            fontawesomecss: {
+                src: 'bower_components/font-awesome/css/font-awesome.min.css',
+                dest: 'src/public/css/font-awesome.min.css'
             }
         },
         watch: {
@@ -158,7 +170,7 @@ module.exports = function (grunt) {
     grunt.registerTask('less-compile', ['less:compileCore', 'autoprefixer:core', 'usebanner', 'cssmin:minifyCore']);
     
     // Distribute all assets to public folder
-    grunt.registerTask('dist-assets', ['copy:fonts', 'copy:jquery', 'copy:bootstrapjs', 'copy:bootstrapcss', 'copy:jqueryui', 'copy:jqueryuijs', 'copy:momentjs', 'copy:datetimepickerjs', 'copy:datetimepickercss', 'copy:redmaterialsjs', 'copy:redmaterialscss']);
+    grunt.registerTask('dist-assets', ['copy:fonts', 'copy:jquery', 'copy:bootstrapjs', 'copy:bootstrapcss', 'copy:jqueryui', 'copy:jqueryuijs', 'copy:momentjs', 'copy:datetimepickerjs', 'copy:datetimepickercss', 'copy:redmaterialsjs', 'copy:redmaterialscss', 'copy:fontawesomefonts', 'copy:fontawesomecss']);
     
     // Default task, compile and distribute all assets to public folder
     grunt.registerTask('default', ['less-compile', 'dist-assets']);

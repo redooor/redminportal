@@ -40,9 +40,9 @@ class Coupon extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Category', 'coupon_category');
     }
     
-    public function users()
+    public function orders()
     {
-        return $this->belongsToMany('Redooor\Redminportal\App\Models\User', 'coupon_user');
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Order', 'coupon_order');
     }
     
     public function delete()
@@ -51,7 +51,7 @@ class Coupon extends Model
         $this->pricelists()->detach();
         $this->products()->detach();
         $this->categories()->detach();
-        $this->users()->detach();
+        $this->orders()->detach();
         
         return parent::delete();
     }

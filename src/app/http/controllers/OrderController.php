@@ -4,6 +4,7 @@ use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Bundle;
+use Redooor\Redminportal\App\Models\Coupon;
 
 class OrderController extends Controller
 {
@@ -25,6 +26,7 @@ class OrderController extends Controller
     {
         $products = Product::orderBy('name')->lists('name', 'id');
         $bundles = Bundle::orderBy('name')->lists('name', 'id');
+        $coupons = Coupon::orderBy('code')->lists('code', 'id');
 
         $payment_statuses = array(
             'Completed'     => 'Completed',
@@ -37,6 +39,7 @@ class OrderController extends Controller
         return view('redminportal::orders/create')
             ->with('products', $products)
             ->with('bundles', $bundles)
+            ->with('coupons', $coupons)
             ->with('payment_statuses', $payment_statuses);
     }
     
@@ -94,6 +97,16 @@ class OrderController extends Controller
         if (count($bundles) > 0) {
             foreach ($bundles as $item) {
                 $model = Bundle::find($item);
+                if ($model != null) {
+                    $apply_to_models[] = $model;
+                }
+            }
+        }
+        // Save coupons to order
+        $coupons = \Input::get('coupon_id');
+        if (count($coupons) > 0) {
+            foreach ($coupons as $item) {
+                $model = Coupon::find($item);
                 if ($model != null) {
                     $apply_to_models[] = $model;
                 }

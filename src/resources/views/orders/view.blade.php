@@ -36,6 +36,7 @@
                     <th>{{ Lang::get('redminportal::forms.payment_status') }}</th>
                     <th>{{ Lang::get('redminportal::forms.transaction_id') }}</th>
                     <th>{{ Lang::get('redminportal::forms.ordered_on') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.coupons') }}</th>
                     <th>{{ Lang::get('redminportal::forms.items') }}</th>
                     <th></th>
                 </tr>
@@ -57,17 +58,31 @@
                     <td class="table-actions text-center">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="fa fa-ticket"></span>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+                                @foreach ($order->coupons as $coupon)
+								<li>
+									<a href="#">{{ $coupon->code }}</a>
+								</li>
+                                @endforeach
+							</ul>
+						</div>
+					</td>
+                    <td class="table-actions text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
 							</button>
 							<ul class="dropdown-menu pull-right" role="menu">
                                 @foreach ($order->products as $product)
 								<li>
-									<a href="">{{ $product->name }}<br><span class="label label-primary">{{ $product->sku }}</span></a>
+									<a href="#">{{ $product->name }}<br><span class="label label-primary">{{ $product->sku }}</span></a>
 								</li>
                                 @endforeach
                                 @foreach ($order->bundles as $bundle)
 								<li>
-                                    <a href="">{{ $bundle->name }}<br><span class="label label-primary">{{ $bundle->sku }}</span></a>
+                                    <a href="#">{{ $bundle->name }}<br><span class="label label-primary">{{ $bundle->sku }}</span></a>
 								</li>
                                 @endforeach
 							</ul>

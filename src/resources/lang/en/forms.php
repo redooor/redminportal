@@ -121,4 +121,7 @@ return array(
     'bundles' => 'Bundles',
     'items' => 'Items',
     'total_value' => 'Total Value',
+    'coupons' => 'Coupons',
+    'optional' => 'Optional',
+    'apply_coupon' => 'Apply Coupon',
 );

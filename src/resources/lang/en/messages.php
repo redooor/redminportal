@@ -33,4 +33,5 @@ return array(
     'not_authorized_to_view_this_page' => "You're not authorized to view this page.",
     'allow_select_multiple' => 'You can select multiple items by holding Ctrl/Cmd + click.',
     'how_to_deselect_multiple' => 'To deselect your selection, hold Ctrl/Cmd + click the item.',
+    'coupon_restriction_applies' => 'Coupon is optional. Restriction applies.',
 );

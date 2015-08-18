@@ -34,11 +34,17 @@ class Order extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Bundle', 'bundle_order');
     }
     
+    public function coupons()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_order');
+    }
+    
     public function delete()
     {
         // Remove product association
         $this->products()->detach();
         $this->bundles()->detach();
+        $this->coupons()->detach();
         
         return parent::delete();
     }
