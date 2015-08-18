@@ -12,15 +12,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('users')) {
-            // Add remember_token column to existing table
-            if (! Schema::hasColumn('users', 'remember_token')) {
-                Schema::table('users', function($table) {
-                    $table->rememberToken();
-                });
-            }
-            
-        } else {
+        if (! Schema::hasTable('users')) {
             // Continue support of Cartalyst/Sentry schema
             Schema::create('users', function(Blueprint $table) {
                 $table->increments('id');

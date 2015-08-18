@@ -23,6 +23,8 @@ class CreatePagesTable extends Migration {
                 $table->boolean('private')->default(TRUE);
                 $table->integer('category_id')->nullable()->unsigned();
                 $table->foreign('category_id')->references('id')->on('categories');
+                // Need to use InnoDB to support foreign key and indexing
+                $table->engine = 'InnoDB';
             });
         }
 	}

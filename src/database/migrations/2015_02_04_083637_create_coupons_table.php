@@ -31,6 +31,8 @@ class CreateCouponsTable extends Migration {
                 $table->boolean('multiple_coupons')->default(false);
                 $table->boolean('exclude_sale_item')->default(false);
                 $table->integer('usage_limit_per_coupon_count')->unsigned()->default(0);
+                // Need to use InnoDB to support foreign key
+                $table->engine = 'InnoDB';
             });
         }
 	}

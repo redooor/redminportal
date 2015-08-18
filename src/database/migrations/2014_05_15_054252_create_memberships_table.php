@@ -19,6 +19,8 @@ class CreateMembershipsTable extends Migration {
                 $table->string('name', 255);
                 $table->integer('rank')->default(0);
                 $table->timestamps();
+                // Need to use InnoDB to support foreign key
+                $table->engine = 'InnoDB';
             });
         }
 	}

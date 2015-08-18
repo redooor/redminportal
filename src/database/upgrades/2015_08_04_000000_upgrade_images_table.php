@@ -122,7 +122,7 @@ class UpgradeImagesTable extends Migration
         }
     }
     
-    protected function moveFileNewToOld($image_folder, $image, $model_type)
+    private function moveFileNewToOld($image_folder, $image, $model_type)
     {
         $move_file = false;
         
@@ -148,7 +148,7 @@ class UpgradeImagesTable extends Migration
         }
     }
     
-    protected function moveFileOldToNew($image_folder, $image, $model_type)
+    private function moveFileOldToNew($image_folder, $image, $model_type)
     {
         $move_file = false;
         
@@ -170,7 +170,7 @@ class UpgradeImagesTable extends Migration
         }
     }
     
-    protected function recursiveRemoveDirectory($target)
+    private function recursiveRemoveDirectory($target)
     {
         if (is_dir($target)) {
             $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned

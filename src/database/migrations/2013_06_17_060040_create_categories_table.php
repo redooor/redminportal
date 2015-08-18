@@ -23,6 +23,8 @@ class CreateCategoriesTable extends Migration
                 $table->timestamps();
                 $table->integer('category_id')->nullable()->unsigned();
                 $table->foreign('category_id')->references('id')->on('categories');
+                // Need to use InnoDB to support foreign key
+                $table->engine = 'InnoDB';
             });
         }
     }

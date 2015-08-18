@@ -13,7 +13,58 @@ Version 0.3.1 introduced some UI improvements. You need to run the following com
 As a general rule, do not save any customed files inside public/vendor/redooor/redminportal folder.
 
     php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
+
+## Upgrading to v0.3.1 from <= v0.1.*
+
+Supports Laravel 5.1.
+
+### Migrations
+
+In Version 0.3.1, the migrations are generally designed to be forgiving. It will check for existance before creating the tables.
+
+**Before you begin, _ALWAYS BACKUP_ your database and `public\assets\img folder`.**
+
+To support foreign keys, we need to convert these tables to **InnoDB** type.
+
+* products
+* categories
+* pricelists
+* medias
+* modules
+* memberships
+* coupons
+
+You can include an upgrade migration to convert these tables automatically for you. _(ONLY works with MySQL database)_
+
+1. Run this command to copy all migrations from Redminportal to your app.
+
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
     
+2. Copy this file
+
+        [root]\vendor\redooor\redminportal\database\upgrades\2015_05_21_000000_upgrade_innodb_table.php
+        
+3. Paste it into
+
+        [root]\database\migrations\vendor\redooor\redminportal\
+        
+4. Then use the following command to run the full migrtions
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+
+
+Additionally, you may run these migrations to upgrade the tags and images table in Version 0.1.* to the new one.
+
+**WARNING: the images migration involves moving of files to the new folder structure. Do this when your site is least busy.**
+
+1. Copy the following files in `vendor\redooor\redminportal\database\upgrades`
+
+        [root]\vendor\redooor\redminportal\database\upgrades\2015_08_03_000000_upgrade_tags_table.php
+        [root]\vendor\redooor\redminportal\database\upgrades\2015_08_04_000000_upgrade_images_table.php
+
+2. Paste them in [root]\database\migrations.
+3. Run `php artisan migrate` at the [root] directory.
+
 ## Upgrading to v0.3.0 from v0.2.*
 
 Supports Laravel 5.1.
@@ -40,16 +91,6 @@ Supports Laravel 5.0.
 Version 0.2.0 is generally **NOT** backward compatible.
 
 Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
-
-However, the migrations are generally designed to be forgiving. It will check for existance before creating the tables.
-
-Additionally, you may run this migration to upgrade the tags and images table to the new one.
-
-**Before you begin, ALWAYS backup your database and public\assets\img folder.**
-
-1. Copy the files in vendor\redooor\redminportal\database\upgrades.
-2. Paste them in [root]\database\migrations.
-3. Run `php artisan migrate` at the [root] directory.
 
 ## Upgrading to v0.1.5 from <= v0.1.4
 
