@@ -47,6 +47,11 @@ class Bundle extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Product', 'bundle_product');
     }
     
+    public function coupons()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'bundle_coupon');
+    }
+    
     public function translations()
     {
         return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
@@ -73,6 +78,7 @@ class Bundle extends Model
         $this->pricelists()->detach();
         $this->products()->detach();
         $this->orders()->detach();
+        $this->coupons()->detach();
         
         // Delete all images
         foreach ($this->images as $image) {

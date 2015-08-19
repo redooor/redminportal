@@ -4,6 +4,7 @@ use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Coupon;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Pricelist;
+use Redooor\Redminportal\App\Models\Bundle;
 
 class CouponController extends Controller
 {
@@ -39,6 +40,7 @@ class CouponController extends Controller
         $categories = $this->getCategories();
         
         $products = Product::where('active', true)->lists('name', 'id');
+        $bundles = Bundle::where('active', true)->lists('name', 'id');
         
         $membermodules = array();
 
@@ -57,7 +59,8 @@ class CouponController extends Controller
         $data = array(
             'categories' => $categories,
             'products' => $products,
-            'membermodules' => $membermodules
+            'membermodules' => $membermodules,
+            'bundles' => $bundles
         );
         
         return view('redminportal::coupons/create', $data);
@@ -78,6 +81,7 @@ class CouponController extends Controller
         $categories = $this->getCategories();
         
         $products = Product::where('active', true)->lists('name', 'id');
+        $bundles = Bundle::where('active', true)->lists('name', 'id');
         
         $membermodules = array();
 
@@ -108,14 +112,21 @@ class CouponController extends Controller
             $pricelist_id[$pricelist->id] = $pricelist->id;
         }
         
+        $bundle_id = array();
+        foreach ($coupon->bundles as $bundle) {
+            $bundle_id[$bundle->id] = $bundle->id;
+        }
+        
         $data = array(
             'categories' => $categories,
             'products' => $products,
             'membermodules' => $membermodules,
+            'bundles' => $bundles,
             'coupon' => $coupon,
             'product_id' => $product_id,
             'category_id' => $category_id,
-            'pricelist_id' => $pricelist_id
+            'pricelist_id' => $pricelist_id,
+            'bundle_id' => $bundle_id
         );
         
         return view('redminportal::coupons/edit', $data);
@@ -232,6 +243,16 @@ class CouponController extends Controller
                 }
             }
         }
+        
+        $bundles = \Input::get('bundle_id');
+        if (count($bundles) > 0) {
+            foreach ($bundles as $item) {
+                $model = Bundle::find($item);
+                if ($model != null) {
+                    $apply_to_models[] = $model;
+                }
+            }
+        }
 
         // In the worst scenario, all select items have been deleted
         if (count($apply_to_models) == 0) {
@@ -263,6 +284,7 @@ class CouponController extends Controller
             $coupon->categories()->detach();
             $coupon->pricelists()->detach();
             $coupon->products()->detach();
+            $coupon->bundles()->detach();
         }
 
         foreach ($apply_to_models as $apply_to_model) {

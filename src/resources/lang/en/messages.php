@@ -19,7 +19,7 @@ return array(
     'no_purchase_found' => 'No Purchase Found',
     'no_user_found' => 'No User Found',
     'no_bundle_found' => 'No Bundle Found',
-    'no_pricelist_found' => 'No Membership/Module Found',
+    'no_pricelist_found' => 'No Module/Membership Found',
     'select_category_to_view_detail' => 'Select category to view detail',
     'confirm_delete' => 'Confirm delete?',
     'are_you_sure_you_want_to_delete' => 'Are you sure you want to delete this?',
@@ -34,4 +34,5 @@ return array(
     'allow_select_multiple' => 'You can select multiple items by holding Ctrl/Cmd + click.',
     'how_to_deselect_multiple' => 'To deselect your selection, hold Ctrl/Cmd + click the item.',
     'coupon_restriction_applies' => 'Coupon is optional. Restriction applies.',
+    'product_level_supersede_category' => 'Coupon applied to bundle, product and module/membership will supersede category.',
 );

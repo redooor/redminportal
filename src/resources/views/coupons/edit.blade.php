@@ -119,23 +119,30 @@
                                     <p></p>
                                     {!! Form::select('category_id', $categories, $category_id, array('class' => 'form-control', 'id' => 'category_id', 'multiple', 'name' => 'category_id[]')) !!}
                                     @else
-                                    <div class="alert alert-warning">No category</div>
+                                    <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_category_found') }}</div>
                                     @endif
                                     <h4>{{ Lang::get('redminportal::forms.products') }}</h4>
                                     @if (count($products) > 0)
                                     <p></p>
                                     {!! Form::select('product_id', $products, $product_id, array('class' => 'form-control', 'id' => 'product_id', 'multiple', 'name' => 'product_id[]')) !!}
                                     @else
-                                    <div class="alert alert-warning">No product</div>
+                                    <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_product_found') }}</div>
                                     @endif
                                     <h4>{{ Lang::get('redminportal::forms.membership_modules') }}</h4>
                                     @if (count($membermodules) > 0)
                                     <p></p>
                                     {!! Form::select('pricelist_id', $membermodules, $pricelist_id, array('class' => 'form-control', 'id' => 'pricelist_id', 'multiple', 'name' => 'pricelist_id[]')) !!}
                                     @else
-                                    <div class="alert alert-warning">No membership/module</div>
+                                    <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_pricelist_found') }}</div>
                                     @endif
-                                    <p class="help-block">Coupon applied to product and membership/module will supersede category.</p>
+                                    <h4>{{ Lang::get('redminportal::forms.bundles') }}</h4>
+                                    @if (count($bundles) > 0)
+                                    <p></p>
+                                    {!! Form::select('bundle_id', $bundles, $bundle_id, array('class' => 'form-control', 'id' => 'bundle_id', 'multiple', 'name' => 'bundle_id[]')) !!}
+                                    @else
+                                    <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_bundle_found') }}</div>
+                                    @endif
+                                    <p class="help-block">{{ Lang::get('redminportal::messages.product_level_supersede_category') }}</p>
                                 </div>
                             </div>
                         </div>
