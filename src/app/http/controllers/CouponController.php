@@ -269,12 +269,12 @@ class CouponController extends Controller
         $newCoupon->description            = $description;
         $newCoupon->amount                 = $amount;
         $newCoupon->is_percent             = $is_percent;
-        $newCoupon->start_date              = $start_date;
-        $newCoupon->end_date                = $end_date;
-        $newCoupon->max_spent              = $max_spent;
-        $newCoupon->min_spent              = $min_spent;
-        $newCoupon->usage_limit_per_coupon = $limit_per_coupon;
-        $newCoupon->usage_limit_per_user   = $limit_per_user;
+        $newCoupon->start_date             = $start_date;
+        $newCoupon->end_date               = $end_date;
+        $newCoupon->max_spent              = ($max_spent == 0) ? null : $max_spent;
+        $newCoupon->min_spent              = ($min_spent == 0) ? null : $min_spent;
+        $newCoupon->usage_limit_per_coupon = ($limit_per_coupon == 0) ? null : $limit_per_coupon;
+        $newCoupon->usage_limit_per_user   = ($limit_per_user == 0) ? null : $limit_per_user;
         $newCoupon->multiple_coupons       = $multiple_coupons;
         $newCoupon->exclude_sale_item      = $exclude_sale_item;
         $newCoupon->save();
