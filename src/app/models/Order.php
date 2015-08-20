@@ -85,7 +85,7 @@ class Order extends Model
             }
         }
         
-        return setDiscounts();
+        return $this->setDiscounts();
     }
     
     /*
@@ -169,6 +169,10 @@ class Order extends Model
             if ($coupon_used >= $coupon->usage_limit_per_user) {
                 return null; // Skip this coupon, already exceeded quota
             }
+        }
+        
+        if (! $model) {
+            return null;
         }
         
         // Continue with checks on start_date, end_date, min_spent, max_spent and usage_limit_per_coupon
