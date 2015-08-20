@@ -141,6 +141,9 @@ class OrderController extends Controller
             $apply_to_model->orders()->save($new_order);
         }
         
+        // Set coupon discount
+        $new_order->setDiscounts();
+        
         return redirect('admin/orders');
     }
     

@@ -124,4 +124,6 @@ return array(
     'coupons' => 'Coupons',
     'optional' => 'Optional',
     'apply_coupon' => 'Apply Coupon',
+    'total_price' => 'Total Price',
+    'total_discount' => 'Total Discount',
 );
