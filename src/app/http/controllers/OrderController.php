@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Exception;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
@@ -102,16 +103,6 @@ class OrderController extends Controller
                 }
             }
         }
-        // Save coupons to order
-        $coupons = \Input::get('coupon_id');
-        if (count($coupons) > 0) {
-            foreach ($coupons as $item) {
-                $model = Coupon::find($item);
-                if ($model != null) {
-                    $apply_to_models[] = $model;
-                }
-            }
-        }
 
         // No product/bundle to add
         if (count($apply_to_models) == 0) {
@@ -136,13 +127,36 @@ class OrderController extends Controller
         $new_order->payment_status = $payment_status;
         $new_order->save();
         
-        // Save the products
+        // Save the products/bundles
         foreach ($apply_to_models as $apply_to_model) {
             $apply_to_model->orders()->save($new_order);
         }
         
-        // Set coupon discount
-        $new_order->setDiscounts();
+        // Save coupons to order
+        $coupons = \Input::get('coupon_id');
+        if (count($coupons) > 0) {
+            $errors = new \Illuminate\Support\MessageBag;
+            foreach ($coupons as $item) {
+                $model = Coupon::find($item);
+                if ($model != null) {
+                    try {
+                        $new_order->addCoupon($model);
+                    } catch (Exception $exp) {
+                        $errors->add('couponError',
+                            "Coupon " . $model->code . " cannot be added because: " . $exp->getMessage()
+                        );
+                        
+                    }
+                }
+            }
+            
+            // Set coupon discount
+            $new_order->setDiscounts();
+            
+            if (count($errors) > 0) {
+                return redirect('admin/orders')->withErrors($errors);
+            }
+        }
         
         return redirect('admin/orders');
     }

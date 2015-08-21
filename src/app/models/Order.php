@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Models;
 
-use DateTime;
+use DateTime, Exception;
 use Illuminate\Database\Eloquent\Model;
 
 /* Columns
@@ -59,12 +59,47 @@ class Order extends Model
         return parent::delete();
     }
     
+    /*
+     * Return the sum of all products and bundles prices.
+     *
+     * @return Float
+     */
     public function getTotalprice()
     {
         $totalprice = 0;
         $totalprice += $this->bundles()->sum('price');
         $totalprice += $this->products()->sum('price');
         return $totalprice;
+    }
+    
+    /*
+     * Perform a check on the coupon before adding to the order.
+     * Recommended if you need to check coupon's multiple_coupons flag before adding it.
+     * This is optional, you need to specifically call this method to add a coupon.
+     *
+     * @return Coupon
+     * @throws Exception If coupon cannot be added due to multiple_coupons flag
+     */
+    public function addCoupon(Coupon $coupon)
+    {
+        if ($coupon->multiple_coupons) {
+            // Allows multiple
+            if ($this->coupons()->where('multiple_coupons', false)->count() > 0) {
+                // Exists a coupon which doesn't allow multiple
+                throw new Exception('Existing coupon does not allow multiple coupons.');
+            }
+        } else {
+            // Doesn't allow multiple
+            if ($this->coupons()->count() > 0) {
+                // There's an existing coupon in this order
+                throw new Exception('This coupon does not allow multiple coupons.');
+            }
+        }
+        
+        // All checks passed, proceed to add coupon to order
+        $this->coupons()->save($coupon);
+        
+        return $coupon;
     }
     
     /*

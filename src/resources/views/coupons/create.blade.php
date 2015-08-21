@@ -102,12 +102,14 @@
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.min_spent') }}</label>
                                 <div class="col-md-8">
                                     {!! Form::text('min_spent', null, array('class' => 'form-control')) !!}
+                                    <p class="help-block">{{ Lang::get('redminportal::messages.applies_to_whole_cart_spent') }}</p>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.max_spent') }}</label>
                                 <div class="col-md-8">
                                     {!! Form::text('max_spent', null, array('class' => 'form-control')) !!}
+                                    <p class="help-block">{{ Lang::get('redminportal::messages.applies_to_whole_cart_spent') }}</p>
                                 </div>
                             </div>
                             <div class="form-group">

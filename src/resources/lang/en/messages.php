@@ -35,4 +35,5 @@ return array(
     'how_to_deselect_multiple' => 'To deselect your selection, hold Ctrl/Cmd + click the item.',
     'coupon_restriction_applies' => 'Coupon is optional. Restriction applies.',
     'product_level_supersede_category' => 'Coupon applied to bundle, product and module/membership will supersede category.',
+    'applies_to_whole_cart_spent' => 'Applies to the total amount in the shopping cart.',
 );
