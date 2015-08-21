@@ -8,12 +8,30 @@ New features and UI improvements.
 
 Version 0.3.1 introduced some UI improvements. You need to run the following command to re-publish the assets.
 
-**Caution**: This action will overwrite any changes made to the public/vendor/redooor/redminportal folder.
+**Caution**: This action will overwrite any changes made to the `public/vendor/redooor/redminportal` folder.
 
-As a general rule, do not save any customed files inside public/vendor/redooor/redminportal folder.
+As a general rule, do not save any customed files inside `public/vendor/redooor/redminportal` folder.
 
     php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
 
+### Migrations
+
+Version 0.3.1 introduced some new database tables. You need to run the following command to re-publish the migrations.
+
+**Caution**: This action will overwrite any changes made to the `database/migrations/vendor/redooor/redminportal` folder.
+
+As a general rule, do not save any customed files inside `database/migrations/vendor/redooor/redminportal` folder.
+
+**Before you begin, _ALWAYS BACKUP_ your database.**
+
+1. You can publish the migrations using:
+
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
+
+2. Then run the following in the root folder:
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+        
 ## Upgrading to v0.3.1 from <= v0.1.*
 
 Supports Laravel 5.1.
