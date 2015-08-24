@@ -18,7 +18,7 @@ class CouponOrderTest extends RedminTestCase
         return $model;
     }
     
-    private function createNewCoupon($code)
+    private function createNewCoupon($code, $allow_multiple = false)
     {
         $model = new Coupon;
         $model->code = $code;
@@ -31,7 +31,7 @@ class CouponOrderTest extends RedminTestCase
         $model->min_spent = 1;
         $model->usage_limit_per_coupon = 100;
         $model->usage_limit_per_user = 1;
-        $model->multiple_coupons = false;
+        $model->multiple_coupons = $allow_multiple;
         $model->exclude_sale_item = false;
         $model->usage_limit_per_coupon_count = 0;
         $model->save();
@@ -68,6 +68,107 @@ class CouponOrderTest extends RedminTestCase
                 $this->assertTrue($coupon->description == 'Say something UK8888');
             } elseif ($coupon->code == 'UK5678') {
                 $this->assertTrue($coupon->description == 'Say something UK5678');
+            } else {
+                $this->assertTrue(false);
+            }
+        }
+        
+        // Delete order will delete coupons relationship
+        $order->delete();
+        
+        $check_orders = DB::table('coupon_order')->where('order_id', $check_id)->count();
+        $this->assertTrue($check_orders == 0);
+    }
+    
+    public function testAddCouponsToOrderWithAddCoupon()
+    {
+        $order = $this->createNewOrder();
+        $check_id = $order->id;
+
+        $coupon_1 = $this->createNewCoupon('UK1234');
+        $order->addCoupon($coupon_1);
+
+        $this->assertTrue($order->coupons->count() == 1);
+        $this->assertTrue($coupon_1->orders->count() == 1);
+        
+        $check_orders = DB::table('coupon_order')->where('order_id', $check_id)->count();
+        $this->assertTrue($check_orders == 1);
+        
+        foreach ($order->coupons as $coupon) {
+            if ($coupon->code == 'UK1234') {
+                $this->assertTrue($coupon->description == 'Say something UK1234');
+            } else {
+                $this->assertTrue(false);
+            }
+        }
+        
+        // Delete order will delete coupons relationship
+        $order->delete();
+        
+        $check_orders = DB::table('coupon_order')->where('order_id', $check_id)->count();
+        $this->assertTrue($check_orders == 0);
+    }
+    
+    public function testAddCouponsToOrderWithAddCouponFail()
+    {
+        $order = $this->createNewOrder();
+        $check_id = $order->id;
+
+        $coupon_1 = $this->createNewCoupon('UK1234');
+        $order->addCoupon($coupon_1);
+        
+        $coupon_2 = $this->createNewCoupon('UK8888');
+        try {
+            $order->addCoupon($coupon_2);
+        } catch (\Exception $exp) {
+            $this->assertTrue($exp->getMessage() == 'This coupon does not allow multiple coupons.');
+        }
+
+        $this->assertTrue($order->coupons->count() == 1);
+        $this->assertTrue($coupon_1->orders->count() == 1);
+        
+        $check_orders = DB::table('coupon_order')->where('order_id', $check_id)->count();
+        $this->assertTrue($check_orders == 1);
+        
+        foreach ($order->coupons as $coupon) {
+            if ($coupon->code == 'UK1234') {
+                $this->assertTrue($coupon->description == 'Say something UK1234');
+            } else {
+                $this->assertTrue(false);
+            }
+        }
+        
+        // Delete order will delete coupons relationship
+        $order->delete();
+        
+        $check_orders = DB::table('coupon_order')->where('order_id', $check_id)->count();
+        $this->assertTrue($check_orders == 0);
+    }
+    
+    public function testAddCouponsToOrderWithAddCouponFail2()
+    {
+        $order = $this->createNewOrder();
+        $check_id = $order->id;
+
+        $coupon_1 = $this->createNewCoupon('UK1234');
+        $order->addCoupon($coupon_1);
+        
+        $coupon_2 = $this->createNewCoupon('UK8888', true);
+        try {
+            $order->addCoupon($coupon_2);
+        } catch (\Exception $exp) {
+            $this->assertTrue($exp->getMessage() == 'Existing coupon does not allow multiple coupons.');
+        }
+
+        $this->assertTrue($order->coupons->count() == 1);
+        $this->assertTrue($coupon_1->orders->count() == 1);
+        
+        $check_orders = DB::table('coupon_order')->where('order_id', $check_id)->count();
+        $this->assertTrue($check_orders == 1);
+        
+        foreach ($order->coupons as $coupon) {
+            if ($coupon->code == 'UK1234') {
+                $this->assertTrue($coupon->description == 'Say something UK1234');
             } else {
                 $this->assertTrue(false);
             }
