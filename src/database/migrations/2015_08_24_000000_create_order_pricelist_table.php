@@ -29,20 +29,23 @@ class CreateOrderPricelistTable extends Migration {
             $orders = DB::table('user_pricelists')->get();
             
             foreach ($orders as $item) {
-                $order_id = DB::table('orders')->insertGetId([
-                    'user_id' => $item->user_id,
-                    'paid' => $item->paid,
-                    'transaction_id' => $item->transaction_id,
-                    'payment_status' => $item->payment_status,
-                    'options' => $item->options,
-                    'created_at' => $item->created_at,
-                    'updated_at' => $item->updated_at
-                ]);
-                
-                DB::table('order_pricelist')->insert([
-                    'order_id' => $order_id,
-                    'pricelist_id' => $item->pricelist_id
-                ]);
+				// Check if user exists
+				if (DB::table('users')->where('id', $item->user_id)->count() > 0) {
+					$order_id = DB::table('orders')->insertGetId([
+						'user_id' => $item->user_id,
+						'paid' => $item->paid,
+						'transaction_id' => $item->transaction_id,
+						'payment_status' => $item->payment_status,
+						'options' => $item->options,
+						'created_at' => $item->created_at,
+						'updated_at' => $item->updated_at
+					]);
+					
+					DB::table('order_pricelist')->insert([
+						'order_id' => $order_id,
+						'pricelist_id' => $item->pricelist_id
+					]);
+				}
             }
             
             Schema::dropIfExists('user_pricelists');
@@ -81,20 +84,22 @@ class CreateOrderPricelistTable extends Migration {
                 ->get();
             
             foreach ($orders as $item) {
-                $order_id = DB::table('user_pricelists')->insertGetId([
-                    'user_id' => $item->user_id,
-                    'paid' => $item->paid,
-                    'transaction_id' => $item->transaction_id,
-                    'payment_status' => $item->payment_status,
-                    'options' => $item->options,
-                    'created_at' => $item->created_at,
-                    'updated_at' => $item->updated_at,
-                    'pricelist_id' => $item->pricelist_id
-                ]);
+				// Check if user exists
+				if (DB::table('users')->where('id', $item->user_id)->count() > 0) {
+					$order_id = DB::table('user_pricelists')->insertGetId([
+						'user_id' => $item->user_id,
+						'paid' => $item->paid,
+						'transaction_id' => $item->transaction_id,
+						'payment_status' => $item->payment_status,
+						'options' => $item->options,
+						'created_at' => $item->created_at,
+						'updated_at' => $item->updated_at,
+						'pricelist_id' => $item->pricelist_id
+					]);
+				}
             }
             
             Schema::dropIfExists('order_pricelist');
         }
 	}
-
 }
