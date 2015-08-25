@@ -38,6 +38,19 @@ The migration script will automatically transfer existing data from user_priceli
 
 That being said, always **BACKUP** your database before executing any migration.
 
+#### Replace all UserPricelist model with Order
+
+The best way to get purchased pricelists are done through Order now. If you can, change all UserPricelist to Order.
+
+To get the purchased pricelist in Order, you can do the same like this:
+
+```php
+    Order::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
+        ->where('orders.user_id', $user->id)
+        ->where('order_pricelist.pricelist_id', $pricelist->id)
+        ->get();
+```
+
 ### Migrations
 
 Version 0.4.0 introduced some new database tables and removed some.

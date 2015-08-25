@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use DB;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Media;
 use Redooor\Redminportal\App\Models\Category;
@@ -9,7 +10,7 @@ use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Models\Pricelist;
-use Redooor\Redminportal\App\Models\UserPricelist;
+use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
@@ -220,7 +221,7 @@ class ModuleController extends Controller
                     $pricelist->save();
                 } else {
                     // Empty price means to delete, but check that it is not used
-                    $pricelist_used = UserPricelist::where('pricelist_id', $pricelist->id)->get();
+                    $pricelist_used = DB::table('order_pricelist')->where('pricelist_id', $pricelist->id)->get();
                     if (count($pricelist_used) == 0) {
                         $pricelist->delete();
                     }
@@ -299,7 +300,7 @@ class ModuleController extends Controller
             return \Redirect::to('admin/modules')->withErrors($errors);
         }
 
-        $purchases = UserPricelist::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
+        $purchases = Order::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
             ->join('pricelists', 'pricelists.id', '=', 'order_pricelist.pricelist_id')
             ->where('pricelists.module_id', $sid)
             ->get();
