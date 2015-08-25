@@ -88,9 +88,6 @@
             </div>
     	</div>
 
-        <hr>
-
-
     {!! Form::close() !!}
 @stop
 

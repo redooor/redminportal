@@ -27,6 +27,8 @@ class CreateMediasTable extends Migration
                 $table->integer('category_id')->nullable()->unsigned();
                 $table->foreign('category_id')->references('id')->on('categories');
                 $table->timestamps();
+                // Need to use InnoDB to support foreign key
+                $table->engine = 'InnoDB';
             });
         }
     }

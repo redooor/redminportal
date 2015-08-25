@@ -34,10 +34,17 @@ A Laravel 5.1 package as a **backend** administrating tool for Content Managemen
 # Important note
 
 Version 0.3.0 is backward compatible to Version 0.2.0.
+
 Version 0.2.0 is **NOT** backward compatible to Version 0.1.*.
 
 * Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
 * Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+
+**Upgrading from v0.1.*?**
+
+We've included a few database migrations to upgrade the database to support v0.2/v0.3. However, use this at your own risk. The upgrade scripts were not thoroughly tested and it may not be complete. If you find something missing, please report to us using the issue ticket. We welcome any contribution too.
+
+Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
 # Models and Features
 
@@ -57,6 +64,7 @@ Version 0.2.0 is **NOT** backward compatible to Version 0.1.*.
 * Coupon
 * Product
 * Order
+* Bundle
 
 ## Membership Subscription (Digital Products)
 * Category
@@ -66,6 +74,7 @@ Version 0.2.0 is **NOT** backward compatible to Version 0.1.*.
 * Module
 * ModuleMediaMembership
 * Purchase
+* Bundle
 
 ## Morphs
 * Image
@@ -108,12 +117,15 @@ You can install Laravel version 5.1 using the command:
             "redooor/redminportal": "0.3.*"
         },
 
-Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
+    Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
 
         "minimum-stability": "dev",
         "prefer-stable": true
 
-2. Then run `php composer update` in a terminal.
+2. Then run `php composer update [--prefer-dist]` in a terminal.
+
+    Use `--prefer-dist` to include only essential files (i.e. exclude tests).
+
 3. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
