@@ -33,7 +33,9 @@ A Laravel 5.1 package as a **backend** administrating tool for Content Managemen
 
 # Important note
 
-Version 0.3.0 is backward compatible to Version 0.2.0.
+Version 0.4.0 **may break** your front-end due to the change in UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+
+Version 0.3.* is backward compatible to Version 0.2.0.
 
 Version 0.2.0 is **NOT** backward compatible to Version 0.1.*.
 
@@ -73,7 +75,8 @@ Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 * Membership
 * Module
 * ModuleMediaMembership
-* Purchase
+* Order
+* Purchase **_(deprecated, replaced by Order)_**
 * Bundle
 
 ## Morphs
@@ -282,8 +285,10 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # External Libraries Used
 
-* Bootstrap v3.3.4
-* jQuery v2.1.3
+* [Bootstrap v3.3.5](http://getbootstrap.com)
+* [Font Awesome 4.4.0 by @davegandy](http://fontawesome.io)
+* jQuery v2.1.4
+* jQuery UI v1.11.4
 * [illuminate/html](https://github.com/illuminate/html)
 * [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel)
 * [Imagine](https://github.com/avalanche123/Imagine)

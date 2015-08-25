@@ -299,7 +299,8 @@ class ModuleController extends Controller
             return \Redirect::to('admin/modules')->withErrors($errors);
         }
 
-        $purchases = UserPricelist::join('pricelists', 'pricelists.id', '=', 'user_pricelists.pricelist_id')
+        $purchases = UserPricelist::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
+            ->join('pricelists', 'pricelists.id', '=', 'order_pricelist.pricelist_id')
             ->where('pricelists.module_id', $sid)
             ->get();
 
@@ -307,7 +308,7 @@ class ModuleController extends Controller
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'deleteError',
-                "This module has been purchased before. You cannot delete it. Please change disable it instead."
+                "This module has been purchased before. You cannot delete it. Please disable it instead."
             );
             return \Redirect::to('admin/modules')->withErrors($errors);
         }

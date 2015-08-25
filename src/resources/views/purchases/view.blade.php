@@ -14,6 +14,13 @@
     
     <div class="row">
         <div class="col-md-12">
+            <div class="alert alert-warning">
+                This page is no longer in use. Please go to <a href="{{ URL::to('admin/orders') }}" class="btn btn-default btn-xs">Orders</a> instead.
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
                 @if (count($purchases) > 0)
@@ -51,8 +58,8 @@
                     <td>User deleted</td>
                     <td>User deleted</td>
                     @endif
-                    <td>{{ $purchase->pricelist->module->name }}</td>
-                    <td>{{ $purchase->pricelist->membership->name }}</td>
+                    <td>{{ $purchase->pricelist->module->name or '' }}</td>
+                    <td>{{ $purchase->pricelist->membership->name or '' }}</td>
                     <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
                     <td>{{ $purchase->payment_status }}</td>
                     <td>{{ $purchase->transaction_id }}</td>

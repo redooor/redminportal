@@ -1,5 +1,63 @@
 # Upgrade Guide
 
+## Upgrading to v0.4.0 from v0.3.1
+
+New features and UI improvements.
+
+### UserPricelist _(deprecated)_
+
+Table **user_pricelists** has been moved to **orders** and **order_pricelist** so that it's consistent with products and bundles. Pricelist orders should be managed via admin/orders from now onwards.
+
+#### Query change required
+
+UserPricelist model has been kept for backward compatibility.
+However, the column 'pricelist_id' no longer exists. So in your queries, if you have conditions checking for 'pricelist_id', you need to change them. For example:
+
+Existing query:
+
+```php
+    UserPricelist::where('user_id', $user->id)
+        ->where('pricelist_id', $pricelist->id)
+        ->get();
+```
+
+New query:
+
+```php
+    UserPricelist::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
+        ->where('orders.user_id', $user->id)
+        ->where('order_pricelist.pricelist_id', $pricelist->id)
+        ->get();
+```
+
+**NOTE:** UserPricelist now refers to database table **orders**.
+
+#### user_pricelists migration
+    
+The migration script will automatically transfer existing data from user_pricelists to orders and order_pricelist. No additional work is required from you (other than the front-end query code change mentioned above).
+
+That being said, always **BACKUP** your database before executing any migration.
+
+### Migrations
+
+Version 0.4.0 introduced some new database tables and removed some.
+
+You need to run the following command to re-publish the migrations.
+
+**Caution**: This action will overwrite any changes made to the `database/migrations/vendor/redooor/redminportal` folder.
+
+As a general rule, do not save any customed files inside `database/migrations/vendor/redooor/redminportal` folder.
+
+**Before you begin, _ALWAYS BACKUP_ your database.**
+
+1. You can publish the migrations using:
+
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
+
+2. Then run the following in the root folder:
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+
 ## Upgrading to v0.3.1 from v0.3.0
 
 New features and UI improvements.
