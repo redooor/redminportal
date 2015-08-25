@@ -14,15 +14,26 @@
 New Bundle module and improvement to UI.
 
 ### New feature:
-1. Bundle module allow bundling physical and digital products on a single price (issue #94).
+1. Bundle module allow bundling physical and digital products on a single price (issue #94, #104).
+2. Get total value of a bundle (issue #97).
+3. Able to add multiple coupons to an order (issue #106, #107, #109).
+4. Coupon can be applied to bundles (issue #108).
+5. Verify and save coupon against all products in an order (issue #110).
+6. Order will now check coupon for multiple_coupons flag (issue #111).
+7. Cleaner UI.
 
 ### Enhancement:
 1. Added migrations to upgrade database from v0.1 to v0.2/v0.3 (issue #89).
 2. Sidebar is now off-canvas (issue #91).
+3. Exclude tests and non-production files from release package (issue #96).
 
 ### Bug fixes:
 1. Resolves TokenMismatchException issue on login (issue #88).
 2. User config file will override the default package config file (issue #90).
+3. Add Remember_token column users table never run in migration (issue #105).
+
+### Upgrade scripts:
+1. Add migration scripts to help migrate database and folder structure from v0.1 (issue #104).
 
 ## Version 0.3.0
 Focus on supporting Laravel 5.1.
