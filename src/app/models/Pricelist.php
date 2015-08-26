@@ -17,6 +17,24 @@ class Pricelist extends Model
 {
     protected $table = 'pricelists';
     
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['name'];
+    
+    /**
+     * Get the module name and membership name as Pricelist's name.
+     *
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        $name = $this->module->name . " (" . $this->membership->name . ")";
+        return $name;
+    }
+    
     public function module()
     {
         return $this->belongsTo('Redooor\Redminportal\App\Models\Module');
@@ -37,11 +55,17 @@ class Pricelist extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Bundle', 'bundle_pricelist');
     }
     
+    public function orders()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Order', 'order_pricelist');
+    }
+    
     public function delete()
     {
         // Remove all relationships
         $this->coupons()->detach();
         $this->bundles()->detach();
+        $this->orders()->detach();
         
         return parent::delete();
     }

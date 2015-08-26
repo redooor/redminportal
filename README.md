@@ -33,9 +33,9 @@ A Laravel 5.0 package as a **backend** administrating tool for Content Managemen
 
 # Important note
 
-Version 0.3.0 is backward compatible to Version 0.2.0.
+Version 0.2.2 **may break** your front-end due to the change in UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
-Version 0.2.0 is **NOT** backward compatible to Version 0.1.*.
+Version 0.2.* is **NOT** backward compatible to Version 0.1.*.
 
 * Looking for RedminPortal for Laravel 5.1? Visit the [v0.3 Branch](https://github.com/redooor/redminportal/tree/v0.3).
 * Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
@@ -73,7 +73,8 @@ Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 * Membership
 * Module
 * ModuleMediaMembership
-* Purchase
+* Order
+* Purchase **_(deprecated, replaced by Order)_**
 * Bundle
 
 ## Morphs

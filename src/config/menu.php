@@ -82,6 +82,11 @@ return array(
                 'hide' => false
             ),
             array(
+                'name' => 'orders',
+                'path' => 'admin/orders',
+                'hide' => false
+            ),
+            array(
                 'name' => 'physical',
                 'path' => '',
                 'hide' => false,
@@ -89,11 +94,6 @@ return array(
                     array(
                         'name' => 'products',
                         'path' => 'admin/products',
-                        'hide' => false
-                    ),
-                    array(
-                        'name' => 'orders',
-                        'path' => 'admin/orders',
                         'hide' => false
                     )
                 )
@@ -117,11 +117,6 @@ return array(
                     array(
                         'name' => 'medias',
                         'path' => 'admin/medias',
-                        'hide' => false
-                    ),
-                    array(
-                        'name' => 'purchases',
-                        'path' => 'admin/purchases',
                         'hide' => false
                     )
                 )

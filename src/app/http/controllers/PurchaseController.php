@@ -105,8 +105,11 @@ class PurchaseController extends Controller
         }
 
         // Check if user_pricelist already exist
-        $existing = UserPricelist::where('user_id', $user->id)->where('pricelist_id', $pricelist->id)->get();
-        if (count($existing) > 0) {
+        $existing = UserPricelist::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
+            ->where('orders.user_id', $user->id)
+            ->where('order_pricelist.pricelist_id', $pricelist->id)
+            ->count();
+        if ($existing > 0) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'userpricelistError',

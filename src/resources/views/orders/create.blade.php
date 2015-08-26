@@ -57,6 +57,14 @@
                             <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_bundle_found') }}</div>
                         @endif
                     </div>
+                    <div class="form-group">
+                        @if (count($pricelists) > 0)
+                            {!! Form::label('pricelist_id', Lang::get('redminportal::forms.membership_modules')) !!}
+                            {!! Form::select('pricelist_id', $pricelists, null, array('class' => 'form-control', 'id' => 'pricelist_id', 'multiple', 'name' => 'pricelist_id[]')) !!}
+                        @else
+                            <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_pricelist_found') }}</div>
+                        @endif
+                    </div>
                 </div>
                 <div class="panel-footer">
                     <p class="help-block">{{ Lang::get('redminportal::messages.allow_select_multiple') }}</p>

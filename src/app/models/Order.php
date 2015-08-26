@@ -44,6 +44,11 @@ class Order extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Bundle', 'bundle_order');
     }
     
+    public function pricelists()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Pricelist', 'order_pricelist');
+    }
+    
     public function coupons()
     {
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_order');
@@ -54,6 +59,7 @@ class Order extends Model
         // Remove product association
         $this->products()->detach();
         $this->bundles()->detach();
+        $this->pricelists()->detach();
         $this->coupons()->detach();
         
         return parent::delete();
@@ -69,6 +75,7 @@ class Order extends Model
         $totalprice = 0;
         $totalprice += $this->bundles()->sum('price');
         $totalprice += $this->products()->sum('price');
+        $totalprice += $this->pricelists()->sum('price');
         return $totalprice;
     }
     
@@ -164,6 +171,23 @@ class Order extends Model
                 
                 // Bundle doesn't qualify for coupon, check if category qualifies
                 $category_coupon = $this->verifyCoupon($bundle->category, $coupon, $bundle);
+                
+                if ($category_coupon) {
+                    $discounts[] = $category_coupon;
+                }
+            }
+            
+            // Loop through all pricelists
+            foreach ($this->pricelists as $pricelist) {
+                $pricelist_coupon = $this->verifyCoupon($pricelist, $coupon);
+                
+                if ($pricelist_coupon) {
+                    $discounts[] = $pricelist_coupon;
+                    continue;
+                }
+                
+                // Pricelist doesn't qualify for coupon, check if category qualifies
+                $category_coupon = $this->verifyCoupon($pricelist->module->category, $coupon, $pricelist);
                 
                 if ($category_coupon) {
                     $discounts[] = $category_coupon;

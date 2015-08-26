@@ -91,7 +91,7 @@
                         @endif
 					</td>
                     <td class="table-actions text-center">
-                        @if ($order->products()->count() > 0 or $order->bundles()->count() > 0)
+                        @if ($order->products()->count() > 0 or $order->bundles()->count() > 0 or $order->pricelists()->count())
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
@@ -105,6 +105,11 @@
                                 @foreach ($order->bundles as $bundle)
 								<li>
                                     <a href="#">{{ $bundle->name }}<br><span class="label label-primary">{{ $bundle->sku }}</span></a>
+								</li>
+                                @endforeach
+                                @foreach ($order->pricelists as $pricelist)
+								<li>
+                                    <a href="#">{{ $pricelist->name }}<br><span class="label label-primary">{{ $pricelist->module->sku }}</span></a>
 								</li>
                                 @endforeach
 							</ul>
