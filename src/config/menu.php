@@ -77,6 +77,11 @@ return array(
                 'hide' => false
             ),
             array(
+                'name' => 'bundles',
+                'path' => 'admin/bundles',
+                'hide' => false
+            ),
+            array(
                 'name' => 'physical',
                 'path' => '',
                 'hide' => false,

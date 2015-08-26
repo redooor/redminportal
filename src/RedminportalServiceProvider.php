@@ -15,7 +15,11 @@ class RedminportalServiceProvider extends ServiceProvider
         include __DIR__.'/app/Http/routes.php';
         
         // Get views
-        $this->loadViewsFrom(__DIR__.'/resources/views', 'redminportal');
+        if (file_exists(base_path('resources/views/vendor/redooor/redminportal'))) {
+            $this->loadViewsFrom(base_path('resources/views/vendor/redooor/redminportal'), 'redminportal');
+        } else {
+            $this->loadViewsFrom(__DIR__.'/resources/views', 'redminportal');
+        }
         
         // Establish Translator Namespace
         $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'redminportal');
@@ -23,7 +27,7 @@ class RedminportalServiceProvider extends ServiceProvider
         // Allow end users to publish and modify views
         $this->publishes([
             __DIR__.'/resources/views' => base_path('resources/views/vendor/redooor/redminportal'),
-        ]);
+        ], 'views');
         
         // Allow end users to publish and modify public assets
         $this->publishes([
@@ -91,7 +95,7 @@ class RedminportalServiceProvider extends ServiceProvider
 
         if (file_exists($userConfigFile)) {
             $userConfig = $this->app['files']->getRequire($userConfigFile);
-            $config     = array_replace_recursive($config, $userConfig);
+            $config     = $userConfig;
         }
 
         $this->app['config']->set($setname, $config);

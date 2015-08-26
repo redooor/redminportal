@@ -6,7 +6,8 @@
 
 A Laravel 5.0 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
 
-Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+* Looking for RedminPortal for Laravel 5.1? Visit the [v0.3 Branch](https://github.com/redooor/redminportal/tree/v0.3).
+* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
 # Table of Content
 1. [Compatibility](#compatibility)
@@ -28,12 +29,22 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 |:-------:|:------------:|
 | 4.2     | 0.1.x        |
 | 5.0     | 0.2.x        |
+| 5.1     | 0.3.x        |
 
 # Important note
 
-Version 0.2.0 is **NOT** backward compatible.
+Version 0.3.0 is backward compatible to Version 0.2.0.
 
-Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+Version 0.2.0 is **NOT** backward compatible to Version 0.1.*.
+
+* Looking for RedminPortal for Laravel 5.1? Visit the [v0.3 Branch](https://github.com/redooor/redminportal/tree/v0.3).
+* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+
+**Upgrading from v0.1.*?**
+
+We've included a few database migrations to upgrade the database to support v0.2/v0.3. However, use this at your own risk. The upgrade scripts were not thoroughly tested and it may not be complete. If you find something missing, please report to us using the issue ticket. We welcome any contribution too.
+
+Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
 # Models and Features
 
@@ -53,6 +64,7 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 * Coupon
 * Product
 * Order
+* Bundle
 
 ## Membership Subscription (Digital Products)
 * Category
@@ -62,6 +74,7 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 * Module
 * ModuleMediaMembership
 * Purchase
+* Bundle
 
 ## Morphs
 * Image
@@ -95,7 +108,7 @@ To use it, get the model's translations and use json_decode to convert content i
 
 You can install Laravel version 5.0 using the command:
 
-    composer create-project laravel/laravel redmindemo 5.0.*
+    composer create-project laravel/laravel {directory} "~5.0.0" --prefer-dist
 
 1. Add Redminportal to composer.json of a new Laravel application, under "require". Like this:
 
@@ -104,12 +117,15 @@ You can install Laravel version 5.0 using the command:
             "redooor/redminportal": "0.2.*"
         },
 
-Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
+    Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
 
         "minimum-stability": "dev",
         "prefer-stable": true
 
-2. Then run `php composer update` in a terminal.
+2. Then run `php composer update [--prefer-dist]` in a terminal.
+
+    Use `--prefer-dist` to include only essential files (i.e. exclude tests).
+
 3. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
@@ -117,7 +133,7 @@ Due to the use of getID3 package, we need to set the minimum-stability to "dev" 
             ... omitted ...
             
             // Add this line
-            'Redooor\Redminportal\RedminportalServiceProvider',
+            'Redooor\Redminportal\RedminportalServiceProvider'
         ),
 
 4. Then run `php composer dump-autoload` in a terminal.
@@ -155,7 +171,7 @@ It is recommended that contributors use Laravel Homestead for development becaus
 
 You can install Laravel version 5.0 using the command:
 
-    composer create-project laravel/laravel redmindemo 5.0.*
+    composer create-project laravel/laravel {directory} "~5.0.0" --prefer-dist
 
 2. Create a folder named "packages" inside the [root] folder.
 3. Clone the Redooor\Redminportal repository into [root]\packages\redooor\redminportal folder.
@@ -193,7 +209,7 @@ You can install Laravel version 5.0 using the command:
             ... omitted ...
             
             // Add this line
-            'Redooor\Redminportal\RedminportalServiceProvider',
+            'Redooor\Redminportal\RedminportalServiceProvider'
         ),
 
 9. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
@@ -225,7 +241,7 @@ You can install Laravel version 5.0 using the command:
 ## Install Grunt and Bower dependencies
 
 1. You need to have nodejs installed
-3. cd to workbench/redooor/redminportal
+3. cd to packages/redooor/redminportal
 2. Run _npm install_
 3. Run _bower install_
 4. To build all assets, run _grunt_
@@ -266,8 +282,10 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # External Libraries Used
 
-* Bootstrap v3.3.4
-* jQuery v2.1.3
+* [Bootstrap v3.3.5](http://getbootstrap.com)
+* [Font Awesome 4.4.0 by @davegandy](http://fontawesome.io)
+* jQuery v2.1.4
+* jQuery UI v1.11.4
 * [illuminate/html](https://github.com/illuminate/html)
 * [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel)
 * [Imagine](https://github.com/avalanche123/Imagine)

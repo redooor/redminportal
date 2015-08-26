@@ -1,8 +1,112 @@
 # Upgrade Guide
 
+## Upgrading to v0.3.1 from v0.3.0
+
+New features and UI improvements.
+
+### Publish assets
+
+Version 0.3.1 introduced some UI improvements. You need to run the following command to re-publish the assets.
+
+**Caution**: This action will overwrite any changes made to the `public/vendor/redooor/redminportal` folder.
+
+As a general rule, do not save any customed files inside `public/vendor/redooor/redminportal` folder.
+
+    php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
+
+### Migrations
+
+Version 0.3.1 introduced some new database tables. You need to run the following command to re-publish the migrations.
+
+**Caution**: This action will overwrite any changes made to the `database/migrations/vendor/redooor/redminportal` folder.
+
+As a general rule, do not save any customed files inside `database/migrations/vendor/redooor/redminportal` folder.
+
+**Before you begin, _ALWAYS BACKUP_ your database.**
+
+1. You can publish the migrations using:
+
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
+
+2. Then run the following in the root folder:
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+        
+## Upgrading to v0.3.1 from <= v0.1.*
+
+Supports Laravel 5.1.
+
+### Migrations
+
+In Version 0.3.1, the migrations are generally designed to be forgiving. It will check for existance before creating the tables.
+
+**Before you begin, _ALWAYS BACKUP_ your database and `public\assets\img folder`.**
+
+To support foreign keys, we need to convert these tables to **InnoDB** type.
+
+* products
+* categories
+* pricelists
+* medias
+* modules
+* memberships
+* coupons
+
+You can include an upgrade migration to convert these tables automatically for you. _(ONLY works with MySQL database)_
+
+1. Run this command to copy all migrations from Redminportal to your app.
+
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
+    
+2. Copy this file
+
+        [root]\vendor\redooor\redminportal\database\upgrades\2015_05_21_000000_upgrade_innodb_table.php
+        
+3. Paste it into
+
+        [root]\database\migrations\vendor\redooor\redminportal\
+        
+4. Then use the following command to run the full migrtions
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+
+
+Additionally, you may run these migrations to upgrade the tags and images table in Version 0.1.* to the new one.
+
+**WARNING: the images migration involves moving of files to the new folder structure. Do this when your site is least busy.**
+
+1. Copy the following files in `vendor\redooor\redminportal\database\upgrades`
+
+        [root]\vendor\redooor\redminportal\database\upgrades\2015_08_03_000000_upgrade_tags_table.php
+        [root]\vendor\redooor\redminportal\database\upgrades\2015_08_04_000000_upgrade_images_table.php
+
+2. Paste them in [root]\database\migrations.
+3. Run `php artisan migrate` at the [root] directory.
+
+## Upgrading to v0.3.0 from v0.2.*
+
+Supports Laravel 5.1.
+
+Version 0.3.0 should be backward compatible to Version 0.2.0 but not Version 0.1.*.
+
+* Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
+* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+
+Edit your [root]\config\app.php providers and alias array like this:
+
+        'providers' => array(
+            Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
+            ... omitted ...
+            
+            // Edit this line
+            Redooor\Redminportal\RedminportalServiceProvider::class,
+        ),
+
 ## Upgrading to v0.2.0 from <= v0.1.*
 
-Version 0.2.0 is **NOT** backward compatible.
+Supports Laravel 5.0.
+
+Version 0.2.0 is generally **NOT** backward compatible.
 
 Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 

@@ -42,6 +42,11 @@ class Product extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_product');
     }
     
+    public function bundles()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Bundle', 'bundle_product');
+    }
+    
     public function orders()
     {
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Order', 'order_product');
@@ -57,6 +62,7 @@ class Product extends Model
         // Remove all relationships
         $this->tags()->detach();
         $this->coupons()->detach();
+        $this->bundles()->detach();
         $this->orders()->detach();
         
         // Delete all images

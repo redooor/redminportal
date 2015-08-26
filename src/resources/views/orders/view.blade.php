@@ -32,11 +32,14 @@
                 <tr>
                     <th>User</th>
                     <th>{{ Lang::get('redminportal::forms.email') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.total_price') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.total_discount') }}</th>
                     <th>{{ Lang::get('redminportal::forms.paid') }}</th>
                     <th>{{ Lang::get('redminportal::forms.payment_status') }}</th>
                     <th>{{ Lang::get('redminportal::forms.transaction_id') }}</th>
                     <th>{{ Lang::get('redminportal::forms.ordered_on') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.products') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.coupons') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.items') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -50,11 +53,45 @@
                     <td>User deleted</td>
                     <td>User deleted</td>
                     @endif
+                    <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($order->getTotalprice(), Lang::get('redminportal::currency.currency')) }}</td>
+                    <td class="table-actions text-center">
+                        @if (count($order->getDiscounts()) > 0)
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency(collect($order->getDiscounts())->sum('value'), Lang::get('redminportal::currency.currency')) }}
+							</button>
+							<ul class="dropdown-menu" role="menu">
+                                @foreach ($order->getDiscounts() as $discount)
+								<li>
+									<a href="#">{{ $discount['name'] }}<br><span class="label label-primary">{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($discount['value'], Lang::get('redminportal::currency.currency')) }}</span></a>
+								</li>
+                                @endforeach
+							</ul>
+						</div>
+                        @endif
+					</td>
                     <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($order->paid, Lang::get('redminportal::currency.currency')) }}</td>
                     <td>{{ $order->payment_status }}</td>
                     <td>{{ $order->transaction_id }}</td>
                     <td>{{ $order->created_at }}</td>
                     <td class="table-actions text-center">
+                        @if ($order->coupons()->count() > 0)
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="fa fa-ticket"></span>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+                                @foreach ($order->coupons as $coupon)
+								<li>
+									<a href="#">{{ $coupon->code }}<br><span class="label label-primary">{{ $coupon->amount }} @if($coupon->is_percent){{ "%" }}@else{{ "(fixed)" }}@endif</span></a>
+								</li>
+                                @endforeach
+							</ul>
+						</div>
+                        @endif
+					</td>
+                    <td class="table-actions text-center">
+                        @if ($order->products()->count() > 0 or $order->bundles()->count() > 0)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
@@ -62,11 +99,17 @@
 							<ul class="dropdown-menu pull-right" role="menu">
                                 @foreach ($order->products as $product)
 								<li>
-									<a href="">{{ $product->name }} [{{ $product->sku }}]</a>
+									<a href="#">{{ $product->name }}<br><span class="label label-primary">{{ $product->sku }}</span></a>
+								</li>
+                                @endforeach
+                                @foreach ($order->bundles as $bundle)
+								<li>
+                                    <a href="#">{{ $bundle->name }}<br><span class="label label-primary">{{ $bundle->sku }}</span></a>
 								</li>
                                 @endforeach
 							</ul>
 						</div>
+                        @endif
 					</td>
                     <td class="table-actions text-right">
                         <div class="btn-group">

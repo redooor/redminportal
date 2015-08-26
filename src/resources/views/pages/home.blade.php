@@ -7,7 +7,36 @@
                 <div class="panel-body">
                     <h1>RedminPortal <small>by Redooor</small></h1>
                     <h2><u>Change log</u></h2>
-                    <h3>Under Development, Version 0.2.0 (latest master)</h3>
+                    <h3>Version 0.2.1</h3>
+                    <p>New Bundle module and improvement to UI.</p>
+                    <h4>New feature:</h4>
+                    <ol>
+                        <li>Bundle module allow bundling physical and digital products on a single price (issue #94, #104).</li>
+                        <li>Get total value of a bundle (issue #97).</li>
+                        <li>Able to add multiple coupons to an order (issue #106, #107, #109).</li>
+                        <li>Coupon can be applied to bundles (issue #108).</li>
+                        <li>Verify and save coupon against all products in an order (issue #110).</li>
+                        <li>Order will now check coupon for multiple_coupons flag (issue #111).</li>
+                        <li>Cleaner UI.</li>
+                    </ol>
+                    <h4>Enhancement:</h4>
+                    <ol>
+                        <li>Added migrations to upgrade database from v0.1 to v0.2/v0.3 (issue #89).</li>
+                        <li>Sidebar is now off-canvas (issue #91).</li>
+                        <li>Exclude tests and non-production files from release package (issue #96).</li>
+                    </ol>
+                    <h4>Bug fixes:</h4>
+                    <ol>
+                        <li>Resolves TokenMismatchException issue on login (issue #88).</li>
+                        <li>User config file will override the default package config file (issue #90).</li>
+                        <li>Add Remember_token column users table never run in migration (issue #105).</li>
+                    </ol>
+                    <h4>Upgrade scripts:</h4>
+                    <ol>
+                        <li>Add migration scripts to help migrate database and folder structure from v0.1 (issue #104).</li>
+                    </ol>
+                    <hr>
+                    <h3>Version 0.2.0</h3>
                     <p>Focus on supporting Laravel 5.0.</p>
                     <h4>New feature:</h4>
                     <ol>
@@ -30,12 +59,30 @@
                         <li>Add Page model and Controller (issue #74).</li>
                         <li>Save orders for products (issue #51).</li>
                         <li>Download orders in CSV format.</li>
-                        <li>More coming... (developing)</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
                         <li>Translation to support any language (issue #83).</li>
                     </ol>
+                    <hr>
+                    <h3>Version 0.1.6</h3>
+                    <p>Minor enhancement and bug fixes.</p>
+                    <h4>Important:</h4>
+                    <p>If you're upgrading from &lt;= v0.1.5, please refer to the Upgrade Guide in README.md.</p>
+                    <p>The translation enhancement in Category, Module, Media, Product, Promotion and Portfolio introduces a different way of storing the data. <strong>Translation data will be lost when you upgrade to v0.1.6.</strong></p>
+                    <h4>Enhancements:</h4>
+                    <ol>
+                        <li>Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)</li>
+                        <li>Added UI for "active" column for module create and edit. (issue #78)</li>
+                        <li>Promotions, Products and Portfolios now allow translation title, summary and description. (issue #84)</li>
+                        <li>Revamp Translation implementation for Category, Media, Module, Portfolio, Product and Promotion (issue #86).</li>
+                    </ol>
+                    <h4>Bug fixes:</h4>
+                    <ol>
+                        <li>Fixed missing columns in coupon_user table.</li>
+                        <li>Translation only support Chinese cn now. (issue #82)</li>
+                    </ol>
+                    <hr>
                     <h3>Version 0.1.5</h3>
                     <p>Focus on fixing bugs and cleaning up code. Improve assets management via Grunt and Bower. Add Coupon module.</p>
                     <h4>Important:</h4>
@@ -67,6 +114,7 @@
                     </ol>
                     <h4>Note for Contributors</h4>
                     <p>All assets are now managed via Grunt and Bower. Please refer to <strong>Install Grunt and Bower dependencies</strong> in the README.md file.</p>
+                    <hr>
                     <h3>Version 0.1.4</h3>
                     <p>Released for a major bug fix related to MySQL database and a new feature to allow same sub-category names under different parent.</p>
                     <h4>Important:</h4>
@@ -80,6 +128,7 @@
                     <ol>
                         <li>Allow same sub-category names under different parent (issue #40).</li>
                     </ol>
+                    <hr>
                     <h3>Version 0.1.3</h3>
                     <p>The focus of this update was on cleaning up the code and making sure all tests pass.</p>
 
@@ -109,6 +158,7 @@
                         <li>Prevent same user and pricelist to be added to Purchases (issue #24).</li>
                         <li>All view pages where no record is found, don't show table (issue #25).</li>
                     </ol>
+                    <hr>
                     <h3>Version 0.1.2</h3>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -130,6 +180,7 @@
                     <ol>
                         <li>Fixed migration foreign reference by @tusharvikky</li>
                     </ol>
+                    <hr>
                     <h3>Version 0.1.1</h3>
                     <ol>
                         <li>Supports Laravel 4.2.</li>
@@ -140,6 +191,7 @@
                         <li>Resolved issue where package Config cannot be overriden.</li>
                         <li>Temporarily increase memory to 256MB for testing.</li>
                     </ol>
+                    <hr>
                     <h3>Version 0.1.0</h3>
                     <ol>
                         <li>Supports Laravel 4.1.</li>

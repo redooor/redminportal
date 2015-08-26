@@ -27,13 +27,17 @@
 	},
     "autoload": {
         "classmap": [
-            "src/database/seeds",
-            "tests/bases",
-            "tests/RedminTestCase.php"
+            "src/database/seeds"
         ],
         "psr-4": {
             "Redooor\\Redminportal\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/bases",
+            "tests/RedminTestCase.php"
+        ]
     },
     "minimum-stability": "dev",
     "prefer-stable" : true

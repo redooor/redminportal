@@ -28,6 +28,8 @@ class CreateProductsTable extends Migration {
                 $table->foreign('category_id')->references('id')->on('categories');
                  // created_at | updated_at DATETIME
                 $table->timestamps();
+                // Need to use InnoDB to support foreign key
+                $table->engine = 'InnoDB';
             });
         }
 	}

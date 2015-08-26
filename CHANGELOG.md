@@ -1,12 +1,41 @@
 # Change log
 
-1. [Version 0.2.0](#version-020)
-2. [Version 0.1.5](#version-015)
-3. [Version 0.1.4](#version-014)
-4. [Version 0.1.3](#version-013)
-5. [Version 0.1.2](#version-012)
-6. [Version 0.1.1](#version-011)
-7. [Version 0.1.0](#version-010)
+* [Version 0.2.1](#version-021)
+* [Version 0.2.0](#version-020)
+* [Version 0.1.5](#version-015)
+* [Version 0.1.4](#version-014)
+* [Version 0.1.3](#version-013)
+* [Version 0.1.2](#version-012)
+* [Version 0.1.1](#version-011)
+* [Version 0.1.0](#version-010)
+
+## Version 0.2.1
+New Bundle module and improvement to UI.
+
+* Looking for RedminPortal for Laravel 5.1? Visit the [v0.3 Branch](https://github.com/redooor/redminportal/tree/v0.3).
+* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+
+### New feature:
+1. Bundle module allow bundling physical and digital products on a single price (issue #94, #104).
+2. Get total value of a bundle (issue #97).
+3. Able to add multiple coupons to an order (issue #106, #107, #109).
+4. Coupon can be applied to bundles (issue #108).
+5. Verify and save coupon against all products in an order (issue #110).
+6. Order will now check coupon for multiple_coupons flag (issue #111).
+7. Cleaner UI.
+
+### Enhancement:
+1. Added migrations to upgrade database from v0.1 to v0.2/v0.3 (issue #89).
+2. Sidebar is now off-canvas (issue #91).
+3. Exclude tests and non-production files from release package (issue #96).
+
+### Bug fixes:
+1. Resolves TokenMismatchException issue on login (issue #88).
+2. User config file will override the default package config file (issue #90).
+3. Add Remember_token column users table never run in migration (issue #105).
+
+### Upgrade scripts:
+1. Add migration scripts to help migrate database and folder structure from v0.1 (issue #104).
 
 ## Version 0.2.0
 Focus on supporting Laravel 5.0 and making sure all models and controllers work.
@@ -38,6 +67,26 @@ Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github
 
 ### Bug fixes:
 1. Translation to support any language (issue #83).
+
+## Version 0.1.6
+Minor enhancement and bug fixes.
+
+### Important:
+If you're upgrading from <= v0.1.5, please refer to the [Upgrade Guide](#upgrade-guide).
+
+The translation enhancement in Category, Module, Media, Product, Promotion and Portfolio introduces a different way of storing the data. 
+
+**Translation data will be lost when you upgrade to v0.1.6.**
+
+### Enhancements:
+1. Added a new column "active" to pricelists table. To allow disabling pricelist without affecting existing subscribers. (issue #78)
+2. Added UI for "active" column for module create and edit. (issue #78)
+3. Promotions, Products and Portfolios now allow translation title, summary and description. (issue #84)
+4. Revamp Translation implementation for Category, Media, Module, Portfolio, Product and Promotion (issue #86).
+
+### Bug fixes:
+1. Fixed missing columns in coupon_user table.
+2. Translation only support Chinese cn now. (issue #82)
 
 ## Version 0.1.5
 The focus of this update was on cleaning up the code and making sure all tests pass. Improve assets management via Grunt and Bower. Add Coupon module.

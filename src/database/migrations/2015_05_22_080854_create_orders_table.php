@@ -23,6 +23,8 @@ class CreateOrdersTable extends Migration {
                 $table->string('transaction_id')->default('Unknown')->nullable();
                 $table->string('payment_status')->default('Completed')->nullable();
                 $table->text('options')->nullable();
+                // Need to use InnoDB to support foreign key
+                $table->engine = 'InnoDB';
             });
         }
 	}
