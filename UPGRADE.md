@@ -131,7 +131,7 @@ You can include an upgrade migration to convert these tables automatically for y
     
 2. Copy this file
 
-        [root]\vendor\redooor\redminportal\database\upgrades\2015_05_21_000000_upgrade_innodb_table.php
+        [root]\vendor\redooor\redminportal\src\database\upgrades\2015_05_21_000000_upgrade_innodb_table.php
         
 3. Paste it into
 
