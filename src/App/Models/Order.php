@@ -249,7 +249,7 @@ class Order extends Model
             })
             ->where(function($query) use ($coupon) {
                 $query->orWhere('coupons.usage_limit_per_coupon', null)
-                    ->orWhere('coupons.usage_limit_per_coupon', '>', $coupon->usage_limit_per_coupon_count);
+                    ->orWhere('coupons.usage_limit_per_coupon', '>=', $coupon->usage_limit_per_coupon_count);
             })
             ->first();
 
