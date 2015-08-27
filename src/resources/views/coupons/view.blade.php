@@ -77,6 +77,14 @@
                             @endif
                         </a>
                     </th>
+                    <th>
+                        <a href="{{ URL::to('admin/coupons/sort') . '/usage_limit_per_coupon_count/' . ($sortBy == 'usage_limit_per_coupon_count' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            {{ Lang::get('redminportal::forms.usage_limit_per_coupon_count') }}
+                            @if ($sortBy == 'usage_limit_per_coupon_count')
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
+                            @endif
+                        </a>
+                    </th>
                     <th></th>
                 </tr>
             </thead>
@@ -101,6 +109,9 @@
                         </td>
                         <td>
                             {{ $coupon->usage_limit_per_user }}
+                        </td>
+                        <td>
+                            {{ $coupon->usage_limit_per_coupon_count }}
                         </td>
                         <td class="table-actions text-right">
                             <div class="btn-group">
