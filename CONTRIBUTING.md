@@ -81,3 +81,10 @@ Please feel free to suggest a better alternative.
 * [Brackets](http://brackets.io/) for text editing.
 * [Brackets PHP Code Quality Tools](https://github.com/mikaeljorhult/brackets-php-code-quality-tools) a plugin for Brackets.
 * [Brackets PHP Syntax Hint](http://www.oslibrary.in/brackets/) a plugin for Brackets.
+
+# Dealing with Case-sensitive naming convention
+
+It was only recently that we found out the huge difference when deploying to our hosting server which was case sensitive. In our vagrant environment, we thought the Ubuntu virtual machine will take care of that. Unfortunately, VirtualBox uses the host machine's file system instead of the Virtual machine's. So we couldn't really get a consistent environment just by using Vagrant.
+
+This link shows a good solution for Mac OSX users. Unfortunately, we couldn't find a suitable solution for Windows users yet.
+[https://plog.logston.me/Vagrant-development-environment-on-OSX/](https://plog.logston.me/Vagrant-development-environment-on-OSX/)
