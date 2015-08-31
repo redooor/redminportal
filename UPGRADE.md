@@ -150,6 +150,7 @@ Additionally, you may run these migrations to upgrade the tags and images table 
 
         [root]\vendor\redooor\redminportal\database\upgrades\2015_08_03_000000_upgrade_tags_table.php
         [root]\vendor\redooor\redminportal\database\upgrades\2015_08_04_000000_upgrade_images_table.php
+        [root]\vendor\redooor\redminportal\database\upgrades\2015_08_31_000000_upgrade_translations_table.php
 
 2. Paste them in [root]\database\migrations.
 3. Run `php artisan migrate` at the [root] directory.
