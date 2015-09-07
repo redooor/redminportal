@@ -122,6 +122,6 @@ class ReportController extends Controller
 
             });
 
-        })->download('csv');
+        })->download('xlsx');
     }
 }

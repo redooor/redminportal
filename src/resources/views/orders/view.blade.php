@@ -30,7 +30,7 @@
         <table class="table table-bordered table-striped table-condensed">
             <thead>
                 <tr>
-                    <th>User</th>
+                    <th>{{ Lang::get('redminportal::forms.user') }}</th>
                     <th>{{ Lang::get('redminportal::forms.email') }}</th>
                     <th>{{ Lang::get('redminportal::forms.total_price') }}</th>
                     <th>{{ Lang::get('redminportal::forms.total_discount') }}</th>
