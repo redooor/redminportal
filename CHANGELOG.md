@@ -1,6 +1,6 @@
 # Change log
 
-* [Version 0.4.0](#version-040)
+* [Version 0.3.2](#version-032)
 * [Version 0.3.1](#version-031)
 * [Version 0.3.0](#version-030)
 * [Version 0.2.0](#version-020)
@@ -11,7 +11,7 @@
 * [Version 0.1.1](#version-011)
 * [Version 0.1.0](#version-010)
 
-## Version 0.4.0
+## Version 0.3.2
 Code clean up, new features and UI improvements.
 
 This update is generally v0.3.* compatible but there's a change with UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
