@@ -50,34 +50,36 @@
             </thead>
             <tbody>
                 @foreach($purchases as $purchase)
-                <tr>
-                    @if ($purchase->user != null)
-                    <td>{{ $purchase->user->first_name }} {{ $purchase->user->last_name }}</td>
-                    <td>{{ $purchase->user->email }}</td>
-                    @else
-                    <td>User deleted</td>
-                    <td>User deleted</td>
+                    @if (isset($purchase->pricelist))
+                    <tr>
+                        @if ($purchase->user != null)
+                        <td>{{ $purchase->user->first_name }} {{ $purchase->user->last_name }}</td>
+                        <td>{{ $purchase->user->email }}</td>
+                        @else
+                        <td>User deleted</td>
+                        <td>User deleted</td>
+                        @endif
+                        <td>{{ $purchase->pricelist->module->name or '' }}</td>
+                        <td>{{ $purchase->pricelist->membership->name or '' }}</td>
+                        <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
+                        <td>{{ $purchase->payment_status }}</td>
+                        <td>{{ $purchase->transaction_id }}</td>
+                        <td>{{ $purchase->created_at }}</td>
+                        <td class="table-actions text-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-option-horizontal"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li>
+                                        <a href="{{ URL::to('admin/purchases/delete/' . $purchase->id) }}" class="btn-confirm">
+                                            <i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
                     @endif
-                    <td>{{ $purchase->pricelist->module->name or '' }}</td>
-                    <td>{{ $purchase->pricelist->membership->name or '' }}</td>
-                    <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
-                    <td>{{ $purchase->payment_status }}</td>
-                    <td>{{ $purchase->transaction_id }}</td>
-                    <td>{{ $purchase->created_at }}</td>
-                    <td class="table-actions text-right">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-								<span class="glyphicon glyphicon-option-horizontal"></span>
-							</button>
-							<ul class="dropdown-menu pull-right" role="menu">
-								<li>
-									<a href="{{ URL::to('admin/purchases/delete/' . $purchase->id) }}" class="btn-confirm">
-										<i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
-								</li>
-							</ul>
-						</div>
-					</td>
-                </tr>
                 @endforeach
             </tbody>
         </table>
