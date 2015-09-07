@@ -19,6 +19,9 @@ This update is generally v0.2.* compatible but there's a change with UserPriceli
 1. Move Purchases into Orders (issue #95).
 2. Download Orders report as Excel format xlsx (issue #114).
 
+### Bug fixes:
+1. (legacy support) Purchase export to excel not working. Purchase has deprecated. Use Orders instead. (issue #115)
+
 ## Version 0.2.1
 New Bundle module and improvement to UI.
 
