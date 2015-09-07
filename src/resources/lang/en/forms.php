@@ -127,4 +127,5 @@ return array(
     'total_price' => 'Total Price',
     'total_discount' => 'Total Discount',
     'usage_limit_per_coupon_count' => 'Coupon used',
+    'user' => 'User',
 );
