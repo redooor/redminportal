@@ -15,6 +15,10 @@
                         <li>Move Purchases into Orders (issue #95).</li>
                         <li>Download Orders report as Excel format xlsx (issue #114).</li>
                     </ol>
+                    <h4>Bug fixes:</h4>
+                    <ol>
+                        <li>(legacy support) Purchase export to excel not working. Purchase has deprecated. Use Orders instead. (issue #115)</li>
+                    </ol>
                     <h3>Version 0.3.1</h3>
                     <p>New Bundle module and improvement to UI.</p>
                     <h4>New feature:</h4>
