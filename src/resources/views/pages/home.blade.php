@@ -16,6 +16,7 @@
                         <li>Download Orders report as Excel format xlsx (issue #114).</li>
                         <li>Search user by email or name (issue #68).</li>
                         <li>Users pagination increased to 50 per page (issue #121).</li>
+                        <li>User creation to check unique email and prompt error (issue #120).</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
