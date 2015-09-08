@@ -25,6 +25,7 @@ This update is generally v0.2.* compatible but there's a change with UserPriceli
 
 ### Bug fixes:
 1. (legacy support) Purchase export to excel not working. Purchase has deprecated. Use Orders instead. (issue #115)
+2. User creation to check unique email and prompt error (issue #120).
 
 ## Version 0.2.1
 New Bundle module and improvement to UI.

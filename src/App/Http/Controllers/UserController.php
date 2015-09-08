@@ -68,7 +68,7 @@ class UserController extends Controller
         $rules = array(
             'first_name'    => 'required',
             'last_name'     => 'required',
-            'email'         => 'required'
+            'email'         => 'required|unique:users,email,' . $sid
         );
         
         if (isset($sid)) {
