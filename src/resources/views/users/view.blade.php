@@ -13,7 +13,25 @@
     @include('redminportal::partials.errors')
     
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-4">
+            {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\UserController@postSearch', 'role' => 'form', 'class' => 'form-inline')) !!}
+            @if(isset($search))
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon"><span class="fa fa-search"></span></span>
+				{!! Form::text('search', $search, array('class' => 'form-control', 'placeholder' => 'Search')) !!}
+                <span class="input-group-btn">
+                    <a class="btn btn-default" href="{{ URL::to('admin/users') }}"><span class="glyphicon glyphicon-remove"></span> Clear</a>
+                </span>
+            </div><!-- /input-group -->
+            @else
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon"><span class="fa fa-search"></span></span>
+				{!! Form::text('search', null, array('class' => 'form-control', 'placeholder' => 'Search')) !!}
+            </div><!-- /input-group -->
+            @endif
+			{!! Form::close() !!}
+        </div>
+        <div class="col-md-8">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
                 @if (count($users) > 0)
