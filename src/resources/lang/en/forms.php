@@ -128,4 +128,6 @@ return array(
     'total_discount' => 'Total Discount',
     'usage_limit_per_coupon_count' => 'Coupon used',
     'user' => 'User',
+    'search' => 'Search',
+    'hint_search_user' => 'Hint: Try "group:name"',
 );
