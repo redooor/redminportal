@@ -163,4 +163,106 @@ class UserControllerTest extends BaseControllerTest
         $this->assertRedirectedTo('/admin/users');
         $this->assertSessionHasErrors();
     }
+    
+    /**
+     * Test (Pass): access postSearch with valid input
+     */
+    public function testPostSearchNamePass()
+    {
+        $input = array(
+            'search' => 'peter'
+        );
+
+        $this->call('POST', '/admin/users/search', $input);
+
+        $this->assertRedirectedTo('admin/users/search/peter');
+    }
+    
+    /**
+     * Test (Fail): access postSearch with invalid input
+     */
+    public function testPostSearchNameFail()
+    {
+        $input = array(
+            'search' => 'peter$&%*'
+        );
+
+        $this->call('POST', '/admin/users/search', $input);
+
+        $this->assertRedirectedTo('/admin/users');
+        $this->assertSessionHasErrors();
+    }
+    
+    /**
+     * Test (Pass): access postSearch with valid input, for Group
+     */
+    public function testPostSearchGroupNamePass()
+    {
+        $input = array(
+            'search' => 'group:user'
+        );
+
+        $this->call('POST', '/admin/users/search', $input);
+
+        $this->assertRedirectedTo('admin/users/group/user');
+    }
+    
+    /**
+     * Test (Fail): access postSearch with invalid input, for Goup
+     */
+    public function testPostSearchGroupNameFail()
+    {
+        $input = array(
+            'search' => 'group:user$&%*'
+        );
+
+        $this->call('POST', '/admin/users/search', $input);
+
+        $this->assertRedirectedTo('/admin/users');
+        $this->assertSessionHasErrors();
+    }
+    
+    /**
+     * Test (Pass): access getSearch with valid input
+     */
+    public function testGetSearchNamePass()
+    {
+        $this->call('GET', '/admin/users/search/peter');
+
+        $this->assertResponseOk();
+        $this->assertViewHas('users');
+    }
+    
+    /**
+     * Test (Fail): access getSearch with invalid input
+     */
+    public function testGetSearchNameFail()
+    {
+        $this->call('GET', '/admin/users/search/peter$&%*');
+
+        $this->assertRedirectedTo('/admin/users');
+        $this->assertSessionHasErrors();
+    }
+    
+    /**
+     * Test (Pass): access getGroup with valid input
+     */
+    public function testGetGroupNamePass()
+    {
+        $this->call('GET', '/admin/users/group/user');
+
+        $this->assertResponseOk();
+        $this->assertViewHas('users');
+    }
+    
+    /**
+     * Test (Fail): access getGroup with invalid input
+     */
+    public function testGetGroupNameFail()
+    {
+        $this->call('GET', '/admin/users/group/user$&%*');
+
+        $this->assertRedirectedTo('/admin/users');
+        $this->assertSessionHasErrors();
+    }
 }
