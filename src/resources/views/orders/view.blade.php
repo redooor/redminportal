@@ -1,14 +1,10 @@
 @extends('redminportal::layouts.master')
 
+@section('navbar-breadcrumb')
+    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::menus.orders') }}</span></li>
+@stop
+
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <ol class="breadcrumb">
-                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
-                <li class="active">{{ Lang::get('redminportal::menus.orders') }}</li>
-            </ol>
-        </div>
-    </div>
 
     @include('redminportal::partials.errors')
     

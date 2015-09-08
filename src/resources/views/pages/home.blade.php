@@ -17,6 +17,7 @@
                         <li>Search user by email or name (issue #68).</li>
                         <li>Users pagination increased to 50 per page (issue #121).</li>
                         <li>User creation to check unique email and prompt error (issue #120).</li>
+                        <li>Improve UI: move breadcrumb to unused menu bar area (issue #103).</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>

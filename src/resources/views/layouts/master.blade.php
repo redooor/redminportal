@@ -35,7 +35,12 @@
                         <a href="{{ URL::to('admin') }}" class="navbar-brand visible-xs"><img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal" class="redooor-nav-logo"> RedminPortal</a>
                     </div>
                     <div class="navbar-collapse collapse">
-                        {{ \Redooor\Redminportal\App\Helpers\RHelper::printMenu(config('redminportal::menu'), 'nav navbar-nav hidden-lg hidden-md hidden-sm') }}
+                        <ul class="nav navbar-nav navbar-breadcrumb hidden-xs">
+                            <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.dashboard') }}</a></li>
+                            @section('navbar-breadcrumb')
+                            @show
+                        </ul>
+                        {{ \Redooor\Redminportal\App\Helpers\RHelper::printMenu(config('redminportal::menu'), 'nav navbar-nav navbar-xs hidden-lg hidden-md hidden-sm') }}
                         <ul class="nav navbar-nav navbar-right">
                             <li><a class="btn btn-link hidden-xs" href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')">{{ Lang::get('redminportal::menus.logout') }} <i class="glyphicon glyphicon-log-out"></i></a></li>
                             <li><a class="visible-xs" href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')">{{ Lang::get('redminportal::menus.logout') }}</a></li>

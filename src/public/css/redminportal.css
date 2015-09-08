@@ -1,5 +1,5 @@
 /*!
- * redminportal v0.3.1
+ * redminportal v0.2.1
  * Homepage: https://github.com/redooor/redminportal
  * Copyright 2014-2015 Redooor LLP
  * Licensed under MIT
@@ -170,21 +170,36 @@ footer,
   color: #fff;
   background-color: #428bca;
 }
-.navbar-nav li span {
+/* Override Redmaterials navbar */
+.navbar-nav.navbar-breadcrumb > li > a,
+.navbar-nav.navbar-breadcrumb > li > a:hover,
+.navbar-nav.navbar-breadcrumb > li > a:focus {
+  color: #428bca;
+}
+.navbar-nav.navbar-breadcrumb > li.active > a,
+.navbar-nav.navbar-breadcrumb > li.active > a:hover,
+.navbar-nav.navbar-breadcrumb > li.active > a:focus,
+.navbar-nav.navbar-breadcrumb > li.active > .navbar-text {
+  color: #898989;
+}
+/* For mobile screen navbar */
+.navbar-nav.navbar-xs li span {
   padding: 10px 1.5em;
   line-height: 23px;
   position: relative;
   display: block;
+  font-weight: 200;
+  color: #FF5722;
 }
-.navbar-nav ul {
+.navbar-nav.navbar-xs ul {
   margin-left: -15px;
   margin-right: -15px;
 }
-.navbar-nav ul li {
+.navbar-nav.navbar-xs ul li {
   list-style: none;
   display: block;
 }
-.navbar-nav ul li a {
+.navbar-nav.navbar-xs ul li a {
   color: #777;
   padding: 10px 1.5em;
   line-height: 23px;
@@ -192,12 +207,12 @@ footer,
   display: block;
   text-decoration: none;
 }
-.navbar-nav ul li a:hover,
-.navbar-nav ul li a:focus {
+.navbar-nav.navbar-xs ul li a:hover,
+.navbar-nav.navbar-xs ul li a:focus {
   color: #333;
   background-color: transparent;
 }
-.navbar-nav ul li span {
+.navbar-nav.navbar-xs ul li span {
   padding: 10px 1.5em;
   line-height: 23px;
   position: relative;
