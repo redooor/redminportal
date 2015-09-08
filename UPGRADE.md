@@ -71,6 +71,16 @@ As a general rule, do not save any customed files inside `database/migrations/ve
 
         php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
 
+### Public assets
+
+You need to run the following command to re-publish the assets.
+
+**Caution**: This action will overwrite any changes made to the `public/vendor/redooor/redminportal` folder.
+
+As a general rule, do not save any customed files inside `public/vendor/redooor/redminportal` folder.
+
+    php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
+
 ## Upgrading to v0.2.1 from v0.2.0
 
 New features and UI improvements.

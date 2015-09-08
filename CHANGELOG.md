@@ -22,6 +22,7 @@ This update is generally v0.2.* compatible but there's a change with UserPriceli
 2. Download Orders report as Excel format xlsx (issue #114).
 3. Search user by email or name (issue #68).
 4. Users pagination increased to 50 per page (issue #121).
+5. Improve UI: move breadcrumb to unused menu bar area (issue #103).
 
 ### Bug fixes:
 1. (legacy support) Purchase export to excel not working. Purchase has deprecated. Use Orders instead. (issue #115)

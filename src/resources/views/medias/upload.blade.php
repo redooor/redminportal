@@ -1,16 +1,12 @@
 @extends('redminportal::layouts.master')
 
+@section('navbar-breadcrumb')
+    <li><a href="{{ URL::to('admin/medias') }}">{{ Lang::get('redminportal::menus.medias') }}</a></li>
+    <li><a href="{{ URL::to('admin/medias/edit/' . $media->id) }}">{{ Lang::get('redminportal::forms.edit') }}</a></li>
+    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::forms.upload') }}</span></li>
+@stop
+
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <ol class="breadcrumb">
-                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
-                <li><a href="{{ URL::to('admin/medias') }}">{{ Lang::get('redminportal::menus.medias') }}</a></li>
-                <li><a href="{{ URL::to('admin/medias/edit/' . $media->id) }}">{{ Lang::get('redminportal::forms.edit') }}</a></li>
-                <li class="active">{{ Lang::get('redminportal::forms.upload') }}</li>
-            </ol>
-        </div>
-    </div>
 
     <pre id="console" style="display:none;"></pre>
     
