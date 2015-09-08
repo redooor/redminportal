@@ -10,6 +10,8 @@
 * Looking for RedminPortal for Laravel 5.1? Visit the [v0.3 Branch](https://github.com/redooor/redminportal/tree/v0.3).
 * Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
 
+Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+
 ## Version 0.2.2
 Code clean up, new features and UI improvements.
 
@@ -18,6 +20,8 @@ This update is generally v0.2.* compatible but there's a change with UserPriceli
 ### Enhancement:
 1. Move Purchases into Orders (issue #95).
 2. Download Orders report as Excel format xlsx (issue #114).
+3. Search user by email or name (issue #68).
+4. Users pagination increased to 50 per page (issue #121).
 
 ### Bug fixes:
 1. (legacy support) Purchase export to excel not working. Purchase has deprecated. Use Orders instead. (issue #115)
