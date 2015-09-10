@@ -1,14 +1,10 @@
 @extends('redminportal::layouts.master')
 
+@section('navbar-breadcrumb')
+    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::menus.orders') }}</span></li>
+@stop
+
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <ol class="breadcrumb">
-                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
-                <li class="active">{{ Lang::get('redminportal::menus.orders') }}</li>
-            </ol>
-        </div>
-    </div>
 
     @include('redminportal::partials.errors')
     
@@ -30,7 +26,7 @@
         <table class="table table-bordered table-striped table-condensed">
             <thead>
                 <tr>
-                    <th>User</th>
+                    <th>{{ Lang::get('redminportal::forms.user') }}</th>
                     <th>{{ Lang::get('redminportal::forms.email') }}</th>
                     <th>{{ Lang::get('redminportal::forms.total_price') }}</th>
                     <th>{{ Lang::get('redminportal::forms.total_discount') }}</th>
@@ -91,7 +87,7 @@
                         @endif
 					</td>
                     <td class="table-actions text-center">
-                        @if ($order->products()->count() > 0 or $order->bundles()->count() > 0)
+                        @if ($order->products()->count() > 0 or $order->bundles()->count() > 0 or $order->pricelists()->count())
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
@@ -105,6 +101,11 @@
                                 @foreach ($order->bundles as $bundle)
 								<li>
                                     <a href="#">{{ $bundle->name }}<br><span class="label label-primary">{{ $bundle->sku }}</span></a>
+								</li>
+                                @endforeach
+                                @foreach ($order->pricelists as $pricelist)
+								<li>
+                                    <a href="#">{{ $pricelist->name }}<br><span class="label label-primary">{{ $pricelist->module->sku }}</span></a>
 								</li>
                                 @endforeach
 							</ul>

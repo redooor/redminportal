@@ -12,7 +12,7 @@ class RedminportalServiceProvider extends ServiceProvider
     public function boot()
     {
         // Get routes
-        include __DIR__.'/app/Http/routes.php';
+        include __DIR__.'/App/Http/routes.php';
         
         // Get views
         if (file_exists(base_path('resources/views/vendor/redooor/redminportal'))) {

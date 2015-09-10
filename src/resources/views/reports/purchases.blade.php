@@ -12,6 +12,7 @@
             <th>{{ Lang::get('redminportal::forms.purchased_on') }}</th>
         </tr>
         @foreach($data as $purchase)
+            @if (isset($purchase->pricelist))
             <tr>
                 @if ($purchase->user != null)
                 <td>{{ str_replace(',', '.', $purchase->user->first_name) }} {{ str_replace(',', '.', $purchase->user->last_name) }}</td>
@@ -27,6 +28,7 @@
                 <td>{{ str_replace(',', '.', $purchase->transaction_id) }}</td>
                 <td>{{ str_replace(',', '.', $purchase->created_at) }}</td>
             </tr>
+            @endif
         @endforeach
     </table>
     @endif

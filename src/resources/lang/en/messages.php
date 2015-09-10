@@ -36,4 +36,5 @@ return array(
     'coupon_restriction_applies' => 'Coupon is optional. Restriction applies.',
     'product_level_supersede_category' => 'Coupon applied to bundle, product and module/membership will supersede category.',
     'applies_to_whole_cart_spent' => 'Applies to the total amount in the shopping cart.',
+    'error_remove_special_characters' => 'The search format is invalid. Please remove all special characters such as $%&*.',
 );
