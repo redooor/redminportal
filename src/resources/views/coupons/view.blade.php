@@ -1,14 +1,10 @@
 @extends('redminportal::layouts.master')
 
+@section('navbar-breadcrumb')
+    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::menus.coupons') }}</span></li>
+@stop
+
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <ol class="breadcrumb">
-                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
-                <li class="active">{{ Lang::get('redminportal::menus.coupons') }}</li>
-            </ol>
-        </div>
-    </div>
     
     @include('redminportal::partials.errors')
 
@@ -77,6 +73,14 @@
                             @endif
                         </a>
                     </th>
+                    <th>
+                        <a href="{{ URL::to('admin/coupons/sort') . '/usage_limit_per_coupon_count/' . ($sortBy == 'usage_limit_per_coupon_count' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
+                            {{ Lang::get('redminportal::forms.usage_limit_per_coupon_count') }}
+                            @if ($sortBy == 'usage_limit_per_coupon_count')
+                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
+                            @endif
+                        </a>
+                    </th>
                     <th></th>
                 </tr>
             </thead>
@@ -101,6 +105,9 @@
                         </td>
                         <td>
                             {{ $coupon->usage_limit_per_user }}
+                        </td>
+                        <td>
+                            {{ $coupon->usage_limit_per_coupon_count }}
                         </td>
                         <td class="table-actions text-right">
                             <div class="btn-group">

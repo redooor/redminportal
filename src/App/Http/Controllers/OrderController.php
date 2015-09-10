@@ -6,6 +6,7 @@ use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Bundle;
 use Redooor\Redminportal\App\Models\Coupon;
+use Redooor\Redminportal\App\Models\Pricelist;
 
 class OrderController extends Controller
 {
@@ -25,9 +26,23 @@ class OrderController extends Controller
 
     public function getCreate()
     {
-        $products = Product::orderBy('name')->lists('name', 'id');
-        $bundles = Bundle::orderBy('name')->lists('name', 'id');
+        $products = Product::where('active', true)->orderBy('name')->lists('name', 'id');
+        $bundles = Bundle::where('active', true)->orderBy('name')->lists('name', 'id');
         $coupons = Coupon::orderBy('code')->lists('code', 'id');
+        
+        $pricelists = array();
+
+        $pricelists_get = Pricelist::join('modules', 'modules.id', '=', 'pricelists.module_id')
+            ->join('memberships', 'memberships.id', '=', 'pricelists.membership_id')
+            ->where('modules.active', true)
+            ->orderBy('modules.name')
+            ->orderBy('memberships.rank', 'desc')
+            ->select('pricelists.*')
+            ->get();
+
+        foreach ($pricelists_get as $pricelist) {
+            $pricelists[$pricelist->id] = $pricelist->name;
+        }
 
         $payment_statuses = array(
             'Completed'     => 'Completed',
@@ -41,6 +56,7 @@ class OrderController extends Controller
             ->with('products', $products)
             ->with('bundles', $bundles)
             ->with('coupons', $coupons)
+            ->with('pricelists', $pricelists)
             ->with('payment_statuses', $payment_statuses);
     }
     
@@ -60,8 +76,9 @@ class OrderController extends Controller
         $sid = \Input::get('id');
 
         $rules = array(
-            'product_id'        => 'required_without:bundle_id',
-            'bundle_id'         => 'required_without:product_id',
+            'product_id'        => 'required_without_all:bundle_id,pricelist_id',
+            'bundle_id'         => 'required_without_all:product_id,pricelist_id',
+            'pricelist_id'      => 'required_without_all:product_id,bundle_id',
             'transaction_id'    => 'required',
             'payment_status'    => 'required',
             'paid'              => 'numeric',
@@ -98,6 +115,16 @@ class OrderController extends Controller
         if (count($bundles) > 0) {
             foreach ($bundles as $item) {
                 $model = Bundle::find($item);
+                if ($model != null) {
+                    $apply_to_models[] = $model;
+                }
+            }
+        }
+        // Save pricelists to order
+        $pricelists = \Input::get('pricelist_id');
+        if (count($pricelists) > 0) {
+            foreach ($pricelists as $item) {
+                $model = Pricelist::find($item);
                 if ($model != null) {
                     $apply_to_models[] = $model;
                 }

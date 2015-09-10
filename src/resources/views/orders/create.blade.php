@@ -1,15 +1,11 @@
 @extends('redminportal::layouts.master')
 
+@section('navbar-breadcrumb')
+    <li><a href="{{ URL::to('admin/orders') }}">{{ Lang::get('redminportal::menus.orders') }}</a></li>
+    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::forms.create') }}</span></li>
+@stop
+
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <ol class="breadcrumb">
-                <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.home') }}</a></li>
-                <li><a href="{{ URL::to('admin/orders') }}">{{ Lang::get('redminportal::menus.orders') }}</a></li>
-                <li class="active">{{ Lang::get('redminportal::forms.create') }}</li>
-            </ol>
-        </div>
-    </div>
     
     @include('redminportal::partials.errors')
 
@@ -55,6 +51,14 @@
                             {!! Form::select('bundle_id', $bundles, null, array('class' => 'form-control', 'id' => 'bundle_id', 'multiple', 'name' => 'bundle_id[]')) !!}
                         @else
                             <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_bundle_found') }}</div>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        @if (count($pricelists) > 0)
+                            {!! Form::label('pricelist_id', Lang::get('redminportal::forms.membership_modules')) !!}
+                            {!! Form::select('pricelist_id', $pricelists, null, array('class' => 'form-control', 'id' => 'pricelist_id', 'multiple', 'name' => 'pricelist_id[]')) !!}
+                        @else
+                            <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_pricelist_found') }}</div>
                         @endif
                     </div>
                 </div>
