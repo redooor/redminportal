@@ -57,6 +57,16 @@ class Product extends Model
         return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
     }
     
+    public function variantParents()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Product', 'product_variant', 'variant_id', 'product_id');
+    }
+    
+    public function variants()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Product', 'product_variant', 'product_id', 'variant_id');
+    }
+    
     public function delete()
     {
         // Remove all relationships
@@ -64,6 +74,8 @@ class Product extends Model
         $this->coupons()->detach();
         $this->bundles()->detach();
         $this->orders()->detach();
+        $this->variants()->detach();
+        $this->variantParents()->detach();
         
         // Delete all images
         foreach ($this->images as $image) {

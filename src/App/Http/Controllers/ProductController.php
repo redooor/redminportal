@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Lang;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -20,7 +21,14 @@ class ProductController extends Controller
 
     public function getIndex()
     {
+        // Get all products but not variants
         $products = Product::orderBy('category_id')
+            ->whereNotExists(function($query)
+            {
+                $query->select(\DB::raw(1))
+                      ->from('product_variant')
+                      ->whereRaw('product_variant.variant_id = products.id');
+            })
             ->orderBy('name')
             ->paginate(20);
 
@@ -37,6 +45,30 @@ class ProductController extends Controller
 
         return view('redminportal::products/create')->with('categories', $categories);
     }
+    
+    public function getCreateVariant($product_id)
+    {
+        $product = Product::find($product_id);
+        // No such id
+        if ($product == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
+            return redirect('/admin/products')->withErrors($errors);
+        }
+        
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
+        
+        $data = array(
+            'categories' => $categories,
+            'product_id' => $product_id
+        );
+
+        return view('redminportal::products/create-variant', $data);
+    }
 
     public function getEdit($sid)
     {
@@ -46,10 +78,7 @@ class ProductController extends Controller
         // No such id
         if ($product == null) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
-                "The product cannot be found because it does not exist or may have been deleted."
-            );
+            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
             return redirect('/admin/products')->withErrors($errors);
         }
 
@@ -84,6 +113,17 @@ class ProductController extends Controller
     public function postStore()
     {
         $sid = Input::get('id');
+        $product_id = Input::get('product_id');
+        
+        if (isset($product_id) and isset($sid)) {
+            $redirect_url = 'admin/products/create-variant/' . $product_id;
+        } elseif (isset($product_id) and !isset($sid)) {
+            $redirect_url = 'admin/products/create-variant/' . $product_id;
+        } elseif (isset($sid)) {
+            $redirect_url = 'admin/products/edit/' . $sid;
+        } else {
+            $redirect_url = 'admin/products/create';
+        }
 
         /*
          * Validate
@@ -116,10 +156,7 @@ class ProductController extends Controller
             
             if ($product == null) {
                 $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The product cannot be found because it does not exist or may have been deleted."
-                );
+                $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
                 return redirect('/admin/products')->withErrors($errors);
             }
             
@@ -186,11 +223,7 @@ class ProductController extends Controller
             }
         //if it validate
         } else {
-            if (isset($sid)) {
-                return redirect('admin/products/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return redirect('admin/products/create')->withErrors($validation)->withInput();
-            }
+            return redirect($redirect_url)->withErrors($validation)->withInput();
         }
 
         return redirect('admin/products');
@@ -203,14 +236,14 @@ class ProductController extends Controller
 
         if ($product == null) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
+            $errors->add('errorDeleteRecord', Lang::get('redminportal::messages.error_delete_record'));
             return redirect('admin/products')->withErrors($errors);
         }
         
         // Check if there's any order related to this product
         if (count($product->orders) > 0) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "You cannot delete this product because it has been ordered. Please delete the order first.");
+            $errors->add('errorDeleteRecordAlreadyOrdered', Lang::get('redminportal::messages.error_delete_product_already_ordered'));
             return redirect('admin/products')->withErrors($errors);
         }
         
@@ -226,7 +259,7 @@ class ProductController extends Controller
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The image cannot be deleted at this time.");
+            $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
             return redirect('/admin/products')->withErrors($errors);
         }
 

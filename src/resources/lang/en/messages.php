@@ -37,4 +37,8 @@ return array(
     'product_level_supersede_category' => 'Coupon applied to bundle, product and module/membership will supersede category.',
     'applies_to_whole_cart_spent' => 'Applies to the total amount in the shopping cart.',
     'error_remove_special_characters' => 'The search format is invalid. Please remove all special characters such as $%&*.',
+    'error_no_such_product' => 'The product cannot be found because it does not exist or may have been deleted.',
+    'error_delete_entry' => 'We are having problem deleting this record. Please try again.',
+    'error_delete_product_already_ordered' => 'You cannot delete this product because it has been ordered. Please delete the order first.',
+    'error_delete_image' => 'The image cannot be deleted at this time.',
 );

@@ -17,4 +17,5 @@ return array(
     'delete_yes' => 'Yes, delete',
     'close' => 'Close',
     'download_csv' => 'Download CSV',
+    'add' => 'Add',
 );

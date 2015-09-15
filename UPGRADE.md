@@ -1,5 +1,29 @@
 # Upgrade Guide
 
+Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+
+## Upgrading to v0.3.3/v0.2.3 from v0.3.2/v0.2.2
+
+### Migrations
+
+Version 0.3.3 and v0.2.3 introduced some new database tables.
+
+You need to run the following command to re-publish the migrations.
+
+**Caution**: This action will overwrite any changes made to the `database/migrations/vendor/redooor/redminportal` folder.
+
+As a general rule, do not save any customed files inside `database/migrations/vendor/redooor/redminportal` folder.
+
+**Before you begin, _ALWAYS BACKUP_ your database.**
+
+1. You can publish the migrations using:
+
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
+
+2. Then run the following in the root folder:
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+
 ## Upgrading to v0.3.2 from v0.3.1
 
 New features and UI improvements.

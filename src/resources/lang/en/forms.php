@@ -130,4 +130,7 @@ return array(
     'user' => 'User',
     'search' => 'Search',
     'hint_search_user' => 'Hint: Try "group:name"',
+    'variation' => 'Variation',
+    'create_product_variation' => 'Create Product Variation',
+    'product_variations' => 'Product Variations',
 );

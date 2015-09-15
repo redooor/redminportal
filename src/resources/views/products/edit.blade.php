@@ -1,5 +1,18 @@
 @extends('redminportal::layouts.master')
 
+@section('head')
+<style>
+    #iframe-variant-form {
+        width: 100%;
+        height: 500px;
+        border: 0;
+    }
+    .progress {
+        margin-bottom: 0px;
+    }
+</style>
+@stop
+
 @section('navbar-breadcrumb')
     <li><a href="{{ URL::to('admin/products') }}">{{ Lang::get('redminportal::menus.products') }}</a></li>
     <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::forms.edit') }}</span></li>
@@ -146,6 +159,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.product_variations') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <a id="add-product-variant" href="{{ url('admin/products/create-variant/' . $product->id) }}" class="btn btn-primary btn-sm">Add</a>
+                    </div>
+                </div>
                 @if (count($product->images) > 0)
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -177,6 +198,26 @@
             </div>
         </div>
     {!! Form::close() !!}
+    <div id="product-variant-modal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{ Lang::get('redminportal::forms.create_product_variation') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe id="iframe-variant-form"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <div class="progress">
+                        <div id="modal-progress" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">Loading</span>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @stop
 
 @section('footer')
@@ -210,6 +251,36 @@
                     $(this).addClass('active');
                 });
             })
+        }(window.jQuery);
+    </script>
+    <script>
+        !function ($) {
+            $(function() {
+                // Add a product variant
+                $(document).on('click', '#add-product-variant', function(e) {
+                    e.preventDefault();
+                    // Make iframe height 70% of window height
+                    $window_height = $(window).height();
+                    $('#iframe-variant-form').css('height', Math.round(($window_height*0.7-80), 0));
+                    // Load the source
+                    $create_url = $(this).attr('href');
+                    $('#iframe-variant-form').removeAttr('src').empty().attr('src', $create_url).load(function() {
+                        $('#modal-progress').parent().fadeOut();
+                    });
+                    $('#product-variant-modal').modal('show');
+                });
+                $('#product-variant-modal').on('shown.bs.modal', function (e) {
+                    $('#modal-progress').css('width', '0%').parent().fadeIn(function() {
+                        for(ipercent = 0; ipercent<=50; ipercent++) {
+                            $('#modal-progress').delay(4000).css('width', ipercent*2 + '%');
+                        }
+                    });
+                });
+                // Clear content when modal hidden
+                $('#product-variant-modal').on('hidden.bs.modal', function (e) {
+                    $('#iframe-variant-form').removeAttr('src').empty();
+                });
+            });
         }(window.jQuery);
     </script>
     @include('redminportal::plugins/tinymce')

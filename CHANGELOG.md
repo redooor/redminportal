@@ -13,6 +13,18 @@
 
 Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
 
+## Version 0.3.3 and 0.2.3
+Code clean up, new features and UI improvements.
+
+This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+
+### New features:
+1. Added product variations. You can now add variations to each product. (issue #125)
+
+### Enhancements:
+
+### Bug fixes:
+
 ## Version 0.3.2
 Code clean up, new features and UI improvements.
 
