@@ -1,18 +1,5 @@
 @extends('redminportal::layouts.master')
 
-@section('head')
-<style>
-    #iframe-variant-form {
-        width: 100%;
-        height: 500px;
-        border: 0;
-    }
-    .progress {
-        margin-bottom: 0px;
-    }
-</style>
-@stop
-
 @section('navbar-breadcrumb')
     <li><a href="{{ URL::to('admin/products') }}">{{ Lang::get('redminportal::menus.products') }}</a></li>
     <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::forms.edit') }}</span></li>
@@ -163,7 +150,8 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">{{ Lang::get('redminportal::forms.product_variations') }}</h4>
                     </div>
-                    <div class="panel-body">
+                    <div id="list-variants" data-url="{{ url('admin/products/list-variants/' . $product->id) }}"></div>
+                    <div class="panel-footer">
                         <a id="add-product-variant" href="{{ url('admin/products/create-variant/' . $product->id) }}" class="btn btn-primary btn-sm">Add</a>
                     </div>
                 </div>
@@ -256,6 +244,12 @@
     <script>
         !function ($) {
             $(function() {
+                // On load, list the product variants
+                loadVariants();
+                function loadVariants() {
+                    $list_variant_url = $('#list-variants').attr('data-url');
+                    $('#list-variants').empty().load($list_variant_url);
+                }
                 // Add a product variant
                 $(document).on('click', '#add-product-variant', function(e) {
                     e.preventDefault();
@@ -279,6 +273,7 @@
                 // Clear content when modal hidden
                 $('#product-variant-modal').on('hidden.bs.modal', function (e) {
                     $('#iframe-variant-form').removeAttr('src').empty();
+                    loadVariants(); // reload list of product variants
                 });
             });
         }(window.jQuery);

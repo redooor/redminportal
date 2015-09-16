@@ -1,5 +1,5 @@
 /*!
- * redminportal v0.2.1
+ * redminportal v0.3.3
  * Homepage: https://github.com/redooor/redminportal
  * Copyright 2014-2015 Redooor LLP
  * Licensed under MIT
@@ -68,6 +68,11 @@ footer,
 #sidebar,
 #sidebar-overlay {
   display: none;
+}
+/* Add size to media-object */
+.media .media-object.media-thumbnail {
+  width: 100px;
+  height: 100px;
 }
 @media (min-width: 768px) {
   #sidebar {
@@ -381,6 +386,27 @@ ul.redooor-hierarchy.no-max-height {
   font-size: 14px;
   line-height: 1;
   padding: 0px;
+}
+/* Style for iframe in modal window */
+.modal .modal-dialog .modal-content .modal-body iframe {
+  width: 100%;
+  height: 500px;
+  border: 0;
+}
+/* Fixed padding and margin issue with Panels */
+.panel .progress,
+.panel .table,
+.panel .list-group,
+.panel .panel-collapse .list-group {
+  margin-bottom: 0;
+}
+.panel .list-group .list-group-item,
+.panel .panel-collapse .list-group .list-group-item {
+  border-width: 1px 0;
+  border-radius: 0;
+}
+.panel .list-group .list-group-item:first-child {
+  border-top: 0;
 }
 /* Overwrite default padding on small screens */
 @media (max-width: 979px) {

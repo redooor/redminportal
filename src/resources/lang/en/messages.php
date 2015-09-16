@@ -20,6 +20,7 @@ return array(
     'no_user_found' => 'No User Found',
     'no_bundle_found' => 'No Bundle Found',
     'no_pricelist_found' => 'No Module/Membership Found',
+    'no_variant_found' => 'No Product Variant Found',
     'select_category_to_view_detail' => 'Select category to view detail',
     'confirm_delete' => 'Confirm delete?',
     'are_you_sure_you_want_to_delete' => 'Are you sure you want to delete this?',
@@ -41,4 +42,5 @@ return array(
     'error_delete_entry' => 'We are having problem deleting this record. Please try again.',
     'error_delete_product_already_ordered' => 'You cannot delete this product because it has been ordered. Please delete the order first.',
     'error_delete_image' => 'The image cannot be deleted at this time.',
+    'success_delete_record' => 'The record has been deleted successfully.',
 );

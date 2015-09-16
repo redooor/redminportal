@@ -9,8 +9,40 @@
     {!! Form::hidden('product_id', $product_id, array('id' => 'product_id')) !!}
 
     	<div class='row'>
-            <div class="col-sm-4 col-sm-push-8">
-                <div class="well">
+	        <div class="col-sm-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.create_product') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        @include('redminportal::partials.lang-selector', ['selector_name' => '-variant'])
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.product_properties') }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            {!! Form::label('sku', Lang::get('redminportal::forms.sku')) !!}
+                            {!! Form::text('sku', null, array('class' => 'form-control')) !!}
+                        </div>
+                        <div class="form-group">
+                            {!! Form::label('price', Lang::get('redminportal::forms.price')) !!}
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                {!! Form::text('price', null, array('class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {!! Form::label('tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
+                            {!! Form::text('tags', null, array('class' => 'form-control')) !!}
+                        </div>
+                    </div>
+                </div>
+	        </div>
+            <div class="col-sm-4">
+                <div class="well hidden-xs">
                     <div class='form-actions text-right'>
                         {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm')) !!}
                     </div>
@@ -54,37 +86,9 @@
                       </div>
                     </div>
                 </div>
-	        </div>
-
-	        <div class="col-sm-8 col-sm-pull-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.create_product') }}</h4>
-                    </div>
-                    <div class="panel-body">
-                        @include('redminportal::partials.lang-selector', ['selector_name' => '-variant'])
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.product_properties') }}</h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            {!! Form::label('sku', Lang::get('redminportal::forms.sku')) !!}
-                            {!! Form::text('sku', null, array('class' => 'form-control')) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('price', Lang::get('redminportal::forms.price')) !!}
-                            <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                {!! Form::text('price', null, array('class' => 'form-control')) !!}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
-                            {!! Form::text('tags', null, array('class' => 'form-control')) !!}
-                        </div>
+                <div class="well visible-xs">
+                    <div class='form-actions text-right'>
+                        {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm')) !!}
                     </div>
                 </div>
 	        </div>
