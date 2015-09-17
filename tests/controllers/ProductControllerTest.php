@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\Test;
 
 use Lang;
+use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Order;
 
@@ -312,12 +313,107 @@ class ProductControllerTest extends BaseControllerTest
             'category_id'           => 1,
             'active'                => true
         );
-        $product = $this->createNewModel(new Product, $testcase_1);
+        $this->createNewModel(new Product, $testcase_1);
         
         $response = $this->call('GET', $this->page . '/delete-variant-json/1');
         
         $array = json_decode($response->getContent());
         $this->assertTrue($array->status == true);
         $this->assertTrue($array->message == Lang::get('redminportal::messages.success_delete_record'));
+    }
+    
+    /**
+     * Test (Fail): attempt to delete product but at least one of its variant already ordered
+     */
+    public function testDeleteProductFailVariantInOrder()
+    {
+        // Create parent
+        $testcase_1 = array(
+            'name'                  => 'Product1',
+            'sku'                   => 'UNIQUESKU001',
+            'short_description'     => 'This is the body',
+            'category_id'           => 1,
+            'active'                => true
+        );
+        $parentProduct = $this->createNewModel(new Product, $testcase_1);
+        
+        // Create variant
+        $testcase_2 = array(
+            'name'                  => 'Product2',
+            'sku'                   => 'VARIANT001',
+            'short_description'     => 'This is the body',
+            'category_id'           => 1,
+            'active'                => true
+        );
+        $variant = $this->createNewModel(new Product, $testcase_2);
+        
+        $parentProduct->variants()->attach($variant->id);
+        
+        // Create order
+        $testcase_3 = array(
+            'user_id' => 1,
+            'paid' => 10.99,
+            'transaction_id' => 'UK12345YZ',
+            'payment_status' => 'Completed'
+        );
+        $order = $this->createNewModel(new Order, $testcase_3);
+        $order->products()->attach($variant->id);
+        
+        $this->call('GET', $this->page . '/delete/1');
+        
+        $this->assertRedirectedTo('/admin/products');
+        $this->assertSessionHasErrors();
+    }
+    
+    /**
+     * Test (Pass): access view-variant
+     */
+    public function testViewVariantPass()
+    {
+        // Create category
+        $testcase = array(
+            'name' => 'This is the title',
+            'short_description' => 'This is the body',
+            'active' => true
+        );
+        $category = $this->createNewModel(new Category, $testcase);
+        
+        // Create parent
+        $testcase_1 = array(
+            'name'                  => 'Product1',
+            'sku'                   => 'UNIQUESKU001',
+            'short_description'     => 'This is the body',
+            'category_id'           => $category->id,
+            'active'                => true
+        );
+        $parentProduct = $this->createNewModel(new Product, $testcase_1);
+        
+        // Create variant
+        $testcase_2 = array(
+            'name'                  => 'Product2',
+            'sku'                   => 'VARIANT001',
+            'short_description'     => 'This is the body',
+            'category_id'           => $category->id,
+            'active'                => true
+        );
+        $variant = $this->createNewModel(new Product, $testcase_2);
+        
+        $parentProduct->variants()->attach($variant->id);
+        
+        $this->call('GET', $this->page . '/view-variant/2');
+
+        $this->assertResponseOk();
+        $this->assertViewHas(['product', 'translated', 'imagine']);
+    }
+    
+    /**
+     * Test (Fail): access view-variant with invalid product id
+     */
+    public function testViewVariantFail()
+    {
+        $this->call('GET', $this->page . '/view-variant/1');
+
+        $this->assertResponseOk();
+        $this->assertViewHas('errors');
     }
 }

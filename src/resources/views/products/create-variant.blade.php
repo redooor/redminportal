@@ -12,10 +12,10 @@
 	        <div class="col-sm-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.create_product') }}</h4>
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.create_product_variation') }}</h4>
                     </div>
                     <div class="panel-body">
-                        @include('redminportal::partials.lang-selector', ['selector_name' => '-variant'])
+                        @include('redminportal::partials.lang-selector-form', ['selector_name' => '-variant'])
                     </div>
                 </div>
                 <div class="panel panel-default">

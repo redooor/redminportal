@@ -117,7 +117,25 @@ class ProductController extends Controller
     
     public function getViewVariant($sid)
     {
-        return "ok";
+        // Find the product using the user id
+        $product = Product::find($sid);
+
+        // No such id
+        if ($product == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
+            return view('redminportal::products/view-variant')->withErrors($errors);
+        }
+
+        $translated = array();
+        foreach ($product->translations as $translation) {
+            $translated[$translation->lang] = json_decode($translation->content);
+        }
+
+        return view('redminportal::products/view-variant')
+            ->with('product', $product)
+            ->with('translated', $translated)
+            ->with('imagine', new RImage);
     }
     
     /*
@@ -327,6 +345,15 @@ class ProductController extends Controller
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('errorDeleteRecordAlreadyOrdered', Lang::get('redminportal::messages.error_delete_product_already_ordered'));
             return redirect('admin/products')->withErrors($errors);
+        }
+        
+        // Check if there's any order related to this product's variants
+        foreach ($product->variants as $variant) {
+            if (count($variant->orders) > 0) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add('errorDeleteRecordAlreadyOrdered', Lang::get('redminportal::messages.error_delete_variant_already_ordered'));
+                return redirect('admin/products')->withErrors($errors);
+            }
         }
         
         // Delete the product

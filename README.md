@@ -64,7 +64,7 @@ Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 ## Online Store (Physical Products)
 * Category
 * Coupon
-* Product
+* Product (now supports variations)
 * Order
 * Bundle
 

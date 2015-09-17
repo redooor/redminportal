@@ -133,4 +133,6 @@ return array(
     'variation' => 'Variation',
     'create_product_variation' => 'Create Product Variation',
     'product_variations' => 'Product Variations',
+    'view_product' => 'View Product',
+    'product_variation' => 'Product Variation',
 );

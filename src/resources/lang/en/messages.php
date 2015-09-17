@@ -43,4 +43,5 @@ return array(
     'error_delete_product_already_ordered' => 'You cannot delete this product because it has been ordered. Please delete the order first.',
     'error_delete_image' => 'The image cannot be deleted at this time.',
     'success_delete_record' => 'The record has been deleted successfully.',
+    'error_delete_variant_already_ordered' => 'You cannot delete this product because at least one of its variations has been ordered. Please delete the order first.',
 );

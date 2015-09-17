@@ -33,6 +33,7 @@
                     <th>{{ Lang::get('redminportal::forms.tags') }}</th>
                     <th>{{ Lang::get('redminportal::forms.featured') }}</th>
                     <th>{{ Lang::get('redminportal::forms.active') }}</th>
+                    <th>{{ Lang::get('redminportal::forms.variation') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -63,6 +64,22 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
+                    <td class="table-actions text-center">
+                        @if ($product->variants()->count() > 0)
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="fa fa-sitemap"></span>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+                                @foreach ($product->variants as $variant)
+								<li>
+									<a href="#">{{ $variant->name }}<br><span class="label label-primary">{{ $variant->sku }}</span></a>
+								</li>
+                                @endforeach
+							</ul>
+						</div>
+                        @endif
+					</td>
                     <td class="table-actions text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
