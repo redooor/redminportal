@@ -416,4 +416,127 @@ class ProductControllerTest extends BaseControllerTest
         $this->assertResponseOk();
         $this->assertViewHas('errors');
     }
+    
+    /**
+     * Test (Pass): access edit-variant
+     */
+    public function testEditVariantPass()
+    {
+        // Create category
+        $testcase = array(
+            'name' => 'This is the title',
+            'short_description' => 'This is the body',
+            'active' => true
+        );
+        $category = $this->createNewModel(new Category, $testcase);
+        
+        // Create parent
+        $testcase_1 = array(
+            'name'                  => 'Product1',
+            'sku'                   => 'UNIQUESKU001',
+            'short_description'     => 'This is the body',
+            'category_id'           => $category->id,
+            'active'                => true
+        );
+        $parentProduct = $this->createNewModel(new Product, $testcase_1);
+        
+        // Create variant
+        $testcase_2 = array(
+            'name'                  => 'Product2',
+            'sku'                   => 'VARIANT001',
+            'short_description'     => 'This is the body',
+            'category_id'           => $category->id,
+            'active'                => true
+        );
+        $variant = $this->createNewModel(new Product, $testcase_2);
+        
+        $parentProduct->variants()->attach($variant->id);
+        
+        $this->call('GET', $this->page . '/edit-variant/1/2');
+        
+        $viewhas = array(
+            'product_id',
+            'product',
+            'translated',
+            'categories',
+            'tagString',
+            'imagine'
+        );
+        
+        $this->assertResponseOk();
+        $this->assertViewHas($viewhas);
+    }
+    
+    /**
+     * Test (Fail): access edit-variant with invalid product id
+     */
+    public function testEditVariantFail()
+    {
+        $this->call('GET', $this->page . '/edit-variant/1/2');
+
+        $this->assertResponseOk();
+        $this->assertViewHas('errors');
+    }
+    
+    /**
+     * Test (Pass): access postStore with product_id and id
+     * Create Product Variant
+     */
+    public function testStoreEditVariantPass()
+    {
+        // Create parent
+        $testcase_1 = array(
+            'name'                  => 'Product1',
+            'sku'                   => 'UNIQUESKU001',
+            'short_description'     => 'This is the body',
+            'category_id'           => 1,
+            'active'                => true
+        );
+        $parentProduct = $this->createNewModel(new Product, $testcase_1);
+        
+        // Create variant
+        $testcase_2 = array(
+            'name'                  => 'Product2',
+            'sku'                   => 'VARIANT002',
+            'short_description'     => 'This is the body',
+            'category_id'           => 1,
+            'active'                => true
+        );
+        $variant = $this->createNewModel(new Product, $testcase_2);
+        
+        $parentProduct->variants()->attach($variant->id);
+        
+        $input = array(
+            'name'                  => 'This is a variant',
+            'short_description'     => 'This is body',
+            'cn_name'               => 'CN name',
+            'cn_short_description'  => 'CN short body',
+            'category_id'           => 1,
+            'sku'                   => 'VARIANT001',
+            'product_id'            => $parentProduct->id,
+            'id'                    => $variant->id
+        );
+        
+        $testcase_3 = array(
+            'name'                  => 'This is a variant',
+            'short_description'     => 'This is body',
+            'category_id'           => 1,
+            'sku'                   => 'VARIANT001',
+            'active'                => false
+        );
+
+        $this->call('POST', '/admin/products/store', $input);
+
+        $this->assertRedirectedTo('/admin/products/view-variant/2');
+        
+        // Check that there's exactly 1 variant
+        $this->assertTrue($parentProduct->variants->count() == 1);
+        
+        foreach ($parentProduct->variants as $variant) {
+            // Verify the properties
+            $this->assertTrueModelAllTestcases($variant, $testcase_3);
+            // Check that there's exactly 1 parent
+            $this->assertTrue($variant->variantParents->count() == 1);
+        }
+    }
 }

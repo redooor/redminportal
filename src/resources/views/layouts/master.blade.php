@@ -67,24 +67,16 @@
                 </div>
             </div>
         </div><!--End main-->
-
-        <div id="confirm-modal" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">{{ Lang::get('redminportal::messages.confirm_delete') }}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>{{ Lang::get('redminportal::messages.are_you_sure_you_want_to_delete') }}</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ Lang::get('redminportal::buttons.delete_no') }}</button>
-                        <a href="#" id="confirm-delete" class="btn btn-danger">{{ Lang::get('redminportal::buttons.delete_yes') }}</a>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
+        
+        <!-- Modal confirmation window -->
+        @include('redminportal::partials.modal-window', [
+            'modal_id' => 'confirm-modal',
+            'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
+            'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
+            'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
+        ])
+        <!-- End of modal window -->
+        
         <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery/jquery.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/moment/moment.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -97,7 +89,7 @@
                     $(document).on('click', '.btn-confirm', function(e) {
                         e.preventDefault();
                         $delete_url = $(this).attr('href');
-                        $('#confirm-delete').attr('href', $delete_url);
+                        $('#confirm-modal-proceed').attr('href', $delete_url);
                         $('#confirm-modal').modal('show');
                     });
                     $(document).on('click', '.sidebar-toggle', function(e) {

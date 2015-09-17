@@ -112,7 +112,46 @@ class ProductController extends Controller
     
     public function getEditVariant($product_id, $sid)
     {
-        return "ok";
+        // Find the product using the user id
+        $product = Product::find($sid);
+
+        // No such id
+        if ($product == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
+            return view('redminportal::products/edit-variant')->withErrors($errors);
+        }
+
+        $categories = Category::where('active', true)
+            ->where('category_id', 0)
+            ->orWhere('category_id', null)
+            ->orderBy('name')
+            ->get();
+
+        $tagString = "";
+        foreach ($product->tags as $tag) {
+            if (! empty($tagString)) {
+                $tagString .= ",";
+            }
+
+            $tagString .= $tag->name;
+        }
+
+        $translated = array();
+        foreach ($product->translations as $translation) {
+            $translated[$translation->lang] = json_decode($translation->content);
+        }
+        
+        $data = array(
+            'product_id' => $product_id,
+            'product' => $product,
+            'translated' => $translated,
+            'categories'=> $categories,
+            'tagString'=> $tagString,
+            'imagine' => new RImage
+        );
+
+        return view('redminportal::products/edit-variant', $data);
     }
     
     public function getViewVariant($sid)
@@ -322,7 +361,10 @@ class ProductController extends Controller
         
         // Link variant to parent Product
         if ($product_id) {
-            $parentProduct->variants()->attach($product->id);
+            // Only attach new variant
+            if ($product_id and !$sid) {
+                $parentProduct->variants()->attach($product->id);
+            }
             return redirect('admin/products/view-variant/' . $product->id);
         }
         
@@ -362,20 +404,49 @@ class ProductController extends Controller
         return redirect('admin/products');
     }
     
-    public function getImgremove($sid)
+    /*
+     * Remove image from model
+     * @param int Image ID
+     * @return int Model ID if pass, null if fail
+     */
+    private function removeImage($sid)
     {
         $image = Image::find($sid);
 
         if ($image == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
-            return redirect('/admin/products')->withErrors($errors);
+            return null;
         }
 
         $model_id = $image->imageable_id;
 
         $image->delete();
+        
+        return $model_id;
+    }
+    
+    public function getImgremove($sid)
+    {
+        $model_id = $this->removeImage($sid);
+
+        if ($model_id == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
+            return redirect('/admin/products')->withErrors($errors);
+        }
 
         return redirect('admin/products/edit/' . $model_id);
+    }
+    
+    public function getVariantImgremove($product_id, $sid)
+    {
+        $model_id = $this->removeImage($sid);
+
+        if ($model_id == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
+            return redirect('/admin/products/edit-variant/'. $product_id . '/' . $model_id)->withErrors($errors);
+        }
+
+        return redirect('admin/products/edit-variant/' . $product_id . '/' . $model_id);
     }
 }

@@ -45,7 +45,7 @@
                 <div class="panel-body">
                     <div class='row'>
                         @foreach ($product->images as $image)
-                        <div class='col-md-3'>
+                        <div class='col-sm-4'>
                             {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
                         </div>
                         @endforeach

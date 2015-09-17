@@ -158,7 +158,7 @@
                         </div>
                     </div>
                     <div id="list-variants" data-url="{{ url('admin/products/list-variants/' . $product->id) }}"></div>
-                    <div class="panel-footer">
+                    <div class="panel-footer text-right">
                         <a id="add-product-variant" href="{{ url('admin/products/create-variant/' . $product->id) }}" class="btn btn-primary btn-sm">Add</a>
                     </div>
                 </div>
@@ -193,26 +193,25 @@
             </div>
         </div>
     {!! Form::close() !!}
-    <div id="product-variant-modal" class="modal fade">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-progress">
-                    <div class="progress">
-                        <div id="modal-progress" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                            <span class="sr-only">Loading</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">{{ Lang::get('redminportal::forms.product_variation') }}</h4>
-                </div>
-                <div class="modal-body">
-                    <iframe id="iframe-variant-form"></iframe>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    
+    <!-- Modal window iframe -->
+    @include('redminportal::partials.modal-window', [
+        'modal_id' => 'product-variant-modal',
+        'modal_size' => 'modal-lg',
+        'modal_progress' => 'modal-progress',
+        'modal_title' => Lang::get('redminportal::forms.product_variation'),
+        'modal_body' => '<iframe id="iframe-variant-form"></iframe>'
+    ])
+    <!-- End of modal window iframe -->
+
+    <!-- Modal confirmation window -->
+    @include('redminportal::partials.modal-window', [
+        'modal_id' => 'variant-remove-modal',
+        'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
+        'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
+        'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="variant-remove-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
+    ])
+    <!-- End of modal window -->
 @stop
 
 @section('footer')
@@ -270,7 +269,7 @@
                 //---------------------------------------------------------
                 // Add or View a product variant
                 //---------------------------------------------------------
-                $(document).on('click', '#add-product-variant, .view-product-variant', function(e) {
+                $(document).on('click', '#add-product-variant, .view-product-variant, .edit-product-variant', function(e) {
                     e.preventDefault();
                     // Make iframe height 70% of window height
                     $window_height = $(window).height();
@@ -295,29 +294,29 @@
                     loadVariants(); // reload list of product variants
                 });
                 //---------------------------------------------------------
-                // Delete variant, using confirm-modal from master layout
+                // Delete variant, using variant-remove-modal from master layout
                 //---------------------------------------------------------
-                $modal_body = $('#confirm-modal .modal-body').html();
+                $modal_body = $('#variant-remove-modal .modal-body').html();
                 $(document).on('click', '.delete-product-variant', function(e) {
                     e.preventDefault();
                     $delete_url = $(this).attr('href');
-                    $('#confirm-delete').attr('href', $delete_url);
-                    $('#confirm-modal').modal('show');
+                    $('#variant-remove-modal-proceed').attr('href', $delete_url);
+                    $('#variant-remove-modal').modal('show');
                 });
-                $(document).on('click', '#confirm-delete', function(e) {
+                $(document).on('click', '#variant-remove-modal-proceed', function(e) {
                     e.preventDefault();
                     $delete_url = $(this).attr('href');
                     $(this).addClass('disabled');
                     $.getJSON( $delete_url )
                         .done(function( json ) {
                             if (json.status == true) {
-                                $('#confirm-modal').modal('hide');
+                                $('#variant-remove-modal').modal('hide');
                             } else {
                                 $errormsg = '<div class="alert alert-danger">';
                                 $errormsg += json.message;
                                 $errormsg += '</div>';
-                                $('#confirm-modal .modal-footer').hide();
-                                $('#confirm-modal .modal-body').html($errormsg);
+                                $('#variant-remove-modal .modal-footer').hide();
+                                $('#variant-remove-modal .modal-body').html($errormsg);
                             }
                         })
                         .fail(function( jqxhr, textStatus, error ) {
@@ -325,15 +324,15 @@
                             $errormsg = '<div class="alert alert-danger">';
                             $errormsg += err;
                             $errormsg += '</div>';
-                            $('#confirm-modal .modal-footer').hide();
-                            $('#confirm-modal .modal-body').html($errormsg);
+                            $('#variant-remove-modal .modal-footer').hide();
+                            $('#variant-remove-modal .modal-body').html($errormsg);
                         });
                 });
                 // Clear content when modal hidden
-                $('#confirm-modal').on('hidden.bs.modal', function (e) {
-                    $('#confirm-modal .modal-body').html($modal_body);
-                    $('#confirm-modal .modal-footer').show();
-                    $('#confirm-delete').removeClass('disabled');
+                $('#variant-remove-modal').on('hidden.bs.modal', function (e) {
+                    $('#variant-remove-modal .modal-body').html($modal_body);
+                    $('#variant-remove-modal .modal-footer').show();
+                    $('#variant-remove-modal-proceed').removeClass('disabled');
                     loadVariants(); // reload list of product variants
                 });
             });
