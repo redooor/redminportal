@@ -11,7 +11,11 @@
                     <h4 class="panel-title">{{ Lang::get('redminportal::forms.view_product') }}</h4>
                 </div>
                 <div class="panel-body">
-                    @include('redminportal::partials.lang-selector-view', ['selector_name' => '-variant', 'translatable' => $product, 'translated' => $translated])
+                    @include('redminportal::partials.lang-selector-view', [
+                        'selector_name' => '-variant',
+                        'translatable' => $product,
+                        'translated' => $translated
+                    ])
                 </div>
             </div>
             <div class="panel panel-default">
