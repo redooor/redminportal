@@ -7,6 +7,15 @@
                 <div class="panel-body">
                     <h1>RedminPortal <small>by Redooor</small></h1>
                     <h2><u>Change log</u></h2>
+                    <h3>Version 0.3.3 and 0.2.3</h3>
+                    <p>Code clean up, new features and UI improvements.</p>
+                    <p>This update introduces some new tables. Refer to UPGRADE.md for the upgrading instructions.</p>
+                    <h4>New features:</h4>
+                    <ol>
+                        <li>Added product variations. You can now add variations to each product. (issue #125)</li>
+                        <li>Added reusable partial templates for Modal Window and Language selector tab. (issue #130)</li>
+                        <li>Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)</li>
+                    </ol> 
                     <h3>Version 0.3.2</h3>
                     <p>Code clean up, new features and UI improvements.</p>
                     <p>This update is generally v0.3.* compatible but there's a change with UserPricelist. Refer to UPGRADE.md for the upgrading instructions.</p>

@@ -21,7 +21,8 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 
 ### New features:
 1. Added product variations. You can now add variations to each product. (issue #125)
-2. Added reusable partial templates for Modal Window and Language selector tab.
+2. Added reusable partial templates for Modal Window and Language selector tab. (issue #130)
+3. Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)
 
 ### Enhancements:
 
