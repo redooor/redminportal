@@ -10,13 +10,19 @@ use Redooor\Redminportal\App\Helpers\RHelper;
     sku                 (string, 255)
     short_description   (string, 255)
     long_description    (text, nullable)
-    price               (float, 0)
+    price               (decimal, 8, 2)
     featured            (boolean, false)
     active              (boolean, true)
     options             (text, nullable)
     category_id         (unsigned, nullable)
-    created_at  (dateTime)
-    updated_at  (dateTime)
+    weight_unit         (string, 3, nullable)
+    volume_unit         (string, 3, nullable)
+    length              (decimal, 8, 3, nullable)
+    width               (decimal, 8, 3, nullable)
+    height              (decimal, 8, 3, nullable)
+    weight              (decimal, 8, 3, nullable)
+    created_at          (dateTime)
+    updated_at          (dateTime)
 ***********************/
 class Product extends Model
 {

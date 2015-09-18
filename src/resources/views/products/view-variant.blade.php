@@ -41,6 +41,33 @@
                     </div>
                 </div>
             </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        {{ Lang::get('redminportal::forms.product_shipping_properties') }}
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <!-- Weight information -->
+                    <div class="form-group">
+                        <label>{{ Lang::get('redminportal::forms.weight') }}</label>
+                        @if ($product->weight)
+                        <div class="form-group">{{ $product->weight }} {{ $product->weight_unit }}</div>
+                        @else
+                        <div class="form-group">{{ Lang::get('redminportal::messages.no_weight_information_found') }}</div>
+                        @endif
+                    </div>
+                    <!-- Volume information -->
+                    <div class="form-group">
+                        <label>{{ Lang::get('redminportal::forms.volume') }}</label>
+                        @if ($product->length or $product->width or $product->height)
+                        <div class="form-group">(L) {{ $product->length }} {{ $product->volume_unit }}, (W) {{ $product->width }} {{ $product->volume_unit }}, (H) {{ $product->height }} {{ $product->volume_unit }}</div>
+                        @else
+                        <div class="form-group">{{ Lang::get('redminportal::messages.no_volume_information_found') }}</div>
+                        @endif
+                    </div>
+                </div>
+            </div>
             @if (count($product->images) > 0)
             <div class="panel panel-default">
                 <div class="panel-heading">

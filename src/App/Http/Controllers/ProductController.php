@@ -7,16 +7,22 @@ use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
+use Redooor\Redminportal\App\Classes\Weight;
+use Redooor\Redminportal\App\Classes\Volume;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 
 class ProductController extends Controller
 {
     protected $model;
+    private $weight_units;
+    private $volume_units;
 
     public function __construct(Product $product)
     {
         $this->model = $product;
+        $this->weight_units = Weight::getUnits();
+        $this->volume_units = Volume::getUnits();
     }
 
     public function getIndex()
@@ -42,8 +48,16 @@ class ProductController extends Controller
             ->orWhere('category_id', null)
             ->orderBy('name')
             ->get();
-
-        return view('redminportal::products/create')->with('categories', $categories);
+        
+        
+        
+        $data = array(
+            'categories' => $categories,
+            'weight_units' => $this->weight_units,
+            'volume_units' => $this->volume_units
+        );
+        
+        return view('redminportal::products/create', $data);
     }
     
     public function getEdit($sid)
@@ -77,13 +91,18 @@ class ProductController extends Controller
         foreach ($product->translations as $translation) {
             $translated[$translation->lang] = json_decode($translation->content);
         }
-
-        return view('redminportal::products/edit')
-            ->with('product', $product)
-            ->with('translated', $translated)
-            ->with('categories', $categories)
-            ->with('tagString', $tagString)
-            ->with('imagine', new RImage);
+        
+        $data = array(
+            'product' => $product,
+            'translated' => $translated,
+            'categories' => $categories,
+            'tagString' => $tagString,
+            'imagine' => new RImage,
+            'weight_units' => $this->weight_units,
+            'volume_units' => $this->volume_units
+        );
+        
+        return view('redminportal::products/edit', $data);
     }
     
     public function getCreateVariant($product_id)
@@ -104,7 +123,9 @@ class ProductController extends Controller
         
         $data = array(
             'categories' => $categories,
-            'product_id' => $product_id
+            'product_id' => $product_id,
+            'weight_units' => $this->weight_units,
+            'volume_units' => $this->volume_units
         );
 
         return view('redminportal::products/create-variant', $data);
@@ -148,7 +169,9 @@ class ProductController extends Controller
             'translated' => $translated,
             'categories'=> $categories,
             'tagString'=> $tagString,
-            'imagine' => new RImage
+            'imagine' => new RImage,
+            'weight_units' => $this->weight_units,
+            'volume_units' => $this->volume_units
         );
 
         return view('redminportal::products/edit-variant', $data);
@@ -251,6 +274,10 @@ class ProductController extends Controller
             'sku'               => 'required|alpha_dash|unique:products,sku' . (isset($sid) ? ',' . $sid : ''),
             'category_id'       => 'required',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
+            'weight'            => 'numeric',
+            'length'            => 'numeric',
+            'width'             => 'numeric',
+            'height'            => 'numeric'
         );
 
         $validation = Validator::make(Input::all(), $rules);
@@ -288,7 +315,13 @@ class ProductController extends Controller
         $active             = (Input::get('active') == '' ? false : true);
         $category_id        = Input::get('category_id');
         $tags               = Input::get('tags');
-
+        $weight_unit        = Input::get('weight_unit');
+        $volume_unit        = Input::get('volume_unit');
+        $weight             = Input::get('weight');
+        $length             = Input::get('length');
+        $width              = Input::get('width');
+        $height             = Input::get('height');
+        
         $product = (isset($sid) ? Product::find($sid) : new Product);
 
         if ($product == null) {
@@ -305,6 +338,12 @@ class ProductController extends Controller
         $product->featured = $featured;
         $product->active = $active;
         $product->category_id = $category_id;
+        $product->weight_unit = $weight_unit;
+        $product->volume_unit = $volume_unit;
+        $product->weight = (($weight != '') ? $weight : null);
+        $product->length = (($length != '') ? $length : null);
+        $product->width  = (($width  != '') ? $width  : null);
+        $product->height = (($height != '') ? $height : null);
 
         $product->save();
 

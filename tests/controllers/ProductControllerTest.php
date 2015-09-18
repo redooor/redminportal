@@ -25,9 +25,14 @@ class ProductControllerTest extends BaseControllerTest
                 'cn_short_description'  => 'CN short body',
                 'category_id'           => 1,
                 'sku'                   => 'UNIQUESKU001',
-                'cn_name' => 'This is cn name',
-                'cn_short_description' => 'This is cn short description',
-                'cn_long_description' => 'This is cn long description'
+                'cn_name'               => 'This is cn name',
+                'cn_short_description'  => 'This is cn short description',
+                'cn_long_description'   => 'This is cn long description',
+                'weight_unit'           => 'kg',
+                'volume_unit'           => 'm',
+                'length'                => 9.99,
+                'width'                 => 8.44,
+                'height'                => 2.33
             ),
             'edit' => array(
                 'id'   => 1,
@@ -39,7 +44,12 @@ class ProductControllerTest extends BaseControllerTest
                 'sku'                   => 'UNIQUESKU001',
                 'cn_name' => 'This is cn name',
                 'cn_short_description' => 'This is cn short description',
-                'cn_long_description' => 'This is cn long description'
+                'cn_long_description' => 'This is cn long description',
+                'weight_unit'           => 'g',
+                'volume_unit'           => 'mm',
+                'length'                => 8.99,
+                'width'                 => 7.44,
+                'height'                => 1.33
             )
         );
         
@@ -187,7 +197,12 @@ class ProductControllerTest extends BaseControllerTest
             'cn_short_description'  => 'CN short body',
             'category_id'           => 1,
             'sku'                   => 'VARIANT001',
-            'product_id'            => $parentProduct->id
+            'product_id'            => $parentProduct->id,
+            'weight_unit'           => 'kg',
+            'volume_unit'           => 'm',
+            'length'                => 9.99,
+            'width'                 => 8.44,
+            'height'                => 2.33
         );
         
         $testcase_2 = array(
@@ -195,7 +210,12 @@ class ProductControllerTest extends BaseControllerTest
             'short_description'     => 'This is body',
             'category_id'           => 1,
             'sku'                   => 'VARIANT001',
-            'active'                => false
+            'active'                => false,
+            'weight_unit'           => 'kg',
+            'volume_unit'           => 'm',
+            'length'                => 9.99,
+            'width'                 => 8.44,
+            'height'                => 2.33
         );
 
         $this->call('POST', '/admin/products/store', $input);
@@ -514,7 +534,12 @@ class ProductControllerTest extends BaseControllerTest
             'category_id'           => 1,
             'sku'                   => 'VARIANT001',
             'product_id'            => $parentProduct->id,
-            'id'                    => $variant->id
+            'id'                    => $variant->id,
+            'weight_unit'           => 'kg',
+            'volume_unit'           => 'm',
+            'length'                => 9.99,
+            'width'                 => 8.44,
+            'height'                => 2.33
         );
         
         $testcase_3 = array(
@@ -522,7 +547,12 @@ class ProductControllerTest extends BaseControllerTest
             'short_description'     => 'This is body',
             'category_id'           => 1,
             'sku'                   => 'VARIANT001',
-            'active'                => false
+            'active'                => false,
+            'weight_unit'           => 'kg',
+            'volume_unit'           => 'm',
+            'length'                => 9.99,
+            'width'                 => 8.44,
+            'height'                => 2.33
         );
 
         $this->call('POST', '/admin/products/store', $input);

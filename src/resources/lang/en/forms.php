@@ -135,4 +135,12 @@ return array(
     'product_variations' => 'Product Variations',
     'view_product' => 'View Product',
     'product_variation' => 'Product Variation',
+    'product_shipping_properties' => 'Product Shipping Properties',
+    'weight_unit' => 'Weight Unit',
+    'volume_unit' => 'Volume Unit',
+    'weight' => 'Weight',
+    'length' => 'Length',
+    'width' => 'Width',
+    'height' => 'Height',
+    'volume' => 'Volume',
 );

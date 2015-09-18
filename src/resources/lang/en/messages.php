@@ -44,4 +44,7 @@ return array(
     'error_delete_image' => 'The image cannot be deleted at this time.',
     'success_delete_record' => 'The record has been deleted successfully.',
     'error_delete_variant_already_ordered' => 'You cannot delete this product because at least one of its variations has been ordered. Please delete the order first.',
+    'unit_applies_to_all_dimensions' => 'Unit applies to all dimensions',
+    'no_volume_information_found' => 'No volume information found.',
+    'no_weight_information_found' => 'No weight information found.',
 );
