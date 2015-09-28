@@ -1,18 +1,23 @@
 # Change log
 
 * [Version 0.3.3 and 0.2.3](#version-033-and-023)
-* [Version 0.3.2](#version-032)
-* [Version 0.3.1](#version-031)
+* [Version 0.3.2 and 0.2.2](#version-032-and-022)
+* [Version 0.3.1 and 0.2.1](#version-031-and-021)
 * [Version 0.3.0](#version-030)
-* [Version 0.2](#version-02)
+* [Version 0.2.0](#version-020)
 * [Version 0.1](#version-01)
 
+#Compatibility
 
-* Version 0.3 supports Laravel 5.1 only.
-* Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
-* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+| Laravel | RedminPortal | Branch |
+|:-------:|:------------:|:------:|
+| 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) |
+| 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) |
+| 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) |
 
 Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+
+Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
 
 ## Version 0.3.3 and 0.2.3
 Code clean up, new features and UI improvements.
@@ -28,7 +33,7 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 
 ### Bug fixes:
 
-## Version 0.3.2
+## Version 0.3.2 and 0.2.2
 Code clean up, new features and UI improvements.
 
 This update is generally v0.3.* compatible but there's a change with UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
@@ -44,7 +49,7 @@ This update is generally v0.3.* compatible but there's a change with UserPriceli
 1. (legacy support) Purchase export to excel not working. Purchase has deprecated. Use Orders instead. (issue #115)
 2. User creation to check unique email and prompt error (issue #120).
 
-## Version 0.3.1
+## Version 0.3.1 and 0.2.1
 New Bundle module and improvement to UI.
 
 ### New feature:
@@ -80,7 +85,7 @@ If you're upgrading from v0.2.*, please refer to the [Upgrade Guide](#upgrade-gu
 ### New feature:
 Support Laravel 5.1 (issue #87).
 
-## Version 0.2
+## Version 0.2.0
 Focus on supporting Laravel 5.0 and making sure all models and controllers work.
 
 Version 0.2.0 is **SOMEWHAT** backward compatible.
@@ -88,6 +93,30 @@ Version 0.2.0 is **SOMEWHAT** backward compatible.
 If you're upgrading from v0.1.*, please refer to the [branch v0.2 Upgrade Guide](https://github.com/redooor/redminportal/blob/v0.2/UPGRADE.md).
 
 Refer to [branch v0.2 CHANGELOG.md](https://github.com/redooor/redminportal/blob/v0.2/CHANGELOG.md)
+
+### New feature:
+1. Support Laravel 5.0.
+2. Removed dependancy of Cartalyst/Sentry.
+3. Use Laravel's Authentication instead of Cartalyst/Sentry.
+4. Users and Groups tables should work with previous schema. (But need to add column remember_token to users table)
+5. Drop Discount module support from v0.2.0 onwards (issue #63).
+6. Changed UI to use [Redmaterials](http://redmaterials.redooor.com) theme.
+7. Removed Bootstrap from redminportal.css. It should be linked separately.
+8. Consistent UI across all views (issue #76).
+9. Add active column to Pricelists table (issue #78).
+10. Add UI to views for additional active column in Pricelists table (issue #78).
+11. Rearrange menu to split Physical product store and Digital product store (issue #52).
+12. Promotions, Products and Portfolios now allow translation (issue #9).
+13. Use Laravel authentication, removed Sentry dependency (issue #81).
+14. Allow multiple Category images (issue #79).
+15. Add Post Model and Controller (issue #73).
+16. Revamp Translation implementation for Category, Media, Module, Portfolio, Product and Promotion (issue #85).
+17. Add Page model and Controller (issue #74).
+18. Save orders for products (issue #51).
+19. Download orders in CSV format.
+
+### Bug fixes:
+1. Translation to support any language (issue #83).
 
 ## Version 0.1
 Supports Laravel 4.2.

@@ -34,7 +34,7 @@ As a general rule, do not save any customed files inside `public/vendor/redooor/
 
     php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
     
-## Upgrading to v0.3.2 from v0.3.1
+## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 
 New features and UI improvements.
 
@@ -87,7 +87,7 @@ To get the purchased pricelist in Order, you can do the same like this:
 
 ### Migrations
 
-Version 0.3.2 introduced some new database tables and removed some.
+Version 0.3.2/0.2.2 introduced some new database tables and removed some.
 
 You need to run the following command to re-publish the migrations.
 
@@ -115,7 +115,7 @@ As a general rule, do not save any customed files inside `public/vendor/redooor/
 
     php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
     
-## Upgrading to v0.3.1 from v0.3.0
+## Upgrading to v0.3.1/v0.2.1 from v0.3.0/0.2.0
 
 New features and UI improvements.
 
@@ -131,7 +131,7 @@ As a general rule, do not save any customed files inside `public/vendor/redooor/
 
 ### Migrations
 
-Version 0.3.1 introduced some new database tables. You need to run the following command to re-publish the migrations.
+Version 0.3.1/0.2.1 introduced some new database tables. You need to run the following command to re-publish the migrations.
 
 **Caution**: This action will overwrite any changes made to the `database/migrations/vendor/redooor/redminportal` folder.
 
@@ -147,13 +147,13 @@ As a general rule, do not save any customed files inside `database/migrations/ve
 
         php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
         
-## Upgrading to v0.3.1 from <= v0.1.*
+## Upgrading to v0.3.1/0.2.1 from <= v0.1.*
 
-Supports Laravel 5.1.
+Version 0.3.1 supports Laravel 5.1. Version 0.2.1 supports Laravel 5.0.
 
 ### Migrations
 
-In Version 0.3.1, the migrations are generally designed to be forgiving. It will check for existance before creating the tables.
+In Version 0.3.1/0.2.1, the migrations are generally designed to be forgiving. It will check for existance before creating the tables.
 
 **Before you begin, _ALWAYS BACKUP_ your database and `public\assets\img folder`.**
 
@@ -205,9 +205,6 @@ Supports Laravel 5.1.
 
 Version 0.3.0 should be backward compatible to Version 0.2.0 but not Version 0.1.*.
 
-* Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
-* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
-
 Edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
@@ -218,6 +215,9 @@ Edit your [root]\config\app.php providers and alias array like this:
             Redooor\Redminportal\RedminportalServiceProvider::class,
         ),
 
-## Upgrading to v0.2.0 from <= v0.1.*
+To upgrade from version v0.1.*, you need to use v0.3.1/0.2.1 onwards.
 
-Refer to [branch v0.2 UPGRADE.md](https://github.com/redooor/redminportal/blob/v0.2/UPGRADE.md)
+## Version 0.1
+Supports Laravel 4.2.
+
+Refer to [branch v0.1 README.md Upgrade Guide](https://github.com/redooor/redminportal/blob/v0.1/README.md#upgrade-guide)

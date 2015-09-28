@@ -4,10 +4,9 @@
 
 # RedminPortal by Redooor
 
-A Laravel 5.1 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
+A Laravel 5 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
 
-* Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
-* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+RedminPortal currently supports both Laravel 5.0 and 5.1. See [Compatibility](#compatibility).
 
 # Table of Content
 1. [Compatibility](#compatibility)
@@ -25,22 +24,23 @@ A Laravel 5.1 package as a **backend** administrating tool for Content Managemen
 
 #Compatibility
 
-| Laravel | RedminPortal |
-|:-------:|:------------:|
-| 4.2     | 0.1.x        |
-| 5.0     | 0.2.x        |
-| 5.1     | 0.3.x        |
+| Laravel | RedminPortal | Branch |
+|:-------:|:------------:|:------:|
+| 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) |
+| 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) |
+| 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) |
+
+Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+
+Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
 
 # Important note
 
-Version 0.3.2 **may break** your front-end due to the change in UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+Version 0.3.2 and 0.2.2 **may break** your front-end due to the change in UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
 Version 0.3 is backward compatible to Version 0.2.
 
-Version 0.2 is **SOMEWHAT** backward compatible to Version 0.1. Refer to [v0.2 branch UPGRADE.md](https://github.com/redooor/redminportal/blob/v0.2/UPGRADE.md).
-
-* Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
-* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
+Version 0.3 and 0.2 are **SOMEWHAT** backward compatible to Version 0.1. Refer to [UPGRADE.md](UPGRADE.md).
 
 **Upgrading from v0.1?**
 
