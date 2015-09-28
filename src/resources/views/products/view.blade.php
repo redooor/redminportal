@@ -65,7 +65,7 @@
                         @endif
                     </td>
                     <td class="table-actions text-center">
-                        @if ($product->variants()->count() > 0)
+                        @if (count($product->variants) > 0)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
 								<span class="fa fa-sitemap"></span>
