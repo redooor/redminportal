@@ -17,6 +17,8 @@
                         <li>Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)</li>
                         <li>Fixed UI: Category hierarchy list word wrap. (issue #133)</li>
                         <li>Developer: use grunt to publish assets to public folder automatically. (issue #139)</li>
+                        <li>User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)</li>
+                        <li>Moved static text to translation file. (issue #102)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>

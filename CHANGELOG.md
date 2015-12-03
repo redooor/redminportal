@@ -30,6 +30,8 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 3. Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)
 4. Fixed UI: Category hierarchy list word wrap. (issue #133)
 5. Developer: use grunt to publish assets to public folder automatically. (issue #139)
+6. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
+7. Moved static text to translation file. (issue #102)
 
 ### Enhancements:
 

@@ -47,4 +47,10 @@ return array(
     'unit_applies_to_all_dimensions' => 'Unit applies to all dimensions',
     'no_volume_information_found' => 'No volume information found.',
     'no_weight_information_found' => 'No weight information found.',
+    'user_error_delete_own_account' => "You cannot delete your own account while you are logged in. Try using another account.",
+    'user_error_user_not_found' => "The user cannot be edited because it does not exist or may have been deleted.",
+    'user_error_deactivate_own_account' => "You cannot deactivate your own account while you are logged in. Try using another account.",
+    'user_error_group_not_found' => "The user cannot be updated because the selected group cannot be found. Please try again.",
+    'user_error_update_unknown' => "The user cannot be updated due to some problem. Please try again.",
+    'user_error_create_unknown' => "The user cannot be found or created. Please try again later."
 );

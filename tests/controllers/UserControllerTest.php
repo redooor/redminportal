@@ -58,12 +58,37 @@ class UserControllerTest extends BaseControllerTest
     }
     
     /**
+     * Test (Pass): access getDelete with id = 2
+     * Override BaseControllerTest method, cannot delete self, must delete another user
+     */
+    public function testDeletePass()
+    {
+        $this->testStoreCreatePass();
+        
+        $this->call('GET', $this->page . '/delete/2');
+
+        $this->assertRedirectedTo('/'); // Redirected to previous page, which is root
+    }
+    
+    /**
      * Test (Fail): access getDelete with id = 2
      * Override BaseControllerTest method because Seeder already created 1 user
      */
-    public function testDeleteFail()
+    public function testDeleteFailNoRecord()
     {
         $this->call('GET', $this->page . '/delete/2');
+
+        $this->assertRedirectedTo($this->page);
+        $this->assertSessionHasErrors();
+    }
+    
+    /**
+     * Test (Fail): access getDelete with id = 1
+     * Cannot delete own account while logged in
+     */
+    public function testDeleteFailDeleteSelf()
+    {
+        $this->call('GET', $this->page . '/delete/1');
 
         $this->assertRedirectedTo($this->page);
         $this->assertSessionHasErrors();
@@ -83,17 +108,31 @@ class UserControllerTest extends BaseControllerTest
     /**
      * Test (Pass): access getActivate with id = 1
      */
-    public function testActivatePass()
+    public function testActivatePassActivateSelf()
     {
         $this->call('GET', $this->page . '/activate/1');
-
-        $this->assertResponseStatus(302); // Redirected
+        
+        $this->assertRedirectedTo('/'); // Redirected to previous page, which is root
+    }
+    
+    /**
+     * Test (Pass): access getActivate with id = 2
+     */
+    public function testActivatePassActivateOther()
+    {
+        // Creates 2nd record
+        $this->testStoreCreatePass();
+        
+        // Then try activate it
+        $this->call('GET', $this->page . '/activate/2');
+        
+        $this->assertRedirectedTo('/'); // Redirected to previous page, which is root
     }
     
     /**
      * Test (Fail): access getDeactivate with id = 2
      */
-    public function testDeactivateFail()
+    public function testDeactivateFailNoRecord()
     {
         $this->call('GET', $this->page . '/deactivate/2');
 
@@ -102,13 +141,30 @@ class UserControllerTest extends BaseControllerTest
     }
     
     /**
-     * Test (Pass): access getDeactivate with id = 1
+     * Test (Fail): access getDeactivate with id = 1
+     * Cannot deactivate own account while logged in
      */
-    public function testDeactivatePass()
+    public function testDeactivateFailDeactivateSelf()
     {
         $this->call('GET', $this->page . '/deactivate/1');
         
         $this->assertResponseStatus(302); // Redirected
+        $this->assertSessionHasErrors();
+    }
+    
+    /**
+     * Test (Pass): access getDeactivate with id = 2
+     */
+    public function testDeactivatePass()
+    {
+        // Creates 2nd record
+        $this->testStoreCreatePass();
+        
+        // Then try deactivate it
+        $this->call('GET', $this->page . '/deactivate/2');
+        
+        $this->assertResponseStatus(302); // Redirected
+        $this->assertRedirectedTo('/'); // Redirected to previous page, which is root
     }
     
     /**
