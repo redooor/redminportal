@@ -90,10 +90,11 @@ footer,
     -webkit-transition: .3s ease all;
          -o-transition: .3s ease all;
             transition: .3s ease all;
+    padding-bottom: 2em;
   }
   #sidebar-title {
     position: relative;
-    padding: 20px;
+    padding: 15px;
     background-color: #2196F3;
   }
   #sidebar-title .redooor-nav-logo {

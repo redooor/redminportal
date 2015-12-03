@@ -15,6 +15,8 @@
                         <li>Added product variations. You can now add variations to each product. (issue #125)</li>
                         <li>Added reusable partial templates for Modal Window and Language selector tab. (issue #130)</li>
                         <li>Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)</li>
+                        <li>Fixed UI: Category hierarchy list word wrap. (issue #133)</li>
+                        <li>Developer: use grunt to publish assets to public folder automatically. (issue #139)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>
