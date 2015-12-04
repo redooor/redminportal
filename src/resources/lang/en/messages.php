@@ -52,5 +52,9 @@ return array(
     'user_error_deactivate_own_account' => "You cannot deactivate your own account while you are logged in. Try using another account.",
     'user_error_group_not_found' => "The user cannot be updated because the selected group cannot be found. Please try again.",
     'user_error_update_unknown' => "The user cannot be updated due to some problem. Please try again.",
-    'user_error_create_unknown' => "The user cannot be found or created. Please try again later."
+    'user_error_create_unknown' => "The user cannot be found or created. Please try again later.",
+    'category_error_category_not_found' => "The category cannot be edited because it does not exist or may have been deleted.",
+    'category_error_name_already_exists' => "The category cannot be added because there's an existing category with the same name.",
+    'category_error_cannot_delete_in_use' => "The category ':name' cannot be deleted because it is in use.",
+    'category_error_cannot_delete_has_child' => "The category ':name' cannot be deleted because it has :children children categories."
 );
