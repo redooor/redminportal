@@ -28,14 +28,15 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 1. Added product variations. You can now add variations to each product. (issue #125)
 2. Added reusable partial templates for Modal Window and Language selector tab. (issue #130)
 3. Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)
-4. Fixed UI: Category hierarchy list word wrap. (issue #133)
-5. Developer: use grunt to publish assets to public folder automatically. (issue #139)
-6. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
-7. Moved static text to translation file. (issue #102)
 
 ### Enhancements:
+1. Category model missing relationships with other models. (issue #140)
+2. Fixed UI: Category hierarchy list word wrap. (issue #133)
+3. Developer: use grunt to publish assets to public folder automatically. (issue #139)
+4. Moved static text to translation file. (issue #102)
 
 ### Bug fixes:
+1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
 
 ## Version 0.3.2 and 0.2.2
 Code clean up, new features and UI improvements.
