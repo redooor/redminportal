@@ -54,7 +54,7 @@
                         @if (count($order->getDiscounts()) > 0)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-								{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency(collect($order->getDiscounts())->sum('value'), Lang::get('redminportal::currency.currency')) }}
+								{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($order->getTotaldiscount(), Lang::get('redminportal::currency.currency')) }}
 							</button>
 							<ul class="dropdown-menu" role="menu">
                                 @foreach ($order->getDiscounts() as $discount)
