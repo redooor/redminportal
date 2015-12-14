@@ -34,6 +34,7 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 2. Fixed UI: Category hierarchy list word wrap. (issue #133)
 3. Developer: use grunt to publish assets to public folder automatically. (issue #139)
 4. Moved static text to translation file. (issue #102)
+5. Add getTotaldiscount method to Order. (issue #142)
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)

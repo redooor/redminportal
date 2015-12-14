@@ -23,6 +23,7 @@
                         <li>Fixed UI: Category hierarchy list word wrap. (issue #133)</li>
                         <li>Developer: use grunt to publish assets to public folder automatically. (issue #139)</li>
                         <li>Moved static text to translation file. (issue #102)</li>
+                        <li>Add getTotaldiscount method to Order. (issue #142)</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
