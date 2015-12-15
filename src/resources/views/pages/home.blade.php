@@ -26,6 +26,7 @@
                         <li>Moved static text to translation file. (issue #102)</li>
                         <li>Add getTotaldiscount method to Order. (issue #142)</li>
                         <li>Improved Tinymce editor to match RedminPortal look and feel.</li>
+                        <li>Updated Tinymce to version 4.3.2.</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
