@@ -46,6 +46,17 @@ module.exports = function (grunt) {
                 },
                 src: 'src/resources/assets/less/redminportal.less',
                 dest: 'src/public/css/<%= pkg.name %>.css'
+            },
+            tinymce: {
+                options: {
+                    strictMath: true,
+                    sourceMap: true,
+                    outputSourceFiles: true,
+                    sourceMapURL: 'redmin-tinymce.css.map',
+                    sourceMapFilename: 'src/public/css/redmin-tinymce.css.map'
+                },
+                src: 'src/resources/assets/less/redmin-tinymce.less',
+                dest: 'src/public/css/redmin-tinymce.css'
             }
         },
         autoprefixer: {
@@ -68,6 +79,10 @@ module.exports = function (grunt) {
             minifyCore: {
                 src: 'src/public/css/<%= pkg.name %>.css',
                 dest: 'src/public/css/<%= pkg.name %>.min.css'
+            },
+            minifyTinymce: {
+                src: 'src/public/css/redmin-tinymce.css',
+                dest: 'src/public/css/redmin-tinymce.min.css'
             }
         },
         usebanner: {
@@ -171,7 +186,7 @@ module.exports = function (grunt) {
     grunt.registerTask('none', function () {});
     
     // Copy Bootstrap less, compile and minify
-    grunt.registerTask('less-compile', ['less:compileCore', 'autoprefixer:core', 'usebanner', 'cssmin:minifyCore']);
+    grunt.registerTask('less-compile', ['less', 'autoprefixer:core', 'usebanner', 'cssmin']);
     
     // Distribute all assets to public folder
     grunt.registerTask('dist-assets', ['copy:fonts', 'copy:jquery', 'copy:bootstrapjs', 'copy:bootstrapcss', 'copy:jqueryui', 'copy:jqueryuijs', 'copy:momentjs', 'copy:datetimepickerjs', 'copy:datetimepickercss', 'copy:redmaterialsjs', 'copy:redmaterialscss', 'copy:fontawesomefonts', 'copy:fontawesomecss']);

@@ -494,4 +494,15 @@ ul.redooor-hierarchy.no-max-height {
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
 }
+/* Customised CSS for Tinymce */
+.mce-content-body {
+  padding: 1em;
+}
+.mce-textbox:focus {
+  -webkit-box-shadow: initial;
+  box-shadow: initial;
+}
+.mce-btn.mce-primary .mce-txt {
+  color: #ffffff;
+}
 /*# sourceMappingURL=redminportal.css.map */

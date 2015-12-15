@@ -9,7 +9,12 @@
                 plugins: "link image code",
                 convert_urls: false,
                 relative_urls: false,
-                toolbar: "undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | image | code"
+                toolbar: "undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | image | code",
+                content_css: [
+                @foreach (config('redminportal::tinymce') as $tinymce_css)
+                    "{{ url($tinymce_css) }}",
+                @endforeach
+                ]
             });
         })
     }(window.jQuery);

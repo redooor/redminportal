@@ -16,6 +16,7 @@
                         <li>Added product variations. You can now add variations to each product. (issue #125)</li>
                         <li>Added reusable partial templates for Modal Window and Language selector tab. (issue #130)</li>
                         <li>Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)</li>
+                        <li>Allow Tinymce content to follow front end CSS. (issue #143)</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -24,6 +25,7 @@
                         <li>Developer: use grunt to publish assets to public folder automatically. (issue #139)</li>
                         <li>Moved static text to translation file. (issue #102)</li>
                         <li>Add getTotaldiscount method to Order. (issue #142)</li>
+                        <li>Improved Tinymce editor to match RedminPortal look and feel.</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>

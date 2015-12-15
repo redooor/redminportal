@@ -28,6 +28,7 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 1. Added product variations. You can now add variations to each product. (issue #125)
 2. Added reusable partial templates for Modal Window and Language selector tab. (issue #130)
 3. Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)
+4. Allow Tinymce content to follow front end CSS. (issue #143)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)
@@ -35,6 +36,7 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 3. Developer: use grunt to publish assets to public folder automatically. (issue #139)
 4. Moved static text to translation file. (issue #102)
 5. Add getTotaldiscount method to Order. (issue #142)
+6. Improved Tinymce editor to match RedminPortal look and feel.
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
