@@ -90,10 +90,11 @@ footer,
     -webkit-transition: .3s ease all;
          -o-transition: .3s ease all;
             transition: .3s ease all;
+    padding-bottom: 2em;
   }
   #sidebar-title {
     position: relative;
-    padding: 20px;
+    padding: 15px;
     background-color: #2196F3;
   }
   #sidebar-title .redooor-nav-logo {
@@ -339,6 +340,7 @@ ul.redooor-hierarchy ul {
 }
 ul.redooor-hierarchy li {
   line-height: 1.8;
+  white-space: nowrap;
 }
 ul.redooor-hierarchy a {
   padding: 0.3em 0.5em;
@@ -491,5 +493,16 @@ ul.redooor-hierarchy.no-max-height {
   border-radius: 0;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
+}
+/* Customised CSS for Tinymce */
+.mce-content-body {
+  padding: 1em;
+}
+.mce-textbox:focus {
+  -webkit-box-shadow: initial;
+  box-shadow: initial;
+}
+.mce-btn.mce-primary .mce-txt {
+  color: #ffffff;
 }
 /*# sourceMappingURL=redminportal.css.map */

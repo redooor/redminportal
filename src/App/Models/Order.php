@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Models;
 
-use DateTime, Exception;
+use DateTime;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 /* Columns
@@ -80,6 +81,16 @@ class Order extends Model
     }
     
     /*
+     * Return the sum of all discounted values base on coupons applied.
+     *
+     * @return Float
+     */
+    public function getTotaldiscount()
+    {
+        return collect($this->getDiscounts())->sum('value');
+    }
+    
+    /*
      * Perform a check on the coupon before adding to the order.
      * Recommended if you need to check coupon's multiple_coupons flag before adding it.
      * This is optional, you need to specifically call this method to add a coupon.
@@ -132,7 +143,7 @@ class Order extends Model
     
     /*
      * Verify and save discounts into options['discounts'].
-     * Verify all coupons and return an array of dicounts with their corresponding product or bundle.
+     * Verify all coupons and return an array of discounts with their corresponding product or bundle.
      * Coupon will be verified on product and bundle level before checking for category.
      *
      * @return array of array('type', 'id', 'name', 'price', 'coupon_id', 'code', 'amount', 'is_percent', 'value')

@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Lang;
+use Auth;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Group;
 
@@ -39,7 +40,7 @@ class UserController extends Controller
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'editError',
-                "The user cannot be found because it does not exist or may have been deleted."
+                Lang::get('redminportal::messages.user_error_user_not_found')
             );
             return redirect('/admin/users')->withErrors($errors);
         }
@@ -92,13 +93,26 @@ class UserController extends Controller
         $role         = \Input::get('role');
         $activated     = (\Input::get('activated') == '' ? false : true);
         
+        // Check if this is logged in user, prevent deactivate
+        if (isset($sid)) {
+            $this_user = Auth::user();
+            if ($this_user->id == $sid && $activated == false) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'deactivateError',
+                    Lang::get('redminportal::messages.user_error_deactivate_own_account')
+                );
+                return redirect($path)->withErrors($errors)->withInput();
+            }
+        }
+        
         $user = (isset($sid) ? User::find($sid) : new User);
         
         if ($user == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
-                'editError',
-                "The user cannot be found or created. Please try again later."
+                'createError',
+                Lang::get('redminportal::messages.user_error_create_unknown')
             );
             return redirect('/admin/users')->withErrors($errors);
         }
@@ -115,8 +129,8 @@ class UserController extends Controller
         if (! $user->save()) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
-                'editError',
-                "The user cannot be updated due to some problem. Please try again."
+                'saveError',
+                Lang::get('redminportal::messages.user_error_update_unknown')
             );
             return redirect($path)->withErrors($errors)->withInput();
         }
@@ -128,8 +142,8 @@ class UserController extends Controller
         if ($new_group == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
-                'editError',
-                "The user cannot be updated because the selected group cannot be found. Please try again."
+                'groupError',
+                Lang::get('redminportal::messages.user_error_group_not_found')
             );
             return redirect($path)->withErrors($errors)->withInput();
         }
@@ -147,13 +161,23 @@ class UserController extends Controller
 
     public function getDelete($sid)
     {
+        $this_user = Auth::user();
+        if ($this_user->id == $sid) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'deleteError',
+                Lang::get('redminportal::messages.user_error_delete_own_account')
+            );
+            return redirect('/admin/users')->withErrors($errors);
+        }
+        
         $user = User::find($sid);
         
         if ($user == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
-                'editError',
-                "The user cannot be found because it does not exist or may have been deleted."
+                'deleteError',
+                Lang::get('redminportal::messages.user_error_user_not_found')
             );
             return redirect('/admin/users')->withErrors($errors);
         }
@@ -172,7 +196,7 @@ class UserController extends Controller
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'editError',
-                "The user cannot be found because it does not exist or may have been deleted."
+                Lang::get('redminportal::messages.user_error_user_not_found')
             );
             return redirect('/admin/users')->withErrors($errors);
         }
@@ -186,13 +210,23 @@ class UserController extends Controller
 
     public function getDeactivate($sid)
     {
+        $this_user = Auth::user();
+        if ($this_user->id == $sid) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                Lang::get('redminportal::messages.user_error_deactivate_own_account')
+            );
+            return redirect('/admin/users')->withErrors($errors);
+        }
+        
         $user = User::find($sid);
         
         if ($user == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'editError',
-                "The user cannot be found because it does not exist or may have been deleted."
+                Lang::get('redminportal::messages.user_error_user_not_found')
             );
             return redirect('/admin/users')->withErrors($errors);
         }

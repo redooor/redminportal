@@ -2,23 +2,22 @@
 
 use Redooor\Redminportal\App\Models\Category;
 
-class CategoryRelationshipTest extends RedminTestCase
+class CategorySubcategoryTest extends RedminTestCase
 {
-    protected function createNew()
+    private function createNew()
     {
         $model = new Category;
         $model->name = 'This is main category';
         $model->short_description = 'This is the body';
         $model->active = true;
-
         $model->save();
+        
+        return $model;
     }
 
     public function testCreateSubCategory()
     {
-        $this->createNew();
-
-        $model = Category::find(1);
+        $model = $this->createNew();
 
         $new_model = new Category;
         $new_model->name = 'This is sub category';
