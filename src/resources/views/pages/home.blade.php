@@ -31,6 +31,7 @@
                     <h4>Bug fixes:</h4>
                     <ol>
                         <li>User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)</li>
+                        <li>UI: Page and Post cannot change category back to No Category. (issue #145)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>

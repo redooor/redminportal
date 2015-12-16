@@ -102,6 +102,8 @@ class PostController extends Controller
             $post->featured = $featured;
             if ($category_id) {
                 $post->category_id = $category_id;
+            } else {
+                $post->category_id = null;
             }
 
             $post->save();

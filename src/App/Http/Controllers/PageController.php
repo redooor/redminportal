@@ -100,6 +100,8 @@ class PageController extends Controller
             $page->private = $private;
             if ($category_id) {
                 $page->category_id = $category_id;
+            } else {
+                $page->category_id = null;
             }
 
             $page->save();
