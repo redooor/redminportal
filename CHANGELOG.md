@@ -42,6 +42,7 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
 2. UI: Page and Post cannot change category back to No Category. (issue #145)
+3. Fix Tinymce editor not showing Bootstrap components correctly by adding container-fluid class to body.
 
 ## Version 0.3.2 and 0.2.2
 Code clean up, new features and UI improvements.
