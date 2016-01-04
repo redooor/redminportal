@@ -78,6 +78,9 @@ return array(
     'updated' => 'Updated',
     'active' => 'Active',
     'parent_category' => 'Parent Category',
+    'parent_category_note' => 'Categories, unlike tags, can have a hierarchy. '
+        . 'You might have a Music category, and under that have children categories for Jazz and Classical. '
+        . 'Totally optional.',
     'no_parent' => 'No Parent',
     'summary' => 'Summary',
     'priority_order' => 'Priority Order',

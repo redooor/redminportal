@@ -41,6 +41,9 @@
                         @endforeach
                         </ul>
                     </div>
+                    <div class="panel-footer">
+                        <i><small>{{ trans('redminportal::forms.parent_category_note') }}</small></i>
+                    </div>
                 </div>
                 <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
