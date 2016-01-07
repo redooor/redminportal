@@ -80,8 +80,13 @@ class Product extends Model
         $this->coupons()->detach();
         $this->bundles()->detach();
         $this->orders()->detach();
-        $this->variants()->detach();
         $this->variantParents()->detach();
+        
+        // Detach and delete all variants
+        foreach ($this->variants as $variant) {
+            $variant->detach();
+            $variant->delete();
+        }
         
         // Delete all images
         foreach ($this->images as $image) {

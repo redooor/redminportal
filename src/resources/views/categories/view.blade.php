@@ -21,7 +21,7 @@
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <ul class="redooor-hierarchy no-max-height">
+                        <ul class="redmin-hierarchy no-max-height">
                         @foreach ($categories as $item)
                             <li>{!! $item->printCategory(true) !!}</li>
                         @endforeach
@@ -47,7 +47,7 @@
     <script>
         !function ($) {
             $(function(){
-                $(document).on('click', '.redooor-hierarchy a', function(e) {
+                $(document).on('click', '.redmin-hierarchy a', function(e) {
                     e.preventDefault();
                     $('.rdpt-preloader').show();
                     $url = "{{ URL::to('admin/categories/detail') }}";

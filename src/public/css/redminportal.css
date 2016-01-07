@@ -1,7 +1,7 @@
 /*!
  * redminportal v0.3.3
  * Homepage: https://github.com/redooor/redminportal
- * Copyright 2014-2015 Redooor LLP
+ * Copyright 2014-2016 Redooor LLP
  * Licensed under MIT
 */
 
@@ -327,31 +327,6 @@ i {
   -webkit-background-size: contain;
           background-size: contain;
 }
-ul.redooor-hierarchy {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  max-height: 200px;
-  overflow-y: scroll;
-}
-ul.redooor-hierarchy ul {
-  padding-left: 1.2em;
-  list-style: none;
-}
-ul.redooor-hierarchy li {
-  line-height: 1.8;
-  white-space: nowrap;
-}
-ul.redooor-hierarchy a {
-  padding: 0.3em 0.5em;
-}
-ul.redooor-hierarchy a.active {
-  color: #fff;
-  background: #428bca;
-}
-ul.redooor-hierarchy.no-max-height {
-  max-height: none;
-}
 .rdpt-preloader {
   text-align: center;
   padding: 1em;
@@ -438,6 +413,31 @@ ul.redooor-hierarchy.no-max-height {
   .hero-text {
     font-size: 2em;
   }
+}
+ul.redmin-hierarchy {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+ul.redmin-hierarchy ul {
+  padding-left: 1.2em;
+  list-style: none;
+}
+ul.redmin-hierarchy li {
+  line-height: 1.8;
+  white-space: nowrap;
+}
+ul.redmin-hierarchy a {
+  padding: 0.3em 0.5em;
+}
+ul.redmin-hierarchy a.active {
+  color: #fff;
+  background: #428bca;
+}
+ul.redmin-hierarchy.no-max-height {
+  max-height: none;
 }
 .panel.panel-card .panel-heading {
   min-height: 80px;

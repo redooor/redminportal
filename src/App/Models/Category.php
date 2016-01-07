@@ -14,7 +14,7 @@ use Redooor\Redminportal\App\Helpers\RHelper;
  * active           (boolean, default true)
  * options          (text, nullable)
  * order            (integer, default 0)
- * category_id      (integer, unsigned)
+ * category_id      (integer, unsigned, nullable)
  * created_at       (dateTime)
  * updated_at       (dateTime)
  *

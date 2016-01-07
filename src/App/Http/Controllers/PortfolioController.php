@@ -71,10 +71,14 @@ class PortfolioController extends Controller
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
             'name'              => 'required',
             'short_description' => 'required',
-            'category_id'       => 'required',
+            'category_id'       => 'required|numeric|min:1',
         );
+        
+        $messages = [
+            'category_id.min' => 'The category field is required.'
+        ];
 
-        $validation = \Validator::make(\Input::all(), $rules);
+        $validation = \Validator::make(\Input::all(), $rules, $messages);
 
         if ($validation->passes()) {
             $name               = \Input::get('name');

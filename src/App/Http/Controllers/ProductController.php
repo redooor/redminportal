@@ -272,15 +272,19 @@ class ProductController extends Controller
             'short_description' => 'required',
             'price'             => 'numeric',
             'sku'               => 'required|alpha_dash|unique:products,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required',
+            'category_id'       => 'required|numeric|min:1',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
             'weight'            => 'numeric',
             'length'            => 'numeric',
             'width'             => 'numeric',
             'height'            => 'numeric'
         );
+        
+        $messages = [
+            'category_id.min' => 'The category field is required.'
+        ];
 
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules, $messages);
         
         if ($validation->fails()) {
             $redirect_url = 'admin/products/create';

@@ -136,11 +136,15 @@ class ModuleController extends Controller
             'name'              => 'required|unique:modules,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description' => 'required',
             'sku'               => 'required|alpha_dash|unique:modules,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required',
+            'category_id'       => 'required|numeric|min:1',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
         );
+        
+        $messages = [
+            'category_id.min' => 'The category field is required.'
+        ];
 
-        $validation = \Validator::make(\Input::all(), $rules);
+        $validation = \Validator::make(\Input::all(), $rules, $messages);
 
         if ($validation->passes()) {
             $name               = \Input::get('name');

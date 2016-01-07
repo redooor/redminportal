@@ -38,6 +38,7 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 5. Add getTotaldiscount method to Order. (issue #142)
 6. Improved Tinymce editor to match RedminPortal look and feel.
 7. Updated Tinymce to version 4.3.2.
+8. Create Category Select reusable form (issue #130)
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
