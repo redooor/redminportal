@@ -8,10 +8,17 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PostController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
         $posts = Post::orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->paginate($this->perpage);
 
         return view('redminportal::posts/view')->with('posts', $posts);
     }

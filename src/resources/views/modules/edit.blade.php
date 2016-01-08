@@ -223,6 +223,10 @@
                     $selected_val = $('#category_id').val();
                     $('#media-wrapper').empty().load('../editmedias/' + $selected_val + '/' + {{ $module->id }});
                 }
+                loadMedia(); // Initiate media list on load
+                $(document).on('click', '.redmin-hierarchy li', function() {
+                    loadMedia(); // Load media list on category change
+                });
             })
         }(window.jQuery);
     </script>

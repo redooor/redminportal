@@ -7,7 +7,12 @@ use Redooor\Redminportal\App\Models\Group;
 
 class UserController extends Controller
 {
-    private $perpage = 50;
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
     
     public function getIndex()
     {

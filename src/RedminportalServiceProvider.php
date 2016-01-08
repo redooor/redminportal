@@ -40,7 +40,8 @@ class RedminportalServiceProvider extends ServiceProvider
             __DIR__.'/config/menu.php' => config_path('vendor/redooor/redminportal/menu.php'),
             __DIR__.'/config/translation.php' => config_path('vendor/redooor/redminportal/translation.php'),
             __DIR__.'/config/auth.php' => config_path('vendor/redooor/redminportal/auth.php'),
-            __DIR__.'/config/tinymce.php' => config_path('vendor/redooor/redminportal/tinymce.php')
+            __DIR__.'/config/tinymce.php' => config_path('vendor/redooor/redminportal/tinymce.php'),
+            __DIR__.'/config/pagination.php' => config_path('vendor/redooor/redminportal/pagination.php')
         ], 'config');
         
         // Publish your migrations
@@ -79,6 +80,7 @@ class RedminportalServiceProvider extends ServiceProvider
         $this->registerResources('menu', 'redminportal::menu');
         $this->registerResources('translation', 'redminportal::translation');
         $this->registerResources('tinymce', 'redminportal::tinymce');
+        $this->registerResources('pagination', 'redminportal::pagination');
         
         // Change Authentication model
         $this->registerResources('auth', 'auth');

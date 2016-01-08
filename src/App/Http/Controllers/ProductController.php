@@ -17,12 +17,14 @@ class ProductController extends Controller
     protected $model;
     private $weight_units;
     private $volume_units;
+    private $perpage;
 
     public function __construct(Product $product)
     {
         $this->model = $product;
         $this->weight_units = Weight::getUnits();
         $this->volume_units = Volume::getUnits();
+        $this->perpage = config('redminportal::pagination.size');
     }
 
     public function getIndex()
@@ -36,7 +38,7 @@ class ProductController extends Controller
                       ->whereRaw('product_variant.variant_id = products.id');
             })
             ->orderBy('name')
-            ->paginate(20);
+            ->paginate($this->perpage);
 
         return view('redminportal::products/view')->with('products', $products);
     }

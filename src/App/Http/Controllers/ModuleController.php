@@ -15,9 +15,18 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
-        $modules = Module::orderBy('category_id')->orderBy('name')->paginate(20);
+        $modules = Module::orderBy('category_id')
+            ->orderBy('name')
+            ->paginate($this->perpage);
 
         return \View::make('redminportal::modules/view')->with('modules', $modules);
     }

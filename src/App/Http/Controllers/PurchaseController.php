@@ -6,9 +6,16 @@ use Redooor\Redminportal\App\Models\Pricelist;
 
 class PurchaseController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
-        $purchases = UserPricelist::orderBy('created_at', 'desc')->paginate(20);
+        $purchases = UserPricelist::orderBy('created_at', 'desc')->paginate($this->perpage);
 
         return view('redminportal::purchases/view')->with('purchases', $purchases);
     }

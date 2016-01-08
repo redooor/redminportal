@@ -11,9 +11,19 @@ use \GetId3\GetId3Core as GetId3;
 
 class MediaController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
-        $medias = Media::orderBy('created_at', 'desc')->orderBy('category_id')->orderBy('name')->paginate(20);
+        $medias = Media::orderBy('created_at', 'desc')
+            ->orderBy('category_id')
+            ->orderBy('name')
+            ->paginate($this->perpage);
 
         return view('redminportal::medias/view')->with('medias', $medias);
     }

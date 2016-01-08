@@ -5,9 +5,18 @@ use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class MembershipController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
-        $memberships = Membership::orderBy('rank')->orderBy('name')->paginate(20);
+        $memberships = Membership::orderBy('rank')
+            ->orderBy('name')
+            ->paginate($this->perpage);
 
         return view('redminportal::memberships/view')->with('memberships', $memberships);
     }

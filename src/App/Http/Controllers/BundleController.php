@@ -12,12 +12,19 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
         $sortBy = 'name';
         $orderBy = 'asc';
         
-        $bundles = Bundle::orderBy($sortBy, $orderBy)->paginate(20);
+        $bundles = Bundle::orderBy($sortBy, $orderBy)->paginate($this->perpage);
 
         return view('redminportal::bundles/view')
             ->with('bundles', $bundles)
@@ -326,7 +333,7 @@ class BundleController extends Controller
             $orderBy = 'asc';
         }
         
-        $bundles = Bundle::orderBy($sortBy, $orderBy)->paginate(20);
+        $bundles = Bundle::orderBy($sortBy, $orderBy)->paginate($this->perpage);
 
         return view('redminportal::bundles/view')
             ->with('bundles', $bundles)

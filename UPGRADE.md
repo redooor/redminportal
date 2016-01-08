@@ -34,6 +34,14 @@ As a general rule, do not save any customed files inside `public/vendor/redooor/
 
     php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
     
+### Pagination Config file
+
+We've moved the default pagination size for all pages to a config file `src/config/pagination.php`.
+
+Copy the file `src/config/pagination.php` to your root folder's `config/vendor/redooor/redminportal/pagination.php`.
+
+You can change the value to any desired number to be the pagination size. The default is 50.
+
 ## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 
 New features and UI improvements.

@@ -17,6 +17,7 @@
                         <li>Added reusable partial templates for Modal Window and Language selector tab. (issue #130)</li>
                         <li>Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)</li>
                         <li>Allow Tinymce content to follow front end CSS. (issue #143)</li>
+                        <li>Moved pagination to config file so developer can set the default pagingation size. (issue #121)</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -28,6 +29,8 @@
                         <li>Improved Tinymce editor to match RedminPortal look and feel.</li>
                         <li>Updated Tinymce to version 4.3.2.</li>
                         <li>Create Category Select reusable form (issue #130)</li>
+                        <li>Rearranged menu to push User Management to bottom.</li>
+                        <li>Increase default pagination to 50. (issue #121)</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
@@ -35,6 +38,7 @@
                         <li>UI: Page and Post cannot change category back to No Category. (issue #145)</li>
                         <li>Fix Tinymce editor not showing Bootstrap components correctly by adding container-fluid class to body.</li>
                         <li>Fix error message when deleting Category in used. Deleting Category will delete all related data. (issue #135)</li>
+                        <li>Fix Module on change category doesn't load media. (issue #150)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>

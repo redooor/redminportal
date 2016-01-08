@@ -29,6 +29,7 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 2. Added reusable partial templates for Modal Window and Language selector tab. (issue #130)
 3. Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)
 4. Allow Tinymce content to follow front end CSS. (issue #143)
+5. Moved pagination to config file so developer can set the default pagingation size. (issue #121)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)
@@ -39,12 +40,15 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 6. Improved Tinymce editor to match RedminPortal look and feel.
 7. Updated Tinymce to version 4.3.2.
 8. Create Category Select reusable form (issue #130)
+9. Rearranged menu to push User Management to bottom.
+10. Increase default pagination to 50. (issue #121)
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
 2. UI: Page and Post cannot change category back to No Category. (issue #145)
 3. Fix Tinymce editor not showing Bootstrap components correctly by adding container-fluid class to body.
 4. Fix error message when deleting Category in used. Deleting Category will delete all related data. (issue #135)
+5. Fix Module on change category doesn't load media. (issue #150)
 
 ## Version 0.3.2 and 0.2.2
 Code clean up, new features and UI improvements.

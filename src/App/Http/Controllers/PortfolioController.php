@@ -8,11 +8,18 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PortfolioController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
         $portfolios = Portfolio::orderBy('category_id')
             ->orderBy('name')
-            ->paginate(20);
+            ->paginate($this->perpage);
 
         return view('redminportal::portfolios/view')->with('portfolios', $portfolios);
     }

@@ -6,9 +6,16 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class AnnouncementController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
-        $announcements = Announcement::paginate(20);
+        $announcements = Announcement::paginate($this->perpage);
         
         return view('redminportal::announcements/view')->with('announcements', $announcements);
     }

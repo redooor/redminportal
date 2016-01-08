@@ -10,9 +10,16 @@ use DateTime;
 
 class PromotionController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
-        $promotions = Promotion::paginate(20);
+        $promotions = Promotion::paginate($this->perpage);
         
         return view('redminportal::promotions/view')->with('promotions', $promotions);
     }

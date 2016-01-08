@@ -4,12 +4,19 @@ use Redooor\Redminportal\App\Models\Group;
 
 class GroupController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
         $sortBy = 'name';
         $orderBy = 'asc';
         
-        $groups = Group::orderBy($sortBy, $orderBy)->paginate(20);
+        $groups = Group::orderBy($sortBy, $orderBy)->paginate($this->perpage);
 
         return view('redminportal::groups/view')
             ->with('sortBy', $sortBy)
@@ -198,7 +205,7 @@ class GroupController extends Controller
             $orderBy = 'asc';
         }
 
-        $groups = Group::orderBy($sortBy, $orderBy)->paginate(20);
+        $groups = Group::orderBy($sortBy, $orderBy)->paginate($this->perpage);
 
         return view('redminportal::groups/view')
             ->with('sortBy', $sortBy)

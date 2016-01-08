@@ -4,9 +4,16 @@ use Redooor\Redminportal\App\Models\Mailinglist;
 
 class MailinglistController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
-        $mailinglists = Mailinglist::orderBy('email')->paginate(20);
+        $mailinglists = Mailinglist::orderBy('email')->paginate($this->perpage);
 
         return view('redminportal::mailinglists/view')
             ->with('sortBy', 'email')
@@ -35,8 +42,8 @@ class MailinglistController extends Controller
         if ($orderBy != 'asc' && $orderBy != 'desc') {
             $orderBy = 'asc';
         }
-
-        $mailinglists = Mailinglist::orderBy($sortBy, $orderBy)->paginate(20);
+        
+        $mailinglists = Mailinglist::orderBy($sortBy, $orderBy)->paginate($this->perpage);
 
         return view('redminportal::mailinglists/view')
             ->with('sortBy', $sortBy)

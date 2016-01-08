@@ -8,12 +8,19 @@ use Redooor\Redminportal\App\Models\Bundle;
 
 class CouponController extends Controller
 {
+    private $perpage;
+    
+    public function __construct()
+    {
+        $this->perpage = config('redminportal::pagination.size');
+    }
+    
     public function getIndex()
     {
         $sortBy = 'start_date';
         $orderBy = 'desc';
         
-        $coupons = Coupon::orderBy($sortBy, $orderBy)->paginate(20);
+        $coupons = Coupon::orderBy($sortBy, $orderBy)->paginate($this->perpage);
 
         return view('redminportal::coupons/view')
             ->with('coupons', $coupons)
@@ -332,7 +339,7 @@ class CouponController extends Controller
             $orderBy = 'asc';
         }
         
-        $coupons = Coupon::orderBy($sortBy, $orderBy)->paginate(20);
+        $coupons = Coupon::orderBy($sortBy, $orderBy)->paginate($this->perpage);
 
         return view('redminportal::coupons/view')
             ->with('coupons', $coupons)
