@@ -34,6 +34,7 @@
                         <li>User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)</li>
                         <li>UI: Page and Post cannot change category back to No Category. (issue #145)</li>
                         <li>Fix Tinymce editor not showing Bootstrap components correctly by adding container-fluid class to body.</li>
+                        <li>Fix error message when deleting Category in used. Deleting Category will delete all related data. (issue #135)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>
