@@ -17,7 +17,7 @@
                         <li>Added reusable partial templates for Modal Window and Language selector tab. (issue #130)</li>
                         <li>Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)</li>
                         <li>Allow Tinymce content to follow front end CSS. (issue #143)</li>
-                        <li>Moved pagination to config file so developer can set the default pagingation size. (issue #121)</li>
+                        <li>Moved pagination to config file so developer can set the default pagination size. (issue #121)</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
