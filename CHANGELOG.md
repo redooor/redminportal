@@ -30,6 +30,7 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 3. Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)
 4. Allow Tinymce content to follow front end CSS. (issue #143)
 5. Moved pagination to config file so developer can set the default pagination size. (issue #121)
+6. Added Sorting capability for Orders page (issue #15).
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)
@@ -42,6 +43,9 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 8. Create Category Select reusable form (issue #130)
 9. Rearranged menu to push User Management to bottom.
 10. Increase default pagination to 50. (issue #121)
+11. Introduced SorterController trait to reduce code for sortable pages.
+12. Introduced partial Blade template for sortable header.
+13. Overall Line count decreased from 23031 to 22805 with trait and partial template.
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)

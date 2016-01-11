@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Input;
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Bundle;
 use Redooor\Redminportal\App\Models\Product;
@@ -12,24 +13,36 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
 {
-    private $perpage;
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
     
-    public function __construct()
+    use SorterController;
+    
+    public function __construct(Bundle $model)
     {
+        $this->model = $model;
+        $this->sortBy = 'name';
+        $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model;
+        $this->sort_success_view = 'redminportal::bundles.view';
+        $this->sort_fail_redirect = 'admin/bundles';
     }
     
     public function getIndex()
     {
-        $sortBy = 'name';
-        $orderBy = 'asc';
+        $models = Bundle::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
         
-        $bundles = Bundle::orderBy($sortBy, $orderBy)->paginate($this->perpage);
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return view('redminportal::bundles/view')
-            ->with('bundles', $bundles)
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy);
+        return view('redminportal::bundles/view', $data);
     }
     
     public function getCreate()
@@ -309,35 +322,5 @@ class BundleController extends Controller
         $bundle->delete();
 
         return redirect('admin/bundles');
-    }
-    
-    public function getSort($sortBy = 'create_at', $orderBy = 'desc')
-    {
-        $inputs = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy
-        );
-        
-        $rules = array(
-            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
-            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
-        );
-        
-        $validation = \Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/bundles')->withErrors($validation);
-        }
-        
-        if ($orderBy != 'asc' && $orderBy != 'desc') {
-            $orderBy = 'asc';
-        }
-        
-        $bundles = Bundle::orderBy($sortBy, $orderBy)->paginate($this->perpage);
-
-        return view('redminportal::bundles/view')
-            ->with('bundles', $bundles)
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy);
     }
 }

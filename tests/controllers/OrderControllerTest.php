@@ -5,6 +5,8 @@ use Redooor\Redminportal\App\Models\Product;
 
 class OrderControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -13,7 +15,7 @@ class OrderControllerTest extends BaseControllerTest
         $page = '/admin/orders';
         $viewhas = array(
             'singular' => 'order',
-            'plural' => 'orders'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -32,6 +34,9 @@ class OrderControllerTest extends BaseControllerTest
                 'email'          => 'admin@admin.com'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'created_at';
         
         parent::__construct($page, $viewhas, $input);
     }

@@ -24,7 +24,7 @@ class UserController extends Controller
         $data = array(
             'sortBy' => $sortBy,
             'orderBy' => $orderBy,
-            'users' => $users
+            'models' => $users
         );
 
         return view('redminportal::users/view', $data);
@@ -265,7 +265,7 @@ class UserController extends Controller
             $orderBy = 'asc';
         }
         
-        if ($sortBy == 'group') {
+        if ($sortBy == 'groups') {
             $users = User::LeftJoin('users_groups', 'users_groups.user_id', '=', 'users.id')
                 ->LeftJoin('groups', 'groups.id', '=', 'users_groups.group_id')
                 ->select('users.*', 'groups.name')
@@ -278,7 +278,7 @@ class UserController extends Controller
         $data = array(
             'sortBy' => $sortBy,
             'orderBy' => $orderBy,
-            'users' => $users
+            'models' => $users
         );
         
         return view('redminportal::users/view', $data);
@@ -294,8 +294,7 @@ class UserController extends Controller
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if( $validation->fails() )
-        {
+        if ($validation->fails()) {
             return redirect('admin/users')->withErrors($validation)->withInput();
         }
         
@@ -331,8 +330,7 @@ class UserController extends Controller
 
         $validation = \Validator::make($inputs, $rules);
 
-        if( $validation->fails() )
-        {
+        if ($validation->fails()) {
             return redirect('admin/users')->withErrors($validation)->with('search', $search);
         }
         
@@ -354,7 +352,7 @@ class UserController extends Controller
         $data = array(
             'sortBy' => $sortBy,
             'orderBy' => $orderBy,
-            'users' => $users,
+            'models' => $users,
             'search' => $search
         );
 
@@ -375,8 +373,7 @@ class UserController extends Controller
 
         $validation = \Validator::make($inputs, $rules);
 
-        if( $validation->fails() )
-        {
+        if ($validation->fails()) {
             return redirect('admin/users')->withErrors($validation)->with('search', $search);
         }
         
@@ -399,7 +396,7 @@ class UserController extends Controller
         $data = array(
             'sortBy' => $sortBy,
             'orderBy' => $orderBy,
-            'users' => $users,
+            'models' => $users,
             'search' => 'group:' . $search
         );
         

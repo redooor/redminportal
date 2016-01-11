@@ -84,9 +84,10 @@ class Product extends Model
         
         // Detach and delete all variants
         foreach ($this->variants as $variant) {
-            $variant->detach();
             $variant->delete();
         }
+        
+        $this->variants()->detach();
         
         // Delete all images
         foreach ($this->images as $image) {

@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
 use Illuminate\Support\ServiceProvider;
+use Redooor\Redminportal\App\Classes\Redminportal;
 
 class RedminportalServiceProvider extends ServiceProvider
 {
@@ -63,13 +64,15 @@ class RedminportalServiceProvider extends ServiceProvider
             require_once $autoloader;
         }
         
+        $this->bindSharedInstances();
+        
         $this->app->register('Illuminate\Html\HtmlServiceProvider');
         $this->app->register('Orchestra\Imagine\ImagineServiceProvider');
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
         
         $this->app->booting(function() {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-            $loader->alias('Redminportal', 'Redooor\Redminportal\Facades\Redminportal');
+            $loader->alias('Redminportal', 'Redooor\Redminportal\App\Facades\Redminportal');
             $loader->alias('Form', 'Illuminate\Html\FormFacade');
             $loader->alias('HTML', 'Illuminate\Html\HtmlFacade');
             $loader->alias('Imagine', 'Orchestra\Imagine\Facade');
@@ -103,5 +106,17 @@ class RedminportalServiceProvider extends ServiceProvider
         }
 
         $this->app['config']->set($setname, $config);
+    }
+    
+    /**
+     * Bind all shared instances.
+     *
+     * @return void
+     */
+    protected function bindSharedInstances()
+    {
+        $this->app->bindShared('redminportal', function($app) {
+            return new Redminportal($app['url']);
+        });
     }
 }

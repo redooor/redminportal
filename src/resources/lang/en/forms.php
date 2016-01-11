@@ -76,6 +76,8 @@ return array(
     'remove_image' => 'Remove',
     'created' => 'Created',
     'updated' => 'Updated',
+    'created_at' => 'Created',
+    'updated_at' => 'Updated',
     'active' => 'Active',
     'parent_category' => 'Parent Category',
     'parent_category_note' => 'Categories, unlike tags, can have a hierarchy. '

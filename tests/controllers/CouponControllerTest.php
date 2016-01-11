@@ -8,6 +8,8 @@ use Redooor\Redminportal\App\Models\Product;
 
 class CouponControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -16,7 +18,7 @@ class CouponControllerTest extends BaseControllerTest
         $page = '/admin/coupons';
         $viewhas = array(
             'singular' => 'coupon',
-            'plural' => 'coupons'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -57,6 +59,9 @@ class CouponControllerTest extends BaseControllerTest
                 'pricelist_id' => array(1)
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'start_date';
         
         parent::__construct($page, $viewhas, $input);
     }

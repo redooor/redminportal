@@ -18,6 +18,7 @@
                         <li>Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)</li>
                         <li>Allow Tinymce content to follow front end CSS. (issue #143)</li>
                         <li>Moved pagination to config file so developer can set the default pagination size. (issue #121)</li>
+                        <li>Added Sorting capability for Orders page (issue #15).</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -31,6 +32,9 @@
                         <li>Create Category Select reusable form (issue #130)</li>
                         <li>Rearranged menu to push User Management to bottom.</li>
                         <li>Increase default pagination to 50. (issue #121)</li>
+                        <li>Introduced SorterController trait to reduce code for sortable pages.</li>
+                        <li>Introduced partial Blade template for sortable header.</li>
+                        <li>Overall Line count decreased from 23031 to 22805 with trait and partial template.</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
