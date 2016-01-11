@@ -27,6 +27,7 @@ return array(
     'no_mailinglist_found' => 'No Mailing List Found',
     'leave_all_blank_to_download_all' => 'Leave the dates empty to download all.',
     'export_to_csv' => 'Export to CSV',
+    'export_to_excel' => 'Export to Excel',
     'select_category_to_load_media' => 'Please select a category to load medias.',
     'no_media_in_this_category' => "There's no media in this category.",
     'allow_user_to_login_this_account' => 'Allow user to log in to this account.',

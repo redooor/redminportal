@@ -39,6 +39,7 @@
                         <li>Fix Tinymce editor not showing Bootstrap components correctly by adding container-fluid class to body.</li>
                         <li>Fix error message when deleting Category in used. Deleting Category will delete all related data. (issue #135)</li>
                         <li>Fix Module on change category doesn't load media. (issue #150)</li>
+                        <li>Click menu overlay to close doesn't work on iPad. (issue #151)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>
