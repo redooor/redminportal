@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Media;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 use Redooor\Redminportal\App\Models\Category;
@@ -11,21 +12,38 @@ use \GetId3\GetId3Core as GetId3;
 
 class MediaController extends Controller
 {
-    private $perpage;
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
     
-    public function __construct()
+    use SorterController;
+    
+    public function __construct(Media $model)
     {
+        $this->model = $model;
+        $this->sortBy = 'created_at';
+        $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('categories', 'medias.category_id', '=', 'categories.id')
+            ->select('medias.*', 'categories.name as category_name');
+        $this->sort_success_view = 'redminportal::medias.view';
+        $this->sort_fail_redirect = 'admin/medias';
     }
     
     public function getIndex()
     {
-        $medias = Media::orderBy('created_at', 'desc')
-            ->orderBy('category_id')
-            ->orderBy('name')
-            ->paginate($this->perpage);
+        $models = Media::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return view('redminportal::medias/view')->with('medias', $medias);
+        return view('redminportal::medias/view', $data);
     }
 
     public function getCreate()

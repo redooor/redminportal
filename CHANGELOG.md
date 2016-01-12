@@ -37,6 +37,12 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
     - Pages
     - Posts
     - Portfolios
+    - Promotions
+    - Products
+    - Memberships
+    - Modules
+    - Medias
+8. Added capability to sort by Category for Bundle. (issue #15)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)

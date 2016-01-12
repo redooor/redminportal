@@ -26,8 +26,14 @@
                                 <li>Pages</li>
                                 <li>Posts</li>
                                 <li>Portfolios</li>
+                                <li>Promotions</li>
+                                <li>Products</li>
+                                <li>Memberships</li>
+                                <li>Modules</li>
+                                <li>Medias</li>
                             </ul>
                         </li>
+                        <li>Added capability to sort by Category for Bundle. (issue #15)</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>

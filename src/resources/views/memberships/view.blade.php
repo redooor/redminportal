@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($memberships) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $memberships->firstItem() . ' to ' . $memberships->lastItem() . ' of ' . $memberships->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 {!! HTML::link('admin/memberships/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
@@ -21,17 +21,17 @@
         </div>
     </div>
 
-    @if (count($memberships) > 0)
+    @if (count($models) > 0)
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>{{ Lang::get('redminportal::forms.rank') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.name') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/memberships', 'rank', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/memberships', 'name', $sortBy, $orderBy) !!}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-            @foreach ($memberships as $membership)
+            @foreach ($models as $membership)
                 <tr>
                     <td>{{ $membership->rank }}</td>
                     <td>{{ $membership->name }}</td>
@@ -57,7 +57,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $memberships->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_membership_found') }}</div>

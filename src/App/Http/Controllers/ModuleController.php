@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use DB;
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Media;
 use Redooor\Redminportal\App\Models\Category;
@@ -15,20 +16,38 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
 {
-    private $perpage;
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
     
-    public function __construct()
+    use SorterController;
+    
+    public function __construct(Module $model)
     {
+        $this->model = $model;
+        $this->sortBy = 'name';
+        $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('categories', 'modules.category_id', '=', 'categories.id')
+            ->select('modules.*', 'categories.name as category_name');
+        $this->sort_success_view = 'redminportal::modules.view';
+        $this->sort_fail_redirect = 'admin/modules';
     }
     
     public function getIndex()
     {
-        $modules = Module::orderBy('category_id')
-            ->orderBy('name')
-            ->paginate($this->perpage);
+        $models = Module::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return \View::make('redminportal::modules/view')->with('modules', $modules);
+        return \View::make('redminportal::modules/view', $data);
     }
 
     public function getMedias($sid)

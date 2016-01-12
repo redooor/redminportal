@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($modules) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $modules->firstItem() . ' to ' . $modules->lastItem() . ' of ' . $modules->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 {!! HTML::link('admin/modules/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
@@ -21,23 +21,23 @@
         </div>
     </div>
 
-    @if (count($modules) > 0)
+    @if (count($models) > 0)
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>{{ Lang::get('redminportal::forms.name') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.sku') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/modules', 'name', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/modules', 'category_name', $sortBy, $orderBy, trans('redminportal::forms.category')) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/modules', 'sku', $sortBy, $orderBy) !!}</th>
                     <th>{{ Lang::get('redminportal::forms.summary') }}</th>
                     <th>{{ Lang::get('redminportal::forms.tags') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.featured') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.active') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.updated') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/modules', 'featured', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/modules', 'active', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/modules', 'updated_at', $sortBy, $orderBy) !!}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-            @foreach ($modules as $module)
+            @foreach ($models as $module)
                 <tr>
                     <td>{{ $module->name }}</td>
                     <td>{{ $module->category->name }}</td>
@@ -62,7 +62,7 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
-                    <td>{{ date('d-M-y', strtotime($module->updated_at)) }}</td>
+                    <td>{{ date('d/m/y h:i A', strtotime($module->updated_at)) }}</td>
                     <td class="table-actions text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
@@ -85,7 +85,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $modules->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_module_found') }}</div>

@@ -27,7 +27,9 @@ class BundleController extends Controller
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
         // For sorting
-        $this->query = $this->model;
+        $this->query = $this->model
+            ->LeftJoin('categories', 'bundles.category_id', '=', 'categories.id')
+            ->select('bundles.*', 'categories.name as category_name');
         $this->sort_success_view = 'redminportal::bundles.view';
         $this->sort_fail_redirect = 'admin/bundles';
     }

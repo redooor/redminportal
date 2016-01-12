@@ -2,6 +2,8 @@
 
 class PromotionControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -10,7 +12,7 @@ class PromotionControllerTest extends BaseControllerTest
         $page = '/admin/promotions';
         $viewhas = array(
             'singular' => 'promotion',
-            'plural' => 'promotions'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -43,6 +45,9 @@ class PromotionControllerTest extends BaseControllerTest
                 'cn_long_description' => 'This is cn long description'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'end_date';
         
         parent::__construct($page, $viewhas, $input);
     }

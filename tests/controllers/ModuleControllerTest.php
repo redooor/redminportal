@@ -7,6 +7,8 @@ use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class ModuleControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -15,7 +17,7 @@ class ModuleControllerTest extends BaseControllerTest
         $page = '/admin/modules';
         $viewhas = array(
             'singular' => 'module',
-            'plural' => 'modules'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -42,6 +44,9 @@ class ModuleControllerTest extends BaseControllerTest
                 'cn_long_description' => 'This is cn long description'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'name';
         
         parent::__construct($page, $viewhas, $input);
     }

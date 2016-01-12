@@ -2,6 +2,8 @@
 
 class MediaControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -10,7 +12,7 @@ class MediaControllerTest extends BaseControllerTest
         $page = '/admin/medias';
         $viewhas = array(
             'singular' => 'media',
-            'plural' => 'medias'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -37,6 +39,9 @@ class MediaControllerTest extends BaseControllerTest
                 'cn_long_description' => 'This is cn long description'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'created_at';
         
         parent::__construct($page, $viewhas, $input);
     }

@@ -25,23 +25,15 @@
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>
-                        {!! Redminportal::html()->sorter('admin/bundles', 'name', $sortBy, $orderBy) !!}
-                    </th>
-                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
-                    <th>
-                        {!! Redminportal::html()->sorter('admin/bundles', 'sku', $sortBy, $orderBy) !!}
-                    </th>
-                    <th>{{ Lang::get('redminportal::forms.price') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'name', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'category_name', $sortBy, $orderBy, trans('redminportal::forms.category')) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'sku', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'price', $sortBy, $orderBy) !!}</th>
                     <th>{{ Lang::get('redminportal::forms.total_value') }}</th>
                     <th>{{ Lang::get('redminportal::forms.summary') }}</th>
                     <th>{{ Lang::get('redminportal::forms.tags') }}</th>
-                    <th>
-                        {!! Redminportal::html()->sorter('admin/bundles', 'featured', $sortBy, $orderBy) !!}
-                    </th>
-                    <th>
-                        {!! Redminportal::html()->sorter('admin/bundles', 'active', $sortBy, $orderBy) !!}
-                    </th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'featured', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'active', $sortBy, $orderBy) !!}</th>
                     <th></th>
                 </tr>
             </thead>

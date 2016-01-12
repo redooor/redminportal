@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($medias) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $medias->firstItem() . ' to ' . $medias->lastItem() . ' of ' . $medias->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 <a id="rd-media-get-all-duration" class="btn btn-default btn-sm">{{ Lang::get('redminportal::buttons.get_durations') }}</a>
                 {!! HTML::link('admin/medias/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
@@ -22,24 +22,24 @@
         </div>
     </div>
 
-    @if (count($medias) > 0)
+    @if (count($models) > 0)
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>{{ Lang::get('redminportal::forms.name') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.sku') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/medias', 'name', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/medias', 'category_name', $sortBy, $orderBy, trans('redminportal::forms.category')) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/medias', 'sku', $sortBy, $orderBy) !!}</th>
                     <th>{{ Lang::get('redminportal::forms.summary') }}</th>
                     <th>{{ Lang::get('redminportal::forms.tags') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.featured') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.active') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/medias', 'featured', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/medias', 'active', $sortBy, $orderBy) !!}</th>
                     <th>{{ Lang::get('redminportal::forms.media_file') }}</th>
                     <th>{{ Lang::get('redminportal::forms.duration') }}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-            @foreach ($medias as $media)
+            @foreach ($models as $media)
                 <tr>
                     <td>{{ $media->name }}</td>
                     <td>{{ $media->category->name }}</td>
@@ -101,7 +101,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $medias->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_media_found') }}</div>
