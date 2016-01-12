@@ -2,6 +2,8 @@
 
 class PortfolioControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -10,7 +12,7 @@ class PortfolioControllerTest extends BaseControllerTest
         $page = '/admin/portfolios';
         $viewhas = array(
             'singular' => 'portfolio',
-            'plural' => 'portfolios'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -35,6 +37,9 @@ class PortfolioControllerTest extends BaseControllerTest
                 'cn_long_description' => 'This is cn long description'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'created_at';
         
         parent::__construct($page, $viewhas, $input);
     }

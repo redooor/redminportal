@@ -4,6 +4,8 @@ use Redooor\Redminportal\App\Models\Announcement;
 
 class AnnouncementControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -12,7 +14,7 @@ class AnnouncementControllerTest extends BaseControllerTest
         $page = '/admin/announcements';
         $viewhas = array(
             'singular' => 'announcement',
-            'plural' => 'announcements'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -27,6 +29,9 @@ class AnnouncementControllerTest extends BaseControllerTest
                 'private'   => false
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'created_at';
         
         parent::__construct($page, $viewhas, $input);
     }

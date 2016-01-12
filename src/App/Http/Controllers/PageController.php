@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Page;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -8,18 +9,38 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PageController extends Controller
 {
-    private $perpage;
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
     
-    public function __construct()
+    use SorterController;
+    
+    public function __construct(Page $model)
     {
+        $this->model = $model;
+        $this->sortBy = 'created_at';
+        $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('categories', 'pages.category_id', '=', 'categories.id')
+            ->select('pages.*', 'categories.name as category_name');
+        $this->sort_success_view = 'redminportal::pages.view';
+        $this->sort_fail_redirect = 'admin/pages';
     }
     
     public function getIndex()
     {
-        $pages = Page::orderBy('created_at', 'desc')->paginate($this->perpage);
-
-        return view('redminportal::pages/view')->with('pages', $pages);
+        $models = Page::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
+        
+        return view('redminportal::pages/view', $data);
     }
 
     public function getCreate()

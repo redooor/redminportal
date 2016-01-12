@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Portfolio;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -8,20 +9,38 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PortfolioController extends Controller
 {
-    private $perpage;
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
     
-    public function __construct()
+    use SorterController;
+    
+    public function __construct(Portfolio $model)
     {
+        $this->model = $model;
+        $this->sortBy = 'created_at';
+        $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('categories', 'portfolios.category_id', '=', 'categories.id')
+            ->select('portfolios.*', 'categories.name as category_name');
+        $this->sort_success_view = 'redminportal::portfolios.view';
+        $this->sort_fail_redirect = 'admin/portfolios';
     }
     
     public function getIndex()
     {
-        $portfolios = Portfolio::orderBy('category_id')
-            ->orderBy('name')
-            ->paginate($this->perpage);
+        $models = Portfolio::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return view('redminportal::portfolios/view')->with('portfolios', $portfolios);
+        return view('redminportal::portfolios/view', $data);
     }
 
     public function getCreate()

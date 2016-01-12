@@ -18,7 +18,16 @@
                         <li>Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)</li>
                         <li>Allow Tinymce content to follow front end CSS. (issue #143)</li>
                         <li>Moved pagination to config file so developer can set the default pagination size. (issue #121)</li>
-                        <li>Added Sorting capability for Orders page (issue #15).</li>
+                        <li>Usable Redminportal Facade for HTML helpers.</li>
+                        <li>Added Sorting capability for (issue #15):
+                            <ul>
+                                <li>Orders</li>
+                                <li>Announcements</li>
+                                <li>Pages</li>
+                                <li>Posts</li>
+                                <li>Portfolios</li>
+                            </ul>
+                        </li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>

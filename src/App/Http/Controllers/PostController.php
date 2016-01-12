@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Post;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -8,19 +9,38 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PostController extends Controller
 {
-    private $perpage;
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
     
-    public function __construct()
+    use SorterController;
+    
+    public function __construct(Post $model)
     {
+        $this->model = $model;
+        $this->sortBy = 'created_at';
+        $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('categories', 'posts.category_id', '=', 'categories.id')
+            ->select('posts.*', 'categories.name as category_name');
+        $this->sort_success_view = 'redminportal::posts.view';
+        $this->sort_fail_redirect = 'admin/posts';
     }
     
     public function getIndex()
     {
-        $posts = Post::orderBy('created_at', 'desc')
-            ->paginate($this->perpage);
+        $models = Post::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return view('redminportal::posts/view')->with('posts', $posts);
+        return view('redminportal::posts/view', $data);
     }
 
     public function getCreate()

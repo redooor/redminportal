@@ -30,7 +30,13 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 3. Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)
 4. Allow Tinymce content to follow front end CSS. (issue #143)
 5. Moved pagination to config file so developer can set the default pagination size. (issue #121)
-6. Added Sorting capability for Orders page (issue #15).
+6. Usable Redminportal Facade for HTML helpers.
+7. Added Sorting capability for (issue #15):
+    - Orders
+    - Announcements
+    - Pages
+    - Posts
+    - Portfolios
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)

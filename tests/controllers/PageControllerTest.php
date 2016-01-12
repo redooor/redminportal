@@ -4,6 +4,8 @@ use Redooor\Redminportal\App\Models\Page;
 
 class PageControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -12,7 +14,7 @@ class PageControllerTest extends BaseControllerTest
         $page = '/admin/pages';
         $viewhas = array(
             'singular' => 'page',
-            'plural' => 'pages'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -37,6 +39,9 @@ class PageControllerTest extends BaseControllerTest
                 'cn_content' => 'This is cn content'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'created_at';
         
         parent::__construct($page, $viewhas, $input);
     }
