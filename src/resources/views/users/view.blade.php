@@ -53,7 +53,7 @@
                         {!! Redminportal::html()->sorter('admin/users', 'last_name', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        {!! Redminportal::html()->sorter('admin/users', 'groups', $sortBy, $orderBy) !!}
+                        {!! Redminportal::html()->sorter('admin/users', 'group_name', $sortBy, $orderBy, trans('redminportal::forms.groups')) !!}
                     </th>
                     <th>
                         {!! Redminportal::html()->sorter('admin/users', 'activated', $sortBy, $orderBy) !!}

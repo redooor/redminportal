@@ -50,6 +50,7 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
     - /api/tag: Get JSON list of tags with id and name
     - /api/tag/name: Get JSON list of tags with name only
     - Check [list of API on github Wiki page](https://github.com/redooor/redminportal/wiki/Public-API)
+11. Able to add user to multiple groups. (issue #53)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)

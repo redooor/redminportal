@@ -47,6 +47,7 @@
                                 <li>Check <a href="https://github.com/redooor/redminportal/wiki/Public-API">list of API on github Wiki page</a></li>
                             </ul>
                         </li>
+                        <li>Able to add user to multiple groups. (issue #53)</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>

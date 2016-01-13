@@ -43,20 +43,17 @@
                         {!! Form::label('password_confirmation', Lang::get('redminportal::forms.reenter_password')) !!}
                         {!! Form::password('password_confirmation', array('class' => 'form-control')) !!}
                     </div>
-
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{ Lang::get('redminportal::forms.role') }}</h4>
+                </div>
+                <div class="panel-body">
                     <div class="form-group">
-                        {!! Form::label('role', Lang::get('redminportal::forms.role')) !!}
-                        {!! Form::select('role', $roles, $group->id, array('class' => 'form-control')) !!}
-                    </div>
-                    <div class="well">
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label for="activated-checker">
-                                    {!! Form::checkbox('activated', 'yes', $user->activated, array('id' => 'activated-checker')) !!} {{ Lang::get('redminportal::forms.activate_now') }}
-                                </label>
-                            </div>
-                            <p class="help-block">{{ Lang::get('redminportal::messages.allow_user_to_login_this_account') }}</p>
-                        </div>
+                        {!! Form::select('role', $roles, $groups, array('class' => 'form-control', 'id' => 'role', 'multiple', 'name' => 'role[]')) !!}
+                        <p class="help-block">{{ Lang::get('redminportal::messages.allow_select_multiple') }}</p>
+                        <p class="help-block">{{ Lang::get('redminportal::messages.how_to_deselect_multiple') }}</p>
                     </div>
                 </div>
             </div>
@@ -66,6 +63,16 @@
                 <div class='form-actions'>
                     {!! HTML::link('admin/users', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
                     {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary btn-sm pull-right')) !!}
+                </div>
+            </div>
+            <div class="well">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label for="activated-checker">
+                            {!! Form::checkbox('activated', 'yes', $user->activated, array('id' => 'activated-checker')) !!} {{ Lang::get('redminportal::forms.activate_now') }}
+                        </label>
+                    </div>
+                    <p class="help-block">{{ Lang::get('redminportal::messages.allow_user_to_login_this_account') }}</p>
                 </div>
             </div>
         </div>
