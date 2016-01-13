@@ -43,6 +43,13 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
     - Modules
     - Medias
 8. Added capability to sort by Category for Bundle. (issue #15)
+9. Improve Tagging (issue #147)
+    - Added Typeahead for tag suggestion
+    - Use label visual for tags
+10. Added API for retrieving tag names
+    - /api/tag: Get JSON list of tags with id and name
+    - /api/tag/name: Get JSON list of tags with name only
+    - Check [list of API on github Wiki page](https://github.com/redooor/redminportal/wiki/Public-API)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)

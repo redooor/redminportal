@@ -156,4 +156,5 @@
     @parent
     <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
     @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tagsinput')
 @stop

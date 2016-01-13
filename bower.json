@@ -35,6 +35,7 @@
     "jquery-ui": "~1.11.2",
     "eonasdan-bootstrap-datetimepicker": "~4.0.0",
     "redmaterials": "master",
-    "font-awesome": "~4.4.0"
+    "font-awesome": "~4.4.0",
+    "typeahead.js": "~0.11.1"
   }
 }

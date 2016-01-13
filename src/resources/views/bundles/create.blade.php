@@ -175,4 +175,5 @@
         }(window.jQuery);
     </script>
     @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tagsinput')
 @stop

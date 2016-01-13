@@ -34,6 +34,19 @@
                             </ul>
                         </li>
                         <li>Added capability to sort by Category for Bundle. (issue #15)</li>
+                        <li>Improve Tagging (issue #147)
+                            <ul>
+                                <li>Added Typeahead for tag suggestion</li>
+                                <li>Use label visual for tags</li>
+                            </ul>
+                        </li>
+                        <li>Added API for retrieving tag names
+                            <ul>
+                                <li>/api/tag: Get JSON list of tags with id and name</li>
+                                <li>/api/tag/name: Get JSON list of tags with name only</li>
+                                <li>Check <a href="https://github.com/redooor/redminportal/wiki/Public-API">list of API on github Wiki page</a></li>
+                            </ul>
+                        </li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
