@@ -12,6 +12,7 @@ env:
     - setup=basic
 
 matrix:
+  fast_finish: true
   include:
     - php: 5.5.9
       env: setup=lowest
@@ -27,7 +28,8 @@ install:
 
 script:
   - vendor/bin/phpunit tests/classes
-  - vendor/bin/phpunit tests/controllers
+  - vendor/bin/phpunit tests/controllers/batch1
+  - vendor/bin/phpunit tests/controllers/batch2
   - vendor/bin/phpunit tests/helpers
   - vendor/bin/phpunit tests/models
   - vendor/bin/phpunit tests/relationships

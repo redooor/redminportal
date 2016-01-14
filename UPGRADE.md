@@ -4,6 +4,22 @@ Version 0.2 and 0.3 are developed in parallel. The only difference between them 
 
 ## Upgrading to v0.3.3/v0.2.3 from v0.3.2/v0.2.2
 
+### Run Dump-Autoload
+
+Due to the additions of HTML and Form helpers, you need to run the following command:
+
+For Users
+```shell
+    cd <your_app_root>
+    composer dump-autoload
+```
+
+For Contributors
+```shell
+    cd <your_app_root>/packages/redooor/redminportal
+    composer dump-autoload
+```
+
 ### Migrations
 
 Version 0.3.3 and v0.2.3 introduced some new database tables.

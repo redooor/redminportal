@@ -1,5 +1,7 @@
 # Change log
 
+[![Build Status](https://travis-ci.org/redooor/redminportal.svg?branch=develop)](https://travis-ci.org/redooor/redminportal)
+
 * [Version 0.3.3 and 0.2.3](#version-033-and-023)
 * [Version 0.3.2 and 0.2.2](#version-032-and-022)
 * [Version 0.3.1 and 0.2.1](#version-031-and-021)
