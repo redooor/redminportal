@@ -9,8 +9,8 @@
                     <h2><u>Change log</u></h2>
                     <p>Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.</p>
                     <h3>Version 0.3.3 and 0.2.3</h3>
-                    <p>Code clean up, new features and UI improvements.</p>
-                    <p>This update introduces some new tables. Refer to UPGRADE.md for the upgrading instructions.</p>
+                    <p>This update introduces some new tables and lots of changes.</p>
+                    <p><strong>IMPORTANT:</strong> Refer to UPGRADE.md for the upgrading instructions.</p>
                     <h4>New features:</h4>
                     <ol>
                         <li>Added product variations. You can now add variations to each product. (issue #125)</li>
@@ -48,6 +48,13 @@
                             </ul>
                         </li>
                         <li>Able to add user to multiple groups. (issue #53)</li>
+                        <li>Introduced HTML and Form helpers
+                            <ul>
+                                <li>HTML and Form helpers provide a shortcut to partial views.</li>
+                                <li>Check <a href="https://github.com/redooor/redminportal/wiki/HTML-and-Form-Helpers">list of helpers on github Wiki page</a></li>
+                            </ul>
+                        </li>
+                        <li>Added tag to Page and Post (issue #146)</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>

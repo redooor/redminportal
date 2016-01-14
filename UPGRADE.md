@@ -42,6 +42,20 @@ Copy the file `src/config/pagination.php` to your root folder's `config/vendor/r
 
 You can change the value to any desired number to be the pagination size. The default is 50.
 
+### Relocation of Redminportal Facade
+
+This shouldn't really affect your existing installation because previously it was not working.
+
+The facade file has been moved from
+
+`src/facades/Redminportal.php`
+
+to
+
+`src/App/Facades/Redminportal.php`
+
+It is important to note the uppercase in Facades because without it autoloading will fail in most Linux and Mac OS environment.
+
 ## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 
 New features and UI improvements.

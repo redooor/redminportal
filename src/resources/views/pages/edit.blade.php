@@ -35,6 +35,8 @@
                     'select_category_selected_id' => $page->category_id,
                     'select_category_categories' => $categories
                 ])
+                {{-- Load Tag form --}}
+                {!! Redminportal::form()->tagger($tagString) !!}
                 <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>

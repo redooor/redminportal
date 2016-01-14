@@ -40,6 +40,7 @@
                     name: 'tagnames',
                     displayKey: 'name',
                     valueKey: 'name',
+                    limit: 10,
                     source: tagnames.ttAdapter()
                 }
             });

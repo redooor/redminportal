@@ -20,9 +20,9 @@ Version 0.2 and 0.3 are developed in parallel. The only difference between them 
 Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
 
 ## Version 0.3.3 and 0.2.3
-Code clean up, new features and UI improvements.
+This update introduces some new tables and lots of changes.
 
-This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+**IMPORTANT:** Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
 ### New features:
 1. Added product variations. You can now add variations to each product. (issue #125)
@@ -51,6 +51,10 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
     - /api/tag/name: Get JSON list of tags with name only
     - Check [list of API on github Wiki page](https://github.com/redooor/redminportal/wiki/Public-API)
 11. Able to add user to multiple groups. (issue #53)
+12. Introduced HTML and Form helpers
+    - HTML and Form helpers provide a shortcut to partial views.
+    - Check [list of helpers on github Wiki page](https://github.com/redooor/redminportal/wiki/HTML-and-Form-Helpers)
+13. Added tag to Page and Post (issue #146)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)

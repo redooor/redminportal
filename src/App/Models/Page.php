@@ -35,6 +35,11 @@ class Page extends Model
         return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
     }
     
+    public function tags()
+    {
+        return $this->morphToMany('Redooor\Redminportal\App\Models\Tag', 'taggable');
+    }
+    
     public function delete()
     {
         // Delete all images

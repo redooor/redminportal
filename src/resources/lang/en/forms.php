@@ -102,6 +102,7 @@ return array(
     'browse_file' => 'Browse...',
     'existing_file' => 'Existing File',
     'tags' => 'Tags',
+    'tags_footnote' => 'hint: press enter or comma to confirm tag',
     'media_file' => 'Media File',
     'duration' => 'Duration',
     'membership' => 'Membership',
