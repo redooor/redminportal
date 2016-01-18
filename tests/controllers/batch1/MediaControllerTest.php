@@ -101,37 +101,66 @@ class MediaControllerTest extends BaseControllerTest
         $this->assertRedirectedTo('/admin/medias/create');
         $this->assertSessionHasErrors();
     }
-
-    public function testUploadFileSuccess()
+    
+    /**
+     * Test (Pass): upload file pass for .pdf
+     */
+    public function testUploadFilePassPdf()
     {
         $this->testStoreCreatePass(); // Create for upload
         
-        foreach ($this->files as $item) {
-            // Test Upload
-            $_FILES = array(
-                'file' => array(
-                    'name' => $item['name'],
-                    'type' => $item['type'],
-                    'size' => $item['size'],
-                    'tmp_name' => $this->path . $item['name'],
-                    'error' => 0,
-                    'mock' => true,
-                    'pathinfo' => $this->path
-                )
-            );
+        $this->runSubtestUpload($this->files[0]);
+    }
+    
+    /**
+     * Test (Pass): upload file pass for .m4a
+     */
+    public function testUploadFilePassM4a()
+    {
+        $this->testStoreCreatePass(); // Create for upload
+        
+        $this->runSubtestUpload($this->files[1]);
+    }
+    
+    /**
+     * Test (Pass): upload file pass for .pdf
+     */
+    public function testUploadFilePassMp3()
+    {
+        $this->testStoreCreatePass(); // Create for upload
+        
+        $this->runSubtestUpload($this->files[2]);
+    }
+    
+    /**
+     * Run upload test
+     **/
+    private function runSubtestUpload($item)
+    {
+        // Test Upload
+        $_FILES = array(
+            'file' => array(
+                'name' => $item['name'],
+                'type' => $item['type'],
+                'size' => $item['size'],
+                'tmp_name' => $this->path . $item['name'],
+                'error' => 0,
+                'mock' => true,
+                'pathinfo' => $this->path
+            )
+        );
 
-            $input = array(
-                'name' => 'This is title'
-            );
+        $input = array(
+            'name' => 'This is title'
+        );
 
-            $this->call('POST', '/admin/medias/upload/1', $input);
+        $this->call('POST', '/admin/medias/upload/1', $input);
 
-            $media = Media::find('1');
-            $this->assertTrue($media->path == $item['name']);
-            $this->assertTrue($media->mimetype == $item['type']);
-            $this->assertTrue($media->options == $item['duration']);
-            
-            unset($_FILES);
-        }
+        $media = Media::find('1');
+        $this->assertTrue($media->path == $item['name']);
+        $this->assertTrue($media->mimetype == $item['type']);
+        $this->assertTrue($media->options == $item['duration']);
+
+        unset($_FILES);
     }
 }

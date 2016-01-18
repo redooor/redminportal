@@ -35,7 +35,9 @@
     "autoload-dev": {
         "classmap": [
             "tests/bases",
-            "tests/RedminTestCase.php"
+            "tests/RedminTestCase.php",
+            "vendor/james-heinrich/getid3/getid3/getid3.php",
+            "vendor/james-heinrich/getid3/getid3/write.php"
         ]
     },
     "minimum-stability": "stable",

@@ -2,7 +2,7 @@
 
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Illuminate\Support\Facades\File as IlluminateFile;
-use getID3 as GetId3;
+use getID3;
 
 /*
  * Extends the file information with media meta
@@ -21,7 +21,7 @@ class File extends SymfonyFile
      */
     public function __construct($path, $checkPath = true)
     {
-        $this->getID3Info = new GetId3;
+        $this->getID3Info = new getID3();
         
         parent::__construct($path, $checkPath);
     }
@@ -34,7 +34,7 @@ class File extends SymfonyFile
      *
      * @return array|null Retrieved Meta data
      */
-    public function getId3()
+    public function retrieveId3()
     {
         if (file_exists($this)) {
             return $this->getID3Info->analyze($this);
