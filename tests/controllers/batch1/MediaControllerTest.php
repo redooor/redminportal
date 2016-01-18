@@ -1,8 +1,13 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Redooor\Redminportal\App\Models\Media;
+
 class MediaControllerTest extends BaseControllerTest
 {
     use TraitSorterControllerTest;
+    
+    private $path;
+    private $files;
     
     /**
      * Contructor
@@ -43,6 +48,29 @@ class MediaControllerTest extends BaseControllerTest
         // For testing sort
         $this->sortBy = 'created_at';
         
+        $this->path = __DIR__ . '/../../dummy/';
+        
+        $this->files = [
+            [
+                'name' => 'foo113a.pdf',
+                'type' => 'application/pdf',
+                'size' => 11941,
+                'duration' => '{"duration":""}'
+            ],
+            [
+                'name' => 'foo113audio.mp3',
+                'type' => 'audio/mpeg',
+                'size' => 174923,
+                'duration' => '{"duration":"0:07"}'
+            ],
+            [
+                'name' => 'foo113audio.m4a',
+                'type' => 'audio/mp4',
+                'size' => 225613,
+                'duration' => '{"duration":"0:07"}'
+            ]
+        ];
+        
         parent::__construct($page, $viewhas, $input);
     }
     
@@ -73,27 +101,37 @@ class MediaControllerTest extends BaseControllerTest
         $this->assertRedirectedTo('/admin/medias/create');
         $this->assertSessionHasErrors();
     }
-/*
+
     public function testUploadFileSuccess()
     {
         $this->testStoreCreatePass(); // Create for upload
         
-        $path = __DIR__ . '/../dummy/';
-        $filename = 'foo113a.pdf';
-        $mimeType = 'application/pdf';
+        foreach ($this->files as $item) {
+            // Test Upload
+            $_FILES = array(
+                'file' => array(
+                    'name' => $item['name'],
+                    'type' => $item['type'],
+                    'size' => $item['size'],
+                    'tmp_name' => $this->path . $item['name'],
+                    'error' => 0,
+                    'mock' => true,
+                    'pathinfo' => $this->path
+                )
+            );
 
-        $file = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-            $path . $filename,
-            $filename,
-            $mimeType
-        );
+            $input = array(
+                'name' => 'This is title'
+            );
 
-        $input = array(
-            'name' => 'This is title'
-        );
+            $this->call('POST', '/admin/medias/upload/1', $input);
 
-        $this->call('POST', '/admin/medias/upload/1', $input, array('file' => $file));
-
-        $this->assertRedirectedTo('/admin/medias');
-    }*/
+            $media = Media::find('1');
+            $this->assertTrue($media->path == $item['name']);
+            $this->assertTrue($media->mimetype == $item['type']);
+            $this->assertTrue($media->options == $item['duration']);
+            
+            unset($_FILES);
+        }
+    }
 }

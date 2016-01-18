@@ -84,6 +84,15 @@ Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 * Tag
 * Translation
 
+## Classes
+* File
+* Volume
+* Weight
+
+## Helpers
+* RHelper
+* RImage
+
 ## Downloadable Reports
 1. Downloadable CSV reports for Purchases and Mailinglist.
 
@@ -120,11 +129,6 @@ You can install Laravel version 5.1 using the command:
             "laravel/framework": "5.1.*",
             "redooor/redminportal": "0.3.*"
         },
-
-    Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
-
-        "minimum-stability": "dev",
-        "prefer-stable": true
 
 2. Then run `php composer update [--prefer-dist]` in a terminal.
 
@@ -202,18 +206,13 @@ You can install Laravel version 5.1 using the command:
             }
         },
 
-6. Due to the use of getID3 package, we need to set the minimum-stability to "dev" but prefer-stable to "true". Like this:
-
-        "minimum-stability": "dev",
-        "prefer-stable": true
-
-7. Then cd to [root]'s folder and run:
+6. Then cd to [root]'s folder and run:
 
     `composer update --prefer-dist -vvv --profile --no-dev`
 
     **NOTE: the [root]'s phpunit dependency will clash with the package's phpunit. "`--no-dev`" ensures that it is not installed on [root]. You can also choose to remove phpunit from `require` inside the [root]'s composer.json.**
     
-8. Now, edit your [root]\config\app.php providers and alias array like this:
+7. Now, edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
             Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
@@ -223,32 +222,32 @@ You can install Laravel version 5.1 using the command:
             Redooor\Redminportal\RedminportalServiceProvider::class,
         ),
 
-9. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
+8. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
         ?> php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
         
     **CAUTION: using --force will overwrite existing files**
 
-10. Run the following in a terminal to seed the database with initial admin username and password:
+9. Run the following in a terminal to seed the database with initial admin username and password:
 
         ?> php artisan db:seed --class="RedminSeeder"
         
         Username/password: admin@admin.com/admin
 
-11. Publish package assets by running this in a terminal:
+10. Publish package assets by running this in a terminal:
 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
-12. Publish package config by running this in a terminal:
+11. Publish package config by running this in a terminal:
 
         ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
-13. _**Optional:**_ Publish package views by running this in a terminal:
+12. _**Optional:**_ Publish package views by running this in a terminal:
 
     Only do this if you want to modify Redminportal views without editing the source code.
 

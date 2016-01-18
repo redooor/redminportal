@@ -66,9 +66,7 @@
                     </td>
                     <td>
                         @if (file_exists(public_path() . '/assets/medias/' . $media->category_id . '/' . $media->id . '/' . $media->path))
-                            <span class="label label-success bs-tooltip" data-toggle="tooltip" data-placement="left" title="{{ $media->path }}"><span class='glyphicon glyphicon-ok'></span></span>
-                        @else
-                            <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
+                            <a class="bs-tooltip" data-toggle="tooltip" data-placement="left" title="{{ $media->path }}" href="{{ url('/assets/medias/' . $media->category_id . '/' . $media->id . '/' . $media->path) }}" target="_blank"><span class='glyphicon glyphicon-file'></span> {{ $media->mimetype }}</a>
                         @endif
                     </td>
                     <td>

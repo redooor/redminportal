@@ -72,6 +72,14 @@ to
 
 It is important to note the uppercase in Facades because without it autoloading will fail in most Linux and Mac OS environment.
 
+### Minimum-stability 'dev' not required
+
+After changing to JamesHeinrich/getID3, it is no longer a requirement to change the minimum-stability to 'dev'.
+You can choose to set it back to 'stable' like this:
+
+    "minimum-stability": "stable",
+    "prefer-stable": true
+
 ## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 
 New features and UI improvements.
