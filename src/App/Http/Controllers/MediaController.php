@@ -283,10 +283,22 @@ class MediaController extends Controller
 
         if (file_exists($filepath) && $media->mimetype != 'application/pdf') {
             $file = new FileInfo($filepath);
-            $media->options = json_encode($file->getId3());
-            $media->save();
-            if (isset($object['duration'])) {
-                $status['data'] = $object['duration'];
+            // Get playtime of the file
+            $playtime = $file->getPlaytime();
+            // Save playtime
+            $options = json_decode($media->options);
+            if (! is_array($options)) {
+                $options = array(); // Create a new array
+            }
+            $options['duration'] = ($playtime) ? $playtime : '';
+            $status['data'] = $options['duration'];
+            $media->options = json_encode($options);
+
+            try {
+                $media->save();
+            } catch (Exception $exp) {
+                $status['status'] = 'error';
+                return $status;
             }
         }
 
