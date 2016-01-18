@@ -30,14 +30,16 @@
         ],
         "psr-4": {
             "Redooor\\Redminportal\\": "src/"
-        }
+        },
+        "files": [
+            "vendor/james-heinrich/getid3/getid3/getid3.php",
+            "vendor/james-heinrich/getid3/getid3/write.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [
             "tests/bases",
-            "tests/RedminTestCase.php",
-            "vendor/james-heinrich/getid3/getid3/getid3.php",
-            "vendor/james-heinrich/getid3/getid3/write.php"
+            "tests/RedminTestCase.php"
         ]
     },
     "minimum-stability": "stable",

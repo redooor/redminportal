@@ -89,6 +89,9 @@ class FileClassTest extends RedminTestCase
         $file = new File($this->path . $test['name']);
         
         $mimetype = $file->getMimeType();
+        
+        echo '\n';
+        echo var_dump($mimetype);
 
         // Check Mime Type
         $this->assertTrue($mimetype == $test['type']);
