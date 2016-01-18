@@ -56,8 +56,7 @@ class FileClassTest extends RedminTestCase
         foreach ($this->files as $test) {
             $file = new File($this->path . $test['name']);
             
-            $id3 = $file->getId3();
-            $duration = @$id3['duration'];
+            $duration = $file->getPlaytime();
             $size = $file->getSize();
             
             // Check Mime Type
