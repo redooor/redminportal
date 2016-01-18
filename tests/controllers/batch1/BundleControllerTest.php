@@ -7,6 +7,8 @@ use Redooor\Redminportal\App\Models\Product;
 
 class BundleControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -15,7 +17,7 @@ class BundleControllerTest extends BaseControllerTest
         $page = '/admin/bundles';
         $viewhas = array(
             'singular' => 'bundle',
-            'plural' => 'bundles'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -46,6 +48,9 @@ class BundleControllerTest extends BaseControllerTest
                 'pricelist_id' => array(1)
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'name';
         
         parent::__construct($page, $viewhas, $input);
     }

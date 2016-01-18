@@ -1,32 +1,47 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\App\Models\Announcement;
+use Redooor\Redminportal\App\Models\Page;
 
-class AnnouncementControllerTest extends BaseControllerTest
+class PageControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
     public function __construct()
     {
-        $page = '/admin/announcements';
+        $page = '/admin/pages';
         $viewhas = array(
-            'singular' => 'announcement',
-            'plural' => 'announcements'
+            'singular' => 'page',
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
-                'title'     => 'This is title',
-                'content'   => 'This is body',
-                'private'   => false
+                'title' => 'This is the title',
+                'slug' => 'this_is_a_slug',
+                'content' => 'This is the body',
+                'private' => false,
+                'category_id' => 1,
+                'cn_title' => 'This is cn title',
+                'cn_slug' => 'This is cn slug',
+                'cn_content' => 'This is cn content'
             ),
             'edit' => array(
                 'id'        => 1,
-                'title'     => 'This is title',
-                'content'   => 'This is body',
-                'private'   => false
+                'title' => 'This is the title',
+                'slug' => 'this_is_a_slug',
+                'content' => 'This is the body',
+                'private' => false,
+                'category_id' => 1,
+                'cn_title' => 'This is cn title',
+                'cn_slug' => 'This is cn slug',
+                'cn_content' => 'This is cn content'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'created_at';
         
         parent::__construct($page, $viewhas, $input);
     }
@@ -46,6 +61,7 @@ class AnnouncementControllerTest extends BaseControllerTest
     {
         $input = array(
             'title'     => '',
+            'slug'      => 'this_is_a_slug',
             'content'   => 'This is body'
         );
 
@@ -62,6 +78,7 @@ class AnnouncementControllerTest extends BaseControllerTest
     {
         $input = array(
             'title'     => 'Open&%*<',
+            'slug'      => 'this_is_a_slug',
             'content'   => 'This is body'
         );
 

@@ -1,15 +1,41 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class MembershipController extends Controller
 {
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
+    
+    public function __construct(Membership $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'rank';
+        $this->orderBy = 'asc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model;
+        $this->sort_success_view = 'redminportal::memberships.view';
+        $this->sort_fail_redirect = 'admin/memberships';
+    }
+    
     public function getIndex()
     {
-        $memberships = Membership::orderBy('rank')->orderBy('name')->paginate(20);
-
-        return view('redminportal::memberships/view')->with('memberships', $memberships);
+        $models = Membership::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
+        
+        return view('redminportal::memberships/view', $data);
     }
 
     public function getCreate()

@@ -85,6 +85,17 @@ module.exports = function (grunt) {
                 dest: 'src/public/css/redmin-tinymce.min.css'
             }
         },
+        uglify: {
+            bootstrap_tagsinput: {
+                options: {
+                    sourceMap: true,
+                    sourceMapName: 'src/public/js/bootstrap-tagsinput.js.map'
+                },
+                files: {
+                    'src/public/js/bootstrap-tagsinput.min.js': ['src/resources/assets/js/bootstrap-tagsinput.js']
+                }
+            }
+        },
         usebanner: {
             options: {
                 position: 'top',
@@ -160,6 +171,10 @@ module.exports = function (grunt) {
             fontawesomecss: {
                 src: 'bower_components/font-awesome/css/font-awesome.min.css',
                 dest: 'src/public/css/font-awesome.min.css'
+            },
+            typeaheadjs: {
+                src: 'bower_components/typeahead.js/dist/typeahead.bundle.min.js',
+                dest: 'src/public/js/typeahead.bundle.min.js'
             }
         },
         watch: {
@@ -189,7 +204,7 @@ module.exports = function (grunt) {
     grunt.registerTask('less-compile', ['less', 'autoprefixer:core', 'usebanner', 'cssmin']);
     
     // Distribute all assets to public folder
-    grunt.registerTask('dist-assets', ['copy:fonts', 'copy:jquery', 'copy:bootstrapjs', 'copy:bootstrapcss', 'copy:jqueryui', 'copy:jqueryuijs', 'copy:momentjs', 'copy:datetimepickerjs', 'copy:datetimepickercss', 'copy:redmaterialsjs', 'copy:redmaterialscss', 'copy:fontawesomefonts', 'copy:fontawesomecss']);
+    grunt.registerTask('dist-assets', ['copy', 'uglify']);
     
     // Publish to public
     grunt.registerTask('publish-assets', ['exec:publish_public']);

@@ -1,20 +1,40 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Group;
 
 class GroupController extends Controller
 {
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
+    
+    public function __construct(Group $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'name';
+        $this->orderBy = 'asc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model;
+        $this->sort_success_view = 'redminportal::groups.view';
+        $this->sort_fail_redirect = 'admin/groups';
+    }
+    
     public function getIndex()
     {
-        $sortBy = 'name';
-        $orderBy = 'asc';
+        $models = Group::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
         
-        $groups = Group::orderBy($sortBy, $orderBy)->paginate(20);
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return view('redminportal::groups/view')
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy)
-            ->with('groups', $groups);
+        return view('redminportal::groups/view', $data);
     }
 
     public function getCreate()
@@ -174,35 +194,5 @@ class GroupController extends Controller
         }
 
         return redirect('admin/groups');
-    }
-    
-    public function getSort($sortBy = 'email', $orderBy = 'asc')
-    {
-        $inputs = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy
-        );
-        
-        $rules = array(
-            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
-            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
-        );
-        
-        $validation = \Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/groups')->withErrors($validation);
-        }
-        
-        if ($orderBy != 'asc' && $orderBy != 'desc') {
-            $orderBy = 'asc';
-        }
-
-        $groups = Group::orderBy($sortBy, $orderBy)->paginate(20);
-
-        return view('redminportal::groups/view')
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy)
-            ->with('groups', $groups);
     }
 }

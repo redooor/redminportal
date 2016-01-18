@@ -92,8 +92,9 @@
                         $('#confirm-modal-proceed').attr('href', $delete_url);
                         $('#confirm-modal').modal('show');
                     });
-                    $(document).on('click', '.sidebar-toggle', function(e) {
+                    $(document).on('click touchstart', '.sidebar-toggle', function(e) {
                         e.preventDefault();
+                        e.stopPropagation();
                         if ($('#sidebar-wrapper').hasClass('active')) {
                             $('#sidebar-wrapper').removeClass('active');
                         } else {

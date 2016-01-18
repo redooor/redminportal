@@ -12,40 +12,55 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($orders) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $orders->firstItem() . ' to ' . $orders->lastItem() . ' of ' . $orders->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
-                <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#export-csv">{{ Lang::get('redminportal::buttons.export_csv') }}</button>
+                <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#export-csv">{{ Lang::get('redminportal::buttons.export_excel') }}</button>
                 {!! HTML::link('admin/orders/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
             </div>
         </div>
     </div>
 
-    @if (count($orders) > 0)
+    @if (count($models) > 0)
         <table class="table table-bordered table-striped table-condensed">
             <thead>
                 <tr>
-                    <th>{{ Lang::get('redminportal::forms.user') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.email') }}</th>
+                    <th>
+                        {!! Redminportal::html()->sorter('admin/orders', 'first_name', $sortBy, $orderBy) !!}
+                    </th>
+                    <th>
+                        {!! Redminportal::html()->sorter('admin/orders', 'last_name', $sortBy, $orderBy) !!}
+                    </th>
+                    <th>
+                        {!! Redminportal::html()->sorter('admin/orders', 'email', $sortBy, $orderBy) !!}
+                    </th>
                     <th>{{ Lang::get('redminportal::forms.total_price') }}</th>
                     <th>{{ Lang::get('redminportal::forms.total_discount') }}</th>
                     <th>{{ Lang::get('redminportal::forms.paid') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.payment_status') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.transaction_id') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.ordered_on') }}</th>
+                    <th>
+                        {!! Redminportal::html()->sorter('admin/orders', 'payment_status', $sortBy, $orderBy) !!}
+                    </th>
+                    <th>
+                        {!! Redminportal::html()->sorter('admin/orders', 'transaction_id', $sortBy, $orderBy) !!}
+                    </th>
+                    <th>
+                        {!! Redminportal::html()->sorter('admin/orders', 'created_at', $sortBy, $orderBy, trans('redminportal::forms.ordered_on')) !!}
+                    </th>
                     <th>{{ Lang::get('redminportal::forms.coupons') }}</th>
                     <th>{{ Lang::get('redminportal::forms.items') }}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($orders as $order)
+                @foreach($models as $order)
                 <tr>
                     @if ($order->user != null)
-                    <td>{{ $order->user->first_name }} {{ $order->user->last_name }}</td>
+                    <td>{{ $order->user->first_name }}</td>
+                    <td>{{ $order->user->last_name }}</td>
                     <td>{{ $order->user->email }}</td>
                     @else
+                    <td>User deleted</td>
                     <td>User deleted</td>
                     <td>User deleted</td>
                     @endif
@@ -69,7 +84,7 @@
                     <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($order->paid, Lang::get('redminportal::currency.currency')) }}</td>
                     <td>{{ $order->payment_status }}</td>
                     <td>{{ $order->transaction_id }}</td>
-                    <td>{{ $order->created_at }}</td>
+                    <td>{{ date("d/m/y h:i A", strtotime($order->created_at)) }}</td>
                     <td class="table-actions text-center">
                         @if ($order->coupons()->count() > 0)
                         <div class="btn-group">
@@ -130,7 +145,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $orders->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_order_found') }}</div>
@@ -141,7 +156,7 @@
                 {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\ReportController@postOrders', 'report' => 'form')) !!}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ Lang::get('redminportal::buttons.close') }}</span></button>
-                    <h4 class="modal-title">{{ Lang::get('redminportal::messages.export_to_csv') }}</h4>
+                    <h4 class="modal-title">{{ Lang::get('redminportal::messages.export_to_excel') }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class='row'>
@@ -166,7 +181,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">{{ Lang::get('redminportal::buttons.close') }}</button>
-                    {!! Form::submit(Lang::get('redminportal::buttons.download_csv'), array('class' => 'btn btn-primary')) !!}
+                    {!! Form::submit(Lang::get('redminportal::buttons.download_excel'), array('class' => 'btn btn-primary')) !!}
                 </div>
                 {!! Form::close() !!}
             </div><!-- /.modal-content -->

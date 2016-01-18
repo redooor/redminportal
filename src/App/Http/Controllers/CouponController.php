@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Coupon;
 use Redooor\Redminportal\App\Models\Product;
@@ -8,17 +9,36 @@ use Redooor\Redminportal\App\Models\Bundle;
 
 class CouponController extends Controller
 {
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
+    
+    public function __construct(Coupon $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'start_date';
+        $this->orderBy = 'desc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model;
+        $this->sort_success_view = 'redminportal::coupons.view';
+        $this->sort_fail_redirect = 'admin/coupons';
+    }
+    
     public function getIndex()
     {
-        $sortBy = 'start_date';
-        $orderBy = 'desc';
-        
-        $coupons = Coupon::orderBy($sortBy, $orderBy)->paginate(20);
+        $models = Coupon::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
 
-        return view('redminportal::coupons/view')
-            ->with('coupons', $coupons)
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy);
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
+        
+        return view('redminportal::coupons/view', $data);
     }
     
     private function getCategories()
@@ -308,35 +328,5 @@ class CouponController extends Controller
         $coupon->delete();
 
         return redirect('admin/coupons');
-    }
-    
-    public function getSort($sortBy = 'create_at', $orderBy = 'desc')
-    {
-        $inputs = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy
-        );
-        
-        $rules = array(
-            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
-            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
-        );
-        
-        $validation = \Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/coupons')->withErrors($validation);
-        }
-        
-        if ($orderBy != 'asc' && $orderBy != 'desc') {
-            $orderBy = 'asc';
-        }
-        
-        $coupons = Coupon::orderBy($sortBy, $orderBy)->paginate(20);
-
-        return view('redminportal::coupons/view')
-            ->with('coupons', $coupons)
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy);
     }
 }

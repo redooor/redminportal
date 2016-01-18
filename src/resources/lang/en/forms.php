@@ -76,8 +76,13 @@ return array(
     'remove_image' => 'Remove',
     'created' => 'Created',
     'updated' => 'Updated',
+    'created_at' => 'Created',
+    'updated_at' => 'Updated',
     'active' => 'Active',
     'parent_category' => 'Parent Category',
+    'parent_category_note' => 'Categories, unlike tags, can have a hierarchy. '
+        . 'You might have a Music category, and under that have children categories for Jazz and Classical. '
+        . 'Totally optional.',
     'no_parent' => 'No Parent',
     'summary' => 'Summary',
     'priority_order' => 'Priority Order',
@@ -97,6 +102,7 @@ return array(
     'browse_file' => 'Browse...',
     'existing_file' => 'Existing File',
     'tags' => 'Tags',
+    'tags_footnote' => 'hint: press enter or comma to confirm tag',
     'media_file' => 'Media File',
     'duration' => 'Duration',
     'membership' => 'Membership',

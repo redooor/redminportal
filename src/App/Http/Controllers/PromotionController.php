@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Promotion;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Translation;
@@ -10,11 +11,36 @@ use DateTime;
 
 class PromotionController extends Controller
 {
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
+    
+    public function __construct(Promotion $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'end_date';
+        $this->orderBy = 'desc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model;
+        $this->sort_success_view = 'redminportal::promotions.view';
+        $this->sort_fail_redirect = 'admin/promotions';
+    }
+    
     public function getIndex()
     {
-        $promotions = Promotion::paginate(20);
+        $models = Promotion::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
         
-        return view('redminportal::promotions/view')->with('promotions', $promotions);
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
+        
+        return view('redminportal::promotions/view', $data);
     }
     
     public function getCreate()

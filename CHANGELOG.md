@@ -1,5 +1,7 @@
 # Change log
 
+[![Build Status](https://travis-ci.org/redooor/redminportal.svg?branch=develop)](https://travis-ci.org/redooor/redminportal)
+
 * [Version 0.3.3 and 0.2.3](#version-033-and-023)
 * [Version 0.3.2 and 0.2.2](#version-032-and-022)
 * [Version 0.3.1 and 0.2.1](#version-031-and-021)
@@ -20,15 +22,41 @@ Version 0.2 and 0.3 are developed in parallel. The only difference between them 
 Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
 
 ## Version 0.3.3 and 0.2.3
-Code clean up, new features and UI improvements.
+This update introduces some new tables and lots of changes.
 
-This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+**IMPORTANT:** Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
 ### New features:
 1. Added product variations. You can now add variations to each product. (issue #125)
 2. Added reusable partial templates for Modal Window and Language selector tab. (issue #130)
 3. Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)
 4. Allow Tinymce content to follow front end CSS. (issue #143)
+5. Moved pagination to config file so developer can set the default pagination size. (issue #121)
+6. Usable Redminportal Facade for HTML helpers.
+7. Added Sorting capability for (issue #15):
+    - Orders
+    - Announcements
+    - Pages
+    - Posts
+    - Portfolios
+    - Promotions
+    - Products
+    - Memberships
+    - Modules
+    - Medias
+8. Added capability to sort by Category for Bundle. (issue #15)
+9. Improve Tagging (issue #147)
+    - Added Typeahead for tag suggestion
+    - Use label visual for tags
+10. Added API for retrieving tag names
+    - /api/tag: Get JSON list of tags with id and name
+    - /api/tag/name: Get JSON list of tags with name only
+    - Check [list of API on github Wiki page](https://github.com/redooor/redminportal/wiki/Public-API)
+11. Able to add user to multiple groups. (issue #53)
+12. Introduced HTML and Form helpers
+    - HTML and Form helpers provide a shortcut to partial views.
+    - Check [list of helpers on github Wiki page](https://github.com/redooor/redminportal/wiki/HTML-and-Form-Helpers)
+13. Added tag to Page and Post (issue #146)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)
@@ -38,9 +66,21 @@ This update introduces some new tables. Refer to [UPGRADE.md](UPGRADE.md) for th
 5. Add getTotaldiscount method to Order. (issue #142)
 6. Improved Tinymce editor to match RedminPortal look and feel.
 7. Updated Tinymce to version 4.3.2.
+8. Create Category Select reusable form (issue #130)
+9. Rearranged menu to push User Management to bottom.
+10. Increase default pagination to 50. (issue #121)
+11. Introduced SorterController trait to reduce code for sortable pages.
+12. Introduced partial Blade template for sortable header.
+13. Overall Line count decreased from 23031 to 22805 with trait and partial template.
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
+2. UI: Page and Post cannot change category back to No Category. (issue #145)
+3. Fix Tinymce editor not showing Bootstrap components correctly by adding container-fluid class to body.
+4. Fix error message when deleting Category in used. Deleting Category will delete all related data. (issue #135)
+5. Fix Module on change category doesn't load media. (issue #150)
+6. Click menu overlay to close doesn't work on iPad. (issue #151)
+7. Fix Build error for PHP7 due to getID3 package. Switch to JamesHeinrich/getID3. (issue #152)
 
 ## Version 0.3.2 and 0.2.2
 Code clean up, new features and UI improvements.

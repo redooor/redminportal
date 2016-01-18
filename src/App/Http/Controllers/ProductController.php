@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Lang;
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -14,31 +15,49 @@ use Illuminate\Support\Facades\Input;
 
 class ProductController extends Controller
 {
-    protected $model;
     private $weight_units;
     private $volume_units;
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
 
-    public function __construct(Product $product)
+    public function __construct(Product $model)
     {
-        $this->model = $product;
         $this->weight_units = Weight::getUnits();
         $this->volume_units = Volume::getUnits();
-    }
-
-    public function getIndex()
-    {
-        // Get all products but not variants
-        $products = Product::orderBy('category_id')
-            ->whereNotExists(function($query)
-            {
+        
+        $this->model = $model;
+        $this->sortBy = 'name';
+        $this->orderBy = 'asc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model
+            ->whereNotExists(function($query) {
+                // Get all products but not variants
                 $query->select(\DB::raw(1))
                       ->from('product_variant')
                       ->whereRaw('product_variant.variant_id = products.id');
             })
-            ->orderBy('name')
-            ->paginate(20);
+            ->LeftJoin('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.name as category_name');
+        $this->sort_success_view = 'redminportal::products.view';
+        $this->sort_fail_redirect = 'admin/products';
+    }
 
-        return view('redminportal::products/view')->with('products', $products);
+    public function getIndex()
+    {
+        $models = $this->query->orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
+
+        return view('redminportal::products/view', $data);
     }
 
     public function getCreate()
@@ -272,15 +291,19 @@ class ProductController extends Controller
             'short_description' => 'required',
             'price'             => 'numeric',
             'sku'               => 'required|alpha_dash|unique:products,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required',
+            'category_id'       => 'required|numeric|min:1',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
             'weight'            => 'numeric',
             'length'            => 'numeric',
             'width'             => 'numeric',
             'height'            => 'numeric'
         );
+        
+        $messages = [
+            'category_id.min' => 'The category field is required.'
+        ];
 
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules, $messages);
         
         if ($validation->fails()) {
             $redirect_url = 'admin/products/create';
@@ -424,7 +447,10 @@ class ProductController extends Controller
         // Check if there's any order related to this product
         if (count($product->orders) > 0) {
             $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorDeleteRecordAlreadyOrdered', Lang::get('redminportal::messages.error_delete_product_already_ordered'));
+            $errors->add(
+                'errorDeleteRecordAlreadyOrdered',
+                Lang::get('redminportal::messages.error_delete_product_already_ordered')
+            );
             return redirect('admin/products')->withErrors($errors);
         }
         
@@ -432,7 +458,10 @@ class ProductController extends Controller
         foreach ($product->variants as $variant) {
             if (count($variant->orders) > 0) {
                 $errors = new \Illuminate\Support\MessageBag;
-                $errors->add('errorDeleteRecordAlreadyOrdered', Lang::get('redminportal::messages.error_delete_variant_already_ordered'));
+                $errors->add(
+                    'errorDeleteRecordAlreadyOrdered',
+                    Lang::get('redminportal::messages.error_delete_variant_already_ordered')
+                );
                 return redirect('admin/products')->withErrors($errors);
             }
         }

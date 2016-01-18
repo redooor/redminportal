@@ -1,24 +1,30 @@
 <?php namespace Redooor\Redminportal\Test;
 
-class PortfolioControllerTest extends BaseControllerTest
+class PromotionControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
     public function __construct()
     {
-        $page = '/admin/portfolios';
+        $page = '/admin/promotions';
         $viewhas = array(
-            'singular' => 'portfolio',
-            'plural' => 'portfolios'
+            'singular' => 'promotion',
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
+                'long_description'      => 'This is long body',
                 'cn_name'               => 'CN name',
                 'cn_short_description'  => 'CN short body',
-                'category_id'           => 1,
+                'cn_long_description'   => 'CN long body',
+                'start_date'            => '29/02/2016',
+                'end_date'              => '29/02/2016',
+                'active'                => true,
                 'cn_name' => 'This is cn name',
                 'cn_short_description' => 'This is cn short description',
                 'cn_long_description' => 'This is cn long description'
@@ -27,14 +33,21 @@ class PortfolioControllerTest extends BaseControllerTest
                 'id'   => 1,
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
+                'long_description'      => 'This is long body',
                 'cn_name'               => 'CN name',
                 'cn_short_description'  => 'CN short body',
-                'category_id'           => 1,
+                'cn_long_description'   => 'CN long body',
+                'start_date'            => '29/02/2016',
+                'end_date'              => '29/02/2016',
+                'active'                => true,
                 'cn_name' => 'This is cn name',
                 'cn_short_description' => 'This is cn short description',
                 'cn_long_description' => 'This is cn long description'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'end_date';
         
         parent::__construct($page, $viewhas, $input);
     }
@@ -55,14 +68,18 @@ class PortfolioControllerTest extends BaseControllerTest
         $input = array(
             'name'                  => '',
             'short_description'     => 'This is body',
+            'long_description'      => 'This is long body',
             'cn_name'               => 'CN name',
             'cn_short_description'  => 'CN short body',
-            'category_id'           => 1
+            'cn_long_description'   => 'CN long body',
+            'start_date'            => '29/02/2016',
+            'end_date'              => '29/02/2016',
+            'active'                => true
         );
 
-        $this->call('POST', '/admin/portfolios/store', $input);
+        $this->call('POST', '/admin/promotions/store', $input);
 
-        $this->assertRedirectedTo('/admin/portfolios/create');
+        $this->assertRedirectedTo('/admin/promotions/create');
         $this->assertSessionHasErrors();
     }
 }

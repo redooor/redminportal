@@ -4,6 +4,22 @@ Version 0.2 and 0.3 are developed in parallel. The only difference between them 
 
 ## Upgrading to v0.3.3/v0.2.3 from v0.3.2/v0.2.2
 
+### Run Dump-Autoload
+
+Due to the additions of HTML and Form helpers, you need to run the following command:
+
+For Users
+```shell
+    cd <your_app_root>
+    composer dump-autoload
+```
+
+For Contributors
+```shell
+    cd <your_app_root>/packages/redooor/redminportal
+    composer dump-autoload
+```
+
 ### Migrations
 
 Version 0.3.3 and v0.2.3 introduced some new database tables.
@@ -34,6 +50,36 @@ As a general rule, do not save any customed files inside `public/vendor/redooor/
 
     php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
     
+### Pagination Config file
+
+We've moved the default pagination size for all pages to a config file `src/config/pagination.php`.
+
+Copy the file `src/config/pagination.php` to your root folder's `config/vendor/redooor/redminportal/pagination.php`.
+
+You can change the value to any desired number to be the pagination size. The default is 50.
+
+### Relocation of Redminportal Facade
+
+This shouldn't really affect your existing installation because previously it was not working.
+
+The facade file has been moved from
+
+`src/facades/Redminportal.php`
+
+to
+
+`src/App/Facades/Redminportal.php`
+
+It is important to note the uppercase in Facades because without it autoloading will fail in most Linux and Mac OS environment.
+
+### Minimum-stability 'dev' not required
+
+After changing to JamesHeinrich/getID3, it is no longer a requirement to change the minimum-stability to 'dev'.
+You can choose to set it back to 'stable' like this:
+
+    "minimum-stability": "stable",
+    "prefer-stable": true
+
 ## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 
 New features and UI improvements.

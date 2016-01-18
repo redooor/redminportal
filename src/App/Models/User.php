@@ -68,4 +68,45 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         
         return parent::delete();
     }
+    
+    /*
+    /* Add Group(s) to User
+    /* @param Group can be single Id or array of Group Id
+    /* @return bool True if successful
+     */
+    public function addGroup($group_id)
+    {
+        $successful = true;
+        
+        if ($group_id == null) {
+            return false;
+        }
+        
+        // Remove all existing group(s) from user
+        $this->groups()->detach();
+        
+        // Assign group(s) to user
+        if (is_array($group_id)) {
+            // If multiple roles
+            if (count($group_id) > 0) {
+                foreach ($group_id as $item) {
+                    $new_group = Group::find($item);
+                    if ($new_group == null) {
+                        $successful = false;
+                    } else {
+                        $this->groups()->save($new_group);
+                    }
+                }
+            }
+        } else {
+            $new_group = Group::find($group_id);
+            if ($new_group == null) {
+                $successful = false;
+            } else {
+                $this->groups()->save($new_group);
+            }
+        }
+        
+        return $successful;
+    }
 }

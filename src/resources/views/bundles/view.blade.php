@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($bundles) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $bundles->firstItem() . ' to ' . $bundles->lastItem() . ' of ' . $bundles->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 {!! HTML::link('admin/bundles/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
@@ -21,52 +21,24 @@
         </div>
     </div>
 
-    @if (count($bundles) > 0)
+    @if (count($models) > 0)
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>
-                        <a href="{{ URL::to('admin/bundles/sort') . '/name/' . ($sortBy == 'name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.name') }}
-                            @if ($sortBy == 'name')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
-                    </th>
-                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
-                    <th>
-                        <a href="{{ URL::to('admin/bundles/sort') . '/sku/' . ($sortBy == 'sku' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.sku') }}
-                            @if ($sortBy == 'sku')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
-                    </th>
-                    <th>{{ Lang::get('redminportal::forms.price') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'name', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'category_name', $sortBy, $orderBy, trans('redminportal::forms.category')) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'sku', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'price', $sortBy, $orderBy) !!}</th>
                     <th>{{ Lang::get('redminportal::forms.total_value') }}</th>
                     <th>{{ Lang::get('redminportal::forms.summary') }}</th>
                     <th>{{ Lang::get('redminportal::forms.tags') }}</th>
-                    <th>
-                        <a href="{{ URL::to('admin/bundles/sort') . '/featured/' . ($sortBy == 'featured' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.featured') }}
-                            @if ($sortBy == 'featured')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{{ URL::to('admin/bundles/sort') . '/active/' . ($sortBy == 'active' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.active') }}
-                            @if ($sortBy == 'active')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
-                    </th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'featured', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/bundles', 'active', $sortBy, $orderBy) !!}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-            @foreach ($bundles as $bundle)
+            @foreach ($models as $bundle)
                 <tr>
                     <td>{{ $bundle->name }}</td>
                     <td>{{ $bundle->category->name or 'No category' }}</td>
@@ -115,7 +87,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $bundles->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_bundle_found') }}</div>

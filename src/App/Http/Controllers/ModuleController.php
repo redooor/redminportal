@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use DB;
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Media;
 use Redooor\Redminportal\App\Models\Category;
@@ -15,11 +16,38 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
 {
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
+    
+    public function __construct(Module $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'name';
+        $this->orderBy = 'asc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('categories', 'modules.category_id', '=', 'categories.id')
+            ->select('modules.*', 'categories.name as category_name');
+        $this->sort_success_view = 'redminportal::modules.view';
+        $this->sort_fail_redirect = 'admin/modules';
+    }
+    
     public function getIndex()
     {
-        $modules = Module::orderBy('category_id')->orderBy('name')->paginate(20);
+        $models = Module::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return \View::make('redminportal::modules/view')->with('modules', $modules);
+        return \View::make('redminportal::modules/view', $data);
     }
 
     public function getMedias($sid)
@@ -136,11 +164,15 @@ class ModuleController extends Controller
             'name'              => 'required|unique:modules,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description' => 'required',
             'sku'               => 'required|alpha_dash|unique:modules,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required',
+            'category_id'       => 'required|numeric|min:1',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
         );
+        
+        $messages = [
+            'category_id.min' => 'The category field is required.'
+        ];
 
-        $validation = \Validator::make(\Input::all(), $rules);
+        $validation = \Validator::make(\Input::all(), $rules, $messages);
 
         if ($validation->passes()) {
             $name               = \Input::get('name');

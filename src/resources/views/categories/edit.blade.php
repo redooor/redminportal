@@ -29,20 +29,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">{{ Lang::get('redminportal::forms.parent_category') }}</div>
-                    </div>
-                    <div class="panel-body">
-                        {!! Form::hidden('parent_id', $category->category_id, array('id' => 'parent_id'))!!}
-                        <ul class="redooor-hierarchy">
-                            <li><a href="0"><span class='glyphicon glyphicon-chevron-right'></span> {{ Lang::get('redminportal::forms.no_parent') }}</a></li>
-                        @foreach ($categories as $item)
-                            <li>{!! $item->printCategory() !!}</li>
-                        @endforeach
-                        </ul>
-                    </div>
-                </div>
+                {{-- Load Select Category partial form --}}
+                @include('redminportal::partials.form-select-category', [
+                    'select_category_title' => trans('redminportal::forms.parent_category'),
+                    'select_category_selected_name' => 'parent_id',
+                    'select_category_selected_id' => $category->category_id,
+                    'select_category_categories' => $categories,
+                    'select_category_footnote' => trans('redminportal::forms.parent_category_note'),
+                    'select_category_default_text' => trans('redminportal::forms.no_parent')
+                ])
                 <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
@@ -162,6 +157,7 @@
 @stop
 
 @section('footer')
+    @parent
     <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
     <script>
         !function ($) {
@@ -170,29 +166,6 @@
                 $('#lang-selector a').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
-                });
-                // On load, check if previous category exists for error message
-                function checkCategory() {
-                    $selected_val = $('#parent_id').val();
-                    if ($selected_val == '') {
-                        // Initialize No Parent
-                        $('#parent_id').val(0);
-                        $selected_val = '0';
-                    }
-                    $('.redooor-hierarchy a').each(function() {
-                        if ($(this).attr('href') == $selected_val) {
-                            $(this).addClass('active');
-                        }
-                    });
-                }
-                checkCategory();
-                // Change selected category
-                $(document).on('click', '.redooor-hierarchy a', function(e) {
-                    e.preventDefault();
-                    $selected = $(this).attr('href');
-                    $('#parent_id').val($selected);
-                    $('.redooor-hierarchy a.active').removeClass('active');
-                    $(this).addClass('active');
                 });
             })
         }(window.jQuery);

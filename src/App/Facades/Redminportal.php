@@ -1,0 +1,16 @@
+<?php namespace Redooor\Redminportal\App\Facades;
+
+use Illuminate\Support\Facades\Facade;
+
+class Redminportal extends Facade
+{
+    /**
+    * Get the registered name of the component.
+    *
+    * @return string
+    */
+    protected static function getFacadeAccessor()
+    {
+        return 'redminportal';
+    }
+}

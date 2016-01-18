@@ -1,42 +1,37 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Redooor\Redminportal\App\Models\Page;
+use Redooor\Redminportal\App\Models\Announcement;
 
-class PageControllerTest extends BaseControllerTest
+class AnnouncementControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
     public function __construct()
     {
-        $page = '/admin/pages';
+        $page = '/admin/announcements';
         $viewhas = array(
-            'singular' => 'page',
-            'plural' => 'pages'
+            'singular' => 'announcement',
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
-                'title' => 'This is the title',
-                'slug' => 'this_is_a_slug',
-                'content' => 'This is the body',
-                'private' => false,
-                'category_id' => 1,
-                'cn_title' => 'This is cn title',
-                'cn_slug' => 'This is cn slug',
-                'cn_content' => 'This is cn content'
+                'title'     => 'This is title',
+                'content'   => 'This is body',
+                'private'   => false
             ),
             'edit' => array(
                 'id'        => 1,
-                'title' => 'This is the title',
-                'slug' => 'this_is_a_slug',
-                'content' => 'This is the body',
-                'private' => false,
-                'category_id' => 1,
-                'cn_title' => 'This is cn title',
-                'cn_slug' => 'This is cn slug',
-                'cn_content' => 'This is cn content'
+                'title'     => 'This is title',
+                'content'   => 'This is body',
+                'private'   => false
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'created_at';
         
         parent::__construct($page, $viewhas, $input);
     }
@@ -56,7 +51,6 @@ class PageControllerTest extends BaseControllerTest
     {
         $input = array(
             'title'     => '',
-            'slug'      => 'this_is_a_slug',
             'content'   => 'This is body'
         );
 
@@ -73,7 +67,6 @@ class PageControllerTest extends BaseControllerTest
     {
         $input = array(
             'title'     => 'Open&%*<',
-            'slug'      => 'this_is_a_slug',
             'content'   => 'This is body'
         );
 

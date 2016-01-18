@@ -30,8 +30,8 @@
         <div class="col-md-8">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($users) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $users->firstItem() . ' to ' . $users->lastItem() . ' of ' . $users->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 {!! HTML::link('admin/users/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
@@ -39,79 +39,39 @@
         </div>
     </div>
 
-	@if (count($users) > 0)
+	@if (count($models) > 0)
 		<table class='table table-striped table-bordered table-condensed'>
 			<thead>
 				<tr>
 					<th>
-                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/email/' . ($sortBy == 'email' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.email') }}
-                            @if ($sortBy == 'email')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/users', 'email', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/first_name/' . ($sortBy == 'first_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.first_name') }}
-                            @if ($sortBy == 'first_name')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/users', 'first_name', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/last_name/' . ($sortBy == 'last_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.last_name') }}
-                            @if ($sortBy == 'last_name')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/users', 'last_name', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/group/' . ($sortBy == 'group' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.groups') }}
-                            @if ($sortBy == 'group')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/users', 'group_name', $sortBy, $orderBy, trans('redminportal::forms.groups')) !!}
                     </th>
                     <th>
-                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/activated/' . ($sortBy == 'activated' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.activated') }}
-                            @if ($sortBy == 'activated')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/users', 'activated', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/last_login/' . ($sortBy == 'last_login' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.last_login') }}
-                            @if ($sortBy == 'last_login')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/users', 'last_login', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/created_at/' . ($sortBy == 'created_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.created') }}
-                            @if ($sortBy == 'created_at')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/users', 'created_at', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a class="block-header" href="{{ URL::to('admin/users/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.updated') }}
-                            @if ($sortBy == 'updated_at')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/users', 'updated_at', $sortBy, $orderBy) !!}
                     </th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
-		    @foreach ($users as $user)
+		    @foreach ($models as $user)
 			    <tr>
 			        <td>{{ $user->email }}</td>
 			        <td>{{ $user->first_name }}</td>
@@ -128,9 +88,9 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
 		            </td>
-			        <td>@if ($user->last_login){{ date('d-M-y g:i a', strtotime($user->last_login)) }}@endif</td>
-			        <td>{{ date('d-M-y', strtotime($user->created_at)) }}</td>
-			        <td>{{ date('d-M-y', strtotime($user->updated_at)) }}</td>
+			        <td>@if ($user->last_login){{ date('d/m/y h:i A', strtotime($user->last_login)) }}@endif</td>
+                    <td>{{ date("d/m/y h:i A", strtotime($user->created_at)) }}</td>
+                    <td>{{ date("d/m/y h:i A", strtotime($user->updated_at)) }}</td>
 					<td class="table-actions text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
@@ -164,7 +124,7 @@
 		    </tbody>
 	    </table>
         <div class="text-center">
-		{!! $users->render() !!}
+		{!! $models->render() !!}
         </div>
 	@else
 		<div class="alert alert-info">{{ Lang::get('redminportal::messages.no_user_found') }}</div>

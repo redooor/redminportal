@@ -1,16 +1,42 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Announcement;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class AnnouncementController extends Controller
 {
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
+    
+    public function __construct(Announcement $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'created_at';
+        $this->orderBy = 'desc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model;
+        $this->sort_success_view = 'redminportal::announcements.view';
+        $this->sort_fail_redirect = 'admin/announcements';
+    }
+    
     public function getIndex()
     {
-        $announcements = Announcement::paginate(20);
+        $models = Announcement::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
         
-        return view('redminportal::announcements/view')->with('announcements', $announcements);
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
+        
+        return view('redminportal::announcements/view', $data);
     }
     
     public function getCreate()

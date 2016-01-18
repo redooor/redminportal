@@ -1,47 +1,40 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Mailinglist;
 
 class MailinglistController extends Controller
 {
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
+    
+    public function __construct(Mailinglist $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'created_at';
+        $this->orderBy = 'desc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model;
+        $this->sort_success_view = 'redminportal::mailinglists.view';
+        $this->sort_fail_redirect = 'admin/mailinglists';
+    }
+    
     public function getIndex()
     {
-        $mailinglists = Mailinglist::orderBy('email')->paginate(20);
+        $models = Mailinglist::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
 
-        return view('redminportal::mailinglists/view')
-            ->with('sortBy', 'email')
-            ->with('orderBy', 'asc')
-            ->with('mailinglists', $mailinglists);
-    }
-
-    public function getSort($sortBy = 'email', $orderBy = 'asc')
-    {
-        $inputs = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy
-        );
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
         
-        $rules = array(
-            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
-            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
-        );
-        
-        $validation = \Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/mailinglists')->withErrors($validation);
-        }
-        
-        if ($orderBy != 'asc' && $orderBy != 'desc') {
-            $orderBy = 'asc';
-        }
-
-        $mailinglists = Mailinglist::orderBy($sortBy, $orderBy)->paginate(20);
-
-        return view('redminportal::mailinglists/view')
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy)
-            ->with('mailinglists', $mailinglists);
+        return view('redminportal::mailinglists/view', $data);
     }
 
     public function getCreate()

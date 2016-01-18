@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($coupons) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $coupons->firstItem() . ' to ' . $coupons->lastItem() . ' of ' . $coupons->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 {!! HTML::link('admin/coupons/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
@@ -21,72 +21,37 @@
         </div>
     </div>
     
-    @if (count($coupons) > 0)
+    @if (count($models) > 0)
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
                     <th>
-                        <a href="{{ URL::to('admin/coupons/sort') . '/code/' . ($sortBy == 'code' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.coupon_code') }}
-                            @if ($sortBy == 'code')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/coupons', 'code', $sortBy, $orderBy, trans('redminportal::forms.coupon_code')) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/coupons/sort') . '/amount/' . ($sortBy == 'amount' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.amount') }}
-                            @if ($sortBy == 'amount')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/coupons', 'amount', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/coupons/sort') . '/start_date/' . ($sortBy == 'start_date' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.start_date') }}
-                            @if ($sortBy == 'start_date')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/coupons', 'start_date', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/coupons/sort') . '/end_date/' . ($sortBy == 'end_date' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.expiry_date') }}
-                            @if ($sortBy == 'end_date')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/coupons', 'end_date', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/coupons/sort') . '/usage_limit_per_coupon/' . ($sortBy == 'usage_limit_per_coupon' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.usage_limit_per_coupon') }}
-                            @if ($sortBy == 'usage_limit_per_coupon')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/coupons', 'usage_limit_per_coupon', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/coupons/sort') . '/usage_limit_per_user/' . ($sortBy == 'usage_limit_per_user' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.usage_limit_per_user') }}
-                            @if ($sortBy == 'usage_limit_per_user')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/coupons', 'usage_limit_per_user', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/coupons/sort') . '/usage_limit_per_coupon_count/' . ($sortBy == 'usage_limit_per_coupon_count' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.usage_limit_per_coupon_count') }}
-                            @if ($sortBy == 'usage_limit_per_coupon_count')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/coupons', 'usage_limit_per_coupon_count', $sortBy, $orderBy) !!}
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
 
-                @foreach ($coupons as $coupon)
+                @foreach ($models as $coupon)
                     <tr>
                         <td>
                             {{ $coupon->code }}
@@ -95,10 +60,10 @@
                             {{ $coupon->amount }} @if($coupon->is_percent){{ "%" }}@else{{ "(fixed value)" }}@endif
                         </td>
                         <td>
-                            {{ date("d/m/Y h:i A", strtotime($coupon->start_date)) }}
+                            {{ date("d/m/y h:i A", strtotime($coupon->start_date)) }}
                         </td>
                         <td>
-                            {{ date("d/m/Y h:i A", strtotime($coupon->end_date)) }}
+                            {{ date("d/m/y h:i A", strtotime($coupon->end_date)) }}
                         </td>
                         <td>
                             {{ $coupon->usage_limit_per_coupon }}
@@ -131,7 +96,7 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $coupons->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_coupon_found') }}</div>

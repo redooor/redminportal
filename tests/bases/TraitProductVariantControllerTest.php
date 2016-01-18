@@ -5,85 +5,8 @@ use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Order;
 
-class ProductControllerTest extends BaseControllerTest
+trait TraitProductVariantControllerTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
-    {
-        $page = '/admin/products';
-        $viewhas = array(
-            'singular' => 'product',
-            'plural' => 'products'
-        );
-        $input = array(
-            'create' => array(
-                'name'                  => 'This is title',
-                'short_description'     => 'This is body',
-                'cn_name'               => 'CN name',
-                'cn_short_description'  => 'CN short body',
-                'category_id'           => 1,
-                'sku'                   => 'UNIQUESKU001',
-                'cn_name'               => 'This is cn name',
-                'cn_short_description'  => 'This is cn short description',
-                'cn_long_description'   => 'This is cn long description',
-                'weight_unit'           => 'kg',
-                'volume_unit'           => 'm',
-                'length'                => 9.99,
-                'width'                 => 8.44,
-                'height'                => 2.33
-            ),
-            'edit' => array(
-                'id'   => 1,
-                'name'                  => 'This is title',
-                'short_description'     => 'This is body',
-                'cn_name'               => 'CN name',
-                'cn_short_description'  => 'CN short body',
-                'category_id'           => 1,
-                'sku'                   => 'UNIQUESKU001',
-                'cn_name' => 'This is cn name',
-                'cn_short_description' => 'This is cn short description',
-                'cn_long_description' => 'This is cn long description',
-                'weight_unit'           => 'g',
-                'volume_unit'           => 'mm',
-                'length'                => 8.99,
-                'width'                 => 7.44,
-                'height'                => 1.33
-            )
-        );
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * Test (Fail): access postStore with input but no name
-     */
-    public function testStoreCreateFailsNameBlank()
-    {
-        $input = array(
-            'name'                  => '',
-            'short_description'     => 'This is body',
-            'cn_name'               => 'CN name',
-            'cn_short_description'  => 'CN short body',
-            'category_id'           => 1,
-            'sku'                   => 'UNIQUESKU001'
-        );
-
-        $this->call('POST', '/admin/products/store', $input);
-
-        $this->assertRedirectedTo('/admin/products/create');
-        $this->assertSessionHasErrors();
-    }
-    
     /**
      * Test (Fail): access postStore with product_id and id but no name
      * Edit Product Variant
@@ -391,12 +314,11 @@ class ProductControllerTest extends BaseControllerTest
     public function testViewVariantPass()
     {
         // Create category
-        $testcase = array(
-            'name' => 'This is the title',
-            'short_description' => 'This is the body',
-            'active' => true
-        );
-        $category = $this->createNewModel(new Category, $testcase);
+        $category = $this->createNewModel(new Category, array(
+            'name' => 'This is another title',
+            'short_description' => 'This is another body',
+            'active' => false
+        ));
         
         // Create parent
         $testcase_1 = array(

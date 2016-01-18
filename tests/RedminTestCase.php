@@ -27,8 +27,6 @@ class RedminTestCase extends TestBenchTestCase
     {
         parent::setUp();
 
-        //$this->app['router']->enableFilters();
-
         ini_set('memory_limit', '400M'); // Temporarily increase memory limit to 400MB
         
         /**

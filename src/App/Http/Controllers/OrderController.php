@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Exception;
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
@@ -10,11 +11,38 @@ use Redooor\Redminportal\App\Models\Pricelist;
 
 class OrderController extends Controller
 {
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
+    
+    public function __construct(Order $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'created_at';
+        $this->orderBy = 'desc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('users', 'orders.user_id', '=', 'users.id')
+            ->select('users.email', 'users.first_name', 'users.last_name', 'orders.*');
+        $this->sort_success_view = 'redminportal::orders.view';
+        $this->sort_fail_redirect = 'admin/orders';
+    }
+    
     public function getIndex()
     {
-        $orders = Order::orderBy('created_at', 'desc')->paginate(20);
+        $models = Order::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
 
-        return view('redminportal::orders/view')->with('orders', $orders);
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
+        
+        return view('redminportal::orders.view', $data);
     }
     
     public function getEmails()
@@ -169,7 +197,8 @@ class OrderController extends Controller
                     try {
                         $new_order->addCoupon($model);
                     } catch (Exception $exp) {
-                        $errors->add('couponError',
+                        $errors->add(
+                            'couponError',
                             "Coupon " . $model->code . " cannot be added because: " . $exp->getMessage()
                         );
                         

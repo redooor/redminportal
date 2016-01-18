@@ -1,16 +1,18 @@
 <?php namespace Redooor\Redminportal\Test;
 
-class MediaControllerTest extends BaseControllerTest
+class PortfolioControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
     public function __construct()
     {
-        $page = '/admin/medias';
+        $page = '/admin/portfolios';
         $viewhas = array(
-            'singular' => 'media',
-            'plural' => 'medias'
+            'singular' => 'portfolio',
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -19,24 +21,25 @@ class MediaControllerTest extends BaseControllerTest
                 'cn_name'               => 'CN name',
                 'cn_short_description'  => 'CN short body',
                 'category_id'           => 1,
-                'sku'                   => 'UNIQUESKU001',
                 'cn_name' => 'This is cn name',
                 'cn_short_description' => 'This is cn short description',
                 'cn_long_description' => 'This is cn long description'
             ),
             'edit' => array(
-                'id'        => 1,
+                'id'   => 1,
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
                 'cn_name'               => 'CN name',
                 'cn_short_description'  => 'CN short body',
                 'category_id'           => 1,
-                'sku'                   => 'UNIQUESKU001',
                 'cn_name' => 'This is cn name',
                 'cn_short_description' => 'This is cn short description',
                 'cn_long_description' => 'This is cn long description'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'created_at';
         
         parent::__construct($page, $viewhas, $input);
     }
@@ -50,7 +53,7 @@ class MediaControllerTest extends BaseControllerTest
     }
     
     /**
-     * Test (Fail): access postStore with no name
+     * Test (Fail): access postStore with input but no name
      */
     public function testStoreCreateFailsNameBlank()
     {
@@ -59,36 +62,12 @@ class MediaControllerTest extends BaseControllerTest
             'short_description'     => 'This is body',
             'cn_name'               => 'CN name',
             'cn_short_description'  => 'CN short body',
-            'category_id'           => 1,
-            'sku'                   => 'UNIQUESKU001'
+            'category_id'           => 1
         );
 
-        $this->call('POST', '/admin/medias/store', $input);
+        $this->call('POST', '/admin/portfolios/store', $input);
 
-        $this->assertRedirectedTo('/admin/medias/create');
+        $this->assertRedirectedTo('/admin/portfolios/create');
         $this->assertSessionHasErrors();
     }
-/*
-    public function testUploadFileSuccess()
-    {
-        $this->testStoreCreatePass(); // Create for upload
-        
-        $path = __DIR__ . '/../dummy/';
-        $filename = 'foo113a.pdf';
-        $mimeType = 'application/pdf';
-
-        $file = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-            $path . $filename,
-            $filename,
-            $mimeType
-        );
-
-        $input = array(
-            'name' => 'This is title'
-        );
-
-        $this->call('POST', '/admin/medias/upload/1', $input, array('file' => $file));
-
-        $this->assertRedirectedTo('/admin/medias');
-    }*/
 }

@@ -2,6 +2,8 @@
 
 class MailinglistControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -10,7 +12,7 @@ class MailinglistControllerTest extends BaseControllerTest
         $page = '/admin/mailinglists';
         $viewhas = array(
             'singular' => 'mailinglist',
-            'plural' => 'mailinglists'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -25,6 +27,9 @@ class MailinglistControllerTest extends BaseControllerTest
                 'last_name' => 'Lim2'
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'email';
         
         parent::__construct($page, $viewhas, $input);
     }
@@ -51,39 +56,6 @@ class MailinglistControllerTest extends BaseControllerTest
         $this->call('POST', '/admin/mailinglists/store', $input);
 
         $this->assertRedirectedTo('/admin/mailinglists/create');
-        $this->assertSessionHasErrors();
-    }
-    
-    /**
-     * Test (Pass): access getSort by email, asc
-     */
-    public function testSortByPass()
-    {
-        $this->call('GET', '/admin/mailinglists/sort/email/asc');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('mailinglists');
-    }
-    
-    /**
-     * Test (Fail): access getSort, try to insert query as email
-     */
-    public function testSortByValidationFail()
-    {
-        $this->call('GET', '/admin/mailinglists/sort/->where("id", 5)/asc');
-
-        $this->assertRedirectedTo('/admin/mailinglists');
-        $this->assertSessionHasErrors();
-    }
-    
-    /**
-     * Test (Fail): access getSort, try to insert query as orderBy
-     */
-    public function testSortByValidationOrderByFail()
-    {
-        $this->call('GET', '/admin/mailinglists/sort/email/->where("id", 5)');
-
-        $this->assertRedirectedTo('/admin/mailinglists');
         $this->assertSessionHasErrors();
     }
 }

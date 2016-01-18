@@ -2,6 +2,8 @@
 
 class UserControllerTest extends BaseControllerTest
 {
+    use TraitSorterControllerTest;
+    
     /**
      * Contructor
      */
@@ -10,7 +12,7 @@ class UserControllerTest extends BaseControllerTest
         $page = '/admin/users';
         $viewhas = array(
             'singular' => 'user',
-            'plural' => 'users'
+            'plural' => 'models'
         );
         $input = array(
             'create' => array(
@@ -33,6 +35,9 @@ class UserControllerTest extends BaseControllerTest
                 'activated'  => true
             )
         );
+        
+        // For testing sort
+        $this->sortBy = 'email';
         
         parent::__construct($page, $viewhas, $input);
     }
@@ -188,39 +193,6 @@ class UserControllerTest extends BaseControllerTest
     }
     
     /**
-     * Test (Pass): access getSort by email, asc
-     */
-    public function testSortByPass()
-    {
-        $this->call('GET', '/admin/users/sort/email/asc');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('users');
-    }
-    
-    /**
-     * Test (Fail): access getSort, try to insert query as email
-     */
-    public function testSortByValidationFail()
-    {
-        $this->call('GET', '/admin/users/sort/->where("id", 5)/asc');
-
-        $this->assertRedirectedTo('/admin/users');
-        $this->assertSessionHasErrors();
-    }
-    
-    /**
-     * Test (Fail): access getSort, try to insert query as orderBy
-     */
-    public function testSortByValidationOrderByFail()
-    {
-        $this->call('GET', '/admin/users/sort/email/->where("id", 5)');
-
-        $this->assertRedirectedTo('/admin/users');
-        $this->assertSessionHasErrors();
-    }
-    
-    /**
      * Test (Pass): access postSearch with valid input
      */
     public function testPostSearchNamePass()
@@ -286,7 +258,7 @@ class UserControllerTest extends BaseControllerTest
         $this->call('GET', '/admin/users/search/peter');
 
         $this->assertResponseOk();
-        $this->assertViewHas('users');
+        $this->assertViewHas('models');
     }
     
     /**
@@ -308,7 +280,7 @@ class UserControllerTest extends BaseControllerTest
         $this->call('GET', '/admin/users/group/user');
 
         $this->assertResponseOk();
-        $this->assertViewHas('users');
+        $this->assertViewHas('models');
     }
     
     /**

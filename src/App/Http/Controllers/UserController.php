@@ -2,24 +2,43 @@
 
 use Lang;
 use Auth;
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Group;
 
 class UserController extends Controller
 {
-    private $perpage = 50;
+    protected $model;
+    protected $perpage;
+    protected $sortBy;
+    protected $orderBy;
+    
+    use SorterController;
+    
+    public function __construct(User $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'email';
+        $this->orderBy = 'asc';
+        $this->perpage = config('redminportal::pagination.size');
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('users_groups', 'users_groups.user_id', '=', 'users.id')
+            ->LeftJoin('groups', 'groups.id', '=', 'users_groups.group_id')
+            ->select('users.*', 'groups.name as group_name')
+            ->groupBy('email');
+        $this->sort_success_view = 'redminportal::users.view';
+        $this->sort_fail_redirect = 'admin/users';
+    }
     
     public function getIndex()
     {
-        $sortBy = 'email';
-        $orderBy = 'asc';
-        
-        $users = User::orderBy($sortBy, $orderBy)->paginate($this->perpage);
+        $models = User::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
         
         $data = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy,
-            'users' => $users
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy,
+            'models' => $models
         );
 
         return view('redminportal::users/view', $data);
@@ -47,16 +66,15 @@ class UserController extends Controller
         
         $roles = Group::orderBy('name')->lists('name', 'id');
         
-        $group = $user->groups()->first();
-        
-        if ($group == null) {
-            $group = Group::orderBy('name')->first();
+        $groups = [];
+        foreach ($user->groups as $group) {
+            $groups[$group->id] = $group->id;
         }
         
         $data = array(
             'roles' => $roles,
             'user' => $user,
-            'group' => $group
+            'groups' => $groups
         );
         
         return view('redminportal::users/edit', $data);
@@ -69,6 +87,7 @@ class UserController extends Controller
         $rules = array(
             'first_name'    => 'required',
             'last_name'     => 'required',
+            'role'          => 'required',
             'email'         => 'required|unique:users,email,' . $sid
         );
         
@@ -135,11 +154,11 @@ class UserController extends Controller
             return redirect($path)->withErrors($errors)->withInput();
         }
         
-        // Find user's group
-        $old_group = $user->groups()->first();
-        $new_group = Group::find($role);
-
-        if ($new_group == null) {
+        // Assign group(s) to user
+        $add_group_success = $user->addGroup($role);
+        
+        // Return error message if group has error
+        if (! $add_group_success) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'groupError',
@@ -148,17 +167,9 @@ class UserController extends Controller
             return redirect($path)->withErrors($errors)->withInput();
         }
 
-        // Assign the group to the user
-        if ($old_group == null) {
-            $user->groups()->save($new_group);
-        } elseif ($old_group->id != $new_group->id) {
-            $user->groups()->detach();
-            $user->groups()->save($new_group);
-        }
-
         return redirect('admin/users');
     }
-
+    
     public function getDelete($sid)
     {
         $this_user = Auth::user();
@@ -238,47 +249,6 @@ class UserController extends Controller
         return redirect()->back();
     }
     
-    public function getSort($sortBy = 'email', $orderBy = 'asc')
-    {
-        $inputs = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy
-        );
-        
-        $rules = array(
-            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
-            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
-        );
-        
-        $validation = \Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/users')->withErrors($validation);
-        }
-        
-        if ($orderBy != 'asc' && $orderBy != 'desc') {
-            $orderBy = 'asc';
-        }
-        
-        if ($sortBy == 'group') {
-            $users = User::LeftJoin('users_groups', 'users_groups.user_id', '=', 'users.id')
-                ->LeftJoin('groups', 'groups.id', '=', 'users_groups.group_id')
-                ->select('users.*', 'groups.name')
-                ->orderBy('groups.name', $orderBy)
-                ->paginate($this->perpage);
-        } else {
-            $users = User::orderBy($sortBy, $orderBy)->paginate($this->perpage);
-        }
-        
-        $data = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy,
-            'users' => $users
-        );
-        
-        return view('redminportal::users/view', $data);
-    }
-    
     public function postSearch()
     {
         $pattern = '/^[a-zA-Z0-9 -:\@\.]+$/';
@@ -289,8 +259,7 @@ class UserController extends Controller
 
         $validation = \Validator::make(\Input::all(), $rules);
 
-        if( $validation->fails() )
-        {
+        if ($validation->fails()) {
             return redirect('admin/users')->withErrors($validation)->withInput();
         }
         
@@ -326,8 +295,7 @@ class UserController extends Controller
 
         $validation = \Validator::make($inputs, $rules);
 
-        if( $validation->fails() )
-        {
+        if ($validation->fails()) {
             return redirect('admin/users')->withErrors($validation)->with('search', $search);
         }
         
@@ -349,7 +317,7 @@ class UserController extends Controller
         $data = array(
             'sortBy' => $sortBy,
             'orderBy' => $orderBy,
-            'users' => $users,
+            'models' => $users,
             'search' => $search
         );
 
@@ -370,8 +338,7 @@ class UserController extends Controller
 
         $validation = \Validator::make($inputs, $rules);
 
-        if( $validation->fails() )
-        {
+        if ($validation->fails()) {
             return redirect('admin/users')->withErrors($validation)->with('search', $search);
         }
         
@@ -394,7 +361,7 @@ class UserController extends Controller
         $data = array(
             'sortBy' => $sortBy,
             'orderBy' => $orderBy,
-            'users' => $users,
+            'models' => $users,
             'search' => 'group:' . $search
         );
         

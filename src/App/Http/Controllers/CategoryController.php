@@ -224,20 +224,6 @@ class CategoryController extends Controller
             );
             return redirect('/admin/categories')->withErrors($errors);
         }
-
-        // Check in use by media
-        $medias = Media::where('category_id', $sid)->get();
-        if (count($medias) > 0) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'deleteError',
-                Lang::get(
-                    'redminportal::messages.category_error_cannot_delete_in_use',
-                    ['name' => $category->name]
-                )
-            );
-            return redirect('/admin/categories')->withErrors($errors);
-        }
         
         // Delete the category
         $category->delete();

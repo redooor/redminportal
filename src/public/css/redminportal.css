@@ -1,7 +1,7 @@
 /*!
  * redminportal v0.3.3
  * Homepage: https://github.com/redooor/redminportal
- * Copyright 2014-2015 Redooor LLP
+ * Copyright 2014-2016 Redooor LLP
  * Licensed under MIT
 */
 
@@ -327,57 +327,10 @@ i {
   -webkit-background-size: contain;
           background-size: contain;
 }
-ul.redooor-hierarchy {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  max-height: 200px;
-  overflow-y: scroll;
-}
-ul.redooor-hierarchy ul {
-  padding-left: 1.2em;
-  list-style: none;
-}
-ul.redooor-hierarchy li {
-  line-height: 1.8;
-  white-space: nowrap;
-}
-ul.redooor-hierarchy a {
-  padding: 0.3em 0.5em;
-}
-ul.redooor-hierarchy a.active {
-  color: #fff;
-  background: #428bca;
-}
-ul.redooor-hierarchy.no-max-height {
-  max-height: none;
-}
 .rdpt-preloader {
   text-align: center;
   padding: 1em;
   display: none;
-}
-/* twitter typeahead */
-.twitter-typeahead {
-  width: 100%;
-}
-.scrollable-dropdown-menu .tt-dropdown-menu {
-  max-height: 150px;
-  overflow-y: auto;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-}
-.tt-dropdown-menu .tt-suggestion {
-  cursor: pointer;
-  padding: 0.5em 1em;
-}
-.tt-dropdown-menu .tt-suggestion:hover {
-  color: white;
-  background-color: #428bca;
-}
-.tt-dropdown-menu .tt-suggestion p {
-  padding: 0;
-  margin: 0;
 }
 /* tables */
 .table td.table-actions {
@@ -438,6 +391,31 @@ ul.redooor-hierarchy.no-max-height {
   .hero-text {
     font-size: 2em;
   }
+}
+ul.redmin-hierarchy {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+ul.redmin-hierarchy ul {
+  padding-left: 1.2em;
+  list-style: none;
+}
+ul.redmin-hierarchy li {
+  line-height: 1.8;
+  white-space: nowrap;
+}
+ul.redmin-hierarchy a {
+  padding: 0.3em 0.5em;
+}
+ul.redmin-hierarchy a.active {
+  color: #fff;
+  background: #428bca;
+}
+ul.redmin-hierarchy.no-max-height {
+  max-height: none;
 }
 .panel.panel-card .panel-heading {
   min-height: 80px;
@@ -504,5 +482,104 @@ ul.redooor-hierarchy.no-max-height {
 }
 .mce-btn.mce-primary .mce-txt {
   color: #ffffff;
+}
+.bootstrap-tagsinput {
+  border: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -webkit-box-shadow: inset 0 -1px 0 #dddddd;
+  box-shadow: inset 0 -1px 0 #dddddd;
+  font-size: 16px;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+  vertical-align: middle;
+  max-width: 100%;
+  cursor: text;
+  margin-top: 8px;
+  min-height: 26px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  -webkit-transition: border-color ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
+  -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+.bootstrap-tagsinput.tagsinput-focus {
+  -webkit-box-shadow: inset 0 -2px 0 #2196f3;
+  box-shadow: inset 0 -2px 0 #2196f3;
+}
+.bootstrap-tagsinput input {
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  width: auto !important;
+  max-width: inherit;
+  display: inline-block;
+}
+.bootstrap-tagsinput input:focus {
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.bootstrap-tagsinput .tag {
+  margin-right: 2px;
+  color: white;
+}
+.bootstrap-tagsinput .tag [data-role="remove"] {
+  margin-left: 8px;
+  cursor: pointer;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:after {
+  content: "x";
+  padding: 0px 2px;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:hover {
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:hover:active {
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+/* For Typeahead.js plugin */
+.twitter-typeahead .tt-query {
+  margin-bottom: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.twitter-typeahead .tt-hint {
+  margin-bottom: 0;
+  color: #999999;
+}
+.twitter-typeahead .tt-menu {
+  min-width: 160px;
+  margin-top: 4px;
+  padding: 0px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.twitter-typeahead .tt-suggestion {
+  padding: 3px 20px;
+  line-height: 24px;
+}
+.twitter-typeahead .tt-suggestion.tt-cursor,
+.twitter-typeahead .tt-suggestion:hover {
+  color: #fff;
+  background-color: #0097cf;
+  cursor: pointer;
+}
+.twitter-typeahead .tt-suggestion p {
+  margin: 0;
 }
 /*# sourceMappingURL=redminportal.css.map */
