@@ -81,6 +81,7 @@ This update introduces some new tables and lots of changes.
 5. Fix Module on change category doesn't load media. (issue #150)
 6. Click menu overlay to close doesn't work on iPad. (issue #151)
 7. Fix Build error for PHP7 due to getID3 package. Switch to JamesHeinrich/getID3. (issue #152)
+8. Added delete image functionality to Bundles. (issue #149)
 
 ## Version 0.3.2 and 0.2.2
 Code clean up, new features and UI improvements.

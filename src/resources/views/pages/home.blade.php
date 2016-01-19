@@ -82,6 +82,7 @@
                         <li>Fix Module on change category doesn't load media. (issue #150)</li>
                         <li>Click menu overlay to close doesn't work on iPad. (issue #151)</li>
                         <li>Fix Build error for PHP7 due to getID3 package. Switch to JamesHeinrich/getID3. (issue #152)</li>
+                        <li>Added delete image functionality to Bundles. (issue #149)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>

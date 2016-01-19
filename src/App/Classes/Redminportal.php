@@ -2,6 +2,7 @@
 
 use Redooor\Redminportal\App\UI\Html;
 use Redooor\Redminportal\App\UI\Form;
+use Redooor\Redminportal\App\Classes\Imagine;
 
 class Redminportal
 {
@@ -14,6 +15,7 @@ class Redminportal
         $this->url = $url;
         $this->this_html = new Html;
         $this->this_form = new Form;
+        $this->this_imagine = new Imagine;
     }
     
     public function html()
@@ -24,5 +26,10 @@ class Redminportal
     public function form()
     {
         return $this->this_form;
+    }
+    
+    public function imagine()
+    {
+        return $this->this_imagine;
     }
 }

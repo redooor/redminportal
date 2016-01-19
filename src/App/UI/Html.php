@@ -35,4 +35,23 @@ class Html
         
         return view('redminportal::partials.link-sorter', $data);
     }
+    
+    /*
+     * Generate an HTML link to a sorting route, e.g. sort/sort_by/order_by
+     *
+     * @param string Sorting route
+     * @param string Field name
+     * @param string Sort by name
+     * @param string Order by (asc or desc)
+     * @param string Display name (optional)
+     * @return View
+     */
+    public function uploadedImages($model)
+    {
+        $data = [
+            'model' => $model
+        ];
+        
+        return view('redminportal::partials.uploaded-images', $data);
+    }
 }

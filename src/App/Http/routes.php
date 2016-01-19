@@ -38,6 +38,7 @@ Route::group(
         Route::controller('pages', 'PageController');
         Route::controller('orders', 'OrderController');
         Route::controller('bundles', 'BundleController');
+        Route::controller('images', 'ImageController');
     }
 );
 
