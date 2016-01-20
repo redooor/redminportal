@@ -61,12 +61,8 @@ class OrderGetDiscountTest extends BaseRelationshipTest
         ));
     }
     
-    public function testGetDiscountOfOrderWithProduct1()
+    private function prepareProductsAndCoupons()
     {
-        // Link product 1 to coupon only
-        $this->coupon->products()->save($this->product_1);
-        $this->assertTrue($this->coupon->products->count() == 1);
-        
         // Link product 1 and 2 to order
         $this->order->products()->save($this->product_1);
         $this->order->products()->save($this->product_2);
@@ -78,8 +74,18 @@ class OrderGetDiscountTest extends BaseRelationshipTest
         
         // Check total price of order is same as product
         $this->assertTrue($this->order->getTotalprice() == 100.00);
+    }
+    
+    public function testGetDiscountOfOrderWithProduct1()
+    {
+        // Link product 1 to coupon only
+        $this->coupon->products()->save($this->product_1);
+        $this->assertTrue($this->coupon->products->count() == 1);
+        
+        $this->prepareProductsAndCoupons();
         
         // Check total discount of order is 10% of product 1 only
+        echo var_dump($this->order->getTotaldiscount());
         $this->assertTrue($this->order->getTotaldiscount() == 1.00);
     }
     
@@ -90,19 +96,10 @@ class OrderGetDiscountTest extends BaseRelationshipTest
         $this->coupon->products()->save($this->product_2);
         $this->assertTrue($this->coupon->products->count() == 2);
         
-        // Link product 1 and 2 to order
-        $this->order->products()->save($this->product_1);
-        $this->order->products()->save($this->product_2);
-        $this->assertTrue($this->order->products->count() == 2);
+        $this->prepareProductsAndCoupons();
         
-        // Link coupon to order
-        $this->order->coupons()->save($this->coupon);
-        $this->assertTrue($this->order->coupons->count() == 1);
-        
-        // Check total price of order is same as product
-        $this->assertTrue($this->order->getTotalprice() == 100.00);
-        
-        // Check total discount of order is 10% of product 1 only
+        // Check total discount of order is 10% of product 1 and 2
+        echo var_dump($this->order->getTotaldiscount());
         $this->assertTrue($this->order->getTotaldiscount() == 10.00);
         
         // Check GetDiscounts() return correct value
