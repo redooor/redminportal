@@ -120,9 +120,12 @@ class Imagine
     /**
      * Upload an image to the public storage
      * @param  File $file
+     * @param string Directory (optional, defaults to null)
+     * @param bool Whether to create all dimensions (optional, defaults to false)
+     * @param bool Automatically appends number if file already exists (optional, defaults to true)
      * @return string
      */
-    public function upload($file, $dir = null, $createDimensions = false)
+    public function upload($file, $dir = null, $createDimensions = false, $autonumber = true)
     {
         if ($file) {
             // Generate random dir
@@ -132,7 +135,13 @@ class Imagine
      
             // Get file info and try to move
             $destination = Config::get('redminportal::image.upload_path') . $dir;
-            $filename    = $file->getClientOriginalName();
+            
+            if ($autonumber) {
+                $filename = $this->autoNumberFile($destination, $file);
+            } else {
+                $filename = $file->getClientOriginalName();
+            }
+            
             $path        = RHelper::joinPaths(Config::get('redminportal::image.upload_dir'), $dir, $filename);
             $uploaded    = $file->move($destination, $filename);
      
@@ -144,6 +153,28 @@ class Imagine
                 return $path;
             }
         }
+    }
+    
+    /**
+     * Automatically appends number if file already exists
+     * @param  string $path
+     * @param  string  $filename
+     * @return string New Filename
+     */
+    private function autoNumberFile($path, $file)
+    {
+        $extension = $file->getClientOriginalExtension();
+        $original_name = $file->getClientOriginalName();
+        
+        $filename = $original_name; // Set to original name
+        
+        $counter = 1;
+        while (file_exists($path . '/' . $filename)) {
+            $filename = str_replace("." . $extension, '_' . $counter . "." . $extension, $original_name);
+            $counter++;
+        }
+        
+        return $filename;
     }
     
     /**

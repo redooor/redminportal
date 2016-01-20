@@ -112,6 +112,7 @@
                         <li>Fix Build error for PHP7 due to getID3 package. Switch to JamesHeinrich/getID3. (issue #152)</li>
                         <li>Added delete image functionality to Bundles. (issue #149)</li>
                         <li>Fixed Typeahead styling messed up for email suggestions. (issue #156)</li>
+                        <li>Upload image with same name will now be appended with number. (issue #154)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>
