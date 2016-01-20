@@ -77,7 +77,23 @@ This update introduces some new tables and lots of changes.
 12. Introduced partial Blade template for sortable header.
 13. Overall Line count decreased from 23031 to 22805 with trait and partial template.
 14. Improve Usability: after delete action should go back to last visited page (issue #131)
+    - Announcement
+    - Bundle
+    - Category
+    - Coupon
+    - Group
+    - Mailinglist
+    - Media
+    - Membership
+    - Module
     - Order
+    - Page
+    - Portfolio
+    - Post
+    - Product
+    - Promotion
+    - Purchase
+    - User
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)

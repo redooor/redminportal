@@ -441,7 +441,7 @@ class ProductController extends Controller
         if ($product == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('errorDeleteRecord', Lang::get('redminportal::messages.error_delete_entry'));
-            return redirect('admin/products')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Check if there's any order related to this product
@@ -451,7 +451,7 @@ class ProductController extends Controller
                 'errorDeleteRecordAlreadyOrdered',
                 Lang::get('redminportal::messages.error_delete_product_already_ordered')
             );
-            return redirect('admin/products')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Check if there's any order related to this product's variants
@@ -462,14 +462,14 @@ class ProductController extends Controller
                     'errorDeleteRecordAlreadyOrdered',
                     Lang::get('redminportal::messages.error_delete_variant_already_ordered')
                 );
-                return redirect('admin/products')->withErrors($errors);
+                return redirect()->back()->withErrors($errors);
             }
         }
         
         // Delete the product
         $product->delete();
 
-        return redirect('admin/products');
+        return redirect()->back();
     }
     
     /*

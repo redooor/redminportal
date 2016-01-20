@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Classes;
  
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\File as Filesystem;
 use Illuminate\Support\Facades\Log;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
@@ -82,8 +82,8 @@ class Imagine
             // Create directory if missing
             try {
                 // Create dir if missing
-                if (! File::isDirectory($targetDirPath) and $targetDirPath) {
-                    @File::makeDirectory($targetDirPath);
+                if (! Filesystem::isDirectory($targetDirPath) and $targetDirPath) {
+                    @Filesystem::makeDirectory($targetDirPath);
                 }
      
                 // Set the size
@@ -92,8 +92,8 @@ class Imagine
                 // Now the mode
                 $mode = $crop ? ImageInterface::THUMBNAIL_OUTBOUND : ImageInterface::THUMBNAIL_INSET;
      
-                if (! File::exists($targetFilePath) or
-                    (File::lastModified($targetFilePath) < File::lastModified($sourceFilePath))) {
+                if (! Filesystem::exists($targetFilePath) or
+                    (Filesystem::lastModified($targetFilePath) < Filesystem::lastModified($sourceFilePath))) {
                     $this->imagine->open($sourceFilePath)
                         ->thumbnail($size, $mode)
                         ->save($targetFilePath, array('quality' => $quality));

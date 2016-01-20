@@ -2,6 +2,7 @@
 
 use Exception;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
@@ -16,7 +17,7 @@ class OrderController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Order $model)
     {
@@ -208,20 +209,5 @@ class OrderController extends Controller
         }
         
         return redirect('admin/orders');
-    }
-    
-    public function getDelete($sid)
-    {
-        $order = Order::find($sid);
-        
-        if ($order == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('userError', "The order record may have already been deleted.");
-            return redirect()->back()->withErrors($errors);
-        }
-        
-        $order->delete();
-        
-        return redirect()->back();
     }
 }

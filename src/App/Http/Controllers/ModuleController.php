@@ -329,7 +329,7 @@ class ModuleController extends Controller
         if ($module == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
-            return \Redirect::to('admin/modules')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         $purchases = Order::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
@@ -343,13 +343,13 @@ class ModuleController extends Controller
                 'deleteError',
                 "This module has been purchased before. You cannot delete it. Please disable it instead."
             );
-            return \Redirect::to('admin/modules')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Delete the module
         $module->delete();
 
-        return \Redirect::to('admin/modules');
+        return redirect()->back();
     }
     
     public function getImgremove($sid)

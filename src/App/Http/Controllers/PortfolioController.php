@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Portfolio;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -14,7 +15,7 @@ class PortfolioController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Portfolio $model)
     {
@@ -181,23 +182,6 @@ class PortfolioController extends Controller
                 return redirect('admin/portfolios/create')->withErrors($validation)->withInput();
             }
         }
-
-        return redirect('admin/portfolios');
-    }
-
-    public function getDelete($sid)
-    {
-        // Find the portfolio using the user id
-        $portfolio = Portfolio::find($sid);
-
-        if ($portfolio == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return redirect('/admin/portfolios')->withErrors($errors);
-        }
-        
-        // Delete the portfolio
-        $portfolio->delete();
 
         return redirect('admin/portfolios');
     }

@@ -83,18 +83,6 @@ class OrderControllerTest extends BaseControllerTest
     {
         return;
     }
-    
-    /**
-     * Override base functions
-     * Test (Fail): access getDelete with id = 1
-     */
-    public function testDeleteFail()
-    {
-        $this->call('GET', $this->page . '/delete/1');
-
-        $this->assertRedirectedTo('/');
-        $this->assertSessionHasErrors();
-    }
 
     public function testStoreCreateFailedNoProduct()
     {

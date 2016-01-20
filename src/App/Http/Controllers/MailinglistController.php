@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Mailinglist;
 
 class MailinglistController extends Controller
@@ -10,7 +11,7 @@ class MailinglistController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Mailinglist $model)
     {
@@ -112,23 +113,6 @@ class MailinglistController extends Controller
                 return redirect('admin/mailinglists/create')->withErrors($validation)->withInput();
             }
         }
-
-        return redirect('admin/mailinglists');
-    }
-
-    public function getDelete($sid)
-    {
-        // Find the mailinglist using the user id
-        $mailinglist = Mailinglist::find($sid);
-
-        // Delete the mailinglist
-        if ($mailinglist == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "We are having problem deleting this entry. It may have already been deleted.");
-            return redirect('admin/mailinglists')->withErrors($errors);
-        }
-
-        $mailinglist->delete();
 
         return redirect('admin/mailinglists');
     }

@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Promotion;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Translation;
@@ -16,7 +17,7 @@ class PromotionController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Promotion $model)
     {
@@ -169,23 +170,6 @@ class PromotionController extends Controller
             }
         }
         
-        return redirect('admin/promotions');
-    }
-    
-    public function getDelete($sid)
-    {
-        // Find the promotion using the id
-        $promotion = Promotion::find($sid);
-        
-        if ($promotion == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
-            return redirect('admin/promotions')->withErrors($errors);
-        }
-        
-        // Delete the promotion
-        $promotion->delete();
-
         return redirect('admin/promotions');
     }
     

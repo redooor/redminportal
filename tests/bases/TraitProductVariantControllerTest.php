@@ -304,7 +304,7 @@ trait TraitProductVariantControllerTest
         
         $this->call('GET', $this->page . '/delete/1');
         
-        $this->assertRedirectedTo('/admin/products');
+        $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
     }
     

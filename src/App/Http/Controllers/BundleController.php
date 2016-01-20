@@ -2,6 +2,7 @@
 
 use Input;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Bundle;
 use Redooor\Redminportal\App\Models\Product;
@@ -18,7 +19,7 @@ class BundleController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Bundle $model)
     {
@@ -306,22 +307,6 @@ class BundleController extends Controller
                 $newBundle->images()->save($newimage);
             }
         }
-
-        return redirect('admin/bundles');
-    }
-
-    public function getDelete($sid)
-    {
-        $bundle = Bundle::find($sid);
-
-        // No such id
-        if ($bundle == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The bundle may have been deleted.");
-            return redirect('admin/bundles')->withErrors($errors)->withInput();
-        }
-
-        $bundle->delete();
 
         return redirect('admin/bundles');
     }

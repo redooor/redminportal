@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Illuminate\Support\Facades\File;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\MediaUploaderController;
 use Redooor\Redminportal\App\Models\Media;
@@ -165,9 +166,9 @@ class MediaController extends Controller
                     mkdir($new_cat_folder, 0777, true);
                 }
                 // Copy existing media to new category
-                \File::copyDirectory($old_cat_folder, $new_cat_folder);
+                File::copyDirectory($old_cat_folder, $new_cat_folder);
                 // Delete old media folder
-                \File::deleteDirectory($old_cat_folder);
+                File::deleteDirectory($old_cat_folder);
             }
         } else {
             $media->path = 'broken.pdf';
@@ -240,7 +241,7 @@ class MediaController extends Controller
         if ($media == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
-            return redirect('admin/medias')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         // Check if used by Module
@@ -257,14 +258,14 @@ class MediaController extends Controller
             if (! $orphan) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add('deleteError', "This media cannot be deleted because it is link to a module.");
-                return redirect('admin/medias')->withErrors($errors);
+                return redirect()->back()->withErrors($errors);
             }
         }
         
         // Delete the media
         $media->delete();
 
-        return redirect('admin/medias');
+        return redirect()->back();
     }
     
     public function getDuration($sid)

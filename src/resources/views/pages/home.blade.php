@@ -81,7 +81,23 @@
                         <li>Overall Line count decreased from 23031 to 22805 with trait and partial template.</li>
                         <li>Improve Usability: after delete action should go back to last visited page (issue #131)
                             <ul>
+                                <li>Announcement</li>
+                                <li>Bundle</li>
+                                <li>Category</li>
+                                <li>Coupon</li>
+                                <li>Group</li>
+                                <li>Mailinglist</li>
+                                <li>Media</li>
+                                <li>Membership</li>
+                                <li>Module</li>
                                 <li>Order</li>
+                                <li>Page</li>
+                                <li>Portfolio</li>
+                                <li>Post</li>
+                                <li>Product</li>
+                                <li>Promotion</li>
+                                <li>Purchase</li>
+                                <li>User</li>
                             </ul>
                         </li>
                     </ol>

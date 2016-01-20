@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Post;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -15,7 +16,7 @@ class PostController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Post $model)
     {
@@ -202,23 +203,6 @@ class PostController extends Controller
                 Tag::addTag($post, $tagName);
             }
         }
-
-        return redirect('admin/posts');
-    }
-
-    public function getDelete($sid)
-    {
-        // Find the post using the user id
-        $post = Post::find($sid);
-
-        if ($post == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return redirect('/admin/posts')->withErrors($errors);
-        }
-        
-        // Delete the post
-        $post->delete();
 
         return redirect('admin/posts');
     }

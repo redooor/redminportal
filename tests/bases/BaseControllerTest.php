@@ -147,7 +147,7 @@ class BaseControllerTest extends RedminTestCase
     {
         $this->call('GET', $this->page . '/delete/1');
 
-        $this->assertRedirectedTo($this->page);
+        $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
     }
     

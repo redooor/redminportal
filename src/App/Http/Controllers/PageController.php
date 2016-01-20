@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Page;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -15,7 +16,7 @@ class PageController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Page $model)
     {
@@ -200,23 +201,6 @@ class PageController extends Controller
                 Tag::addTag($page, $tagName);
             }
         }
-
-        return redirect('admin/pages');
-    }
-
-    public function getDelete($sid)
-    {
-        // Find the page using the user id
-        $page = Page::find($sid);
-
-        if ($page == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return redirect('/admin/pages')->withErrors($errors);
-        }
-        
-        // Delete the page
-        $page->delete();
 
         return redirect('admin/pages');
     }

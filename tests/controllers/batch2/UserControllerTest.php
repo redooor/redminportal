@@ -83,7 +83,7 @@ class UserControllerTest extends BaseControllerTest
     {
         $this->call('GET', $this->page . '/delete/2');
 
-        $this->assertRedirectedTo($this->page);
+        $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
     }
     
@@ -95,7 +95,7 @@ class UserControllerTest extends BaseControllerTest
     {
         $this->call('GET', $this->page . '/delete/1');
 
-        $this->assertRedirectedTo($this->page);
+        $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
     }
     

@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Announcement;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Helpers\RImage;
@@ -12,7 +13,7 @@ class AnnouncementController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Announcement $model)
     {
@@ -125,23 +126,6 @@ class AnnouncementController extends Controller
             }
         }
         
-        return redirect('admin/announcements');
-    }
-    
-    public function getDelete($sid)
-    {
-        // Find the announcement using the id
-        $announcement = Announcement::find($sid);
-        
-        if ($announcement == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return redirect('/admin/announcements')->withErrors($errors);
-        }
-        
-        // Delete the announcement
-        $announcement->delete();
-
         return redirect('admin/announcements');
     }
     

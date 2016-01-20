@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Coupon;
 use Redooor\Redminportal\App\Models\Product;
@@ -14,7 +15,7 @@ class CouponController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Coupon $model)
     {
@@ -310,22 +311,6 @@ class CouponController extends Controller
         foreach ($apply_to_models as $apply_to_model) {
             $apply_to_model->coupons()->save($newCoupon);
         }
-
-        return redirect('admin/coupons');
-    }
-
-    public function getDelete($sid)
-    {
-        $coupon = Coupon::find($sid);
-
-        // No such id
-        if ($coupon == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The coupon may have been deleted.");
-            return redirect('admin/coupons')->withErrors($errors)->withInput();
-        }
-
-        $coupon->delete();
 
         return redirect('admin/coupons');
     }

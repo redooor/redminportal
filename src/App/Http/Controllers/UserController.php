@@ -179,7 +179,7 @@ class UserController extends Controller
                 'deleteError',
                 Lang::get('redminportal::messages.user_error_delete_own_account')
             );
-            return redirect('/admin/users')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         $user = User::find($sid);
@@ -190,7 +190,7 @@ class UserController extends Controller
                 'deleteError',
                 Lang::get('redminportal::messages.user_error_user_not_found')
             );
-            return redirect('/admin/users')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Delete the user

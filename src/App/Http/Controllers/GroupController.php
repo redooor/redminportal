@@ -178,7 +178,7 @@ class GroupController extends Controller
         if ($group == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The group cannot be deleted at this time. It may have already been deleted.");
-            return redirect('/admin/groups')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         if (count($group->users) > 0) {
@@ -188,11 +188,11 @@ class GroupController extends Controller
                 'deleteError',
                 "The group cannot be deleted because it is in use. Try moving the users to another group first."
             );
-            return redirect('/admin/groups')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         } else {
             $group->delete();
         }
 
-        return redirect('admin/groups');
+        return redirect()->back();
     }
 }

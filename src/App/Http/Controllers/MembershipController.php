@@ -111,7 +111,7 @@ class MembershipController extends Controller
         if ($membership == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The membership cannot be found. It could have already been deleted.");
-            return \Redirect::to('/admin/memberships')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         // Cannot delete if in use
@@ -119,12 +119,12 @@ class MembershipController extends Controller
         if (count($modMediaMembership) > 0) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The membership cannot be deleted because it is in used.");
-            return \Redirect::to('/admin/memberships')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         // Delete the membership
         $membership->delete();
 
-        return \Redirect::to('admin/memberships');
+        return redirect()->back();
     }
 }
