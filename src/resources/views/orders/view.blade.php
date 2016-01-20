@@ -148,7 +148,12 @@
         {!! $models->render() !!}
         </div>
     @else
+        @if ($models->lastPage())
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_order_found') }}</div>
+        @endif
     @endif
     <div id="export-csv" class="modal fade">
         <div class="modal-dialog">

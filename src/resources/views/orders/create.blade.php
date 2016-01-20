@@ -18,10 +18,8 @@
                     <h4 class="panel-title">{{ Lang::get('redminportal::forms.create_order') }}</h4>
                 </div>
                 <div class="panel-body">
-                    <div class="form-group scrollable-dropdown-menu">
-                        {!! Form::label('email', Lang::get('redminportal::forms.email')) !!}
-                        {!! Form::text('email', null, array('class' => 'form-control typeahead', 'required')) !!}
-                    </div>
+                    {!! Redminportal::form()->emailInputer() !!}
+                    
                     <div class="form-group">
                         {!! Form::label('payment_status', Lang::get('redminportal::forms.payment_status')) !!}
                         {!! Form::select('payment_status', $payment_statuses, null, array('class' => 'form-control')) !!}
@@ -96,52 +94,4 @@
         </div>
     </div>
     {!! Form::close() !!}
-@stop
-
-@section('footer')
-{!! HTML::script('vendor/redooor/redminportal/js/typeahead.bundle.js') !!}
-<script>
-    (function ($){
-        $(function() {
-            var substringMatcher = function(strs) {
-                return function findMatches(q, cb) {
-                    var matches, substrRegex;
-
-                    // an array that will be populated with substring matches
-                    matches = [];
-
-                    // regex used to determine if a string contains the substring `q`
-                    substrRegex = new RegExp(q, 'i');
-
-                    // iterate through the pool of strings and for any string that
-                    // contains the substring `q`, add it to the `matches` array
-                    $.each(strs, function(i, str) {
-                        if (substrRegex.test(str)) {
-                            // the typeahead jQuery plugin expects suggestions to a
-                            // JavaScript object, refer to typeahead docs for more info
-                            matches.push({ value: str });
-                        }
-                    });
-
-                    cb(matches);
-                };
-            };
-
-            $.get( "{{ URL::to('admin/orders/emails') }}", function( data ) {
-                var emails = data;
-                
-                $('.typeahead').typeahead({
-                    hint: true,
-                    highlight: true,
-                    minLength: 1
-                },
-                {
-                    name: 'emails',
-                    displayKey: 'value',
-                    source: substringMatcher(emails)
-                });
-            });
-        });
-    })(window.jQuery);
-</script>
 @stop

@@ -81,16 +81,6 @@ class PurchaseControllerTest extends BaseControllerTest
     }
     
     /**
-     * Test (Pass): access getEmails
-     */
-    public function testEmails()
-    {
-        $this->call('GET', '/admin/purchases/emails');
-
-        $this->assertResponseOk();
-    }
-    
-    /**
      * Overwrite base functions, no edit for Purchase
      */
     public function testEditPass()

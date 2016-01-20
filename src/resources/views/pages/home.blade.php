@@ -56,6 +56,13 @@
                             </ul>
                         </li>
                         <li>Added tag to Page and Post (issue #146)</li>
+                        <li>Added API for retrieving emails for authenticated admin users only
+                            <ul>
+                                <li>/api/email: Unused, returns an empty JSON list</li>
+                                <li>/api/email/all: Get JSON list of emails</li>
+                                <li>Check <a href="https://github.com/redooor/redminportal/wiki/Private-API">list of Private API on github Wiki page</a></li>
+                            </ul>
+                        </li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -72,6 +79,11 @@
                         <li>Introduced SorterController trait to reduce code for sortable pages.</li>
                         <li>Introduced partial Blade template for sortable header.</li>
                         <li>Overall Line count decreased from 23031 to 22805 with trait and partial template.</li>
+                        <li>Improve Usability: after delete action should go back to last visited page (issue #131)
+                            <ul>
+                                <li>Order</li>
+                            </ul>
+                        </li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
@@ -83,6 +95,7 @@
                         <li>Click menu overlay to close doesn't work on iPad. (issue #151)</li>
                         <li>Fix Build error for PHP7 due to getID3 package. Switch to JamesHeinrich/getID3. (issue #152)</li>
                         <li>Added delete image functionality to Bundles. (issue #149)</li>
+                        <li>Fixed Typeahead styling messed up for email suggestions. (issue #156)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>

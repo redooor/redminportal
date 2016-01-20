@@ -20,13 +20,6 @@ class PurchaseController extends Controller
         return view('redminportal::purchases/view')->with('purchases', $purchases);
     }
     
-    public function getEmails()
-    {
-        $emails = User::lists('email');
-
-        return \Response::json($emails);
-    }
-
     public function getCreate()
     {
         $pricelists_select = array();

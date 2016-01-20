@@ -71,4 +71,21 @@ class Form
         
         return view('redminportal::partials.form-tagsinput', $data);
     }
+    
+    /*
+     * Generate an HTML input form with email suggestion
+     *
+     * @param string Value of the input form (optional, defaults to null)
+     * @param bool True if the form is a required field (optional, defaults to true)
+     * @return View
+     */
+    public function emailInputer($value = null, $required = true)
+    {
+        $data = [
+            'value' => $value,
+            'required' => $required
+        ];
+        
+        return view('redminportal::partials.form-input-email-typeahead', $data);
+    }
 }

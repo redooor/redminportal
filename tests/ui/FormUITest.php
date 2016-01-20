@@ -66,4 +66,23 @@ class FormUITest extends RedminTestCase
         
         $this->assertTrue($input == $output);
     }
+    
+    public function testEmailInputerPass()
+    {
+        $input = $this->model->emailInputer(
+            'test',
+            true
+        );
+        
+        $input = str_replace(array("\r", "\n", " "), '', $input);
+        
+        $output = '<div class="form-group redmin-email-typeahead">
+            <label for="email">Email Address</label>
+            <input class="form-control typeahead" name="email" id="email" "required" value="test">
+        </div>';
+        
+        $output = str_replace(array("\r", "\n", " "), '', $output);
+        
+        $this->assertTrue($input == $output);
+    }
 }

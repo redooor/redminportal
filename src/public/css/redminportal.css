@@ -549,16 +549,17 @@ ul.redmin-hierarchy.no-max-height {
           box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 /* For Typeahead.js plugin */
-.twitter-typeahead .tt-query {
+/* For Bootstrap tagsinput plugin */
+.bootstrap-tagsinput .twitter-typeahead .tt-query {
   margin-bottom: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
-.twitter-typeahead .tt-hint {
+.bootstrap-tagsinput .twitter-typeahead .tt-hint {
   margin-bottom: 0;
   color: #999999;
 }
-.twitter-typeahead .tt-menu {
+.bootstrap-tagsinput .twitter-typeahead .tt-menu {
   min-width: 160px;
   margin-top: 4px;
   padding: 0px;
@@ -569,17 +570,39 @@ ul.redmin-hierarchy.no-max-height {
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
-.twitter-typeahead .tt-suggestion {
+.bootstrap-tagsinput .twitter-typeahead .tt-suggestion {
   padding: 3px 20px;
   line-height: 24px;
 }
-.twitter-typeahead .tt-suggestion.tt-cursor,
-.twitter-typeahead .tt-suggestion:hover {
+.bootstrap-tagsinput .twitter-typeahead .tt-suggestion.tt-cursor,
+.bootstrap-tagsinput .twitter-typeahead .tt-suggestion:hover {
   color: #fff;
   background-color: #0097cf;
   cursor: pointer;
 }
-.twitter-typeahead .tt-suggestion p {
+.bootstrap-tagsinput .twitter-typeahead .tt-suggestion p {
+  margin: 0;
+}
+/* For email suggestions */
+.redmin-email-typeahead .twitter-typeahead {
+  width: 100%;
+}
+.redmin-email-typeahead .tt-menu {
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+}
+.redmin-email-typeahead .tt-suggestion {
+  cursor: pointer;
+  padding: 0.5em 1em;
+}
+.redmin-email-typeahead .tt-suggestion:hover {
+  color: white;
+  background-color: #428bca;
+}
+.redmin-email-typeahead .tt-suggestion p {
+  padding: 0;
   margin: 0;
 }
 /*# sourceMappingURL=redminportal.css.map */

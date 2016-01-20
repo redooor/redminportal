@@ -45,13 +45,6 @@ class OrderController extends Controller
         return view('redminportal::orders.view', $data);
     }
     
-    public function getEmails()
-    {
-        $emails = User::lists('email');
-
-        return \Response::json($emails);
-    }
-
     public function getCreate()
     {
         $products = Product::where('active', true)->orderBy('name')->lists('name', 'id');
@@ -224,11 +217,11 @@ class OrderController extends Controller
         if ($order == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('userError', "The order record may have already been deleted.");
-            return redirect('admin/orders')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         $order->delete();
         
-        return redirect('admin/orders');
+        return redirect()->back();
     }
 }

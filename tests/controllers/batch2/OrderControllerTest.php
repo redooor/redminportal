@@ -69,16 +69,6 @@ class OrderControllerTest extends BaseControllerTest
     }
     
     /**
-     * Test (Pass): access getEmails
-     */
-    public function testEmails()
-    {
-        $this->call('GET', '/admin/orders/emails');
-
-        $this->assertResponseOk();
-    }
-    
-    /**
      * Overwrite base functions, no edit for Order
      */
     public function testEditPass()
@@ -92,6 +82,18 @@ class OrderControllerTest extends BaseControllerTest
     public function testStoreEdit()
     {
         return;
+    }
+    
+    /**
+     * Override base functions
+     * Test (Fail): access getDelete with id = 1
+     */
+    public function testDeleteFail()
+    {
+        $this->call('GET', $this->page . '/delete/1');
+
+        $this->assertRedirectedTo('/');
+        $this->assertSessionHasErrors();
     }
 
     public function testStoreCreateFailedNoProduct()

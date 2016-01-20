@@ -41,6 +41,8 @@ return array(
         => 'No Module/Membership Found',
     'no_variant_found'
         => 'No Product Variant Found',
+    'no_record_page_empty'
+        => 'This page is empty, try going to previous page.',
     'select_category_to_view_detail'
         => 'Select category to view detail',
     'confirm_delete'

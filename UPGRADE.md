@@ -80,6 +80,17 @@ You can choose to set it back to 'stable' like this:
     "minimum-stability": "stable",
     "prefer-stable": true
 
+### Get user emails in JSON format
+
+The following 2 links have been removed.
+
+`url('admin/orders/emails');`
+`url('admin/purchases/emails');`
+
+Use this instead:
+
+`url('api/email/all)`
+
 ## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 
 New features and UI improvements.
