@@ -100,7 +100,12 @@
                                 <li>User</li>
                             </ul>
                         </li>
-                        <li>Improved Permission management, allow granular control for every page and action. (issue #69)</li>
+                        <li>Improved Permission management, allow granular control for every page and action. (issue #69)
+                            <ul>
+                                <li>When users are deactivated after they login, they should be logged out and require re-login.</li>
+                                <li>Various actions for create, update and delete are added in the permission checker.</li>
+                            </ul>
+                        </li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>

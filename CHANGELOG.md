@@ -95,6 +95,8 @@ This update introduces some new tables and lots of changes.
     - Purchase
     - User
 15. Improved Permission management, allow granular control for every page and action. (issue #69)
+    - When users are deactivated after they login, they should be logged out and require re-login.
+    - Various actions for create, update and delete are added in the permission checker.
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
