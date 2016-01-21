@@ -4,6 +4,72 @@ Version 0.2 and 0.3 are developed in parallel. The only difference between them 
 
 ## Upgrading to v0.3.3/v0.2.3 from v0.3.2/v0.2.2
 
+### Access Permission
+
+In the past any user who is within the group "Admin" are allowed to access the admin dashboard and all actions such as creation, edit and deletion.
+
+With the recent change, we will now be checking the permission level of user and their groups.
+
+This permission can be set on user level as will as group level.
+
+Permission hierarchy as follow:
+- User level permission supersedes Group level permission.
+- ANY group deny will result in forceful deny.
+- At least 1 group allow (if no deny) will result in allow.
+- Sub route permission supersedes Main route permission.
+
+If you have been using the group creation UI since version 0.2 then you should be fine.
+
+The default seed for Admin and User group are as such:
+
+Admin
+```
+{
+  "admin.view":true,
+  "admin.create":true,
+  "admin.delete":true,
+  "admin.update":true
+}
+```
+
+User
+```
+{
+  "admin.view":false,
+  "admin.create":false,
+  "admin.delete":false,
+  "admin.update":false
+}
+```
+
+From now on, Permission is tied to route, using 3 integers to indicate rights:
+
+- 1: Allow
+- -1: Deny (supersedes any allow from other groups)
+- 0: Inherit (or not allowed if none is found)
+
+So this:
+
+`{"admin.view": 1}`
+
+means that the user/group has access to route 'admin' and all sub-route.
+
+And this:
+
+`{"admin.users.view": -1}`
+
+means that the user/group is denied from route 'admin/users'.
+
+This:
+```
+{
+  "admin.users.view":1,
+  "admin.users.delete":-1,
+  "admin.users.update":-1
+}
+```
+means that the user/group can view but not delete or update record.
+
 ### Run Dump-Autoload
 
 Due to the additions of HTML and Form helpers, you need to run the following command:
@@ -89,7 +155,7 @@ The following 2 links have been removed.
 
 Use this instead:
 
-`url('api/email/all)`
+`url('admin/api/email/all)`
 
 ## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 

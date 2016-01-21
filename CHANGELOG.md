@@ -94,6 +94,7 @@ This update introduces some new tables and lots of changes.
     - Promotion
     - Purchase
     - User
+15. Improved Permission management, allow granular control for every page and action. (issue #69)
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)

@@ -100,6 +100,7 @@
                                 <li>User</li>
                             </ul>
                         </li>
+                        <li>Improved Permission management, allow granular control for every page and action. (issue #69)</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
