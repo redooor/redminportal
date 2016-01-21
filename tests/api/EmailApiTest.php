@@ -16,13 +16,13 @@ class EmailApiTest extends RedminTestCase
     }
     
     /**
-     * Test (Pass): access /api/email
+     * Test (Pass): access /admin/api/email
      */
     public function testIndexPass()
     {
         Auth::loginUsingId(1); // Fake admin authentication
         
-        $response = $this->call('GET', '/api/email');
+        $response = $this->call('GET', '/admin/api/email');
         $this->assertResponseOk();
         
         $input = $response->getContent();
@@ -32,22 +32,22 @@ class EmailApiTest extends RedminTestCase
     }
     
     /**
-     * Test (Fail): access /api/email without authentication
+     * Test (Fail): access /admin/api/email without authentication
      */
     public function testIndexFail()
     {
-        $this->call('GET', '/api/email');
+        $this->call('GET', '/admin/api/email');
         $this->assertResponseStatus(302);
     }
     
     /**
-     * Test (Pass): access /api/email/all
+     * Test (Pass): access /admin/api/email/all
      */
     public function testGetNamePass()
     {
         Auth::loginUsingId(1); // Fake admin authentication
         
-        $response = $this->call('GET', '/api/email/all');
+        $response = $this->call('GET', '/admin/api/email/all');
         $this->assertResponseOk();
         
         $input = $response->getContent();
@@ -57,11 +57,11 @@ class EmailApiTest extends RedminTestCase
     }
     
     /**
-     * Test (Fail): access /api/email/all without authentication
+     * Test (Fail): access /admin/api/email/all without authentication
      */
     public function testGetNameFail()
     {
-        $this->call('GET', '/api/email/all');
+        $this->call('GET', '/admin/api/email/all');
         $this->assertResponseStatus(302);
     }
 }

@@ -46,7 +46,7 @@ Route::group(
     [
         'middleware' => 'Redooor\Redminportal\App\Http\Middleware\Authenticate',
         'namespace' => 'Redooor\Redminportal\App\Http\API',
-        'prefix' => 'api'
+        'prefix' => 'admin/api'
     ],
     function () {
         Route::controller('email', 'EmailApi');

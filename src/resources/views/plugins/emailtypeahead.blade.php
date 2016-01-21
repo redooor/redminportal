@@ -26,7 +26,7 @@
                 };
             };
 
-            $.get( "{{ URL::to('api/email/all') }}", function( data ) {
+            $.get( "{{ URL::to('admin/api/email/all') }}", function( data ) {
                 var emails = data;
                 
                 $('.typeahead').typeahead({
