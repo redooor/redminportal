@@ -35,7 +35,8 @@
                     <div class="navbar-collapse collapse">
                         @if (Auth::check())
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="{{ URL::to('logout') }}">{{ Lang::get('redminportal::menus.logout') }}</a></li>
+                            <li><a class="btn btn-link hidden-xs" href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')">{{ Lang::get('redminportal::menus.logout') }} <i class="glyphicon glyphicon-log-out"></i></a></li>
+                            <li><a class="visible-xs" href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')">{{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>
                         @endif
                     </div><!--/.nav-collapse -->

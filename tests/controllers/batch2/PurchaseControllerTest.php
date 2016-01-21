@@ -53,8 +53,6 @@ class PurchaseControllerTest extends BaseControllerTest
     {
         parent::setup();
         
-        $this->seed('RedminSeeder');
-        
         // Add membership
         $membership = new Membership;
         $membership->name = "Gold";

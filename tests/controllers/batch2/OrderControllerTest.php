@@ -56,8 +56,6 @@ class OrderControllerTest extends BaseControllerTest
     {
         parent::setup();
         
-        $this->seed('RedminSeeder');
-        
         // Add product
         $product = new Product;
         $product->name = 'This is title';

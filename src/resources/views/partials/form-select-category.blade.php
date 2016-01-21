@@ -26,7 +26,7 @@
         <ul class="redmin-hierarchy">
         @if (!isset($select_category_required_field) or !$select_category_required_field)
             <li>
-                <a href="0"><span class='glyphicon glyphicon-chevron-right'></span> 
+                <a href="0"><span class='glyphicon glyphicon-menu-right'></span> 
                     {{ $select_category_default_text or trans('redminportal::forms.no_category') }}</a>
             </li>
         @endif
