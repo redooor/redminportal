@@ -85,8 +85,7 @@ class OrderGetDiscountTest extends BaseRelationshipTest
         $this->prepareProductsAndCoupons();
         
         // Check total discount of order is 10% of product 1 only
-        echo var_dump($this->order->getTotaldiscount());
-        $this->assertTrue($this->order->getTotaldiscount() == 1.00);
+        $this->assertTrue(round($this->order->getTotaldiscount(), 2) == 1.00);
     }
     
     public function testGetDiscountOfOrderWithProduct1and2()
@@ -99,8 +98,7 @@ class OrderGetDiscountTest extends BaseRelationshipTest
         $this->prepareProductsAndCoupons();
         
         // Check total discount of order is 10% of product 1 and 2
-        echo var_dump($this->order->getTotaldiscount());
-        $this->assertTrue($this->order->getTotaldiscount() == 10.00);
+        $this->assertTrue(round($this->order->getTotaldiscount(), 2) == 10.00);
         
         // Check GetDiscounts() return correct value
         foreach ($this->order->getDiscounts() as $item) {
