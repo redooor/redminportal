@@ -85,7 +85,7 @@
     @else
         @if ($purchases->lastPage())
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
-        <a href="{{ $purchases->url($purchases->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        <a href="{{ $purchases->url($purchases->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
         @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_purchase_found') }}</div>
         @endif

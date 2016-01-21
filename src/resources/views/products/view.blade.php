@@ -108,7 +108,7 @@
     @else
         @if ($models->lastPage())
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
-        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
         @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_product_found') }}</div>
         @endif
