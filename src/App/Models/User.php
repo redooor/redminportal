@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Models;
 
+use Illuminate\Http\Request;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -112,8 +113,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     /**
      * Check if user has access rights for the route
-     * @param string route
-     * @param string Type of permission (view, create, delete, update)
+     * @param Request
      * @return bool True if user has access rights
      *
      * User level permission supersedes Group level permission.
@@ -125,8 +125,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * 1 : Allow
      * 0 : Inherit  (If none is defined, default is deny)
      **/
-    public function hasAccess($route, $type = 'view')
+    public function hasAccess(Request $request)
     {
+        $route = $request->path();
+        
+        // Check the type of request
+        $type = $this->checkType($request);
+        
         // Check user level permissions first
         $user_permission = $this->checkPermission($route, $type, json_decode($this->permissions));
         if ($user_permission < 0) {
@@ -151,6 +156,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
         
         return $permission_level;
+    }
+    
+    /**
+     * Check the request and return the request type
+     * e.g. view, create, update, delete, store
+     *
+     * @param Request
+     **/
+    private function checkType(Request $request)
+    {
+        $type = 'view';
+        if ($request->is('admin/*/create')) {
+            $type = 'create';
+        } elseif ($request->is('admin/*/edit/*')) {
+            $type = 'update';
+        } elseif ($request->is('admin/*/delete/*')) {
+            $type = 'delete';
+        }
+        
+        return $type;
     }
     
     /**

@@ -52,17 +52,8 @@ class Authenticate
                 Auth::logout();
                 return redirect()->guest('login');
             }
-            // Check the type of request
-            $type = 'view';
-            if ($request->is('admin/*/create')) {
-                $type = 'create';
-            } elseif ($request->is('admin/*/edit/*')) {
-                $type = 'update';
-            } elseif ($request->is('admin/*/delete/*')) {
-                $type = 'delete';
-            }
             // Proceed to check user permission
-            if ($user->hasAccess($request->path(), $type)) {
+            if ($user->hasAccess($request)) {
                 // Save login time
                 $user->last_login = date('Y-m-d H:i:s');
                 $user->save();
