@@ -48,6 +48,7 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesAllowedButNotOthers()
     {
+        $this->test_pages = null; // Empty
         $this->test_pages = [
             'admin/announcements',
             'admin/coupons',
@@ -56,6 +57,7 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
             'admin/promotions',
         ];
         
+        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             'admin/dashboard'       => 'login/unauthorized',
             'admin/bundles'         => 'login/unauthorized',
@@ -97,6 +99,7 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesDeniedButNotOthers()
     {
+        $this->test_pages = null; // Empty
         $this->test_pages = [
             'admin/dashboard',
             'admin/bundles',
@@ -118,6 +121,7 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
             'admin/api/email/all',
         ];
         
+        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             'admin/announcements'   => 'login/unauthorized',
             'admin/coupons'         => 'login/unauthorized',

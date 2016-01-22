@@ -66,21 +66,6 @@ class MailinglistController extends Controller
     {
         $sid = \Input::get('id');
 
-        if (isset($sid)) {
-            // Find the mailinglist using the user id
-            $mailinglist = Mailinglist::find($sid);
-
-            // No such id
-            if ($mailinglist == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'storeError',
-                    "We are having problem editing this entry. It may have already been deleted."
-                );
-                return redirect('admin/mailinglists')->withErrors($errors);
-            }
-        }
-
         /*
          * Validate
          */
@@ -99,6 +84,17 @@ class MailinglistController extends Controller
             $active      = (\Input::get('active') == '' ? false : true);
 
             $mailinglist = (isset($sid) ? Mailinglist::find($sid) : new Mailinglist);
+            
+            // No such id
+            if ($mailinglist == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'storeError',
+                    "We are having problem editing this entry. It may have already been deleted."
+                );
+                return redirect('admin/mailinglists')->withErrors($errors);
+            }
+            
             $mailinglist->email = $email;
             $mailinglist->first_name = $first_name;
             $mailinglist->last_name = $last_name;

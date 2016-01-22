@@ -167,12 +167,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     private function checkType(Request $request)
     {
         $type = 'view';
-        if ($request->is('admin/*/create')) {
+        if ($request->is('*/create')) {
             $type = 'create';
-        } elseif ($request->is('admin/*/edit/*')) {
+        } elseif ($request->is('*/edit/*')) {
             $type = 'update';
-        } elseif ($request->is('admin/*/delete/*')) {
+        } elseif ($request->is('*/delete/*')) {
             $type = 'delete';
+        } elseif ($request->is('*/store') && $request->isMethod('post')) {
+            if ($request->has('id')) {
+                $type = 'update';
+            } else {
+                $type = 'create';
+            }
         }
         
         return $type;

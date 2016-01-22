@@ -62,6 +62,7 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesAllowedButNotOthers()
     {
+        $this->test_pages = null; // Empty
         $this->test_pages = [
             'admin/announcements/create',
             'admin/coupons/create',
@@ -70,48 +71,50 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
             'admin/promotions/create',
         ];
         
+        $this->test_redirects = null; // Empty
         $this->test_redirects = [
-            'admin/dashboard'       => 'login/unauthorized',
-            'admin/bundles'         => 'login/unauthorized',
-            'admin/categories'      => 'login/unauthorized',
-            'admin/groups'          => 'login/unauthorized',
-            'admin/images'          => 'login/unauthorized',
-            'admin/mailinglists'    => 'login/unauthorized',
-            'admin/medias'          => 'login/unauthorized',
-            'admin/memberships'     => 'login/unauthorized',
-            'admin/modules'         => 'login/unauthorized',
-            'admin/orders'          => 'login/unauthorized',
-            'admin/portfolios'      => 'login/unauthorized',
-            'admin/products'        => 'login/unauthorized',
-            'admin/products/view-variant/1' => 'login/unauthorized',
-            'admin/purchases'       => 'login/unauthorized',
-            'admin/reports'         => 'login/unauthorized',
-            'admin/users'           => 'login/unauthorized',
-            'admin/api/email'       => 'login/unauthorized',
-            'admin/api/email/all'   => 'login/unauthorized',
+            'admin/dashboard'               => 'login/unauthorized',
+            'admin/bundles/create'          => 'login/unauthorized',
+            'admin/categories/create'       => 'login/unauthorized',
+            'admin/groups/create'           => 'login/unauthorized',
+            'admin/images'                  => 'login/unauthorized',
+            'admin/mailinglists/create'     => 'login/unauthorized',
+            'admin/medias/create'           => 'login/unauthorized',
+            'admin/memberships/create'      => 'login/unauthorized',
+            'admin/modules/create'          => 'login/unauthorized',
+            'admin/orders/create'           => 'login/unauthorized',
+            'admin/portfolios/create'       => 'login/unauthorized',
+            'admin/products/create'         => 'login/unauthorized',
+            'admin/products/create-variant' => 'login/unauthorized',
+            'admin/purchases/create'        => 'login/unauthorized',
+            'admin/reports'                 => 'login/unauthorized',
+            'admin/users/create'            => 'login/unauthorized',
+            'admin/api/email'               => 'login/unauthorized',
+            'admin/api/email/all'           => 'login/unauthorized',
         ];
         
+        $this->test_posts = null; // Empty
         $this->test_posts = [
             'admin/reports/mailinglist' => 'login/unauthorized',
             'admin/reports/purchases'   => 'login/unauthorized',
             'admin/reports/orders'      => 'login/unauthorized',
-            'admin/announcements/store' => 'login/unauthorized',
             'admin/bundles/store'       => 'login/unauthorized',
             'admin/categories/store'    => 'login/unauthorized',
-            'admin/coupons/store'       => 'login/unauthorized',
             'admin/groups/store'        => 'login/unauthorized',
             'admin/mailinglists/store'  => 'login/unauthorized',
             'admin/medias/store'        => 'login/unauthorized',
             'admin/memberships/store'   => 'login/unauthorized',
             'admin/modules/store'       => 'login/unauthorized',
             'admin/orders/store'        => 'login/unauthorized',
-            'admin/pages/store'         => 'login/unauthorized',
             'admin/portfolios/store'    => 'login/unauthorized',
-            'admin/posts/store'         => 'login/unauthorized',
             'admin/products/store'      => 'login/unauthorized',
-            'admin/promotions/store'    => 'login/unauthorized',
             'admin/purchases/store'     => 'login/unauthorized',
             'admin/users/store'         => 'login/unauthorized',
+            'admin/announcements/store' => 'admin/announcements/create',
+            'admin/coupons/store'       => 'admin/coupons/create',
+            'admin/pages/store'         => 'admin/pages/create',
+            'admin/posts/store'         => 'admin/posts/create',
+            'admin/promotions/store'    => 'admin/promotions/create',
         ];
         
         $group = $this->createGroup('Specific', array(
@@ -134,6 +137,7 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesDeniedButNotOthers()
     {
+        $this->test_pages = null; // Empty
         $this->test_pages = [
             'admin/bundles/create',
             'admin/categories/create',
@@ -149,12 +153,37 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
             'admin/users/create'
         ];
         
+        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             'admin/announcements/create'   => 'login/unauthorized',
             'admin/coupons/create'         => 'login/unauthorized',
             'admin/pages/create'           => 'login/unauthorized',
             'admin/posts/create'           => 'login/unauthorized',
             'admin/promotions/create'      => 'login/unauthorized',
+        ];
+        
+        $this->test_posts = null; // Empty
+        $this->test_posts = [
+            'admin/reports/mailinglist' => 'admin/mailinglists',
+            'admin/reports/purchases'   => 'admin/purchases',
+            'admin/reports/orders'      => 'admin/orders',
+            'admin/bundles/store'       => 'admin/bundles/create',
+            'admin/categories/store'    => 'admin/categories/create',
+            'admin/groups/store'        => 'admin/groups/create',
+            'admin/mailinglists/store'  => 'admin/mailinglists/create',
+            'admin/medias/store'        => 'admin/medias/create',
+            'admin/memberships/store'   => 'admin/memberships/create',
+            'admin/modules/store'       => 'admin/modules/create',
+            'admin/orders/store'        => 'admin/orders/create',
+            'admin/portfolios/store'    => 'admin/portfolios/create',
+            'admin/products/store'      => 'admin/products/create',
+            'admin/purchases/store'     => 'admin/purchases/create',
+            'admin/users/store'         => 'admin/users/create',
+            'admin/announcements/store' => 'login/unauthorized',
+            'admin/coupons/store'       => 'login/unauthorized',
+            'admin/pages/store'         => 'login/unauthorized',
+            'admin/posts/store'         => 'login/unauthorized',
+            'admin/promotions/store'    => 'login/unauthorized',
         ];
         
         $group = $this->createGroup('Specific', array(
