@@ -57,7 +57,7 @@ class LoginControllerTest extends RedminTestCase
 
         $this->call('POST', '/login/login', $input);
 
-        $this->assertRedirectedTo('/admin');
+        $this->assertRedirectedTo('/admin/dashboard');
     }
     
     /**
