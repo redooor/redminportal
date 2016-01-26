@@ -1,5 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Input;
+use Validator;
+use Illuminate\Support\MessageBag;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Group;
 
@@ -47,128 +50,141 @@ class GroupController extends Controller
         $group = Group::find($sid);
         
         if ($group == null) {
-            $errors = new \Illuminate\Support\MessageBag;
+            $errors = new MessageBag;
             $errors->add(
                 'editError',
-                "The group cannot be found because it does not exist or may have been deleted."
+                trans('redminportal::messages.group_error_edit_no_group_found')
             );
             return redirect('/admin/groups')->withErrors($errors);
         }
         
-        if (isset($group->permissions()->{'admin.view'})) {
-            $checkbox_view = $group->permissions()->{'admin.view'};
-        } else {
-            $checkbox_view = false;
+        $permission_inherit = [];
+        $permission_allow = [];
+        $permission_deny = [];
+        
+        foreach ($group->permissions() as $key => $value) {
+            if ($value < 0) {
+                $permission_deny[$key] = $key;
+            } elseif ($value > 0) {
+                $permission_allow[$key] = $key;
+            } else {
+                $permission_inherit[$key] = $key;
+            }
         }
         
-        if (isset($group->permissions()->{'admin.create'})) {
-            $checkbox_create = $group->permissions()->{'admin.create'};
-        } else {
-            $checkbox_create = false;
-        }
+        $data = [
+            'group' => $group,
+            'permission_inherit' => implode(',', $permission_inherit),
+            'permission_allow' => implode(',', $permission_allow),
+            'permission_deny' => implode(',', $permission_deny)
+        ];
         
-        if (isset($group->permissions()->{'admin.delete'})) {
-            $checkbox_delete = $group->permissions()->{'admin.delete'};
-        } else {
-            $checkbox_delete = false;
-        }
-        
-        if (isset($group->permissions()->{'admin.update'})) {
-            $checkbox_update = $group->permissions()->{'admin.update'};
-        } else {
-            $checkbox_update = false;
-        }
-        
-        return view('redminportal::groups/edit')
-            ->with('group', $group)
-            ->with('checkbox_view', $checkbox_view)
-            ->with('checkbox_create', $checkbox_create)
-            ->with('checkbox_delete', $checkbox_delete)
-            ->with('checkbox_update', $checkbox_update);
+        return view('redminportal::groups/edit', $data);
     }
     
     public function postStore()
     {
-        $sid = \Input::get('id');
+        $sid = Input::get('id');
         
         $rules = array(
-            'name' => 'required'
+            'name' => 'required',
+            'permission-inherit' => 'regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-allow' => 'regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-deny' => 'regex:/^[a-z,0-9._\-?]+$/i'
+        );
+        
+        $messages = array(
+            'permission-inherit.regex' => 'The permission inherit format is invalid. Try using the Permission Builder.',
+            'permission-allow.regex' => 'The permission allow format is invalid. Try using the Permission Builder.',
+            'permission-deny.regex' => 'The permission deny format is invalid. Try using the Permission Builder.'
         );
 
-        $validation = \Validator::make(\Input::all(), $rules);
-
+        $validation = Validator::make(Input::all(), $rules, $messages);
+        
+        $redirect_url = 'admin/groups/' . (isset($sid) ? 'edit/' . $sid : 'create');
+        
         if ($validation->fails()) {
-            if (isset($sid)) {
-                return redirect('admin/groups/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return redirect('admin/groups/create')->withErrors($validation)->withInput();
-            }
+            return redirect($redirect_url)->withErrors($validation)->withInput();
         }
         
-        // Validation passes
-        $name 	= \Input::get('name');
-        $view 	= (\Input::get('view') == '' ? false : true);
-        $create 	= (\Input::get('create') == '' ? false : true);
-        $delete 	= (\Input::get('delete') == '' ? false : true);
-        $update 	= (\Input::get('update') == '' ? false : true);
+        $name = Input::get('name');
+        $permission_inherit = Input::get('permission-inherit');
+        $permission_allow = Input::get('permission-allow');
+        $permission_deny = Input::get('permission-deny');
         
-        $permissions = json_encode(
-            array(
-                'admin.view' => $view,
-                'admin.create' => $create,
-                'admin.delete' => $delete,
-                'admin.update' => $update
-            )
-        );
+        $permissions = $this->populatePermission($permission_inherit, $permission_allow, $permission_deny);
         
-        if (isset($sid)) {
-            $group = Group::find($sid);
-
-            if ($group == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The group cannot be found because it does not exist or may have been deleted."
-                );
-                return redirect('/admin/groups')->withErrors($errors);
-            }
-
-            // Update the group details
-            $group->name = $name;
-            $group->permissions = $permissions;
-
-            // Update the group
-            if ($group->save()) {
-                return redirect('admin/groups');
-            } else {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The group cannot be updated due to some problem. Please try again."
-                );
-                return redirect('admin/groups/edit/' . $sid)->withErrors($errors)->withInput();
-            }
-
-        } else {
-            // Create the group
-            $group = new Group;
-            $group->name = $name;
-            $group->permissions = $permissions;
-            
-            try {
-                $group->save();
-            } catch (\Exception $exp) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The group cannot be created due to some problem. Please try again."
-                );
-                return redirect('admin/groups/create')->withErrors($errors)->withInput();
-            }
+        $group = (isset($sid) ? Group::find($sid) : new Group);
+        
+        if ($group == null) {
+            $errors = new MessageBag;
+            $errors->add(
+                'editError',
+                trans('redminportal::messages.group_error_edit_no_group_found')
+            );
+            return redirect('admin/groups')->withErrors($errors);
         }
-            
-
+        
+        try {
+            // Save the group details
+            $group->name = $name;
+            $group->permissions = json_encode($permissions);
+            $group->save();
+        } catch (\Exception $exp) {
+            $errors = new MessageBag;
+            $errors->add(
+                'editError',
+                trans('redminportal::messages.group_error_edit_cannot_save')
+            );
+            return redirect($redirect_url)->withErrors($errors)->withInput();
+        }
+        
         return redirect('admin/groups');
+    }
+    
+    /**
+     * Returns an array of permissions based on given inherit, allow and deny list
+     * @param array Inherit Permission
+     * @param array Allow Permission
+     * @param array Deny Permission
+     * @return array Permission list
+     **/
+    private function populatePermission($permission_inherit, $permission_allow, $permission_deny)
+    {
+        $permissions = [];
+        
+        // Add Deny permission
+        $permissions = $this->retreivePermission($permissions, $permission_deny, -1);
+        
+        // Add Allow permission
+        $permissions = $this->retreivePermission($permissions, $permission_allow, 1);
+        
+        // Add Allow permission
+        $permissions = $this->retreivePermission($permissions, $permission_inherit, 0);
+        
+        return $permissions;
+    }
+    
+    /**
+     * Appends to an array of permissions based on given permission list and level
+     * @param array Permission array to be appended
+     * @param array Permission list to check through
+     * @param int Level of permission
+     * @return array Permission
+     **/
+    private function retreivePermission($permissions, $permission_list, $level)
+    {
+        $sorted_permissions = explode(',', $permission_list);
+        ksort($sorted_permissions);
+        
+        foreach ($sorted_permissions as $item) {
+            $item = trim($item);
+            if (! array_key_exists($item, $permissions) && ! empty($item)) {
+                $permissions[$item] = $level;
+            }
+        }
+        
+        return $permissions;
     }
     
     public function getDelete($sid)

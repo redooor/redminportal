@@ -70,6 +70,30 @@ This:
 ```
 means that the user/group can view but not delete or update record.
 
+#### Permission Usage
+
+To check if the user is allowed to view the page, use the hasAccess method in User model.
+
+Example:
+```
+    public function getIndex(Request $request)
+    {
+        $user = \Auth::user();
+        if ($user->hasAccess($request)) {
+            // Do something
+            return view('has_access');
+        }
+        
+        return view('access_denied');
+    }
+```
+
+#### Permission Config file
+
+You can edit the list of routes for permission management via the config file `src/config/permissions.php`.
+
+Copy the file `src/config/permissions.php` to your root folder's `config/vendor/redooor/redminportal/permissions.php`.
+
 ### Run Dump-Autoload
 
 Due to the additions of HTML and Form helpers, you need to run the following command:

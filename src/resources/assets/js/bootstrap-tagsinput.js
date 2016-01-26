@@ -361,10 +361,15 @@
 //                self.$input.val('');
 //              }
             // As suggested by https://github.com/bootstrap-tagsinput/bootstrap-tagsinput/issues/387
-            if ($('.tt-hint', self.$container).val().length === 0) {
+            if ($('.typeahead, .twitter-typeahead', self.$container).length) {
+              if ($('.tt-hint', self.$container).val().length === 0) {
                 self.add(self.$input.val());
                 self.$input.typeahead('val', '');
                 self.$input.typeahead('close'); 
+              }
+            } else {
+                self.add(self.$input.val());
+                self.$input.val('');
             }
           }, self));
         }

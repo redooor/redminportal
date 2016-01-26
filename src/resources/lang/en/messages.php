@@ -129,5 +129,11 @@ return array(
     'upload_error_failed_to_open_input_stream'
         => "Failed to open input stream.",
     'upload_error_failed_to_open_output_stream'
-        => "Failed to open output stream."
+        => "Failed to open output stream.",
+    'group_error_edit_no_group_found'
+        => "The group cannot be edited because it does not exist or may have been deleted.",
+    'group_error_edit_cannot_save'
+        => "The group cannot be saved due to some problem. Please try again.",
+    'help_permission_builder'
+        => "Use permission builder below to help you populate the permissions.",
 );

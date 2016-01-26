@@ -17,14 +17,16 @@ class GroupControllerTest extends BaseControllerTest
         $input = array(
             'create' => array(
                 'name'  => 'This is a group name',
-                'admin' => true,
-                'user'  => true
+                'permission-inherit' => 'admin.view,admin.users.view',
+                'permission-allow'  => 'admin.create,admin.update',
+                'permission-deny' => 'admin.delete,admin.users.delete'
             ),
             'edit' => array(
                 'id'   => 3,
                 'name'  => 'This is another group name',
-                'admin' => true,
-                'user'  => false
+                'permission-inherit' => 'admin.view,admin.groups.view',
+                'permission-allow'  => 'admin.create,admin.update',
+                'permission-deny' => 'admin.delete,admin.groups.delete'
             )
         );
         
@@ -60,8 +62,9 @@ class GroupControllerTest extends BaseControllerTest
     {
         $input = array(
             'name'  => '',
-            'admin' => true,
-            'user'  => false
+            'permission-inherit' => 'admin.view,admin.users.view',
+            'permission-allow'  => 'admin.create,admin.update',
+            'permission-deny' => 'admin.delete,admin.users.delete'
         );
 
         $this->call('POST', '/admin/groups/store', $input);

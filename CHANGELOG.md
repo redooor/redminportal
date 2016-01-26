@@ -61,6 +61,7 @@ This update introduces some new tables and lots of changes.
     - /api/email: Unused, returns an empty JSON list
     - /api/email/all: Get JSON list of emails
     - Check [list of Private API on github Wiki page](https://github.com/redooor/redminportal/wiki/Private-API)
+15. UI: Group permission management, able to edit group permission for any route. (issue 69)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)

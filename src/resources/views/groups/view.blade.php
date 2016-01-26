@@ -47,8 +47,10 @@
                             @foreach ($group->permissions() as $key => $value)
                                 @if ($value == 1)
                                     <span class="label label-success">{{ $key }}</span>
-                                @else
+                                @elseif ($value == -1)
                                     <span class="label label-danger">{{ $key }}</span>
+                                @else
+                                    <span class="label label-default">{{ $key }}</span>
                                 @endif
                             @endforeach
                         @endif

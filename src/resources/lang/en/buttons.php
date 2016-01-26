@@ -20,5 +20,6 @@ return array(
     'download_csv' => 'Download CSV',
     'download_excel' => 'Download Excel',
     'add' => 'Add',
-    'previous_page' => 'Previous Page'
+    'previous_page' => 'Previous Page',
+    'insert' => 'Insert',
 );

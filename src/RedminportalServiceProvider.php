@@ -42,7 +42,8 @@ class RedminportalServiceProvider extends ServiceProvider
             __DIR__.'/config/translation.php' => config_path('vendor/redooor/redminportal/translation.php'),
             __DIR__.'/config/auth.php' => config_path('vendor/redooor/redminportal/auth.php'),
             __DIR__.'/config/tinymce.php' => config_path('vendor/redooor/redminportal/tinymce.php'),
-            __DIR__.'/config/pagination.php' => config_path('vendor/redooor/redminportal/pagination.php')
+            __DIR__.'/config/pagination.php' => config_path('vendor/redooor/redminportal/pagination.php'),
+            __DIR__.'/config/permissions.php' => config_path('vendor/redooor/redminportal/permissions.php')
         ], 'config');
         
         // Publish your migrations
@@ -70,7 +71,7 @@ class RedminportalServiceProvider extends ServiceProvider
         $this->app->register('Orchestra\Imagine\ImagineServiceProvider');
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
         
-        $this->app->booting(function() {
+        $this->app->booting(function () {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
             $loader->alias('Redminportal', 'Redooor\Redminportal\App\Facades\Redminportal');
             $loader->alias('Form', 'Illuminate\Html\FormFacade');
@@ -84,6 +85,7 @@ class RedminportalServiceProvider extends ServiceProvider
         $this->registerResources('translation', 'redminportal::translation');
         $this->registerResources('tinymce', 'redminportal::tinymce');
         $this->registerResources('pagination', 'redminportal::pagination');
+        $this->registerResources('permissions', 'redminportal::permissions');
         
         // Change Authentication model
         $this->registerResources('auth', 'auth');
@@ -115,7 +117,7 @@ class RedminportalServiceProvider extends ServiceProvider
      */
     protected function bindSharedInstances()
     {
-        $this->app->bindShared('redminportal', function($app) {
+        $this->app->bindShared('redminportal', function ($app) {
             return new Redminportal($app['url']);
         });
     }
