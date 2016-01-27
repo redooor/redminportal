@@ -4,6 +4,7 @@ use Input;
 use Validator;
 use Illuminate\Support\MessageBag;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\PermissibleController;
 use Redooor\Redminportal\App\Models\Group;
 
 class GroupController extends Controller
@@ -13,7 +14,7 @@ class GroupController extends Controller
     protected $sortBy;
     protected $orderBy;
     
-    use SorterController;
+    use SorterController, PermissibleController;
     
     public function __construct(Group $model)
     {
@@ -101,20 +102,23 @@ class GroupController extends Controller
 
         $validation = Validator::make(Input::all(), $rules, $messages);
         
-        $redirect_url = 'admin/groups/' . (isset($sid) ? 'edit/' . $sid : 'create');
+        if (isset($sid)) {
+            $redirect_url = 'admin/groups/edit/' . $sid;
+            $group = Group::find($sid);
+        } else {
+            $redirect_url = 'admin/groups/create';
+            $group = new Group;
+        }
         
         if ($validation->fails()) {
             return redirect($redirect_url)->withErrors($validation)->withInput();
         }
         
-        $name = Input::get('name');
-        $permission_inherit = Input::get('permission-inherit');
-        $permission_allow = Input::get('permission-allow');
-        $permission_deny = Input::get('permission-deny');
-        
-        $permissions = $this->populatePermission($permission_inherit, $permission_allow, $permission_deny);
-        
-        $group = (isset($sid) ? Group::find($sid) : new Group);
+        $permissions = $this->populatePermission(
+            Input::get('permission-inherit'),
+            Input::get('permission-allow'),
+            Input::get('permission-deny')
+        );
         
         if ($group == null) {
             $errors = new MessageBag;
@@ -127,10 +131,11 @@ class GroupController extends Controller
         
         try {
             // Save the group details
-            $group->name = $name;
+            $group->name = Input::get('name');
             $group->permissions = json_encode($permissions);
             $group->save();
         } catch (\Exception $exp) {
+            // There was a problem saving it
             $errors = new MessageBag;
             $errors->add(
                 'editError',
@@ -140,51 +145,6 @@ class GroupController extends Controller
         }
         
         return redirect('admin/groups');
-    }
-    
-    /**
-     * Returns an array of permissions based on given inherit, allow and deny list
-     * @param array Inherit Permission
-     * @param array Allow Permission
-     * @param array Deny Permission
-     * @return array Permission list
-     **/
-    private function populatePermission($permission_inherit, $permission_allow, $permission_deny)
-    {
-        $permissions = [];
-        
-        // Add Deny permission
-        $permissions = $this->retreivePermission($permissions, $permission_deny, -1);
-        
-        // Add Allow permission
-        $permissions = $this->retreivePermission($permissions, $permission_allow, 1);
-        
-        // Add Allow permission
-        $permissions = $this->retreivePermission($permissions, $permission_inherit, 0);
-        
-        return $permissions;
-    }
-    
-    /**
-     * Appends to an array of permissions based on given permission list and level
-     * @param array Permission array to be appended
-     * @param array Permission list to check through
-     * @param int Level of permission
-     * @return array Permission
-     **/
-    private function retreivePermission($permissions, $permission_list, $level)
-    {
-        $sorted_permissions = explode(',', $permission_list);
-        ksort($sorted_permissions);
-        
-        foreach ($sorted_permissions as $item) {
-            $item = trim($item);
-            if (! array_key_exists($item, $permissions) && ! empty($item)) {
-                $permissions[$item] = $level;
-            }
-        }
-        
-        return $permissions;
     }
     
     public function getDelete($sid)

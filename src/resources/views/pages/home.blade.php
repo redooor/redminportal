@@ -63,7 +63,8 @@
                                 <li>Check <a href="https://github.com/redooor/redminportal/wiki/Private-API">list of Private API on github Wiki page</a></li>
                             </ul>
                         </li>
-                        <li>UI: Group permission management, able to edit group permission for any route. (issue 69)</li>
+                        <li>UI: Group permission management, able to edit group permission for any route. (issue #69)</li>
+                        <li>UI: User permission management, able to edit user permission for any route. (issue #69)</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>

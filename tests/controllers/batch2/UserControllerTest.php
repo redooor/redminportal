@@ -22,7 +22,10 @@ class UserControllerTest extends BaseControllerTest
                 'password'   => '123456',
                 'password_confirmation' => '123456',
                 'role'       => 1,
-                'activated'  => true
+                'activated'  => true,
+                'permission-inherit' => 'admin.view,admin.users.view',
+                'permission-allow'  => 'admin.create,admin.update',
+                'permission-deny' => 'admin.delete,admin.users.delete'
             ),
             'edit' => array(
                 'id'   => 2,
@@ -32,7 +35,10 @@ class UserControllerTest extends BaseControllerTest
                 'password'   => '123456',
                 'password_confirmation' => '123456',
                 'role'       => 1,
-                'activated'  => true
+                'activated'  => true,
+                'permission-inherit' => 'admin.view,admin.groups.view',
+                'permission-allow'  => 'admin.create,admin.update',
+                'permission-deny' => 'admin.delete,admin.groups.delete'
             )
         );
         

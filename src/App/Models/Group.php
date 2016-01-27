@@ -22,9 +22,17 @@ class Group extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\User', 'users_groups');
     }
     
+    /**
+     * Converts permission json string to array
+     * Returns an empty array if string is null
+     **/
     public function permissions()
     {
-        return json_decode($this->permissions);
+        if ($this->permissions) {
+            return json_decode($this->permissions);
+        }
+        
+        return array();
     }
     
     public function delete()
