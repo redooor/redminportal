@@ -77,7 +77,7 @@ class Order extends Model
         $totalprice += $this->bundles()->sum('price');
         $totalprice += $this->products()->sum('price');
         $totalprice += $this->pricelists()->sum('price');
-        return (float)$totalprice;
+        return $totalprice;
     }
     
     /*
@@ -88,7 +88,7 @@ class Order extends Model
     public function getTotaldiscount()
     {
         $value = collect($this->getDiscounts())->sum('value');
-        return (float)$value;
+        return $value;
     }
     
     /*
@@ -135,7 +135,9 @@ class Order extends Model
         
         if ($options) {
             if (array_key_exists('discounts', $options)) {
-                return $options['discounts'];
+                if ($options['discounts']) {
+                    return $options['discounts'];
+                }
             }
         }
         
