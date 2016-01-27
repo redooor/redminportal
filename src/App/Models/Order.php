@@ -77,7 +77,7 @@ class Order extends Model
         $totalprice += $this->bundles()->sum('price');
         $totalprice += $this->products()->sum('price');
         $totalprice += $this->pricelists()->sum('price');
-        return $totalprice;
+        return (float)$totalprice;
     }
     
     /*
@@ -87,7 +87,8 @@ class Order extends Model
      */
     public function getTotaldiscount()
     {
-        return collect($this->getDiscounts())->sum('value');
+        $value = collect($this->getDiscounts())->sum('value');
+        return (float)$value;
     }
     
     /*
@@ -250,15 +251,15 @@ class Order extends Model
             ->where('coupon_id', $coupon->id)
             ->where('coupons.start_date', '<=', $now)
             ->where('coupons.end_date', '>=', $now)
-            ->where(function($query) use ($totalprice) {
+            ->where(function ($query) use ($totalprice) {
                 $query->orWhere('coupons.min_spent', null)
                     ->orWhere('coupons.min_spent', '<=', $totalprice);
             })
-            ->where(function($query) use ($totalprice) {
+            ->where(function ($query) use ($totalprice) {
                 $query->orWhere('coupons.max_spent', null)
                     ->orWhere('coupons.max_spent', '>=', $totalprice);
             })
-            ->where(function($query) use ($coupon) {
+            ->where(function ($query) use ($coupon) {
                 $query->orWhere('coupons.usage_limit_per_coupon', null)
                     ->orWhere('coupons.usage_limit_per_coupon', '>=', $coupon->usage_limit_per_coupon_count);
             })
