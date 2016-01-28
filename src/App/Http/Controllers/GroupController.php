@@ -9,11 +9,6 @@ use Redooor\Redminportal\App\Models\Group;
 
 class GroupController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController, PermissibleController;
     
     public function __construct(Group $model)
@@ -22,10 +17,11 @@ class GroupController extends Controller
         $this->sortBy = 'name';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::groups.view';
+        $this->pageRoute = 'admin/groups';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::groups.view';
-        $this->sort_fail_redirect = 'admin/groups';
     }
     
     public function getIndex()

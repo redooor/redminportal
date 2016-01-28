@@ -16,11 +16,6 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController;
     
     public function __construct(Module $model)
@@ -29,12 +24,13 @@ class ModuleController extends Controller
         $this->sortBy = 'name';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::modules.view';
+        $this->pageRoute = 'admin/modules';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('categories', 'modules.category_id', '=', 'categories.id')
             ->select('modules.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::modules.view';
-        $this->sort_fail_redirect = 'admin/modules';
     }
     
     public function getIndex()

@@ -3,6 +3,7 @@
 use Exception;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
+use Redooor\Redminportal\App\Http\Traits\SearcherController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
@@ -12,12 +13,7 @@ use Redooor\Redminportal\App\Models\Pricelist;
 
 class OrderController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
-    use SorterController, DeleterController;
+    use SorterController, DeleterController, SearcherController;
     
     public function __construct(Order $model)
     {
@@ -25,23 +21,39 @@ class OrderController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::orders.view';
+        $this->pageRoute = 'admin/orders';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('users', 'orders.user_id', '=', 'users.id')
             ->select('users.email', 'users.first_name', 'users.last_name', 'orders.*');
-        $this->sort_success_view = 'redminportal::orders.view';
-        $this->sort_fail_redirect = 'admin/orders';
+        
+        // For searching
+        $this->searchable_fields = [
+            'all' => 'Search all',
+            'email' => 'Email',
+            'first_name' => 'First name',
+            'last_name' => 'Last name',
+            'transaction_id' => 'Transaction Id',
+            'payment_status' => 'Payment status'
+        ];
+        
+        // Default data
+        $this->data = [
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy,
+            'searchable_fields' => $this->searchable_fields
+        ];
     }
     
     public function getIndex()
     {
         $models = Order::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
 
-        $data = [
-            'models' => $models,
-            'sortBy' => $this->sortBy,
-            'orderBy' => $this->orderBy
-        ];
+        $data = array_merge($this->data, [
+            'models' => $models
+        ]);
         
         return view('redminportal::orders.view', $data);
     }

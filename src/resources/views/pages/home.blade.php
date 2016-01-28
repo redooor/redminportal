@@ -65,6 +65,8 @@
                         </li>
                         <li>UI: Group permission management, able to edit group permission for any route. (issue #69)</li>
                         <li>UI: User permission management, able to edit user permission for any route. (issue #69)</li>
+                        <li>Search order by transaction id and more! (issue #137)</li>
+                        <li>Search users by group, first name, last name, email and more!</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -108,6 +110,7 @@
                                 <li>Various actions for create, update and delete are added in the permission checker.</li>
                             </ul>
                         </li>
+                        <li>Improved search engine to be reusable.</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>

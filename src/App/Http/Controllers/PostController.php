@@ -11,11 +11,6 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PostController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController, DeleterController;
     
     public function __construct(Post $model)
@@ -24,12 +19,13 @@ class PostController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::posts.view';
+        $this->pageRoute = 'admin/posts';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('categories', 'posts.category_id', '=', 'categories.id')
             ->select('posts.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::posts.view';
-        $this->sort_fail_redirect = 'admin/posts';
     }
     
     public function getIndex()

@@ -6,11 +6,6 @@ use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class MembershipController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController;
     
     public function __construct(Membership $model)
@@ -19,10 +14,11 @@ class MembershipController extends Controller
         $this->sortBy = 'rank';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::memberships.view';
+        $this->pageRoute = 'admin/memberships';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::memberships.view';
-        $this->sort_fail_redirect = 'admin/memberships';
     }
     
     public function getIndex()

@@ -10,11 +10,6 @@ use Redooor\Redminportal\App\Models\Bundle;
 
 class CouponController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController, DeleterController;
     
     public function __construct(Coupon $model)
@@ -23,10 +18,11 @@ class CouponController extends Controller
         $this->sortBy = 'start_date';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::coupons.view';
+        $this->pageRoute = 'admin/coupons';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::coupons.view';
-        $this->sort_fail_redirect = 'admin/coupons';
     }
     
     public function getIndex()

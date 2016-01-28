@@ -63,6 +63,8 @@ This update introduces some new tables and lots of changes.
     - Check [list of Private API on github Wiki page](https://github.com/redooor/redminportal/wiki/Private-API)
 15. UI: Group permission management, able to edit group permission for any route. (issue #69)
 16. UI: User permission management, able to edit user permission for any route. (issue #69)
+17. Search order by transaction id and more! (issue #137)
+18. Search users by group, first name, last name, email and more!
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)
@@ -99,6 +101,7 @@ This update introduces some new tables and lots of changes.
 15. Improved Permission management, allow granular control for every page and action. (issue #69)
     - When users are deactivated after they login, they should be logged out and require re-login.
     - Various actions for create, update and delete are added in the permission checker.
+16. Improved search engine to be reusable.
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)

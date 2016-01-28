@@ -14,11 +14,6 @@ use Redooor\Redminportal\App\Classes\File as FileInfo;
 
 class MediaController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController, MediaUploaderController;
     
     public function __construct(Media $model)
@@ -27,12 +22,13 @@ class MediaController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::medias.view';
+        $this->pageRoute = 'admin/medias';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('categories', 'medias.category_id', '=', 'categories.id')
             ->select('medias.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::medias.view';
-        $this->sort_fail_redirect = 'admin/medias';
     }
     
     public function getIndex()

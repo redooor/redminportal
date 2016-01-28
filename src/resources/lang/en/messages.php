@@ -78,7 +78,7 @@ return array(
     'applies_to_whole_cart_spent'
         => 'Applies to the total amount in the shopping cart.',
     'error_remove_special_characters'
-        => 'The search format is invalid. Please remove all special characters such as $%&*.',
+        => 'The text format is invalid. Please remove all special characters such as $%&*.',
     'error_no_such_product'
         => 'The product cannot be found because it does not exist or may have been deleted.',
     'error_delete_entry'
@@ -136,4 +136,10 @@ return array(
         => "The group cannot be saved due to some problem. Please try again.",
     'help_permission_builder'
         => "Use permission builder below to help you populate the permissions.",
+    'search_error_field_missing'
+        => "Missing field to search. Please try again using the search form.",
+    'search_error_text_missing'
+        => "Missing text to search. Please try again using the search form.",
+    'search_error_unknown'
+        => "Search cannot be performed at this moment. Please try again using the search form.",
 );

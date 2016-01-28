@@ -9,7 +9,10 @@
     @include('redminportal::partials.errors')
     
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
+            {!! Redminportal::form()->searchForm(url('admin/orders'), url('admin/orders/search'), $searchable_fields, (isset($field) ? $field : null), (isset($search) ? $search : null)) !!}
+        </div>
+        <div class="col-md-4">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
                 @if (count($models) > 0)

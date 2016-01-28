@@ -14,11 +14,6 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController, DeleterController;
     
     public function __construct(Bundle $model)
@@ -27,12 +22,13 @@ class BundleController extends Controller
         $this->sortBy = 'name';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::bundles.view';
+        $this->pageRoute = 'admin/bundles';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('categories', 'bundles.category_id', '=', 'categories.id')
             ->select('bundles.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::bundles.view';
-        $this->sort_fail_redirect = 'admin/bundles';
     }
     
     public function getIndex()

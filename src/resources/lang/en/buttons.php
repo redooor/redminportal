@@ -22,4 +22,5 @@ return array(
     'add' => 'Add',
     'previous_page' => 'Previous Page',
     'insert' => 'Insert',
+    'clear' => 'Clear',
 );

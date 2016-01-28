@@ -88,4 +88,27 @@ class Form
         
         return view('redminportal::partials.form-input-email-typeahead', $data);
     }
+    
+    /*
+     * Generate an HTML search form
+     *
+     * @param string View url
+     * @param string Action route to post to
+     * @param array Array of searchable fields
+     * @param string Optional selected field
+     * @param string Optional search value
+     * @return View
+     */
+    public function searchForm($view, $action, $fields = array(), $selected = null, $value = null)
+    {
+        $data = [
+            'view' => $view,
+            'action' => $action,
+            'fields' => $fields,
+            'value' => $value,
+            'selected' => $selected
+        ];
+        
+        return view('redminportal::partials.form-search-template', $data);
+    }
 }

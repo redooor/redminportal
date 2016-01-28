@@ -85,4 +85,45 @@ class FormUITest extends RedminTestCase
         
         $this->assertTrue($input == $output);
     }
+    
+    /**
+     * Test (pass): Search Form
+     **/
+    public function testSearchFormPass()
+    {
+        $input = $this->model->searchForm(
+            'route/view',
+            'route.action',
+            ['field_1' => 'Field 1', 'field_2' => 'Field 2'],
+            'field_2',
+            'test'
+        );
+        
+        $input = str_replace(array("\r", "\n", " "), '', $input);
+        
+        $output = '<form method="POST" action="route.action" accept-charset="UTF-8" role="form" class="form-inline">
+            <input type="hidden" name="_token" value="">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                </div>
+                <select class="form-control input-sm" name="field">
+                    <option value="field_1">Field 1</option>
+                    <option value="field_2" selected>Field 2</option>
+                </select>
+                <div class="input-group">
+                    <input class="form-control input-sm" placeholder="Search" 
+                        title="Search" name="search" type="text" value="test">
+                    <span class="input-group-btn">
+                        <a class="btn btn-default btn-sm" href="route/view">
+                            <span class="glyphicon glyphicon-remove"></span> Clear</a>
+                    </span>
+                </div>
+            </div>
+        </form>';
+        
+        $output = str_replace(array("\r", "\n", " "), '', $output);
+        
+        $this->assertTrue($input == $output);
+    }
 }

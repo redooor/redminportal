@@ -12,11 +12,6 @@ use DateTime;
 
 class PromotionController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController, DeleterController;
     
     public function __construct(Promotion $model)
@@ -25,10 +20,11 @@ class PromotionController extends Controller
         $this->sortBy = 'end_date';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::promotions.view';
+        $this->pageRoute = 'admin/promotions';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::promotions.view';
-        $this->sort_fail_redirect = 'admin/promotions';
     }
     
     public function getIndex()

@@ -6,11 +6,6 @@ use Redooor\Redminportal\App\Models\Mailinglist;
 
 class MailinglistController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController, DeleterController;
     
     public function __construct(Mailinglist $model)
@@ -19,10 +14,11 @@ class MailinglistController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::mailinglists.view';
+        $this->pageRoute = 'admin/mailinglists';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::mailinglists.view';
-        $this->sort_fail_redirect = 'admin/mailinglists';
     }
     
     public function getIndex()

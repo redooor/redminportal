@@ -7,18 +7,14 @@ use Lang;
 use Validator;
 use Illuminate\Support\MessageBag;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\SearcherController;
 use Redooor\Redminportal\App\Http\Traits\PermissibleController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Group;
 
 class UserController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
-    use SorterController, PermissibleController;
+    use SorterController, PermissibleController, SearcherController;
     
     public function __construct(User $model)
     {
@@ -26,25 +22,40 @@ class UserController extends Controller
         $this->sortBy = 'email';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::users.view';
+        $this->pageRoute = 'admin/users';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('users_groups', 'users_groups.user_id', '=', 'users.id')
             ->LeftJoin('groups', 'groups.id', '=', 'users_groups.group_id')
-            ->select('users.*', 'groups.name as group_name')
+            ->select('users.*', 'groups.name')
             ->groupBy('email');
-        $this->sort_success_view = 'redminportal::users.view';
-        $this->sort_fail_redirect = 'admin/users';
+        
+        // For searching
+        $this->searchable_fields = [
+            'all' => 'Search all',
+            'email' => 'Email',
+            'first_name' => 'First name',
+            'last_name' => 'Last name',
+            'name' => 'Group'
+        ];
+        
+        // Default data for sharing
+        $this->data = [
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy,
+            'searchable_fields' => $this->searchable_fields
+        ];
     }
     
     public function getIndex()
     {
         $models = User::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
         
-        $data = array(
-            'sortBy' => $this->sortBy,
-            'orderBy' => $this->orderBy,
+        $data = array_merge($this->data, [
             'models' => $models
-        );
+        ]);
 
         return view('redminportal::users/view', $data);
     }
@@ -80,17 +91,15 @@ class UserController extends Controller
         $permission_allow = [];
         $permission_deny = [];
         
-//        if ($user->permissions()) {
-            foreach ($user->permissions() as $key => $value) {
-                if ($value < 0) {
-                    $permission_deny[$key] = $key;
-                } elseif ($value > 0) {
-                    $permission_allow[$key] = $key;
-                } else {
-                    $permission_inherit[$key] = $key;
-                }
+        foreach ($user->permissions() as $key => $value) {
+            if ($value < 0) {
+                $permission_deny[$key] = $key;
+            } elseif ($value > 0) {
+                $permission_allow[$key] = $key;
+            } else {
+                $permission_inherit[$key] = $key;
             }
-//        }
+        }
         
         $data = array(
             'roles' => $roles,
@@ -279,143 +288,5 @@ class UserController extends Controller
         $user->save();
         
         return redirect()->back();
-    }
-    
-    public function postSearch()
-    {
-        $pattern = '/^[a-zA-Z0-9 -:\@\.]+$/';
-        
-        $rules = array(
-            'search' => 'required|regex:' . $pattern
-        );
-
-        $validation = Validator::make(Input::all(), $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/users')->withErrors($validation)->withInput();
-        }
-        
-        $search = trim(Input::get('search'));
-        
-        // Check special characters
-        $errors = $this->checkSpecialChar($search);
-        if ($errors) {
-            return redirect('admin/users')->withErrors($errors)->withInput();
-        }
-        
-        // Check if the search is by group
-        if (preg_match("/^group:/i", $search)) {
-            $search = preg_replace("/^group:/i", "", $search);
-            return redirect('admin/users/group/' . $search);
-        }
-
-        // Else perform normal search
-        return redirect('admin/users/search/' . $search);
-    }
-
-    public function getSearch($search)
-    {
-        $pattern = '/^[a-zA-Z0-9 -@.]+$/';
-        
-        $rules = array(
-            'search' => 'required|regex:' . $pattern
-        );
-
-        $inputs = array(
-            'search' => $search
-        );
-
-        $validation = Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/users')->withErrors($validation)->with('search', $search);
-        }
-        
-        // Check special characters
-        $errors = $this->checkSpecialChar($search);
-        if ($errors) {
-            return redirect('admin/users')->withErrors($errors);
-        }
-        
-        $sortBy = 'email';
-        $orderBy = 'asc';
-
-        $users = User::where('first_name', 'LIKE', '%' . $search . '%')
-            ->orWhere('last_name', 'LIKE', '%' . $search . '%')
-            ->orWhere('email', 'LIKE', '%' . $search . '%')
-            ->orderBy($sortBy, $orderBy)
-            ->paginate($this->perpage);
-        
-        $data = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy,
-            'models' => $users,
-            'search' => $search
-        );
-
-        return view('redminportal::users/view', $data);
-    }
-    
-    public function getGroup($search)
-    {
-        $pattern = '/^[a-zA-Z0-9 -]+$/';
-        
-        $rules = array(
-            'search' => 'required|regex:' . $pattern
-        );
-
-        $inputs = array(
-            'search' => $search
-        );
-
-        $validation = Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/users')->withErrors($validation)->with('search', $search);
-        }
-        
-        // Check special characters
-        $errors = $this->checkSpecialChar($search);
-        if ($errors) {
-            return redirect('admin/users')->withErrors($errors);
-        }
-        
-        $sortBy = 'email';
-        $orderBy = 'asc';
-
-        $users = User::join('users_groups', 'users_groups.user_id', '=', 'users.id')
-            ->join('groups', 'groups.id', '=', 'users_groups.group_id')
-            ->where('groups.name', 'LIKE', $search)
-            ->select('users.*')
-            ->orderBy($sortBy, $orderBy)
-            ->paginate($this->perpage);
-        
-        $data = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy,
-            'models' => $users,
-            'search' => 'group:' . $search
-        );
-        
-        return view('redminportal::users/view', $data);
-    }
-    
-    /*
-     * Returns error message if found special characters
-     * return null if no special characters found
-     * @return MessageBag if special character found, null if not found
-     */
-    private function checkSpecialChar($search)
-    {
-        if (preg_match("/[%$&*]/i", $search)) {
-            $errors = new MessageBag;
-            $errors->add(
-                'stringError',
-                Lang::get('redminportal::messages.error_remove_special_characters')
-            );
-            return $errors;
-        }
-        
-        return null;
     }
 }

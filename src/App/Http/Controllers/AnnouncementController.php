@@ -8,11 +8,6 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class AnnouncementController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController, DeleterController;
     
     public function __construct(Announcement $model)
@@ -21,10 +16,11 @@ class AnnouncementController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::announcements.view';
+        $this->pageRoute = 'admin/announcements';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::announcements.view';
-        $this->sort_fail_redirect = 'admin/announcements';
     }
     
     public function getIndex()

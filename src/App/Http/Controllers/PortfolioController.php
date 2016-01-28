@@ -10,11 +10,6 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PortfolioController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController, DeleterController;
     
     public function __construct(Portfolio $model)
@@ -23,12 +18,13 @@ class PortfolioController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::portfolios.view';
+        $this->pageRoute = 'admin/portfolios';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('categories', 'portfolios.category_id', '=', 'categories.id')
             ->select('portfolios.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::portfolios.view';
-        $this->sort_fail_redirect = 'admin/portfolios';
     }
     
     public function getIndex()

@@ -4,14 +4,16 @@
  * Add sorting capability to controller
  */
 
+use Validator;
+
 trait SorterController
 {
     /* -- Requires --
     protected $query;
+    protected $pageView;
+    protected $pageRoute;
+    protected $data;
     ----------------- */
-    protected $sort_success_view;
-    protected $sort_fail_redirect;
-    
     public function getSort($sortBy = 'create_at', $orderBy = 'desc')
     {
         $inputs = array(
@@ -24,10 +26,10 @@ trait SorterController
             'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
         );
         
-        $validation = \Validator::make($inputs, $rules);
+        $validation = Validator::make($inputs, $rules);
 
         if ($validation->fails()) {
-            return redirect($this->sort_fail_redirect)->withErrors($validation);
+            return redirect($this->pageRoute)->withErrors($validation);
         }
         
         if ($orderBy != 'asc' && $orderBy != 'desc') {
@@ -42,6 +44,11 @@ trait SorterController
             'orderBy' => $orderBy
         ];
         
-        return view($this->sort_success_view, $data);
+        // Merge if there're default data
+        if (! empty($this->data)) {
+            $data = array_merge($this->data, $data);
+        }
+        
+        return view($this->pageView, $data);
     }
 }
