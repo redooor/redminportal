@@ -159,4 +159,10 @@ return array(
     'denied' => 'Denied',
     'allow' => 'Allow',
     'deny' => 'Deny',
+    'revision_edited_by' => "Edited by",
+    'revision_edited_on' => "Edited on",
+    'revision_edited_field' => "Edited Field",
+    'revision_edited_from' => "From",
+    'revision_edited_to' => "To",
+    'revision_history_title' => 'Revision History',
 );

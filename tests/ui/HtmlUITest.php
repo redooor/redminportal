@@ -81,4 +81,52 @@ class HtmlUITest extends RedminTestCase
         
         $this->assertTrue($input == $output);
     }
+    
+    /**
+     * Test (pass): Load modalWindow
+     **/
+    public function testModalWindowPass()
+    {
+        $input = $this->model->modalWindow(
+            'modal_id',
+            'This is a title',
+            'This is <br> The body',
+            '<a href="#">Some button at the footer</a>',
+            'modal-lg',
+            'modal-progress-id'
+        );
+        
+        $input = str_replace(array("\r", "\n", " "), '', $input);
+        
+        $output = '<div id="modal_id" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-progress">
+                    <div class="progress">
+                        <div id="modal-progress-id" 
+                        class="progress-bar progress-bar-info progress-bar-striped" 
+                        role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">Loading</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">This is a title</h4>
+                    </div>
+                    <div class="modal-body">
+                        This is
+                        <br> The body
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#">Some button at the footer</a>
+                    </div>
+                </div>
+            </div>
+        </div>';
+        
+        $output = str_replace(array("\r", "\n", " "), '', $output);
+        
+        $this->assertTrue($input == $output);
+    }
 }

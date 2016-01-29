@@ -65,6 +65,9 @@ This update introduces some new tables and lots of changes.
 16. UI: User permission management, able to edit user permission for any route. (issue #69)
 17. Search order by transaction id and more! (issue #137)
 18. Search users by group, first name, last name, email and more!
+19. Able to change Order statuses with tracking changes in Order model.
+20. Added reusable Revision and Revisionable trait for tracking of changes in any model.
+21. Added UI for viewing Revision History for Orders.
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)
@@ -102,6 +105,7 @@ This update introduces some new tables and lots of changes.
     - When users are deactivated after they login, they should be logged out and require re-login.
     - Various actions for create, update and delete are added in the permission checker.
 16. Improved search engine to be reusable.
+17. Payment Statuses can now be edited via config file. See [UPGRADE.md](UPGRADE.md) for instructions.
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)

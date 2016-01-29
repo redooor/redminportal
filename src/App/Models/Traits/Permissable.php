@@ -62,7 +62,7 @@ trait Permissable
         $type = 'view';
         if ($request->is('*/create')) {
             $type = 'create';
-        } elseif ($request->is('*/edit/*')) {
+        } elseif ($request->is('*/edit/*') || $request->is('*/update/*')) {
             $type = 'update';
         } elseif ($request->is('*/delete/*')) {
             $type = 'delete';

@@ -3,6 +3,7 @@
 use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Redooor\Redminportal\App\Models\Traits\Revisionable;
 
 /* Columns
  *
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    use Revisionable;
+    
     protected $table = 'orders';
     
     /**
@@ -57,7 +60,7 @@ class Order extends Model
     
     public function delete()
     {
-        // Remove product association
+        // Remove all associations
         $this->products()->detach();
         $this->bundles()->detach();
         $this->pricelists()->detach();

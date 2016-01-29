@@ -148,6 +148,12 @@ Copy the file `src/config/pagination.php` to your root folder's `config/vendor/r
 
 You can change the value to any desired number to be the pagination size. The default is 50.
 
+### Payment Statues Config file
+
+You can now change the payment statuses in a config file `src/config/payment_statuses.php` for your project.
+
+Copy the file `src/config/pagination.php` to your root folder's `config/vendor/redooor/redminportal/payment_statuses.php`.
+
 ### Relocation of Redminportal Facade
 
 This shouldn't really affect your existing installation because previously it was not working.

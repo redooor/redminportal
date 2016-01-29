@@ -1,9 +1,11 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Exception;
+use Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Http\Traits\SearcherController;
+use Redooor\Redminportal\App\Http\Traits\RevisionableController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
@@ -13,7 +15,7 @@ use Redooor\Redminportal\App\Models\Pricelist;
 
 class OrderController extends Controller
 {
-    use SorterController, DeleterController, SearcherController;
+    use SorterController, DeleterController, SearcherController, RevisionableController;
     
     public function __construct(Order $model)
     {
@@ -43,7 +45,8 @@ class OrderController extends Controller
         $this->data = [
             'sortBy' => $this->sortBy,
             'orderBy' => $this->orderBy,
-            'searchable_fields' => $this->searchable_fields
+            'searchable_fields' => $this->searchable_fields,
+            'payment_statuses' => config('redminportal::payment_statuses')
         ];
     }
     
@@ -78,13 +81,7 @@ class OrderController extends Controller
             $pricelists[$pricelist->id] = $pricelist->name;
         }
 
-        $payment_statuses = array(
-            'Completed'     => 'Completed',
-            'Pending'       => 'Pending',
-            'In Progress'   => 'In Progress',
-            'Canceled'      => 'Canceled',
-            'Refunded'      => 'Refunded'
-        );
+        $payment_statuses = config('redminportal::payment_statuses');
 
         return view('redminportal::orders/create')
             ->with('products', $products)
@@ -221,5 +218,46 @@ class OrderController extends Controller
         }
         
         return redirect('admin/orders');
+    }
+    
+    public function getUpdate($field = null, $sid = null, $status = null)
+    {
+        $field_pattern = '/^[a-zA-Z0-9_\-]+$/';
+        $text_pattern = '/^[a-zA-Z0-9 _\-]+$/';
+        
+        $rules = [
+            'field' => 'required|in:status|regex:' . $field_pattern,
+            'sid' => 'required|numeric',
+            'status' => 'required|regex:' . $text_pattern
+        ];
+        
+        $inputs = [
+            'field' => $field,
+            'sid' => $sid,
+            'status' => $status
+        ];
+        
+        $messages = [
+            'field.in'   => trans('redminportal::messages.order_error_update_unsupported_field'),
+            'field.required'   => trans('redminportal::messages.order_error_update_missing_field'),
+            'field.regex'      => trans('redminportal::messages.error_remove_special_characters'),
+            'status.required'   => trans('redminportal::messages.order_error_update_missing_status'),
+            'status.regex'      => trans('redminportal::messages.error_remove_special_characters')
+        ];
+
+        $validation = Validator::make($inputs, $rules, $messages);
+        
+        if ($validation->fails()) {
+            return redirect($this->pageRoute)->withErrors($validation);
+        }
+        
+        // Only supports status for now
+        if ($field == 'status') {
+            $order = Order::find($sid);
+            $order->payment_status = $status;
+            $order->save();
+        }
+        
+        return redirect()->back();
     }
 }

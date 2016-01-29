@@ -142,4 +142,12 @@ return array(
         => "Missing text to search. Please try again using the search form.",
     'search_error_unknown'
         => "Search cannot be performed at this moment. Please try again using the search form.",
+    'order_error_update_missing_status'
+        => "Missing status to update. Please try again using the dropdown list.",
+    'order_error_update_missing_field'
+        => "Missing field to update. Please try again using the dropdown list.",
+    'order_error_update_unsupported_field'
+        => "That field is not supported. Please try again using the dropdown list.",
+    'no_revision_found'
+        => "No revision history.",
 );

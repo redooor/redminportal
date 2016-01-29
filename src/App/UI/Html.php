@@ -54,4 +54,35 @@ class Html
         
         return view('redminportal::partials.uploaded-images', $data);
     }
+    
+    /*
+     * Generate an HTML modal window
+     *
+     * @param string Modal Unique Id
+     * @param string Content title
+     * @param string Content body
+     * @param string Optional footer
+     * @param string Optional modal size
+     * @param string Optional modal progress ID
+     * @return View
+     */
+    public function modalWindow(
+        $modal_id,
+        $modal_title,
+        $modal_body,
+        $modal_footer = null,
+        $modal_size = null,
+        $modal_progress = null
+    ) {
+        $data = [
+            'modal_id'          => $modal_id,
+            'modal_size'        => $modal_size,
+            'modal_progress'    => $modal_progress,
+            'modal_title'       => $modal_title,
+            'modal_body'        => $modal_body,
+            'modal_footer'      => $modal_footer
+        ];
+        
+        return view('redminportal::partials.modal-window', $data);
+    }
 }

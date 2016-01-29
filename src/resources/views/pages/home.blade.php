@@ -67,6 +67,9 @@
                         <li>UI: User permission management, able to edit user permission for any route. (issue #69)</li>
                         <li>Search order by transaction id and more! (issue #137)</li>
                         <li>Search users by group, first name, last name, email and more!</li>
+                        <li>Able to change Order statuses with tracking changes in Order model.</li>
+                        <li>Added reusable Revision and Revisionable trait for tracking of changes in any model.</li>
+                        <li>Added UI for viewing Revision History for Orders.</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -111,6 +114,7 @@
                             </ul>
                         </li>
                         <li>Improved search engine to be reusable.</li>
+                        <li>Payment Statuses can now be edited via config file. See UPGRADE.md for instructions.</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
