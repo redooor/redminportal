@@ -67,8 +67,8 @@
                         <li>UI: User permission management, able to edit user permission for any route. (issue #69)</li>
                         <li>Search order by transaction id and more! (issue #137)</li>
                         <li>Search users by group, first name, last name, email and more!</li>
-                        <li>Able to change Order statuses with tracking changes in Order model.</li>
-                        <li>Added reusable Revision and Revisionable trait for tracking of changes in any model.</li>
+                        <li>Able to change Order statuses with tracking changes in Order model. (issue #138)</li>
+                        <li>Added reusable Revision and Revisionable trait for tracking of changes in any model. (issue #138)</li>
                         <li>Added UI for viewing Revision History for Orders.</li>
                     </ol>
                     <h4>Enhancements:</h4>
