@@ -6,11 +6,6 @@ use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class MembershipController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController;
     
     public function __construct(Membership $model)
@@ -19,10 +14,11 @@ class MembershipController extends Controller
         $this->sortBy = 'rank';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::memberships.view';
+        $this->pageRoute = 'admin/memberships';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::memberships.view';
-        $this->sort_fail_redirect = 'admin/memberships';
     }
     
     public function getIndex()
@@ -111,7 +107,7 @@ class MembershipController extends Controller
         if ($membership == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The membership cannot be found. It could have already been deleted.");
-            return \Redirect::to('/admin/memberships')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         // Cannot delete if in use
@@ -119,12 +115,12 @@ class MembershipController extends Controller
         if (count($modMediaMembership) > 0) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The membership cannot be deleted because it is in used.");
-            return \Redirect::to('/admin/memberships')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         // Delete the membership
         $membership->delete();
 
-        return \Redirect::to('admin/memberships');
+        return redirect()->back();
     }
 }

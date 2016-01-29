@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Promotion;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Translation;
@@ -11,12 +12,7 @@ use DateTime;
 
 class PromotionController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Promotion $model)
     {
@@ -24,10 +20,11 @@ class PromotionController extends Controller
         $this->sortBy = 'end_date';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::promotions.view';
+        $this->pageRoute = 'admin/promotions';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::promotions.view';
-        $this->sort_fail_redirect = 'admin/promotions';
     }
     
     public function getIndex()
@@ -169,23 +166,6 @@ class PromotionController extends Controller
             }
         }
         
-        return redirect('admin/promotions');
-    }
-    
-    public function getDelete($sid)
-    {
-        // Find the promotion using the id
-        $promotion = Promotion::find($sid);
-        
-        if ($promotion == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
-            return redirect('admin/promotions')->withErrors($errors);
-        }
-        
-        // Delete the promotion
-        $promotion->delete();
-
         return redirect('admin/promotions');
     }
     

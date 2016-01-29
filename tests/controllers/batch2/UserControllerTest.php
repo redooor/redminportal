@@ -2,7 +2,7 @@
 
 class UserControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest;
+    use TraitSorterControllerTest, TraitSearcherControllerTest;
     
     /**
      * Contructor
@@ -22,7 +22,10 @@ class UserControllerTest extends BaseControllerTest
                 'password'   => '123456',
                 'password_confirmation' => '123456',
                 'role'       => 1,
-                'activated'  => true
+                'activated'  => true,
+                'permission-inherit' => 'admin.view,admin.users.view',
+                'permission-allow'  => 'admin.create,admin.update',
+                'permission-deny' => 'admin.delete,admin.users.delete'
             ),
             'edit' => array(
                 'id'   => 2,
@@ -32,12 +35,19 @@ class UserControllerTest extends BaseControllerTest
                 'password'   => '123456',
                 'password_confirmation' => '123456',
                 'role'       => 1,
-                'activated'  => true
+                'activated'  => true,
+                'permission-inherit' => 'admin.view,admin.groups.view',
+                'permission-allow'  => 'admin.create,admin.update',
+                'permission-deny' => 'admin.delete,admin.groups.delete'
             )
         );
         
         // For testing sort
         $this->sortBy = 'email';
+        
+        // For testing search
+        $this->searchable_field = 'name';
+        $this->search_text = 'user';
         
         parent::__construct($page, $viewhas, $input);
     }
@@ -83,7 +93,7 @@ class UserControllerTest extends BaseControllerTest
     {
         $this->call('GET', $this->page . '/delete/2');
 
-        $this->assertRedirectedTo($this->page);
+        $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
     }
     
@@ -95,7 +105,7 @@ class UserControllerTest extends BaseControllerTest
     {
         $this->call('GET', $this->page . '/delete/1');
 
-        $this->assertRedirectedTo($this->page);
+        $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
     }
     
@@ -170,127 +180,5 @@ class UserControllerTest extends BaseControllerTest
         
         $this->assertResponseStatus(302); // Redirected
         $this->assertRedirectedTo('/'); // Redirected to previous page, which is root
-    }
-    
-    /**
-     * Test (Fail): access postStore with input but no name
-     */
-    public function testStoreCreateFailsNameBlank()
-    {
-        $input = array(
-            'first_name' => '',
-            'last_name'  => 'Lim',
-            'email'      => 'peter.lim@test.com',
-            'password'   => '123456',
-            'role'       => 1,
-            'activated'  => true
-        );
-
-        $this->call('POST', '/admin/users/store', $input);
-
-        $this->assertRedirectedTo('/admin/users/create');
-        $this->assertSessionHasErrors();
-    }
-    
-    /**
-     * Test (Pass): access postSearch with valid input
-     */
-    public function testPostSearchNamePass()
-    {
-        $input = array(
-            'search' => 'peter'
-        );
-
-        $this->call('POST', '/admin/users/search', $input);
-
-        $this->assertRedirectedTo('admin/users/search/peter');
-    }
-    
-    /**
-     * Test (Fail): access postSearch with invalid input
-     */
-    public function testPostSearchNameFail()
-    {
-        $input = array(
-            'search' => 'peter$&%*'
-        );
-
-        $this->call('POST', '/admin/users/search', $input);
-
-        $this->assertRedirectedTo('/admin/users');
-        $this->assertSessionHasErrors();
-    }
-    
-    /**
-     * Test (Pass): access postSearch with valid input, for Group
-     */
-    public function testPostSearchGroupNamePass()
-    {
-        $input = array(
-            'search' => 'group:user'
-        );
-
-        $this->call('POST', '/admin/users/search', $input);
-
-        $this->assertRedirectedTo('admin/users/group/user');
-    }
-    
-    /**
-     * Test (Fail): access postSearch with invalid input, for Goup
-     */
-    public function testPostSearchGroupNameFail()
-    {
-        $input = array(
-            'search' => 'group:user$&%*'
-        );
-
-        $this->call('POST', '/admin/users/search', $input);
-
-        $this->assertRedirectedTo('/admin/users');
-        $this->assertSessionHasErrors();
-    }
-    
-    /**
-     * Test (Pass): access getSearch with valid input
-     */
-    public function testGetSearchNamePass()
-    {
-        $this->call('GET', '/admin/users/search/peter');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('models');
-    }
-    
-    /**
-     * Test (Fail): access getSearch with invalid input
-     */
-    public function testGetSearchNameFail()
-    {
-        $this->call('GET', '/admin/users/search/peter$&%*');
-
-        $this->assertRedirectedTo('/admin/users');
-        $this->assertSessionHasErrors();
-    }
-    
-    /**
-     * Test (Pass): access getGroup with valid input
-     */
-    public function testGetGroupNamePass()
-    {
-        $this->call('GET', '/admin/users/group/user');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('models');
-    }
-    
-    /**
-     * Test (Fail): access getGroup with invalid input
-     */
-    public function testGetGroupNameFail()
-    {
-        $this->call('GET', '/admin/users/group/user$&%*');
-
-        $this->assertRedirectedTo('/admin/users');
-        $this->assertSessionHasErrors();
     }
 }

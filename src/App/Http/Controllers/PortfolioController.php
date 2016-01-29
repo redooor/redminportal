@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Portfolio;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -9,12 +10,7 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PortfolioController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Portfolio $model)
     {
@@ -22,12 +18,13 @@ class PortfolioController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::portfolios.view';
+        $this->pageRoute = 'admin/portfolios';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('categories', 'portfolios.category_id', '=', 'categories.id')
             ->select('portfolios.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::portfolios.view';
-        $this->sort_fail_redirect = 'admin/portfolios';
     }
     
     public function getIndex()
@@ -181,23 +178,6 @@ class PortfolioController extends Controller
                 return redirect('admin/portfolios/create')->withErrors($validation)->withInput();
             }
         }
-
-        return redirect('admin/portfolios');
-    }
-
-    public function getDelete($sid)
-    {
-        // Find the portfolio using the user id
-        $portfolio = Portfolio::find($sid);
-
-        if ($portfolio == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return redirect('/admin/portfolios')->withErrors($errors);
-        }
-        
-        // Delete the portfolio
-        $portfolio->delete();
 
         return redirect('admin/portfolios');
     }

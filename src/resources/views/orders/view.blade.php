@@ -9,7 +9,10 @@
     @include('redminportal::partials.errors')
     
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
+            {!! Redminportal::form()->searchForm(url('admin/orders'), url('admin/orders/search'), $searchable_fields, (isset($field) ? $field : null), (isset($search) ? $search : null)) !!}
+        </div>
+        <div class="col-md-4">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
                 @if (count($models) > 0)
@@ -82,7 +85,19 @@
                         @endif
 					</td>
                     <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($order->paid, Lang::get('redminportal::currency.currency')) }}</td>
-                    <td>{{ $order->payment_status }}</td>
+                    <td class="table-actions text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								{{ $order->payment_status }}
+							</button>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-header">Change Status</li>
+                                @foreach ($payment_statuses as $key => $value)
+                                <li><a href="{{ url('admin/orders/update/status/' . $order->id . '/' . $key) }}">{{ $value }}</a></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </td>
                     <td>{{ $order->transaction_id }}</td>
                     <td>{{ date("d/m/y h:i A", strtotime($order->created_at)) }}</td>
                     <td class="table-actions text-center">
@@ -133,6 +148,10 @@
 								<span class="glyphicon glyphicon-option-horizontal"></span>
 							</button>
 							<ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+									<a href="{{ URL::to('admin/orders/revisions/' . $order->id) }}" class="btn-modal-revision">
+										<i class="glyphicon glyphicon-time"></i>Revision History</a>
+								</li>
 								<li>
 									<a href="{{ URL::to('admin/orders/delete/' . $order->id) }}" class="btn-confirm">
 										<i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
@@ -148,45 +167,25 @@
         {!! $models->render() !!}
         </div>
     @else
+        @if ($models->lastPage())
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_order_found') }}</div>
+        @endif
     @endif
-    <div id="export-csv" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\ReportController@postOrders', 'report' => 'form')) !!}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ Lang::get('redminportal::buttons.close') }}</span></button>
-                    <h4 class="modal-title">{{ Lang::get('redminportal::messages.export_to_excel') }}</h4>
-                </div>
-                <div class="modal-body">
-                    <div class='row'>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                {!! Form::label('start_date', Lang::get('redminportal::forms.start_date')) !!}
-                                <div class="input-group" id='start-date'>
-                                    {!! Form::input('text', 'start_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                {!! Form::label('end_date', Lang::get('redminportal::forms.end_date')) !!}
-                                <div class="input-group" id='end-date'>
-                                    {!! Form::input('text', 'end_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                </div>
-                            </div>
-                            <p class="help-block">{{ Lang::get('redminportal::messages.leave_all_blank_to_download_all') }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ Lang::get('redminportal::buttons.close') }}</button>
-                    {!! Form::submit(Lang::get('redminportal::buttons.download_excel'), array('class' => 'btn btn-primary')) !!}
-                </div>
-                {!! Form::close() !!}
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    {{-- Include Export Modal --}}
+    @include('redminportal::orders.export-modal')
+
+    {{-- Modal window for Revision table --}}
+    {!! Redminportal::html()->modalWindow(
+        'revision-modal-window',
+        trans('redminportal::forms.revision_history_title'),
+        '<iframe id="iframe-revision-history"></iframe>',
+        null,
+        'modal-lg',
+        'revision-modal-progress'
+    ) !!}
 @stop
 
 @section('footer')
@@ -198,6 +197,32 @@
                 $('.datepicker').css('z-index', '1051'); // make picker on top of modal window
                 $( '.input-group-addon' ).click( function() {
                     $( this ).parent().find('input').datepicker( "show" );
+                });
+                //---------------------------------------------------------
+                // View revision history
+                //---------------------------------------------------------
+                $(document).on('click', '.btn-modal-revision', function(e) {
+                    e.preventDefault();
+                    // Make iframe height 70% of window height
+                    $window_height = $(window).height();
+                    $('#iframe-revision-history').css('height', Math.round(($window_height*0.7-80), 0));
+                    // Load the source
+                    $create_url = $(this).attr('href');
+                    $('#iframe-revision-history').removeAttr('src').empty().attr('src', $create_url).load(function() {
+                        $('#revision-modal-progress').parent().fadeOut();
+                    });
+                    $('#revision-modal-window').modal('show');
+                });
+                $('#revision-modal-window').on('shown.bs.modal', function (e) {
+                    $('#revision-modal-progress').css('width', '0%').parent().fadeIn(function() {
+                        for(ipercent = 0; ipercent<=50; ipercent++) {
+                            $('#revision-modal-progress').delay(4000).css('width', ipercent*2 + '%');
+                        }
+                    });
+                });
+                // Clear content when modal hidden
+                $('#revision-modal-window').on('hidden.bs.modal', function (e) {
+                    $('#iframe-revision-history').removeAttr('src').empty();
                 });
             })
         }(window.jQuery);

@@ -20,9 +20,9 @@
         "james-heinrich/getid3": "^1.9"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
-		"mockery/mockery": "0.9.*",
-        "orchestra/testbench": "3.0.*"
+        "phpunit/phpunit": "~4.8",
+		"mockery/mockery": "~0.9.4",
+        "orchestra/testbench": "~3.0.7"
 	},
     "autoload": {
         "classmap": [
@@ -30,11 +30,7 @@
         ],
         "psr-4": {
             "Redooor\\Redminportal\\": "src/"
-        },
-        "files": [
-            "vendor/james-heinrich/getid3/getid3/getid3.php",
-            "vendor/james-heinrich/getid3/getid3/write.php"
-        ]
+        }
     },
     "autoload-dev": {
         "classmap": [

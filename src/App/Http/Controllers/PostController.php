@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Post;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -10,12 +11,7 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PostController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Post $model)
     {
@@ -23,12 +19,13 @@ class PostController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::posts.view';
+        $this->pageRoute = 'admin/posts';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('categories', 'posts.category_id', '=', 'categories.id')
             ->select('posts.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::posts.view';
-        $this->sort_fail_redirect = 'admin/posts';
     }
     
     public function getIndex()
@@ -202,23 +199,6 @@ class PostController extends Controller
                 Tag::addTag($post, $tagName);
             }
         }
-
-        return redirect('admin/posts');
-    }
-
-    public function getDelete($sid)
-    {
-        // Find the post using the user id
-        $post = Post::find($sid);
-
-        if ($post == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return redirect('/admin/posts')->withErrors($errors);
-        }
-        
-        // Delete the post
-        $post->delete();
 
         return redirect('admin/posts');
     }

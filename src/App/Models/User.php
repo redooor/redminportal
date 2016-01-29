@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Redooor\Redminportal\App\Models\Traits\Permissable;
 
 /* Columns
  *
@@ -28,7 +29,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-    use Authenticatable, CanResetPassword;
+    use Authenticatable, CanResetPassword, Permissable;
 
     /**
      * The database table used by the model.
@@ -62,14 +63,28 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('Redooor\Redminportal\App\Models\Order');
     }
     
+    /**
+     * Converts permission json string to array
+     * Returns an empty array if string is null
+     **/
+    public function permissions()
+    {
+        if ($this->permissions) {
+            return json_decode($this->permissions);
+        }
+        
+        return array();
+    }
+    
     public function delete()
     {
+        // Detach all groups from this user
         $this->groups()->detach();
         
         return parent::delete();
     }
     
-    /*
+    /**
     /* Add Group(s) to User
     /* @param Group can be single Id or array of Group Id
     /* @return bool True if successful

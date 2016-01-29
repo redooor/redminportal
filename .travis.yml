@@ -24,3 +24,4 @@ script:
   - vendor/bin/phpunit tests/models
   - vendor/bin/phpunit tests/relationships
   - vendor/bin/phpunit tests/ui
+  - vendor/bin/phpunit tests/middleware

@@ -53,8 +53,6 @@ class PurchaseControllerTest extends BaseControllerTest
     {
         parent::setup();
         
-        $this->seed('RedminSeeder');
-        
         // Add membership
         $membership = new Membership;
         $membership->name = "Gold";
@@ -78,16 +76,6 @@ class PurchaseControllerTest extends BaseControllerTest
         $pricelist->module_id = 1;
         $pricelist->membership_id = 1;
         $pricelist->save();
-    }
-    
-    /**
-     * Test (Pass): access getEmails
-     */
-    public function testEmails()
-    {
-        $this->call('GET', '/admin/purchases/emails');
-
-        $this->assertResponseOk();
     }
     
     /**

@@ -168,34 +168,7 @@
                         <p class="help-block">{{ Lang::get('redminportal::messages.how_to_deselect_multiple') }}</p>
                     </div>
                 </div>
-                @if (count($bundle->images) > 0)
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class='row'>
-                            @foreach ($bundle->images as $image)
-                            <div class='col-md-3'>
-                                {!! HTML::image($imagine->getUrl($image->path), $bundle->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
-                                <br><br>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="{{ URL::to('admin/bundles/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </a>
-                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
-                                        <span class="glyphicon glyphicon-link"></span>
-                                    </a>
-                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
-                                        <span class="glyphicon glyphicon-eye-open"></span>
-                                    </a>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                @endif
+                {!! Redminportal::html()->uploadedImages($bundle) !!}
             </div>
         </div>
     {!! Form::close() !!}

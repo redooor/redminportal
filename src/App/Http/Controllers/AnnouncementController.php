@@ -1,18 +1,14 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Announcement;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class AnnouncementController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Announcement $model)
     {
@@ -20,10 +16,11 @@ class AnnouncementController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::announcements.view';
+        $this->pageRoute = 'admin/announcements';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::announcements.view';
-        $this->sort_fail_redirect = 'admin/announcements';
     }
     
     public function getIndex()
@@ -125,23 +122,6 @@ class AnnouncementController extends Controller
             }
         }
         
-        return redirect('admin/announcements');
-    }
-    
-    public function getDelete($sid)
-    {
-        // Find the announcement using the id
-        $announcement = Announcement::find($sid);
-        
-        if ($announcement == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return redirect('/admin/announcements')->withErrors($errors);
-        }
-        
-        // Delete the announcement
-        $announcement->delete();
-
         return redirect('admin/announcements');
     }
     

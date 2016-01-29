@@ -16,11 +16,6 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
     use SorterController;
     
     public function __construct(Module $model)
@@ -29,12 +24,13 @@ class ModuleController extends Controller
         $this->sortBy = 'name';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::modules.view';
+        $this->pageRoute = 'admin/modules';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('categories', 'modules.category_id', '=', 'categories.id')
             ->select('modules.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::modules.view';
-        $this->sort_fail_redirect = 'admin/modules';
     }
     
     public function getIndex()
@@ -329,7 +325,7 @@ class ModuleController extends Controller
         if ($module == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
-            return \Redirect::to('admin/modules')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         $purchases = Order::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
@@ -343,13 +339,13 @@ class ModuleController extends Controller
                 'deleteError',
                 "This module has been purchased before. You cannot delete it. Please disable it instead."
             );
-            return \Redirect::to('admin/modules')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Delete the module
         $module->delete();
 
-        return \Redirect::to('admin/modules');
+        return redirect()->back();
     }
     
     public function getImgremove($sid)

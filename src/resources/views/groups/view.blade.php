@@ -47,8 +47,10 @@
                             @foreach ($group->permissions() as $key => $value)
                                 @if ($value == 1)
                                     <span class="label label-success">{{ $key }}</span>
-                                @else
+                                @elseif ($value == -1)
                                     <span class="label label-danger">{{ $key }}</span>
+                                @else
+                                    <span class="label label-default">{{ $key }}</span>
                                 @endif
                             @endforeach
                         @endif
@@ -80,6 +82,11 @@
 		{!! $models->render() !!}
         </div>
 	@else
-		<div class="alert alert-info">{{ Lang::get('redminportal::messages.no_group_found') }}</div>
+        @if ($models->lastPage())
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @else
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_group_found') }}</div>
+        @endif
 	@endif
 @stop

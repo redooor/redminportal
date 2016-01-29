@@ -3,6 +3,7 @@
 use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Redooor\Redminportal\App\Models\Traits\Revisionable;
 
 /* Columns
  *
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    use Revisionable;
+    
     protected $table = 'orders';
     
     /**
@@ -57,7 +60,7 @@ class Order extends Model
     
     public function delete()
     {
-        // Remove product association
+        // Remove all associations
         $this->products()->detach();
         $this->bundles()->detach();
         $this->pricelists()->detach();
@@ -87,7 +90,8 @@ class Order extends Model
      */
     public function getTotaldiscount()
     {
-        return collect($this->getDiscounts())->sum('value');
+        $value = collect($this->getDiscounts())->sum('value');
+        return $value;
     }
     
     /*
@@ -134,7 +138,9 @@ class Order extends Model
         
         if ($options) {
             if (array_key_exists('discounts', $options)) {
-                return $options['discounts'];
+                if ($options['discounts']) {
+                    return $options['discounts'];
+                }
             }
         }
         
@@ -250,15 +256,15 @@ class Order extends Model
             ->where('coupon_id', $coupon->id)
             ->where('coupons.start_date', '<=', $now)
             ->where('coupons.end_date', '>=', $now)
-            ->where(function($query) use ($totalprice) {
+            ->where(function ($query) use ($totalprice) {
                 $query->orWhere('coupons.min_spent', null)
                     ->orWhere('coupons.min_spent', '<=', $totalprice);
             })
-            ->where(function($query) use ($totalprice) {
+            ->where(function ($query) use ($totalprice) {
                 $query->orWhere('coupons.max_spent', null)
                     ->orWhere('coupons.max_spent', '>=', $totalprice);
             })
-            ->where(function($query) use ($coupon) {
+            ->where(function ($query) use ($coupon) {
                 $query->orWhere('coupons.usage_limit_per_coupon', null)
                     ->orWhere('coupons.usage_limit_per_coupon', '>=', $coupon->usage_limit_per_coupon_count);
             })

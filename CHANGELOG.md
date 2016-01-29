@@ -57,6 +57,17 @@ This update introduces some new tables and lots of changes.
     - HTML and Form helpers provide a shortcut to partial views.
     - Check [list of helpers on github Wiki page](https://github.com/redooor/redminportal/wiki/HTML-and-Form-Helpers)
 13. Added tag to Page and Post (issue #146)
+14. Added API for retrieving emails for authenticated admin users only
+    - /api/email: Unused, returns an empty JSON list
+    - /api/email/all: Get JSON list of emails
+    - Check [list of Private API on github Wiki page](https://github.com/redooor/redminportal/wiki/Private-API)
+15. UI: Group permission management, able to edit group permission for any route. (issue #69)
+16. UI: User permission management, able to edit user permission for any route. (issue #69)
+17. Search order by transaction id and more! (issue #137)
+18. Search users by group, first name, last name, email and more!
+19. Able to change Order statuses with tracking changes in Order model. (issue #138)
+20. Added reusable Revision and Revisionable trait for tracking of changes in any model. (issue #138)
+21. Added UI for viewing Revision History for Orders.
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)
@@ -72,6 +83,29 @@ This update introduces some new tables and lots of changes.
 11. Introduced SorterController trait to reduce code for sortable pages.
 12. Introduced partial Blade template for sortable header.
 13. Overall Line count decreased from 23031 to 22805 with trait and partial template.
+14. Improve Usability: after delete action should go back to last visited page (issue #131)
+    - Announcement
+    - Bundle
+    - Category
+    - Coupon
+    - Group
+    - Mailinglist
+    - Media
+    - Membership
+    - Module
+    - Order
+    - Page
+    - Portfolio
+    - Post
+    - Product
+    - Promotion
+    - Purchase
+    - User
+15. Improved Permission management, allow granular control for every page and action. (issue #69)
+    - When users are deactivated after they login, they should be logged out and require re-login.
+    - Various actions for create, update and delete are added in the permission checker.
+16. Improved search engine to be reusable.
+17. Payment Statuses can now be edited via config file. See [UPGRADE.md](UPGRADE.md) for instructions.
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
@@ -81,6 +115,9 @@ This update introduces some new tables and lots of changes.
 5. Fix Module on change category doesn't load media. (issue #150)
 6. Click menu overlay to close doesn't work on iPad. (issue #151)
 7. Fix Build error for PHP7 due to getID3 package. Switch to JamesHeinrich/getID3. (issue #152)
+8. Added delete image functionality to Bundles. (issue #149)
+9. Fixed Typeahead styling messed up for email suggestions. (issue #156)
+10. Upload image with same name will now be appended with number. (issue #154)
 
 ## Version 0.3.2 and 0.2.2
 Code clean up, new features and UI improvements.

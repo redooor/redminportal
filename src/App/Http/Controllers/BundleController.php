@@ -2,6 +2,7 @@
 
 use Input;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Bundle;
 use Redooor\Redminportal\App\Models\Product;
@@ -13,12 +14,7 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
-    use SorterController;
+    use SorterController, DeleterController;
     
     public function __construct(Bundle $model)
     {
@@ -26,12 +22,13 @@ class BundleController extends Controller
         $this->sortBy = 'name';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::bundles.view';
+        $this->pageRoute = 'admin/bundles';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('categories', 'bundles.category_id', '=', 'categories.id')
             ->select('bundles.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::bundles.view';
-        $this->sort_fail_redirect = 'admin/bundles';
     }
     
     public function getIndex()
@@ -306,22 +303,6 @@ class BundleController extends Controller
                 $newBundle->images()->save($newimage);
             }
         }
-
-        return redirect('admin/bundles');
-    }
-
-    public function getDelete($sid)
-    {
-        $bundle = Bundle::find($sid);
-
-        // No such id
-        if ($bundle == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The bundle may have been deleted.");
-            return redirect('admin/bundles')->withErrors($errors)->withInput();
-        }
-
-        $bundle->delete();
 
         return redirect('admin/bundles');
     }

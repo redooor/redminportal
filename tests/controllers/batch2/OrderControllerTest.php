@@ -5,7 +5,7 @@ use Redooor\Redminportal\App\Models\Product;
 
 class OrderControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest;
+    use TraitSorterControllerTest, TraitSearcherControllerTest;
     
     /**
      * Contructor
@@ -38,6 +38,10 @@ class OrderControllerTest extends BaseControllerTest
         // For testing sort
         $this->sortBy = 'created_at';
         
+        // For testing search
+        $this->searchable_field = 'payment_status';
+        $this->search_text = 'Completed';
+        
         parent::__construct($page, $viewhas, $input);
     }
     
@@ -56,8 +60,6 @@ class OrderControllerTest extends BaseControllerTest
     {
         parent::setup();
         
-        $this->seed('RedminSeeder');
-        
         // Add product
         $product = new Product;
         $product->name = 'This is title';
@@ -66,16 +68,6 @@ class OrderControllerTest extends BaseControllerTest
         $product->active = true;
         $product->category_id = 1;
         $product->save();
-    }
-    
-    /**
-     * Test (Pass): access getEmails
-     */
-    public function testEmails()
-    {
-        $this->call('GET', '/admin/orders/emails');
-
-        $this->assertResponseOk();
     }
     
     /**

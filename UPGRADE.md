@@ -4,6 +4,96 @@ Version 0.2 and 0.3 are developed in parallel. The only difference between them 
 
 ## Upgrading to v0.3.3/v0.2.3 from v0.3.2/v0.2.2
 
+### Access Permission
+
+In the past any user who is within the group "Admin" are allowed to access the admin dashboard and all actions such as creation, edit and deletion.
+
+With the recent change, we will now be checking the permission level of user and their groups.
+
+This permission can be set on user level as will as group level.
+
+Permission hierarchy as follow:
+- User level permission supersedes Group level permission.
+- ANY group deny will result in forceful deny.
+- At least 1 group allow (if no deny) will result in allow.
+- Sub route permission supersedes Main route permission.
+
+If you have been using the group creation UI since version 0.2 then you should be fine.
+
+The default seed for Admin and User group are as such:
+
+Admin
+```
+{
+  "admin.view":true,
+  "admin.create":true,
+  "admin.delete":true,
+  "admin.update":true
+}
+```
+
+User
+```
+{
+  "admin.view":false,
+  "admin.create":false,
+  "admin.delete":false,
+  "admin.update":false
+}
+```
+
+From now on, Permission is tied to route, using 3 integers to indicate rights:
+
+- 1: Allow
+- -1: Deny (supersedes any allow from other groups)
+- 0: Inherit (or not allowed if none is found)
+
+So this:
+
+`{"admin.view": 1}`
+
+means that the user/group has access to route 'admin' and all sub-route.
+
+And this:
+
+`{"admin.users.view": -1}`
+
+means that the user/group is denied from route 'admin/users'.
+
+This:
+```
+{
+  "admin.users.view":1,
+  "admin.users.delete":-1,
+  "admin.users.update":-1
+}
+```
+means that the user/group can view but not delete or update record.
+
+#### Permission Usage
+
+To check if the user is allowed to view the page, use the hasAccess method in User model.
+
+Example:
+```
+    public function getIndex(Request $request)
+    {
+        $user = \Auth::user();
+        if ($user->hasAccess($request)) {
+            // Do something
+            return view('has_access');
+        }
+        
+        return view('access_denied');
+    }
+```
+
+#### Permission Config file
+
+You can edit the list of routes for permission management via the config file `src/config/permissions.php`.
+
+Copy the file `src/config/permissions.php` to your root folder's `config/vendor/redooor/redminportal/permissions.php`.
+
 ### Run Dump-Autoload
 
 Due to the additions of HTML and Form helpers, you need to run the following command:
@@ -58,6 +148,12 @@ Copy the file `src/config/pagination.php` to your root folder's `config/vendor/r
 
 You can change the value to any desired number to be the pagination size. The default is 50.
 
+### Payment Statues Config file
+
+You can now change the payment statuses in a config file `src/config/payment_statuses.php` for your project.
+
+Copy the file `src/config/pagination.php` to your root folder's `config/vendor/redooor/redminportal/payment_statuses.php`.
+
 ### Relocation of Redminportal Facade
 
 This shouldn't really affect your existing installation because previously it was not working.
@@ -79,6 +175,17 @@ You can choose to set it back to 'stable' like this:
 
     "minimum-stability": "stable",
     "prefer-stable": true
+
+### Get user emails in JSON format
+
+The following 2 links have been removed.
+
+`url('admin/orders/emails');`
+`url('admin/purchases/emails');`
+
+Use this instead:
+
+`url('admin/api/email/all)`
 
 ## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 

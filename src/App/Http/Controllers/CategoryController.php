@@ -207,7 +207,7 @@ class CategoryController extends Controller
                 'deleteError',
                 Lang::get('redminportal::messages.category_error_category_not_found')
             );
-            return redirect('/admin/categories')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         // Find if there's any child
@@ -222,13 +222,13 @@ class CategoryController extends Controller
                     ['name' => $category->name, 'children' => $children]
                 )
             );
-            return redirect('/admin/categories')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Delete the category
         $category->delete();
 
-        return redirect('admin/categories');
+        return redirect()->back();
     }
     
     public function getImgremove($sid)

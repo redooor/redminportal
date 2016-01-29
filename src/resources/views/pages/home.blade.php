@@ -56,6 +56,20 @@
                             </ul>
                         </li>
                         <li>Added tag to Page and Post (issue #146)</li>
+                        <li>Added API for retrieving emails for authenticated admin users only
+                            <ul>
+                                <li>/api/email: Unused, returns an empty JSON list</li>
+                                <li>/api/email/all: Get JSON list of emails</li>
+                                <li>Check <a href="https://github.com/redooor/redminportal/wiki/Private-API">list of Private API on github Wiki page</a></li>
+                            </ul>
+                        </li>
+                        <li>UI: Group permission management, able to edit group permission for any route. (issue #69)</li>
+                        <li>UI: User permission management, able to edit user permission for any route. (issue #69)</li>
+                        <li>Search order by transaction id and more! (issue #137)</li>
+                        <li>Search users by group, first name, last name, email and more!</li>
+                        <li>Able to change Order statuses with tracking changes in Order model. (issue #138)</li>
+                        <li>Added reusable Revision and Revisionable trait for tracking of changes in any model. (issue #138)</li>
+                        <li>Added UI for viewing Revision History for Orders.</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -72,6 +86,35 @@
                         <li>Introduced SorterController trait to reduce code for sortable pages.</li>
                         <li>Introduced partial Blade template for sortable header.</li>
                         <li>Overall Line count decreased from 23031 to 22805 with trait and partial template.</li>
+                        <li>Improve Usability: after delete action should go back to last visited page (issue #131)
+                            <ul>
+                                <li>Announcement</li>
+                                <li>Bundle</li>
+                                <li>Category</li>
+                                <li>Coupon</li>
+                                <li>Group</li>
+                                <li>Mailinglist</li>
+                                <li>Media</li>
+                                <li>Membership</li>
+                                <li>Module</li>
+                                <li>Order</li>
+                                <li>Page</li>
+                                <li>Portfolio</li>
+                                <li>Post</li>
+                                <li>Product</li>
+                                <li>Promotion</li>
+                                <li>Purchase</li>
+                                <li>User</li>
+                            </ul>
+                        </li>
+                        <li>Improved Permission management, allow granular control for every page and action. (issue #69)
+                            <ul>
+                                <li>When users are deactivated after they login, they should be logged out and require re-login.</li>
+                                <li>Various actions for create, update and delete are added in the permission checker.</li>
+                            </ul>
+                        </li>
+                        <li>Improved search engine to be reusable.</li>
+                        <li>Payment Statuses can now be edited via config file. See UPGRADE.md for instructions.</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
@@ -82,6 +125,9 @@
                         <li>Fix Module on change category doesn't load media. (issue #150)</li>
                         <li>Click menu overlay to close doesn't work on iPad. (issue #151)</li>
                         <li>Fix Build error for PHP7 due to getID3 package. Switch to JamesHeinrich/getID3. (issue #152)</li>
+                        <li>Added delete image functionality to Bundles. (issue #149)</li>
+                        <li>Fixed Typeahead styling messed up for email suggestions. (issue #156)</li>
+                        <li>Upload image with same name will now be appended with number. (issue #154)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>

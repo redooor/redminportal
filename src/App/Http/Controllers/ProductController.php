@@ -17,10 +17,6 @@ class ProductController extends Controller
 {
     private $weight_units;
     private $volume_units;
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
     
     use SorterController;
 
@@ -33,9 +29,12 @@ class ProductController extends Controller
         $this->sortBy = 'name';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::products.view';
+        $this->pageRoute = 'admin/products';
+        
         // For sorting
         $this->query = $this->model
-            ->whereNotExists(function($query) {
+            ->whereNotExists(function ($query) {
                 // Get all products but not variants
                 $query->select(\DB::raw(1))
                       ->from('product_variant')
@@ -43,8 +42,6 @@ class ProductController extends Controller
             })
             ->LeftJoin('categories', 'products.category_id', '=', 'categories.id')
             ->select('products.*', 'categories.name as category_name');
-        $this->sort_success_view = 'redminportal::products.view';
-        $this->sort_fail_redirect = 'admin/products';
     }
 
     public function getIndex()
@@ -441,7 +438,7 @@ class ProductController extends Controller
         if ($product == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('errorDeleteRecord', Lang::get('redminportal::messages.error_delete_entry'));
-            return redirect('admin/products')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Check if there's any order related to this product
@@ -451,7 +448,7 @@ class ProductController extends Controller
                 'errorDeleteRecordAlreadyOrdered',
                 Lang::get('redminportal::messages.error_delete_product_already_ordered')
             );
-            return redirect('admin/products')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Check if there's any order related to this product's variants
@@ -462,14 +459,14 @@ class ProductController extends Controller
                     'errorDeleteRecordAlreadyOrdered',
                     Lang::get('redminportal::messages.error_delete_variant_already_ordered')
                 );
-                return redirect('admin/products')->withErrors($errors);
+                return redirect()->back()->withErrors($errors);
             }
         }
         
         // Delete the product
         $product->delete();
 
-        return redirect('admin/products');
+        return redirect()->back();
     }
     
     /*

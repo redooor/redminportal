@@ -1,15 +1,20 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\UserPricelist;
 use Redooor\Redminportal\App\Models\Pricelist;
 
 class PurchaseController extends Controller
 {
-    private $perpage;
+    protected $model;
+    protected $perpage;
     
-    public function __construct()
+    use DeleterController;
+    
+    public function __construct(UserPricelist $model)
     {
+        $this->model = $model;
         $this->perpage = config('redminportal::pagination.size');
     }
     
@@ -20,13 +25,6 @@ class PurchaseController extends Controller
         return view('redminportal::purchases/view')->with('purchases', $purchases);
     }
     
-    public function getEmails()
-    {
-        $emails = User::lists('email');
-
-        return \Response::json($emails);
-    }
-
     public function getCreate()
     {
         $pricelists_select = array();
@@ -134,21 +132,6 @@ class PurchaseController extends Controller
         $new_purchase->transaction_id = $transaction_id;
         $new_purchase->payment_status = $payment_status;
         $new_purchase->save();
-        
-        return redirect('admin/purchases');
-    }
-    
-    public function getDelete($sid)
-    {
-        $purchase = UserPricelist::find($sid);
-        
-        if ($purchase == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('userError', "The purchase record may have already been deleted.");
-            return redirect('admin/purchases')->withErrors($errors);
-        }
-        
-        $purchase->delete();
         
         return redirect('admin/purchases');
     }

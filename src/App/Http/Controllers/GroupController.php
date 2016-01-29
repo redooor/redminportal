@@ -1,16 +1,15 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Input;
+use Validator;
+use Illuminate\Support\MessageBag;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\PermissibleController;
 use Redooor\Redminportal\App\Models\Group;
 
 class GroupController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
-    use SorterController;
+    use SorterController, PermissibleController;
     
     public function __construct(Group $model)
     {
@@ -18,10 +17,11 @@ class GroupController extends Controller
         $this->sortBy = 'name';
         $this->orderBy = 'asc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::groups.view';
+        $this->pageRoute = 'admin/groups';
+        
         // For sorting
         $this->query = $this->model;
-        $this->sort_success_view = 'redminportal::groups.view';
-        $this->sort_fail_redirect = 'admin/groups';
     }
     
     public function getIndex()
@@ -47,127 +47,99 @@ class GroupController extends Controller
         $group = Group::find($sid);
         
         if ($group == null) {
-            $errors = new \Illuminate\Support\MessageBag;
+            $errors = new MessageBag;
             $errors->add(
                 'editError',
-                "The group cannot be found because it does not exist or may have been deleted."
+                trans('redminportal::messages.group_error_edit_no_group_found')
             );
             return redirect('/admin/groups')->withErrors($errors);
         }
         
-        if (isset($group->permissions()->{'admin.view'})) {
-            $checkbox_view = $group->permissions()->{'admin.view'};
-        } else {
-            $checkbox_view = false;
+        $permission_inherit = [];
+        $permission_allow = [];
+        $permission_deny = [];
+        
+        foreach ($group->permissions() as $key => $value) {
+            if ($value < 0) {
+                $permission_deny[$key] = $key;
+            } elseif ($value > 0) {
+                $permission_allow[$key] = $key;
+            } else {
+                $permission_inherit[$key] = $key;
+            }
         }
         
-        if (isset($group->permissions()->{'admin.create'})) {
-            $checkbox_create = $group->permissions()->{'admin.create'};
-        } else {
-            $checkbox_create = false;
-        }
+        $data = [
+            'group' => $group,
+            'permission_inherit' => implode(',', $permission_inherit),
+            'permission_allow' => implode(',', $permission_allow),
+            'permission_deny' => implode(',', $permission_deny)
+        ];
         
-        if (isset($group->permissions()->{'admin.delete'})) {
-            $checkbox_delete = $group->permissions()->{'admin.delete'};
-        } else {
-            $checkbox_delete = false;
-        }
-        
-        if (isset($group->permissions()->{'admin.update'})) {
-            $checkbox_update = $group->permissions()->{'admin.update'};
-        } else {
-            $checkbox_update = false;
-        }
-        
-        return view('redminportal::groups/edit')
-            ->with('group', $group)
-            ->with('checkbox_view', $checkbox_view)
-            ->with('checkbox_create', $checkbox_create)
-            ->with('checkbox_delete', $checkbox_delete)
-            ->with('checkbox_update', $checkbox_update);
+        return view('redminportal::groups/edit', $data);
     }
     
     public function postStore()
     {
-        $sid = \Input::get('id');
+        $sid = Input::get('id');
         
         $rules = array(
-            'name' => 'required'
+            'name' => 'required',
+            'permission-inherit' => 'regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-allow' => 'regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-deny' => 'regex:/^[a-z,0-9._\-?]+$/i'
+        );
+        
+        $messages = array(
+            'permission-inherit.regex' => 'The permission inherit format is invalid. Try using the Permission Builder.',
+            'permission-allow.regex' => 'The permission allow format is invalid. Try using the Permission Builder.',
+            'permission-deny.regex' => 'The permission deny format is invalid. Try using the Permission Builder.'
         );
 
-        $validation = \Validator::make(\Input::all(), $rules);
-
-        if ($validation->fails()) {
-            if (isset($sid)) {
-                return redirect('admin/groups/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return redirect('admin/groups/create')->withErrors($validation)->withInput();
-            }
-        }
-        
-        // Validation passes
-        $name 	= \Input::get('name');
-        $view 	= (\Input::get('view') == '' ? false : true);
-        $create 	= (\Input::get('create') == '' ? false : true);
-        $delete 	= (\Input::get('delete') == '' ? false : true);
-        $update 	= (\Input::get('update') == '' ? false : true);
-        
-        $permissions = json_encode(
-            array(
-                'admin.view' => $view,
-                'admin.create' => $create,
-                'admin.delete' => $delete,
-                'admin.update' => $update
-            )
-        );
+        $validation = Validator::make(Input::all(), $rules, $messages);
         
         if (isset($sid)) {
+            $redirect_url = 'admin/groups/edit/' . $sid;
             $group = Group::find($sid);
-
-            if ($group == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The group cannot be found because it does not exist or may have been deleted."
-                );
-                return redirect('/admin/groups')->withErrors($errors);
-            }
-
-            // Update the group details
-            $group->name = $name;
-            $group->permissions = $permissions;
-
-            // Update the group
-            if ($group->save()) {
-                return redirect('admin/groups');
-            } else {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The group cannot be updated due to some problem. Please try again."
-                );
-                return redirect('admin/groups/edit/' . $sid)->withErrors($errors)->withInput();
-            }
-
         } else {
-            // Create the group
+            $redirect_url = 'admin/groups/create';
             $group = new Group;
-            $group->name = $name;
-            $group->permissions = $permissions;
-            
-            try {
-                $group->save();
-            } catch (\Exception $exp) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The group cannot be created due to some problem. Please try again."
-                );
-                return redirect('admin/groups/create')->withErrors($errors)->withInput();
-            }
         }
-            
-
+        
+        if ($validation->fails()) {
+            return redirect($redirect_url)->withErrors($validation)->withInput();
+        }
+        
+        $permissions = $this->populatePermission(
+            Input::get('permission-inherit'),
+            Input::get('permission-allow'),
+            Input::get('permission-deny')
+        );
+        
+        if ($group == null) {
+            $errors = new MessageBag;
+            $errors->add(
+                'editError',
+                trans('redminportal::messages.group_error_edit_no_group_found')
+            );
+            return redirect('admin/groups')->withErrors($errors);
+        }
+        
+        try {
+            // Save the group details
+            $group->name = Input::get('name');
+            $group->permissions = json_encode($permissions);
+            $group->save();
+        } catch (\Exception $exp) {
+            // There was a problem saving it
+            $errors = new MessageBag;
+            $errors->add(
+                'editError',
+                trans('redminportal::messages.group_error_edit_cannot_save')
+            );
+            return redirect($redirect_url)->withErrors($errors)->withInput();
+        }
+        
         return redirect('admin/groups');
     }
     
@@ -178,7 +150,7 @@ class GroupController extends Controller
         if ($group == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The group cannot be deleted at this time. It may have already been deleted.");
-            return redirect('/admin/groups')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         if (count($group->users) > 0) {
@@ -188,11 +160,11 @@ class GroupController extends Controller
                 'deleteError',
                 "The group cannot be deleted because it is in use. Try moving the users to another group first."
             );
-            return redirect('/admin/groups')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         } else {
             $group->delete();
         }
 
-        return redirect('admin/groups');
+        return redirect()->back();
     }
 }

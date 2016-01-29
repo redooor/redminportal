@@ -1,7 +1,7 @@
 /*!
- * redmaterials v0.0.1
+ * redmaterials v0.0.3
  * Homepage: 
- * Copyright 2014-2015 Redooor LLP
+ * Copyright 2014-2016 Redooor LLP
  * Licensed under MIT
  * Based on Bootstrap
 */

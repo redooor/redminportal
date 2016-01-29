@@ -92,7 +92,7 @@ class Category extends Model
     public function printCategory($showActive = false)
     {
         $html = "<a href='" . $this->id .
-            "'><span class='glyphicon glyphicon-chevron-right'></span> " .
+            "'><span class='glyphicon glyphicon-menu-right'></span> " .
             $this->name . "</a>";
         if ($this->categories->count() > 0) {
             $html .= "<ul>";

@@ -33,7 +33,7 @@
                 <div class="rdpt-preloader"><img src="{{ URL::to('vendor/redooor/redminportal/img/Preloader_2.gif') }}" class="img-circle"/></div>
                 <div id="category-detail">
                     <div class="alert alert-info">
-                        <span class="glyphicon glyphicon-chevron-left"></span> {{ Lang::get('redminportal::messages.select_category_to_view_detail') }}
+                        <span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::messages.select_category_to_view_detail') }}
                     </div>
                 </div>
             </div>

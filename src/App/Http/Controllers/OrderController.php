@@ -1,7 +1,11 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Exception;
+use Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
+use Redooor\Redminportal\App\Http\Traits\SearcherController;
+use Redooor\Redminportal\App\Http\Traits\RevisionableController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
@@ -11,12 +15,7 @@ use Redooor\Redminportal\App\Models\Pricelist;
 
 class OrderController extends Controller
 {
-    protected $model;
-    protected $perpage;
-    protected $sortBy;
-    protected $orderBy;
-    
-    use SorterController;
+    use SorterController, DeleterController, SearcherController, RevisionableController;
     
     public function __construct(Order $model)
     {
@@ -24,34 +23,44 @@ class OrderController extends Controller
         $this->sortBy = 'created_at';
         $this->orderBy = 'desc';
         $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::orders.view';
+        $this->pageRoute = 'admin/orders';
+        
         // For sorting
         $this->query = $this->model
             ->LeftJoin('users', 'orders.user_id', '=', 'users.id')
             ->select('users.email', 'users.first_name', 'users.last_name', 'orders.*');
-        $this->sort_success_view = 'redminportal::orders.view';
-        $this->sort_fail_redirect = 'admin/orders';
+        
+        // For searching
+        $this->searchable_fields = [
+            'all' => 'Search all',
+            'email' => 'Email',
+            'first_name' => 'First name',
+            'last_name' => 'Last name',
+            'transaction_id' => 'Transaction Id',
+            'payment_status' => 'Payment status'
+        ];
+        
+        // Default data
+        $this->data = [
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy,
+            'searchable_fields' => $this->searchable_fields,
+            'payment_statuses' => config('redminportal::payment_statuses')
+        ];
     }
     
     public function getIndex()
     {
         $models = Order::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
 
-        $data = [
-            'models' => $models,
-            'sortBy' => $this->sortBy,
-            'orderBy' => $this->orderBy
-        ];
+        $data = array_merge($this->data, [
+            'models' => $models
+        ]);
         
         return view('redminportal::orders.view', $data);
     }
     
-    public function getEmails()
-    {
-        $emails = User::lists('email');
-
-        return \Response::json($emails);
-    }
-
     public function getCreate()
     {
         $products = Product::where('active', true)->orderBy('name')->lists('name', 'id');
@@ -72,13 +81,7 @@ class OrderController extends Controller
             $pricelists[$pricelist->id] = $pricelist->name;
         }
 
-        $payment_statuses = array(
-            'Completed'     => 'Completed',
-            'Pending'       => 'Pending',
-            'In Progress'   => 'In Progress',
-            'Canceled'      => 'Canceled',
-            'Refunded'      => 'Refunded'
-        );
+        $payment_statuses = config('redminportal::payment_statuses');
 
         return view('redminportal::orders/create')
             ->with('products', $products)
@@ -217,18 +220,44 @@ class OrderController extends Controller
         return redirect('admin/orders');
     }
     
-    public function getDelete($sid)
+    public function getUpdate($field = null, $sid = null, $status = null)
     {
-        $order = Order::find($sid);
+        $field_pattern = '/^[a-zA-Z0-9_\-]+$/';
+        $text_pattern = '/^[a-zA-Z0-9 _\-]+$/';
         
-        if ($order == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('userError', "The order record may have already been deleted.");
-            return redirect('admin/orders')->withErrors($errors);
+        $rules = [
+            'field' => 'required|in:status|regex:' . $field_pattern,
+            'sid' => 'required|numeric',
+            'status' => 'required|regex:' . $text_pattern
+        ];
+        
+        $inputs = [
+            'field' => $field,
+            'sid' => $sid,
+            'status' => $status
+        ];
+        
+        $messages = [
+            'field.in'   => trans('redminportal::messages.order_error_update_unsupported_field'),
+            'field.required'   => trans('redminportal::messages.order_error_update_missing_field'),
+            'field.regex'      => trans('redminportal::messages.error_remove_special_characters'),
+            'status.required'   => trans('redminportal::messages.order_error_update_missing_status'),
+            'status.regex'      => trans('redminportal::messages.error_remove_special_characters')
+        ];
+
+        $validation = Validator::make($inputs, $rules, $messages);
+        
+        if ($validation->fails()) {
+            return redirect($this->pageRoute)->withErrors($validation);
         }
         
-        $order->delete();
+        // Only supports status for now
+        if ($field == 'status') {
+            $order = Order::find($sid);
+            $order->payment_status = $status;
+            $order->save();
+        }
         
-        return redirect('admin/orders');
+        return redirect()->back();
     }
 }

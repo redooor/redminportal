@@ -41,6 +41,8 @@ return array(
         => 'No Module/Membership Found',
     'no_variant_found'
         => 'No Product Variant Found',
+    'no_record_page_empty'
+        => 'This page is empty, try going to previous page.',
     'select_category_to_view_detail'
         => 'Select category to view detail',
     'confirm_delete'
@@ -76,7 +78,7 @@ return array(
     'applies_to_whole_cart_spent'
         => 'Applies to the total amount in the shopping cart.',
     'error_remove_special_characters'
-        => 'The search format is invalid. Please remove all special characters such as $%&*.',
+        => 'The text format is invalid. Please remove all special characters such as $%&*.',
     'error_no_such_product'
         => 'The product cannot be found because it does not exist or may have been deleted.',
     'error_delete_entry'
@@ -127,5 +129,25 @@ return array(
     'upload_error_failed_to_open_input_stream'
         => "Failed to open input stream.",
     'upload_error_failed_to_open_output_stream'
-        => "Failed to open output stream."
+        => "Failed to open output stream.",
+    'group_error_edit_no_group_found'
+        => "The group cannot be edited because it does not exist or may have been deleted.",
+    'group_error_edit_cannot_save'
+        => "The group cannot be saved due to some problem. Please try again.",
+    'help_permission_builder'
+        => "Use permission builder below to help you populate the permissions.",
+    'search_error_field_missing'
+        => "Missing field to search. Please try again using the search form.",
+    'search_error_text_missing'
+        => "Missing text to search. Please try again using the search form.",
+    'search_error_unknown'
+        => "Search cannot be performed at this moment. Please try again using the search form.",
+    'order_error_update_missing_status'
+        => "Missing status to update. Please try again using the dropdown list.",
+    'order_error_update_missing_field'
+        => "Missing field to update. Please try again using the dropdown list.",
+    'order_error_update_unsupported_field'
+        => "That field is not supported. Please try again using the dropdown list.",
+    'no_revision_found'
+        => "No revision history.",
 );

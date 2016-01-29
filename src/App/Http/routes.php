@@ -38,6 +38,18 @@ Route::group(
         Route::controller('pages', 'PageController');
         Route::controller('orders', 'OrderController');
         Route::controller('bundles', 'BundleController');
+        Route::controller('images', 'ImageController');
+    }
+);
+
+Route::group(
+    [
+        'middleware' => 'Redooor\Redminportal\App\Http\Middleware\Authenticate',
+        'namespace' => 'Redooor\Redminportal\App\Http\API',
+        'prefix' => 'admin/api'
+    ],
+    function () {
+        Route::controller('email', 'EmailApi');
     }
 );
 

@@ -10,22 +10,7 @@
     
     <div class="row">
         <div class="col-md-4">
-            {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\UserController@postSearch', 'role' => 'form', 'class' => 'form-inline')) !!}
-            @if(isset($search))
-            <div class="input-group input-group-sm">
-                <span class="input-group-addon"><span class="fa fa-search"></span></span>
-				{!! Form::text('search', $search, array('class' => 'form-control', 'placeholder' => Lang::get('redminportal::forms.search'), 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => Lang::get('redminportal::forms.hint_search_user'))) !!}
-                <span class="input-group-btn">
-                    <a class="btn btn-default" href="{{ URL::to('admin/users') }}"><span class="glyphicon glyphicon-remove"></span> Clear</a>
-                </span>
-            </div><!-- /input-group -->
-            @else
-            <div class="input-group input-group-sm">
-                <span class="input-group-addon"><span class="fa fa-search"></span></span>
-				{!! Form::text('search', null, array('class' => 'form-control', 'placeholder' => Lang::get('redminportal::forms.search'), 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => Lang::get('redminportal::forms.hint_search_user'))) !!}
-            </div><!-- /input-group -->
-            @endif
-			{!! Form::close() !!}
+            {!! Redminportal::form()->searchForm(url('admin/users'), url('admin/users/search'), $searchable_fields, (isset($field) ? $field : null), (isset($search) ? $search : null)) !!}
         </div>
         <div class="col-md-8">
             <div class="nav-controls text-right">
@@ -127,7 +112,12 @@
 		{!! $models->render() !!}
         </div>
 	@else
-		<div class="alert alert-info">{{ Lang::get('redminportal::messages.no_user_found') }}</div>
+        @if ($models->lastPage())
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @else
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_user_found') }}</div>
+        @endif
 	@endif
 @stop
 
