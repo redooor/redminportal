@@ -19,6 +19,10 @@ class OrderRevisionTest extends BaseRelationshipTest
     {
         parent::setUp();
 
+        /* Fixed Event not fired issue with Laravel */
+        Order::flushEventListeners();
+        Order::boot();
+        
         $this->seed('RedminSeeder');
         
         Auth::loginUsingId(1);

@@ -13,7 +13,7 @@
     --------------------------------
 --}}
 <form method="POST" action="{{ $action }}" accept-charset="UTF-8" role="form" class="form-inline">
-    {!! csrf_field() !!}
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <div class="form-group">
         <div class="input-group">
             <span class="input-group-addon"><span class="fa fa-search"></span></span>
