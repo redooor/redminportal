@@ -66,6 +66,22 @@ class RedminportalServiceProvider extends ServiceProvider
             require_once $autoloader;
         }
         
+        /**
+         * Include getID3 dependencies
+         * If app vendor folder exists, use that.
+         * Otherwise use development vendor folder
+         **/
+        if (file_exists(base_path('vendor/james-heinrich/getid3/getid3/getid3.php'))) {
+            include_once base_path('vendor/james-heinrich/getid3/getid3/getid3.php');
+        } else {
+            include_once __DIR__ . "/../vendor/james-heinrich/getid3/getid3/getid3.php";
+        }
+        if (file_exists(base_path('vendor/james-heinrich/getid3/getid3/write.php'))) {
+            include_once base_path('vendor/james-heinrich/getid3/getid3/write.php');
+        } else {
+            include_once __DIR__ . "/../vendor/james-heinrich/getid3/getid3/write.php";
+        }
+        
         $this->bindSharedInstances();
         
         $this->app->register('Illuminate\Html\HtmlServiceProvider');
