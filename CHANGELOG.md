@@ -118,6 +118,7 @@ This update introduces some new tables and lots of changes.
 8. Added delete image functionality to Bundles. (issue #149)
 9. Fixed Typeahead styling messed up for email suggestions. (issue #156)
 10. Upload image with same name will now be appended with number. (issue #154)
+11. Product variant create/edit form on error doesn't populate previous inputs. (issue #134)
 
 ## Version 0.3.2 and 0.2.2
 Code clean up, new features and UI improvements.

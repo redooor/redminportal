@@ -126,4 +126,36 @@ class FormUITest extends RedminTestCase
         
         $this->assertTrue($input == $output);
     }
+    
+    public function testSelectorFormPass()
+    {
+        $input = $this->model->selector(
+            'test',
+            ['test1', 'test2', 'test3'],
+            1,
+            [
+                'label' => 'testlabel',
+                'label_classes' => 'testclass',
+                'id' => 'test_id',
+                'value_as_key' => true,
+                'help_text' => 'This is a help block'
+            ]
+        );
+        
+        $input = str_replace(array("\r", "\n", " "), '', $input);
+        
+        $output = '<div class="form-group ">
+            <label class="testclass" for="test">testlabel</label>
+            <select class="form-control " name="test" id="test_id">
+                <option value="test1">test1</option>
+                <option value="test2">test2</option>
+                <option value="test3">test3</option>
+            </select>
+            <p class="help-block">This is a help block</p>
+        </div>';
+        
+        $output = str_replace(array("\r", "\n", " "), '', $output);
+        
+        $this->assertTrue($input == $output);
+    }
 }

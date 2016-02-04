@@ -15,7 +15,7 @@ class Form
         $data = [
             'input_name' => $name,
             'input_id' => $name,
-            'input_value' => $value,
+            'input_value' => $value
         ];
         
         // Check for class
@@ -110,5 +110,63 @@ class Form
         ];
         
         return view('redminportal::partials.form-search-template', $data);
+    }
+    
+    /*
+     * Generate an HTML select input form
+     *
+     * @param string Name and ID of select form
+     * @param array Select options of select form
+     * @param string Selected value of select form
+     * @param array Other options for select form
+     * @return View
+     */
+    public function selector($name, $select_options, $selected = null, $options = array())
+    {
+        $data = [
+            'select_name' => $name,
+            'select_id' => $name,
+            'select_options' => $select_options,
+            'selected' => $selected,
+            'value_as_key' => false
+        ];
+        
+        // Check for class
+        if (array_key_exists('class', $options)) {
+            $data['wrapper_classes'] = $options['class']; // Save value
+            unset($options['class']); // Remove key from array
+        }
+        
+        // Check for ID
+        if (array_key_exists('id', $options)) {
+            $data['select_id'] = $options['id']; // Save value
+            unset($options['id']); // Remove key from array
+        }
+        
+        // Check for Label
+        if (array_key_exists('label', $options)) {
+            $data['label'] = $options['label']; // Save value
+            unset($options['label']); // Remove key from array
+        }
+        
+        // Check for Label Class
+        if (array_key_exists('label_classes', $options)) {
+            $data['label_classes'] = $options['label_classes']; // Save value
+            unset($options['label_classes']); // Remove key from array
+        }
+        
+        // Check for Help Text
+        if (array_key_exists('help_text', $options)) {
+            $data['help_text'] = $options['help_text']; // Save value
+            unset($options['help_text']); // Remove key from array
+        }
+        
+        // Check for value_as_key
+        if (array_key_exists('value_as_key', $options)) {
+            $data['value_as_key'] = $options['value_as_key']; // Save value
+            unset($options['value_as_key']); // Remove key from array
+        }
+        
+        return view('redminportal::partials.form-select-option', $data);
     }
 }

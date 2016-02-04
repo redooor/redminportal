@@ -128,6 +128,7 @@
                         <li>Added delete image functionality to Bundles. (issue #149)</li>
                         <li>Fixed Typeahead styling messed up for email suggestions. (issue #156)</li>
                         <li>Upload image with same name will now be appended with number. (issue #154)</li>
+                        <li>Product variant create/edit form on error doesn't populate previous inputs. (issue #134)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>
