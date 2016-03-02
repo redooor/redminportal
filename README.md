@@ -38,7 +38,7 @@ Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
 
 # Important note
 
-Version 0.3.2 and 0.2.2 **may break** your front-end due to the change in UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+Version >=0.3.2 and >=0.2.2 **may break** your front-end due to the change in UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
 Version 0.3 is backward compatible to Version 0.2.
 
