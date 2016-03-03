@@ -23,6 +23,10 @@ class OrderRevisionTest extends BaseRelationshipTest
         Order::flushEventListeners();
         Order::boot();
 
+        /* Fixed Event not fired issue with Laravel */
+        Order::flushEventListeners();
+        Order::boot();
+        
         $this->seed('RedminSeeder');
         
         Auth::loginUsingId(1);

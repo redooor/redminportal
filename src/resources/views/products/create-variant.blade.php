@@ -25,18 +25,18 @@
                     <div class="panel-body">
                         <div class="form-group">
                             {!! Form::label('sku', Lang::get('redminportal::forms.sku')) !!}
-                            {!! Form::text('sku', null, array('class' => 'form-control')) !!}
+                            {!! Form::text('sku', old('sku'), array('class' => 'form-control')) !!}
                         </div>
                         <div class="form-group">
                             {!! Form::label('price', Lang::get('redminportal::forms.price')) !!}
                             <div class="input-group">
                                 <span class="input-group-addon">$</span>
-                                {!! Form::text('price', null, array('class' => 'form-control')) !!}
+                                {!! Form::text('price', old('price'), array('class' => 'form-control')) !!}
                             </div>
                         </div>
                         <div class="form-group">
                             {!! Form::label('tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
-                            {!! Form::text('tags', null, array('class' => 'form-control')) !!}
+                            {!! Form::text('tags', old('tags'), array('class' => 'form-control')) !!}
                         </div>
                     </div>
                 </div>
@@ -51,54 +51,54 @@
                         <div class="form-group">
                             <label>{{ Lang::get('redminportal::forms.weight') }}</label>
                             <div class="form-inline">
-                                @include('redminportal::partials.form-input', [
+                                {!! Redminportal::form()->inputer('weight', old('weight'), [
                                     'label' => Lang::get('redminportal::forms.weight'),
                                     'label_classes' => 'sr-only',
-                                    'input_name' => 'weight',
-                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00']
-                                ])
-                                @include('redminportal::partials.form-select-option', [
+                                    'type' => 'number',
+                                    'step' => '0.001',
+                                    'placeholder' => '0.00'
+                                ]) !!}
+                                {!! Redminportal::form()->selector('weight_unit', $weight_units, old('weight_unit'), [
                                     'label' => Lang::get('redminportal::forms.weight_unit'),
                                     'label_classes' => 'sr-only',
-                                    'select_name' => 'weight_unit',
-                                    'select_options' => $weight_units,
                                     'value_as_key' => true
-                                ])
+                                ]) !!}
                             </div>
                         </div>
                         <!-- Volume information -->
                         <div class="form-group">
                             <label>{{ Lang::get('redminportal::forms.volume') }}</label>
                             <div class="form-inline">
-                                @include('redminportal::partials.form-input', [
+                                {!! Redminportal::form()->inputer('length', old('length'), [
                                     'label' => Lang::get('redminportal::forms.length'),
                                     'label_classes' => 'sr-only',
-                                    'input_name' => 'length',
-                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'type' => 'number',
+                                    'step' => '0.001',
+                                    'placeholder' => '0.00',
                                     'help_text' => Lang::get('redminportal::forms.length')
-                                ])
-                                @include('redminportal::partials.form-input', [
+                                ]) !!}
+                                {!! Redminportal::form()->inputer('width', old('width'), [
                                     'label' => Lang::get('redminportal::forms.width'),
                                     'label_classes' => 'sr-only',
-                                    'input_name' => 'width',
-                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'type' => 'number',
+                                    'step' => '0.001',
+                                    'placeholder' => '0.00',
                                     'help_text' => Lang::get('redminportal::forms.width')
-                                ])
-                                @include('redminportal::partials.form-input', [
+                                ]) !!}
+                                {!! Redminportal::form()->inputer('height', old('height'), [
                                     'label' => Lang::get('redminportal::forms.height'),
                                     'label_classes' => 'sr-only',
-                                    'input_name' => 'height',
-                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'type' => 'number',
+                                    'step' => '0.001',
+                                    'placeholder' => '0.00',
                                     'help_text' => Lang::get('redminportal::forms.height')
-                                ])
-                                @include('redminportal::partials.form-select-option', [
+                                ]) !!}
+                                {!! Redminportal::form()->selector('volume_unit', $volume_units, old('volume_unit'), [
                                     'label' => Lang::get('redminportal::forms.volume_unit'),
                                     'label_classes' => 'sr-only',
-                                    'select_name' => 'volume_unit',
-                                    'select_options' => $volume_units,
                                     'value_as_key' => true,
                                     'help_text' => Lang::get('redminportal::messages.unit_applies_to_all_dimensions')
-                                ])
+                                ]) !!}
                             </div>
                         </div>
                     </div>

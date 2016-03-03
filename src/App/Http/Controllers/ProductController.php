@@ -2,6 +2,7 @@
 
 use Lang;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\ProductVariantController;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -18,7 +19,7 @@ class ProductController extends Controller
     private $weight_units;
     private $volume_units;
     
-    use SorterController;
+    use SorterController, ProductVariantController;
 
     public function __construct(Product $model)
     {
@@ -54,7 +55,7 @@ class ProductController extends Controller
             'orderBy' => $this->orderBy
         ];
 
-        return view('redminportal::products/view', $data);
+        return view($this->pageView, $data);
     }
 
     public function getCreate()
@@ -85,7 +86,7 @@ class ProductController extends Controller
         if ($product == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return redirect('/admin/products')->withErrors($errors);
+            return redirect($this->pageRoute)->withErrors($errors);
         }
 
         $categories = Category::where('active', true)
@@ -121,158 +122,7 @@ class ProductController extends Controller
         return view('redminportal::products/edit', $data);
     }
     
-    public function getCreateVariant($product_id)
-    {
-        $product = Product::find($product_id);
-        // No such id
-        if ($product == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return redirect('/admin/products')->withErrors($errors);
-        }
-        
-        $categories = Category::where('active', true)
-            ->where('category_id', 0)
-            ->orWhere('category_id', null)
-            ->orderBy('name')
-            ->get();
-        
-        $data = array(
-            'categories' => $categories,
-            'product_id' => $product_id,
-            'weight_units' => $this->weight_units,
-            'volume_units' => $this->volume_units
-        );
-
-        return view('redminportal::products/create-variant', $data);
-    }
     
-    public function getEditVariant($product_id, $sid)
-    {
-        // Find the product using the user id
-        $product = Product::find($sid);
-
-        // No such id
-        if ($product == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return view('redminportal::products/edit-variant')->withErrors($errors);
-        }
-
-        $categories = Category::where('active', true)
-            ->where('category_id', 0)
-            ->orWhere('category_id', null)
-            ->orderBy('name')
-            ->get();
-
-        $tagString = "";
-        foreach ($product->tags as $tag) {
-            if (! empty($tagString)) {
-                $tagString .= ",";
-            }
-
-            $tagString .= $tag->name;
-        }
-
-        $translated = array();
-        foreach ($product->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
-        
-        $data = array(
-            'product_id' => $product_id,
-            'product' => $product,
-            'translated' => $translated,
-            'categories'=> $categories,
-            'tagString'=> $tagString,
-            'imagine' => new RImage,
-            'weight_units' => $this->weight_units,
-            'volume_units' => $this->volume_units
-        );
-
-        return view('redminportal::products/edit-variant', $data);
-    }
-    
-    public function getViewVariant($sid)
-    {
-        // Find the product using the user id
-        $product = Product::find($sid);
-
-        // No such id
-        if ($product == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return view('redminportal::products/view-variant')->withErrors($errors);
-        }
-
-        $translated = array();
-        foreach ($product->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
-
-        return view('redminportal::products/view-variant')
-            ->with('product', $product)
-            ->with('translated', $translated)
-            ->with('imagine', new RImage);
-    }
-    
-    /*
-     * Return a table of variants belonging to the given product id
-     * @param integer product id
-     * @return view
-     */
-    public function getListVariants($sid)
-    {
-        $product = Product::find($sid);
-        
-        // No such id
-        if ($product == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return redirect('/admin/products')->withErrors($errors);
-        }
-        
-        $data = array(
-            'variantParent' => $product,
-            'variants' => $product->variants,
-            'imagine' => new RImage
-        );
-        return view('redminportal::products/list-variants', $data);
-    }
-    
-    /*
-     * Delete a variant
-     * @param integer id
-     * @return json (bool status, string message)
-     */
-    public function getDeleteVariantJson($sid)
-    {
-        $status = false;
-        $message = Lang::get('redminportal::messages.error_delete_entry');
-        
-        $product = Product::find($sid);
-        
-        // No such id
-        if ($product == null) {
-            return json_encode(array('status' => $status, 'message' => $message));
-        }
-        
-        // Check if there's any order related to this product
-        if (count($product->orders) > 0) {
-            $message = Lang::get('redminportal::messages.error_delete_product_already_ordered');
-            return json_encode(array('status' => $status, 'message' => $message));
-        }
-        
-        // Delete the product
-        $result = $product->delete();
-        
-        if ($result) {
-            $status = true;
-            $message = Lang::get('redminportal::messages.success_delete_record');
-        }
-
-        return json_encode(array('status' => $status, 'message' => $message));
-    }
 
     public function postStore()
     {
@@ -303,14 +153,14 @@ class ProductController extends Controller
         $validation = Validator::make(Input::all(), $rules, $messages);
         
         if ($validation->fails()) {
-            $redirect_url = 'admin/products/create';
+            $redirect_url = $this->pageRoute . '/create';
             
             if ($product_id and $sid) {
-                $redirect_url = 'admin/products/edit-variant/' . $product_id . '/' . $sid;
+                $redirect_url = $this->pageRoute . '/edit-variant/' . $product_id . '/' . $sid;
             } elseif ($product_id and !$sid) {
-                $redirect_url = 'admin/products/create-variant/' . $product_id;
+                $redirect_url = $this->pageRoute . '/create-variant/' . $product_id;
             } elseif ($sid) {
-                $redirect_url = 'admin/products/edit/' . $sid;
+                $redirect_url = $this->pageRoute . '/edit/' . $sid;
             }
             
             return redirect($redirect_url)->withErrors($validation)->withInput();
@@ -321,7 +171,7 @@ class ProductController extends Controller
             if (! $parentProduct) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add('errorDeleteRecord', Lang::get('redminportal::messages.error_no_such_product'));
-                return redirect('admin/products')->withErrors($errors);
+                return redirect($this->pageRoute)->withErrors($errors);
             }
         }
 
@@ -347,7 +197,7 @@ class ProductController extends Controller
         if ($product == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return redirect('/admin/products')->withErrors($errors);
+            return redirect($this->pageRoute)->withErrors($errors);
         }
 
         $product->name = $name;
@@ -424,10 +274,10 @@ class ProductController extends Controller
             if ($product_id and !$sid) {
                 $parentProduct->variants()->attach($product->id);
             }
-            return redirect('admin/products/view-variant/' . $product->id);
+            return redirect($this->pageRoute . '/view-variant/' . $product->id);
         }
         
-        return redirect('admin/products');
+        return redirect($this->pageRoute);
     }
 
     public function getDelete($sid)
@@ -469,49 +319,20 @@ class ProductController extends Controller
         return redirect()->back();
     }
     
-    /*
-     * Remove image from model
-     * @param int Image ID
-     * @return int Model ID if pass, null if fail
-     */
-    private function removeImage($sid)
+    public function getImgremove($sid)
     {
         $image = Image::find($sid);
 
         if ($image == null) {
-            return null;
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
+            return redirect($this->pageRoute)->withErrors($errors);
         }
 
         $model_id = $image->imageable_id;
 
         $image->delete();
         
-        return $model_id;
-    }
-    
-    public function getImgremove($sid)
-    {
-        $model_id = $this->removeImage($sid);
-
-        if ($model_id == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
-            return redirect('/admin/products')->withErrors($errors);
-        }
-
-        return redirect('admin/products/edit/' . $model_id);
-    }
-    
-    public function getVariantImgremove($product_id, $sid)
-    {
-        $model_id = $this->removeImage($sid);
-
-        if ($model_id == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
-            return redirect('/admin/products/edit-variant/'. $product_id . '/' . $model_id)->withErrors($errors);
-        }
-
-        return redirect('admin/products/edit-variant/' . $product_id . '/' . $model_id);
+        return redirect($this->pageRoute . '/edit/' . $model_id);
     }
 }
