@@ -106,6 +106,7 @@ This update introduces some new tables and lots of changes.
     - Various actions for create, update and delete are added in the permission checker.
 16. Improved search engine to be reusable.
 17. Payment Statuses can now be edited via config file. See [UPGRADE.md](UPGRADE.md) for instructions.
+18. Product variant should inherit category from main product (issue #160)
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)

@@ -127,12 +127,23 @@
                         </div>
                     </div>
                 </div>
-                {{-- Load Select Category partial form --}}
-                @include('redminportal::partials.form-select-category', [
-                    'select_category_selected_name' => 'category_id',
-                    'select_category_categories' => $categories,
-                    'select_category_required_field' => true
-                ])
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">{{ trans('redminportal::forms.category') }}</div>
+                    </div>
+                    <div class="panel-body">
+                        <input type="hidden" 
+                               id="category_id" 
+                               name="category_id" 
+                               value="{{ $product->category_id }}">
+                        <ul class="redmin-hierarchy">
+                            <li><a class="active">{{ $product->category->name }}</a></li>
+                        </ul>
+                    </div>
+                    <div class="panel-footer">
+                        <i><small>{{ trans('redminportal::messages.product_variant_inherits_from_parent_footnote') }}</small></i>
+                    </div>
+                </div>
 		        <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
