@@ -65,6 +65,8 @@ return array(
         => 'Allow user to log in to this account.',
     'leave_password_empty_to_keep_existing_password'
         => 'Leave the password field empty to keep existing password.',
+    'enter_existing_password_to_proceed'
+        => 'Enter existing password to proceed.',
     'not_authorized_to_view_this_page'
         => "You're not authorized to view this page.",
     'allow_select_multiple'
@@ -153,4 +155,10 @@ return array(
     'product_variant_inherits_from_parent_footnote'
         => "Variant inherits the same category as the main product. "
             . "If you don't see the category here, go back to the main product and save the changes first.",
+    'user_authentication_error'
+        => "We had a problem authenticating your access. Please try again.",
+    'user_error_old_password_required'
+        => 'You need to provide your existing password to save any changes.',
+    'warning_new_password_logout'
+        => 'If you enter a new password, you will be logged out from this page and will be required to login with your new password.',
 );

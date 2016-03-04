@@ -165,4 +165,6 @@ return array(
     'revision_edited_from' => "From",
     'revision_edited_to' => "To",
     'revision_history_title' => 'Revision History',
+    'myaccount' => 'My Account',
+    'new_password' => 'New Password',
 );

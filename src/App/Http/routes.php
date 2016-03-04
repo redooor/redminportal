@@ -8,6 +8,10 @@
 
 Route::controller('login', 'Redooor\Redminportal\App\Http\Controllers\LoginController');
 Route::get('logout', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getLogout');
+Route::controller('myaccount', 'Redooor\Redminportal\App\Http\Controllers\MyaccountController');
+Route::get('admin', function () {
+    return redirect('admin/dashboard');
+});
 
 Route::group(
     [
@@ -16,9 +20,6 @@ Route::group(
         'prefix' => 'admin'
     ],
     function () {
-        Route::get('/', function() {
-            return redirect('admin/dashboard');
-        });
         Route::get('dashboard', 'HomeController@home');
         Route::controller('announcements', 'AnnouncementController');
         Route::controller('categories', 'CategoryController');
@@ -59,7 +60,7 @@ Route::group(
         'prefix' => 'api'
     ],
     function () {
-        Route::get('/', function() {
+        Route::get('/', function () {
             return redirect('/');
         });
         Route::controller('tag', 'TagApi');

@@ -70,6 +70,7 @@
                         <li>Able to change Order statuses with tracking changes in Order model. (issue #138)</li>
                         <li>Added reusable Revision and Revisionable trait for tracking of changes in any model. (issue #138)</li>
                         <li>Added UI for viewing Revision History for Orders.</li>
+                        <li>Allow User to change their password and names (issue #159)</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -130,6 +131,7 @@
                         <li>Fixed Typeahead styling messed up for email suggestions. (issue #156)</li>
                         <li>Upload image with same name will now be appended with number. (issue #154)</li>
                         <li>Product variant create/edit form on error doesn't populate previous inputs. (issue #134)</li>
+                        <li>UI: menu unable to scroll on mobile screens (issue #161)</li>
                     </ol>
                     <hr>
                     <h3>Version 0.3.2 and 0.2.2</h3>

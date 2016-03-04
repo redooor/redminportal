@@ -68,6 +68,7 @@ This update introduces some new tables and lots of changes.
 19. Able to change Order statuses with tracking changes in Order model. (issue #138)
 20. Added reusable Revision and Revisionable trait for tracking of changes in any model. (issue #138)
 21. Added UI for viewing Revision History for Orders.
+22. Allow User to change their password and names (issue #159)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)
@@ -120,6 +121,7 @@ This update introduces some new tables and lots of changes.
 9. Fixed Typeahead styling messed up for email suggestions. (issue #156)
 10. Upload image with same name will now be appended with number. (issue #154)
 11. Product variant create/edit form on error doesn't populate previous inputs. (issue #134)
+12. UI: menu unable to scroll on mobile screens (issue #161)
 
 ## Version 0.3.2 and 0.2.2
 Code clean up, new features and UI improvements.
