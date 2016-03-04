@@ -86,7 +86,7 @@ class MyaccountController extends Controller
                 Auth::logout();
                 return redirect($this->pageRoute);
             } else {
-                $message = "Your changes have been saved.";
+                $message = trans('redminportal::messages.user_myaccount_save_success');
                 return redirect($this->pageRoute)->with('success_message', $message);
             }
         }

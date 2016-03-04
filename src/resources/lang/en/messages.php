@@ -161,4 +161,6 @@ return array(
         => 'You need to provide your existing password to save any changes.',
     'warning_new_password_logout'
         => 'If you enter a new password, you will be logged out from this page and will be required to login with your new password.',
+    'user_myaccount_save_success'
+        => "Your changes have been saved.",
 );
