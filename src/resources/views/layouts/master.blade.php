@@ -63,7 +63,7 @@
                         <div id="sidebar-title">
                             <a href="{{ URL::to('admin') }}" class="redooor-nav-logo"><img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal"> RedminPortal</a>
                         </div>
-                        {{ \Redooor\Redminportal\App\Helpers\RHelper::printMenu(config('redminportal::menu'), 'nav nav-sidebar') }}
+                        {!! Redminportal::html()->printMenu(config('redminportal::menu'), 'nav nav-sidebar') !!}
                     </div>
                     <div id="sidebar-overlay" class="sidebar-toggle"></div>
                     <div class="main-content">
@@ -74,12 +74,12 @@
         </div><!--End main-->
         
         <!-- Modal confirmation window -->
-        @include('redminportal::partials.modal-window', [
-            'modal_id' => 'confirm-modal',
-            'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
-            'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
-            'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
-        ])
+        {!! Redminportal::html()->modalWindow(
+            'confirm-modal',
+            Lang::get('redminportal::messages.confirm_delete'),
+            Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
+            '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
+        ) !!}
         <!-- End of modal window -->
         
         <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery/jquery.min.js') }}"></script>

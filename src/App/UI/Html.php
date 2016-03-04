@@ -37,13 +37,9 @@ class Html
     }
     
     /*
-     * Generate an HTML link to a sorting route, e.g. sort/sort_by/order_by
+     * Generate HTML with all the uploaded images of the given model
      *
-     * @param string Sorting route
-     * @param string Field name
-     * @param string Sort by name
-     * @param string Order by (asc or desc)
-     * @param string Display name (optional)
+     * @param Object Imageable or compatible Eloquent model
      * @return View
      */
     public function uploadedImages($model)
@@ -84,5 +80,22 @@ class Html
         ];
         
         return view('redminportal::partials.modal-window', $data);
+    }
+    
+    /*
+     * Generate an HTML unordered list menu
+     *
+     * @param array $menus A list of menus
+     * @param string $class Optional class
+     * @return string HTML Unordered List
+     */
+    public function printMenu($menus, $class = null)
+    {
+        $data = [
+            'menus' => $menus,
+            'class' => $class
+        ];
+        
+        return view('redminportal::partials.html-print-menu', $data);
     }
 }

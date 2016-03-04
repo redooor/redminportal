@@ -187,6 +187,28 @@ Use this instead:
 
 `url('admin/api/email/all)`
 
+### RHelper::printMenu is moved
+
+For compatibility, RHelper::printMenu() is still available.
+
+However, please change it to Redooor\Redminportal\App\UI\Html->printMenu() instead.
+
+On the blade template, for example,
+
+instead of
+
+```php
+{{ \Redooor\Redminportal\App\Helpers\RHelper::printMenu(config('redminportal::menu'), 'nav nav-sidebar') }}
+```
+
+use this
+
+```php
+{!! Redminportal::html()->printMenu(config('redminportal::menu'), 'nav nav-sidebar') !!}
+```
+
+**Take note of the change in curly brackets {{ }} to {!! !!}.**
+
 ## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 
 New features and UI improvements.

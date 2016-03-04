@@ -117,6 +117,7 @@
                         <li>Improved search engine to be reusable.</li>
                         <li>Payment Statuses can now be edited via config file. See UPGRADE.md for instructions.</li>
                         <li>Product variant should inherit category from main product (issue #160)</li>
+                        <li>Move printMenu to Html class and partial template (issue #155)</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
