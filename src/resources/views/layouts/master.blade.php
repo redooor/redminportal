@@ -32,7 +32,7 @@
                         </a>
                     </div>
                     <ul class="nav navbar-nav navbar-breadcrumb hidden-xs">
-                        <li><a href="{{ URL::to('admin') }}">{{ Lang::get('redminportal::menus.dashboard') }}</a></li>
+                        <li><a href="{{ URL::to('admin/dashboard') }}">{{ Lang::get('redminportal::menus.dashboard') }}</a></li>
                         @section('navbar-breadcrumb')
                         @show
                     </ul>
