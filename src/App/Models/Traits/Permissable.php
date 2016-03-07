@@ -132,7 +132,7 @@ trait Permissable
      * Check this route for permission
      *
      * @param string path
-     * @param string Type of permission (view, create, delete, update)
+     * @param object Permissions
      * @return bool True if user has access rights
      **/
     private function checkRouteAccess($route, $permissions)

@@ -212,6 +212,7 @@ class CouponController extends Controller
         $limit_per_user         = \Input::get('usage_limit_per_user');
         $multiple_coupons       = (\Input::get('multiple_coupons') == '' ? false : true);
         $exclude_sale_item      = (\Input::get('exclude_sale_item') == '' ? false : true);
+        $automatically_apply    = (\Input::get('automatically_apply') == '' ? false : true);
 
         // Check that end date is after start date
         if ($end_date <= $start_date) {
@@ -294,6 +295,7 @@ class CouponController extends Controller
         $newCoupon->usage_limit_per_user   = ($limit_per_user == 0) ? null : $limit_per_user;
         $newCoupon->multiple_coupons       = $multiple_coupons;
         $newCoupon->exclude_sale_item      = $exclude_sale_item;
+        $newCoupon->automatically_apply    = $automatically_apply;
         $newCoupon->save();
 
         // Remove all existing relationships first

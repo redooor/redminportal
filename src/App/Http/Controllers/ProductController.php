@@ -216,6 +216,12 @@ class ProductController extends Controller
         $product->height = (($height != '') ? $height : null);
 
         $product->save();
+        
+        // Update category id of all variants
+        foreach ($product->variants as $variant) {
+            $variant->category_id = $category_id;
+            $variant->save();
+        }
 
         // Save translations
         $translations = \Config::get('redminportal::translation');

@@ -29,14 +29,8 @@ trait ProductVariantController
             return redirect($this->pageRoute)->withErrors($errors);
         }
         
-        $categories = Category::where('active', true)
-            ->where('category_id', 0)
-            ->orWhere('category_id', null)
-            ->orderBy('name')
-            ->get();
-        
         $data = array(
-            'categories' => $categories,
+            'product' => $product,
             'product_id' => $product_id,
             'weight_units' => $this->weight_units,
             'volume_units' => $this->volume_units
@@ -56,12 +50,16 @@ trait ProductVariantController
             $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
             return view('redminportal::products/edit-variant')->withErrors($errors);
         }
-
-        $categories = Category::where('active', true)
-            ->where('category_id', 0)
-            ->orWhere('category_id', null)
-            ->orderBy('name')
-            ->get();
+        
+        // Find the parent product
+        $parent = Product::find($product_id);
+        
+        // No such parent id
+        if ($parent == null) {
+            $errors = new MessageBag;
+            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
+            return view('redminportal::products/edit-variant')->withErrors($errors);
+        }
 
         $tagString = "";
         foreach ($product->tags as $tag) {
@@ -79,9 +77,9 @@ trait ProductVariantController
         
         $data = array(
             'product_id' => $product_id,
+            'parent' => $parent,
             'product' => $product,
             'translated' => $translated,
-            'categories'=> $categories,
             'tagString'=> $tagString,
             'imagine' => new RImage,
             'weight_units' => $this->weight_units,

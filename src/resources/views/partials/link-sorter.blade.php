@@ -16,6 +16,6 @@
 <a class="block-header {{ $wrapper_classes or '' }}" href="{{ $url }}">
     {{ $display_name }}
     @if ($sortBy == $field_name)
-    {!! ($orderBy != 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
+    {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
     @endif
 </a>

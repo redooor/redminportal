@@ -165,4 +165,8 @@ return array(
     'revision_edited_from' => "From",
     'revision_edited_to' => "To",
     'revision_history_title' => 'Revision History',
+    'myaccount' => 'My Account',
+    'new_password' => 'New Password',
+    'automatically_apply' => 'Apply Automatically',
+    'automatically_apply_explanation' => 'Check this box if the coupon should be applied to item automatically.',
 );

@@ -400,7 +400,7 @@ trait TraitProductVariantControllerTest
             'product_id',
             'product',
             'translated',
-            'categories',
+            'parent',
             'tagString',
             'imagine'
         );

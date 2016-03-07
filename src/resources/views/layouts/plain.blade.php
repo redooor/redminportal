@@ -23,11 +23,11 @@
             <div class="navbar navbar-default navbar-fixed-top">
                 <div class="container-fluid">
                     <div class="navbar-header">
+                        @if (Auth::check())
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
+                            <span class="glyphicon glyphicon-user"></span>
                         </button>
+                        @endif
                         <a href="{{ URL::to('admin') }}" class="navbar-brand">
                             <img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal" class="redooor-nav-logo"> RedminPortal
                         </a>
@@ -35,8 +35,7 @@
                     <div class="navbar-collapse collapse">
                         @if (Auth::check())
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a class="btn btn-link hidden-xs" href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')">{{ Lang::get('redminportal::menus.logout') }} <i class="glyphicon glyphicon-log-out"></i></a></li>
-                            <li><a class="visible-xs" href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')">{{ Lang::get('redminportal::menus.logout') }}</a></li>
+                            <li><a href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>
                         @endif
                     </div><!--/.nav-collapse -->
