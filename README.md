@@ -141,8 +141,12 @@ You can install Laravel version 5.1 using the command:
 
         "require": {
             "laravel/framework": "5.1.*",
-            "redooor/redminportal": "0.3.*"
+            "redooor/redminportal": "0.3.[*|specify a version]"
         },
+    
+    **NOTE:**
+    
+    It is advisable to specify the minor version (e.g. 0.3.3) so that it's more controlled. Although we try to be as backward compatible as possible, many changes are added into each version, so it may sometimes break your front end code.
 
 2. Then run `php composer update [--prefer-dist]` in a terminal.
 
@@ -313,10 +317,10 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # External Libraries Used
 
-* [Bootstrap v3.3.5](http://getbootstrap.com)
+* [Bootstrap v3](http://getbootstrap.com)
 * [Font Awesome 4.4.0 by @davegandy](http://fontawesome.io)
-* jQuery v2.1.4
-* jQuery UI v1.11.4
+* jQuery v2
+* jQuery UI v1
 * [illuminate/html](https://github.com/illuminate/html)
 * [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel)
 * [Imagine](https://github.com/avalanche123/Imagine)

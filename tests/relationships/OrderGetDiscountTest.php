@@ -97,6 +97,7 @@ class OrderGetDiscountTest extends BaseRelationshipTest
         
         // Check total discount of order is 10% of product 1 only
         $totalDiscount = $this->order->getTotaldiscount();
+        var_dump($totalDiscount, ($totalDiscount - 1));
         $this->assertTrue(($totalDiscount - 1) == 0);
     }
     
