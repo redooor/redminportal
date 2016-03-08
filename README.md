@@ -59,18 +59,20 @@ Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
 ## Content Management
 * Announcement
-* Post
+* Page
 * Portfolio
+* Post
 * Promotion
 
 ## Online Store (Physical Products)
+* Bundle
 * Category
 * Coupon
-* Product (now supports variations)
 * Order
-* Bundle
+* Product (now supports variations)
 
 ## Membership Subscription (Digital Products)
+* Bundle
 * Category
 * Coupon
 * Media
@@ -79,21 +81,31 @@ Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 * ModuleMediaMembership
 * Order
 * ~~Purchase~~ **_(deprecated, replaced by Order)_**
-* Bundle
+* Pricelist
 
 ## Morphs
 * Image
+* Revision (new! Now changes to Orders are tracked)
 * Tag
 * Translation
+
+## Traits
+* Permissible
+* Revisionable
 
 ## Classes
 * File
 * Volume
 * Weight
+* Imagine
+* Redminportal (use as alias in blade template)
 
 ## Helpers
 * RHelper
-* RImage
+* ~~RImage~~ **_(replaced by Classes/Imagine, retained for backward compatibility)_**
+
+## Facades
+* Redminportal
 
 ## Downloadable Reports
 1. Downloadable CSV reports for Purchases and Mailinglist.
