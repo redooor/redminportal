@@ -18,7 +18,7 @@
         <tbody>
             @foreach ($model->revisions as $revision)
             <tr>
-                <td class="revision-user">{{ $revision->user->first_name }} {{ $revision->user->last_name }}</td>
+                <td class="revision-user">{{ $revision->user->first_name or '' }} {{ $revision->user->last_name or '' }}</td>
                 <td class="revision-date">{{ $revision->created_at }}</td>
                 <td class="revision-field">{{ $revision->showAttribute() }}</td>
                 <td class="revision-old-value">{{ $revision->old_value }}</td>
