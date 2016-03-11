@@ -119,6 +119,7 @@
                         <li>Product variant should inherit category from main product (issue #160)</li>
                         <li>Move printMenu to Html class and partial template (issue #155)</li>
                         <li>Add field automatically_apply to Coupon model (issue #162)</li>
+                        <li>UI: Orders Items list should group into same product and show quantity (issue #166)</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>

@@ -110,6 +110,7 @@ This update introduces some new tables and lots of changes.
 18. Product variant should inherit category from main product (issue #160)
 19. Move printMenu to Html class and partial template (issue #155)
 20. Add field automatically_apply to Coupon model (issue #162)
+21. UI: Orders Items list should group into same product and show quantity (issue #166)
 
 ### Bug fixes:
 1. User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)
