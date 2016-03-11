@@ -1,5 +1,16 @@
 @extends('redminportal::layouts.bare')
 
+@section('head')
+<style>
+    .revision-limit-view {
+        max-width: 200px;
+        max-height: 200px;
+        overflow: scroll;
+        display: block;
+    }
+</style>
+@stop
+
 @section('content')
     
     @include('redminportal::partials.errors')
@@ -22,8 +33,8 @@
                     <td class="revision-user">{{ $revision->user->first_name or '' }} {{ $revision->user->last_name or '' }}</td>
                     <td class="revision-date">{{ $revision->created_at }}</td>
                     <td class="revision-field">{{ $revision->showAttribute() }}</td>
-                    <td class="revision-old-value">{{ $revision->old_value }}</td>
-                    <td class="revision-new-value">{{ $revision->new_value }}</td>
+                    <td class="revision-old-value"><span class="revision-limit-view">{{ $revision->old_value }}</span></td>
+                    <td class="revision-new-value"><span class="revision-limit-view">{{ $revision->new_value }}</span></td>
                 </tr>
                 @endforeach
             </tbody>
