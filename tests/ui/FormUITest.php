@@ -78,7 +78,7 @@ class FormUITest extends RedminTestCase
         
         $output = '<div class="form-group redmin-email-typeahead">
             <label for="email">Email Address</label>
-            <input class="form-control typeahead" name="email" id="email" "required" value="test">
+            <input class="form-control typeahead" name="email" id="email" required value="test">
         </div>';
         
         $output = str_replace(array("\r", "\n", " "), '', $output);

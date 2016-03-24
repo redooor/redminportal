@@ -123,14 +123,20 @@
 								<span class="glyphicon glyphicon-shopping-cart"></span>
 							</button>
 							<ul class="dropdown-menu pull-right" role="menu">
-                                @foreach ($order->products as $product)
+                                @foreach ($order->products()->groupBy('name')->get() as $product)
 								<li>
-									<a href="#">{{ $product->name }}<br><span class="label label-primary">{{ $product->sku }}</span></a>
+									<a href="#">{{ $product->name }}<br>
+                                        <span class="label label-primary">{{ $product->sku }}</span><br>
+                                        <span class="label label-success">Qty: {{ $order->products()->where('name', $product->name)->count() }}</span>
+                                    </a>
 								</li>
                                 @endforeach
-                                @foreach ($order->bundles as $bundle)
+                                @foreach ($order->bundles()->groupBy('name')->get() as $bundle)
 								<li>
-                                    <a href="#">{{ $bundle->name }}<br><span class="label label-primary">{{ $bundle->sku }}</span></a>
+                                    <a href="#">{{ $bundle->name }}<br>
+                                        <span class="label label-primary">{{ $bundle->sku }}</span><br>
+                                        <span class="label label-success">Qty: {{ $order->bundles()->where('name', $bundle->name)->count() }}</span>
+                                    </a>
 								</li>
                                 @endforeach
                                 @foreach ($order->pricelists as $pricelist)

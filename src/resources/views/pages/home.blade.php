@@ -71,6 +71,7 @@
                         <li>Added reusable Revision and Revisionable trait for tracking of changes in any model. (issue #138)</li>
                         <li>Added UI for viewing Revision History for Orders.</li>
                         <li>Allow User to change their password and names (issue #159)</li>
+                        <li>Create new Order with product quantities (issue #165)</li>
                     </ol>
                     <h4>Enhancements:</h4>
                     <ol>
@@ -119,6 +120,7 @@
                         <li>Product variant should inherit category from main product (issue #160)</li>
                         <li>Move printMenu to Html class and partial template (issue #155)</li>
                         <li>Add field automatically_apply to Coupon model (issue #162)</li>
+                        <li>UI: Orders Items list should group into same product and show quantity (issue #166)</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>

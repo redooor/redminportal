@@ -169,4 +169,11 @@ return array(
     'new_password' => 'New Password',
     'automatically_apply' => 'Apply Automatically',
     'automatically_apply_explanation' => 'Check this box if the coupon should be applied to item automatically.',
+    'product_quantity' => 'Quantity',
+    'selected_products' => 'Selected Products',
+    'bundle_quantity' => 'Quantity',
+    'selected_bundles' => 'Selected Bundles',
+    'add_products' => 'Add Products',
+    'add_bundles' => 'Add Bundles',
+    'add_membership_modules' => 'Add Module/Memberships'
 );

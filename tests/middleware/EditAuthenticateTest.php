@@ -182,7 +182,7 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/medias/store'        => 'admin/medias/edit/1',
             'admin/memberships/store'   => 'admin/memberships/edit/1',
             'admin/modules/store'       => 'admin/modules/edit/1',
-            'admin/orders/store'        => 'admin/orders/edit/1',
+            'admin/orders/store'        => 'admin/orders/create',
             'admin/portfolios/store'    => 'admin/portfolios/edit/1',
             'admin/products/store'      => 'admin/products/edit/1',
             'admin/purchases/store'     => 'admin/purchases/edit/1',

@@ -2,6 +2,9 @@
 
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Product;
+use Redooor\Redminportal\App\Models\Bundle;
+use Redooor\Redminportal\App\Models\Pricelist;
+use Redooor\Redminportal\App\Models\Coupon;
 
 class OrderControllerTest extends BaseControllerTest
 {
@@ -19,7 +22,10 @@ class OrderControllerTest extends BaseControllerTest
         );
         $input = array(
             'create' => array(
-                'product_id' => array(1),
+                'selected_products' => array('{"id":"1","name":"This is title","quantity":"1"}'),
+                'selected_bundles' => array('{"id":"1","name":"This is the title","quantity":"1"}'),
+                'pricelist_id' => array(1),
+                'coupon_id' => array(1),
                 'payment_status' => 'Completed',
                 'paid'           => 1.99,
                 'transaction_id' => 1,
@@ -27,7 +33,10 @@ class OrderControllerTest extends BaseControllerTest
             ),
             'edit' => array(
                 'id'   => 1,
-                'product_id' => array(1),
+                'selected_products' => array('{"id":"1","name":"This is title","quantity":"1"}'),
+                'selected_bundles' => array('{"id":"1","name":"This is the title","quantity":"1"}'),
+                'pricelist_id' => array(1),
+                'coupon_id' => array(1),
                 'payment_status' => 'Completed',
                 'paid'           => 1.99,
                 'transaction_id' => 1,
@@ -68,6 +77,34 @@ class OrderControllerTest extends BaseControllerTest
         $product->active = true;
         $product->category_id = 1;
         $product->save();
+        
+        $bundle = new Bundle;
+        $bundle->name = 'This is the title';
+        $bundle->sku = 'UNIQUESKU001';
+        $bundle->short_description = 'This is the body';
+        $bundle->category_id = 1;
+        $bundle->active = true;
+        
+        $coupon = new Coupon;
+        $coupon->code = 'ABC123';
+        $coupon->description = 'This is a description';
+        $coupon->amount = 10.99;
+        $coupon->is_percent = true;
+        $coupon->start_date = '02/05/2016 5:39 PM';
+        $coupon->end_date = '02/05/2016 5:39 PM';
+        $coupon->max_spent = 200.99;
+        $coupon->min_spent = 199.88;
+        $coupon->usage_limit_per_coupon = 10;
+        $coupon->usage_limit_per_user = 1;
+        $coupon->multiple_coupons = true;
+        $coupon->exclude_sale_item = true;
+        $coupon->usage_limit_per_coupon_count = 0;
+        
+        $pricelist = new Pricelist;
+        $pricelist->price = 0;
+        $pricelist->module_id = 1;
+        $pricelist->membership_id = 1;
+        $pricelist->active = true;
     }
     
     /**
@@ -89,7 +126,37 @@ class OrderControllerTest extends BaseControllerTest
     public function testStoreCreateFailedNoProduct()
     {
         $input = array(
-            'product_id' => array(2),
+            'selected_products' => array('{"id":"2","name":"This is title","quantity":"1"}'),
+            'payment_status' => 'Completed',
+            'paid'           => 1.99,
+            'transaction_id' => 1,
+            'email'          => 'admin@admin.com',
+        );
+
+        $this->call('POST', '/admin/orders/store', $input);
+
+        $this->assertRedirectedTo('/admin/orders/create');
+    }
+    
+    public function testStoreCreateFailedNoBundle()
+    {
+        $input = array(
+            'selected_bundles' => array('{"id":"2","name":"This is title","quantity":"1"}'),
+            'payment_status' => 'Completed',
+            'paid'           => 1.99,
+            'transaction_id' => 1,
+            'email'          => 'admin@admin.com',
+        );
+
+        $this->call('POST', '/admin/orders/store', $input);
+
+        $this->assertRedirectedTo('/admin/orders/create');
+    }
+    
+    public function testStoreCreateFailedNoPricelist()
+    {
+        $input = array(
+            'pricelist_id' => array(2),
             'payment_status' => 'Completed',
             'paid'           => 1.99,
             'transaction_id' => 1,
@@ -104,7 +171,7 @@ class OrderControllerTest extends BaseControllerTest
     public function testStoreCreateFailedNoSuchUser()
     {
         $input = array(
-            'product_id' => array(1),
+            'selected_products' => array('{"id":"1","name":"This is title","quantity":"1"}'),
             'payment_status' => 'Completed',
             'paid'           => 1.99,
             'transaction_id' => 1,
