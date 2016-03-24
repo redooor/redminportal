@@ -160,7 +160,22 @@ return array(
     'user_error_old_password_required'
         => 'You need to provide your existing password to save any changes.',
     'warning_new_password_logout'
-        => 'If you enter a new password, you will be logged out from this page and will be required to login with your new password.',
+        => 'If you enter a new password, you will be logged out from this page '
+            . 'and will be required to login with your new password.',
     'user_myaccount_save_success'
         => "Your changes have been saved.",
+    'help_product_builder'
+        => "Use product builder below to help you populate the products.",
+    'help_product_builder_quantity'
+        => "Select product, enter quantity, then click the INSERT button below.",
+    'help_bundle_builder'
+        => "Use bundle builder below to help you populate the bundles.",
+    'help_bundle_builder_quantity'
+        => "Select bundles, enter quantity, then click the INSERT button below.",
+    'order_error_selected_products_required_without_all'
+        => "The products field is required when none of bundles or Module/Memberships are present",
+    'order_error_selected_bundles_required_without_all'
+        => "The bundles field is required when none of products or Module/Memberships are present",
+    'order_error_pricelist_id_required_without_all'
+        => "The Module/Memberships field is required when none of products or bundles are present",
 );

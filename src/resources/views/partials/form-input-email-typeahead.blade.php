@@ -13,7 +13,7 @@
     <label for="email">{{ Lang::get('redminportal::forms.email') }}</label>
     <input class="form-control typeahead" name="email" id="email"
         @if (isset($required) and $required)
-            "required" 
+            required 
         @endif
         @if (isset($value) and $value != null)
             value="{{ $value }}"

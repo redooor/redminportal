@@ -69,6 +69,7 @@ This update introduces some new tables and lots of changes.
 20. Added reusable Revision and Revisionable trait for tracking of changes in any model. (issue #138)
 21. Added UI for viewing Revision History for Orders.
 22. Allow User to change their password and names (issue #159)
+23. Create new Order with product quantities (issue #165)
 
 ### Enhancements:
 1. Category model missing relationships with other models. (issue #140)
