@@ -1,6 +1,215 @@
 # Upgrade Guide
 
-## Upgrading to v0.3.2 from v0.3.1
+Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+
+## Upgrading to v0.3.3/v0.2.3 from v0.3.2/v0.2.2
+
+### Access Permission
+
+In the past any user who is within the group "Admin" are allowed to access the admin dashboard and all actions such as creation, edit and deletion.
+
+With the recent change, we will now be checking the permission level of user and their groups.
+
+This permission can be set on user level as will as group level.
+
+Permission hierarchy as follow:
+- User level permission supersedes Group level permission.
+- ANY group deny will result in forceful deny.
+- At least 1 group allow (if no deny) will result in allow.
+- Sub route permission supersedes Main route permission.
+
+If you have been using the group creation UI since version 0.2 then you should be fine.
+
+The default seed for Admin and User group are as such:
+
+Admin
+```
+{
+  "admin.view":true,
+  "admin.create":true,
+  "admin.delete":true,
+  "admin.update":true
+}
+```
+
+User
+```
+{
+  "admin.view":false,
+  "admin.create":false,
+  "admin.delete":false,
+  "admin.update":false
+}
+```
+
+From now on, Permission is tied to route, using 3 integers to indicate rights:
+
+- 1: Allow
+- -1: Deny (supersedes any allow from other groups)
+- 0: Inherit (or not allowed if none is found)
+
+So this:
+
+`{"admin.view": 1}`
+
+means that the user/group has access to route 'admin' and all sub-route.
+
+And this:
+
+`{"admin.users.view": -1}`
+
+means that the user/group is denied from route 'admin/users'.
+
+This:
+```
+{
+  "admin.users.view":1,
+  "admin.users.delete":-1,
+  "admin.users.update":-1
+}
+```
+means that the user/group can view but not delete or update record.
+
+#### Permission Usage
+
+To check if the user is allowed to view the page, use the hasAccess method in User model.
+
+Example:
+```
+    public function getIndex(Request $request)
+    {
+        $user = \Auth::user();
+        if ($user->hasAccess($request)) {
+            // Do something
+            return view('has_access');
+        }
+        
+        return view('access_denied');
+    }
+```
+
+#### Permission Config file
+
+You can edit the list of routes for permission management via the config file `src/config/permissions.php`.
+
+Copy the file `src/config/permissions.php` to your root folder's `config/vendor/redooor/redminportal/permissions.php`.
+
+### Run Dump-Autoload
+
+Due to the additions of HTML and Form helpers, you need to run the following command:
+
+For Users
+```shell
+    cd <your_app_root>
+    composer dump-autoload
+```
+
+For Contributors
+```shell
+    cd <your_app_root>/packages/redooor/redminportal
+    composer dump-autoload
+```
+
+### Migrations
+
+Version 0.3.3 and v0.2.3 introduced some new database tables.
+
+You need to run the following command to re-publish the migrations.
+
+**Caution**: This action will overwrite any changes made to the `database/migrations/vendor/redooor/redminportal` folder.
+
+As a general rule, do not save any customed files inside `database/migrations/vendor/redooor/redminportal` folder.
+
+**Before you begin, _ALWAYS BACKUP_ your database.**
+
+1. You can publish the migrations using:
+
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" --force
+
+2. Then run the following in the root folder:
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+
+### Public assets
+
+You need to run the following command to re-publish the assets.
+
+**Caution**: This action will overwrite any changes made to the `public/vendor/redooor/redminportal` folder.
+
+As a general rule, do not save any customed files inside `public/vendor/redooor/redminportal` folder.
+
+    php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
+    
+### Pagination Config file
+
+We've moved the default pagination size for all pages to a config file `src/config/pagination.php`.
+
+Copy the file `src/config/pagination.php` to your root folder's `config/vendor/redooor/redminportal/pagination.php`.
+
+You can change the value to any desired number to be the pagination size. The default is 50.
+
+### Payment Statues Config file
+
+You can now change the payment statuses in a config file `src/config/payment_statuses.php` for your project.
+
+Copy the file `src/config/pagination.php` to your root folder's `config/vendor/redooor/redminportal/payment_statuses.php`.
+
+### Relocation of Redminportal Facade
+
+This shouldn't really affect your existing installation because previously it was not working.
+
+The facade file has been moved from
+
+`src/facades/Redminportal.php`
+
+to
+
+`src/App/Facades/Redminportal.php`
+
+It is important to note the uppercase in Facades because without it autoloading will fail in most Linux and Mac OS environment.
+
+### Minimum-stability 'dev' not required
+
+After changing to JamesHeinrich/getID3, it is no longer a requirement to change the minimum-stability to 'dev'.
+You can choose to set it back to 'stable' like this:
+
+    "minimum-stability": "stable",
+    "prefer-stable": true
+
+### Get user emails in JSON format
+
+The following 2 links have been removed.
+
+`url('admin/orders/emails');`
+`url('admin/purchases/emails');`
+
+Use this instead:
+
+`url('admin/api/email/all)`
+
+### RHelper::printMenu is moved
+
+For compatibility, RHelper::printMenu() is still available.
+
+However, please change it to Redooor\Redminportal\App\UI\Html->printMenu() instead.
+
+On the blade template, for example,
+
+instead of
+
+```php
+{{ \Redooor\Redminportal\App\Helpers\RHelper::printMenu(config('redminportal::menu'), 'nav nav-sidebar') }}
+```
+
+use this
+
+```php
+{!! Redminportal::html()->printMenu(config('redminportal::menu'), 'nav nav-sidebar') !!}
+```
+
+**Take note of the change in curly brackets {{ }} to {!! !!}.**
+
+## Upgrading to v0.3.2/v0.2.2 from v0.3.1/v0.2.1
 
 New features and UI improvements.
 
@@ -53,7 +262,7 @@ To get the purchased pricelist in Order, you can do the same like this:
 
 ### Migrations
 
-Version 0.3.2 introduced some new database tables and removed some.
+Version 0.3.2/0.2.2 introduced some new database tables and removed some.
 
 You need to run the following command to re-publish the migrations.
 
@@ -81,7 +290,7 @@ As a general rule, do not save any customed files inside `public/vendor/redooor/
 
     php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
     
-## Upgrading to v0.3.1 from v0.3.0
+## Upgrading to v0.3.1/v0.2.1 from v0.3.0/0.2.0
 
 New features and UI improvements.
 
@@ -97,7 +306,7 @@ As a general rule, do not save any customed files inside `public/vendor/redooor/
 
 ### Migrations
 
-Version 0.3.1 introduced some new database tables. You need to run the following command to re-publish the migrations.
+Version 0.3.1/0.2.1 introduced some new database tables. You need to run the following command to re-publish the migrations.
 
 **Caution**: This action will overwrite any changes made to the `database/migrations/vendor/redooor/redminportal` folder.
 
@@ -113,13 +322,13 @@ As a general rule, do not save any customed files inside `database/migrations/ve
 
         php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
         
-## Upgrading to v0.3.1 from <= v0.1.*
+## Upgrading to v0.3.1/0.2.1 from <= v0.1.*
 
-Supports Laravel 5.1.
+Version 0.3.1 supports Laravel 5.1. Version 0.2.1 supports Laravel 5.0.
 
 ### Migrations
 
-In Version 0.3.1, the migrations are generally designed to be forgiving. It will check for existance before creating the tables.
+In Version 0.3.1/0.2.1, the migrations are generally designed to be forgiving. It will check for existance before creating the tables.
 
 **Before you begin, _ALWAYS BACKUP_ your database and `public\assets\img folder`.**
 
@@ -171,9 +380,6 @@ Supports Laravel 5.1.
 
 Version 0.3.0 should be backward compatible to Version 0.2.0 but not Version 0.1.*.
 
-* Looking for RedminPortal for Laravel 5.0? Visit the [v0.2 Branch](https://github.com/redooor/redminportal/tree/v0.2).
-* Looking for RedminPortal for Laravel 4.2? Visit the [v0.1 Branch](https://github.com/redooor/redminportal/tree/v0.1).
-
 Edit your [root]\config\app.php providers and alias array like this:
 
         'providers' => array(
@@ -184,6 +390,9 @@ Edit your [root]\config\app.php providers and alias array like this:
             Redooor\Redminportal\RedminportalServiceProvider::class,
         ),
 
-## Upgrading to v0.2.0 from <= v0.1.*
+To upgrade from version v0.1.*, you need to use v0.3.1/0.2.1 onwards.
 
-Refer to [branch v0.2 UPGRADE.md](https://github.com/redooor/redminportal/blob/v0.2/UPGRADE.md)
+## Version 0.1
+Supports Laravel 4.2.
+
+Refer to [branch v0.1 README.md Upgrade Guide](https://github.com/redooor/redminportal/blob/v0.1/README.md#upgrade-guide)

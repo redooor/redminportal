@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($mailinglists) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $mailinglists->firstItem() . ' to ' . $mailinglists->lastItem() . ' of ' . $mailinglists->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#export-csv">{{ Lang::get('redminportal::buttons.export_csv') }}</button>
                 {!! HTML::link('admin/mailinglists/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
@@ -22,55 +22,33 @@
         </div>
     </div>
 
-    @if (count($mailinglists) > 0)
+    @if (count($models) > 0)
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
                     <th>
-                        <a href="{{ URL::to('admin/mailinglists/sort') . '/email/' . ($sortBy == 'email' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.email') }}
-                            @if ($sortBy == 'email')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/mailinglists', 'email', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/mailinglists/sort') . '/first_name/' . ($sortBy == 'first_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.first_name') }}
-                            @if ($sortBy == 'first_name')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/mailinglists', 'first_name', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/mailinglists/sort') . '/last_name/' . ($sortBy == 'last_name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.last_name') }}
-                            @if ($sortBy == 'last_name')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/mailinglists', 'last_name', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/mailinglists/sort') . '/active/' . ($sortBy == 'active' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.active') }}
-                            @if ($sortBy == 'active')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/mailinglists', 'active', $sortBy, $orderBy) !!}
                     </th>
                     <th>
-                        <a href="{{ URL::to('admin/mailinglists/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.updated') }}
-                            @if ($sortBy == 'updated_at')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/mailinglists', 'created_at', $sortBy, $orderBy) !!}
+                    </th>
+                    <th>
+                        {!! Redminportal::html()->sorter('admin/mailinglists', 'updated_at', $sortBy, $orderBy) !!}
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-            @foreach ($mailinglists as $mailinglist)
+            @foreach ($models as $mailinglist)
                 <tr>
                     <td>{{ $mailinglist->email }}</td>
                     <td>{{ $mailinglist->first_name }}</td>
@@ -82,7 +60,8 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
-                    <td>{{ date('d-M-y', strtotime($mailinglist->updated_at)) }}</td>
+                    <td>{{ date("d/m/y h:i A", strtotime($mailinglist->created_at)) }}</td>
+                    <td>{{ date("d/m/y h:i A", strtotime($mailinglist->updated_at)) }}</td>
                     <td class="table-actions text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
@@ -105,10 +84,15 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $mailinglists->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
+        @if ($models->lastPage())
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_mailinglist_found') }}</div>
+        @endif
     @endif
     <div id="export-csv" class="modal fade">
         <div class="modal-dialog">

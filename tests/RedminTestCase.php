@@ -17,6 +17,22 @@ class RedminTestCase extends TestBenchTestCase
             'database' => ':memory:',
             'prefix'   => '',
         ));
+        
+        // Set session for tests, otherwise Request::old will not work
+        $app['config']->set('session', [
+            'driver'          => 'array',
+            'lifetime'        => 120,
+            'expire_on_close' => false,
+            'encrypt'         => false,
+            'lottery'         => [2, 100],
+            'path'            => '/',
+            'domain'          => 'localhost',
+            'secure'          => false
+        ]);
+        
+        /* Required for Request::old to work */
+        $kernel = app('Illuminate\Contracts\Http\Kernel');
+        $kernel->pushMiddleware('Illuminate\Session\Middleware\StartSession');
     }
     
     /**
@@ -26,8 +42,6 @@ class RedminTestCase extends TestBenchTestCase
     public function setUp()
     {
         parent::setUp();
-
-        //$this->app['router']->enableFilters();
 
         ini_set('memory_limit', '400M'); // Temporarily increase memory limit to 400MB
         

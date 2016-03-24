@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
     usage_limit_per_user    (integer, unsigned, nullable)
     multiple_coupons        (boolean, default: false)
     exclude_sale_item       (boolean, default: false)
+    automatically_apply     (boolean, default: false)
     usage_limit_per_coupon_count    (integer, unsigned, default: 0)
 ***********************/
 class Coupon extends Model

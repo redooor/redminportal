@@ -37,19 +37,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">{{ Lang::get('redminportal::forms.category') }}</div>
-                    </div>
-                    <div class="panel-body">
-                        {!! Form::hidden('category_id', $product->category_id, array('id' => 'category_id')) !!}
-                        <ul class="redooor-hierarchy">
-                        @foreach ($categories as $item)
-                            <li>{!! $item->printCategory() !!}</li>
-                        @endforeach
-                        </ul>
-                    </div>
-                </div>
+                {{-- Load Select Category partial form --}}
+                @include('redminportal::partials.form-select-category', [
+                    'select_category_selected_name' => 'category_id',
+                    'select_category_selected_id' => $product->category_id,
+                    'select_category_categories' => $categories,
+                    'select_category_required_field' => true
+                ])
                 <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
@@ -146,6 +140,91 @@
                         </div>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            {{ Lang::get('redminportal::forms.product_shipping_properties') }}
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <!-- Weight information -->
+                        <div class="form-group">
+                            <label>{{ Lang::get('redminportal::forms.weight') }}</label>
+                            <div class="form-inline">
+                                @include('redminportal::partials.form-input', [
+                                    'label' => Lang::get('redminportal::forms.weight'),
+                                    'label_classes' => 'sr-only',
+                                    'input_name' => 'weight',
+                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'input_value' => $product->weight
+                                ])
+                                @include('redminportal::partials.form-select-option', [
+                                    'label' => Lang::get('redminportal::forms.weight_unit'),
+                                    'label_classes' => 'sr-only',
+                                    'select_name' => 'weight_unit',
+                                    'select_options' => $weight_units,
+                                    'value_as_key' => true,
+                                    'selected' => $product->weight_unit
+                                ])
+                            </div>
+                        </div>
+                        <!-- Volume information -->
+                        <div class="form-group">
+                            <label>{{ Lang::get('redminportal::forms.volume') }}</label>
+                            <div class="form-inline">
+                                @include('redminportal::partials.form-input', [
+                                    'label' => Lang::get('redminportal::forms.length'),
+                                    'label_classes' => 'sr-only',
+                                    'input_name' => 'length',
+                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'help_text' => Lang::get('redminportal::forms.length'),
+                                    'input_value' => $product->length
+                                ])
+                                @include('redminportal::partials.form-input', [
+                                    'label' => Lang::get('redminportal::forms.width'),
+                                    'label_classes' => 'sr-only',
+                                    'input_name' => 'width',
+                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'help_text' => Lang::get('redminportal::forms.width'),
+                                    'input_value' => $product->width
+                                ])
+                                @include('redminportal::partials.form-input', [
+                                    'label' => Lang::get('redminportal::forms.height'),
+                                    'label_classes' => 'sr-only',
+                                    'input_name' => 'height',
+                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'help_text' => Lang::get('redminportal::forms.height'),
+                                    'input_value' => $product->height
+                                ])
+                                @include('redminportal::partials.form-select-option', [
+                                    'label' => Lang::get('redminportal::forms.volume_unit'),
+                                    'label_classes' => 'sr-only',
+                                    'select_name' => 'volume_unit',
+                                    'select_options' => $volume_units,
+                                    'value_as_key' => true,
+                                    'selected' => $product->volume_unit,
+                                    'help_text' => Lang::get('redminportal::messages.unit_applies_to_all_dimensions')
+                                ])
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.product_variations') }}</h4>
+                    </div>
+                    <div class="panel-progress">
+                        <div class="progress">
+                            <div id="variant-loading-progress" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <span class="sr-only">Loading</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="list-variants" data-url="{{ url('admin/products/list-variants/' . $product->id) }}"></div>
+                    <div class="panel-footer text-right">
+                        <a id="add-product-variant" href="{{ url('admin/products/create-variant/' . $product->id) }}" class="btn btn-primary btn-sm">Add</a>
+                    </div>
+                </div>
                 @if (count($product->images) > 0)
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -177,9 +256,29 @@
             </div>
         </div>
     {!! Form::close() !!}
+    
+    <!-- Modal window iframe -->
+    @include('redminportal::partials.modal-window', [
+        'modal_id' => 'product-variant-modal',
+        'modal_size' => 'modal-lg',
+        'modal_progress' => 'modal-progress',
+        'modal_title' => Lang::get('redminportal::forms.product_variation'),
+        'modal_body' => '<iframe id="iframe-variant-form"></iframe>'
+    ])
+    <!-- End of modal window iframe -->
+
+    <!-- Modal confirmation window -->
+    @include('redminportal::partials.modal-window', [
+        'modal_id' => 'variant-remove-modal',
+        'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
+        'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
+        'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="variant-remove-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
+    ])
+    <!-- End of modal window -->
 @stop
 
 @section('footer')
+    @parent
     <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
     <script>
         !function ($) {
@@ -189,28 +288,100 @@
                     e.preventDefault();
                     $(this).tab('show');
                 });
-                // On load, check if previous category exists for error message
-                function checkCategory() {
-                    $selected_val = $('#category_id').val();
-                    if ($selected_val != '') {
-                        $('.redooor-hierarchy a').each(function() {
-                            if ($(this).attr('href') == $selected_val) {
-                                $(this).addClass('active');
-                            }
-                        });
-                    }
-                }
-                checkCategory();
-                // Change selected category
-                $(document).on('click', '.redooor-hierarchy a', function(e) {
-                    e.preventDefault();
-                    $selected = $(this).attr('href');
-                    $('#category_id').val($selected);
-                    $('.redooor-hierarchy a.active').removeClass('active');
-                    $(this).addClass('active');
-                });
             })
         }(window.jQuery);
     </script>
+    <!-- This portion handles product variants -->
+    <script>
+        !function ($) {
+            $(function() {
+                //---------------------------------------------------------
+                // On load, list the product variants
+                //---------------------------------------------------------
+                loadVariants();
+                function loadVariants() {
+                    $list_variant_url = $('#list-variants').attr('data-url');
+                    $('#variant-loading-progress').css('width', '0%').parent().fadeIn(function() {
+                        for(ipercent = 0; ipercent<=50; ipercent++) {
+                            $('#variant-loading-progress').delay(4000).css('width', ipercent*2 + '%');
+                        }
+                    });
+                    $('#list-variants').empty().load($list_variant_url, function() {
+                        $('#variant-loading-progress').parent().fadeOut();
+                    });
+                }
+                //---------------------------------------------------------
+                // Add or View a product variant
+                //---------------------------------------------------------
+                $(document).on('click', '#add-product-variant, .view-product-variant, .edit-product-variant', function(e) {
+                    e.preventDefault();
+                    // Make iframe height 70% of window height
+                    $window_height = $(window).height();
+                    $('#iframe-variant-form').css('height', Math.round(($window_height*0.7-80), 0));
+                    // Load the source
+                    $create_url = $(this).attr('href');
+                    $('#iframe-variant-form').removeAttr('src').empty().attr('src', $create_url).load(function() {
+                        $('#modal-progress').parent().fadeOut();
+                    });
+                    $('#product-variant-modal').modal('show');
+                });
+                $('#product-variant-modal').on('shown.bs.modal', function (e) {
+                    $('#modal-progress').css('width', '0%').parent().fadeIn(function() {
+                        for(ipercent = 0; ipercent<=50; ipercent++) {
+                            $('#modal-progress').delay(4000).css('width', ipercent*2 + '%');
+                        }
+                    });
+                });
+                // Clear content when modal hidden
+                $('#product-variant-modal').on('hidden.bs.modal', function (e) {
+                    $('#iframe-variant-form').removeAttr('src').empty();
+                    loadVariants(); // reload list of product variants
+                });
+                //---------------------------------------------------------
+                // Delete variant, using variant-remove-modal from master layout
+                //---------------------------------------------------------
+                $modal_body = $('#variant-remove-modal .modal-body').html();
+                $(document).on('click', '.delete-product-variant', function(e) {
+                    e.preventDefault();
+                    $delete_url = $(this).attr('href');
+                    $('#variant-remove-modal-proceed').attr('href', $delete_url);
+                    $('#variant-remove-modal').modal('show');
+                });
+                $(document).on('click', '#variant-remove-modal-proceed', function(e) {
+                    e.preventDefault();
+                    $delete_url = $(this).attr('href');
+                    $(this).addClass('disabled');
+                    $.getJSON( $delete_url )
+                        .done(function( json ) {
+                            if (json.status == true) {
+                                $('#variant-remove-modal').modal('hide');
+                            } else {
+                                $errormsg = '<div class="alert alert-danger">';
+                                $errormsg += json.message;
+                                $errormsg += '</div>';
+                                $('#variant-remove-modal .modal-footer').hide();
+                                $('#variant-remove-modal .modal-body').html($errormsg);
+                            }
+                        })
+                        .fail(function( jqxhr, textStatus, error ) {
+                            var err = textStatus + ", " + error;
+                            $errormsg = '<div class="alert alert-danger">';
+                            $errormsg += err;
+                            $errormsg += '</div>';
+                            $('#variant-remove-modal .modal-footer').hide();
+                            $('#variant-remove-modal .modal-body').html($errormsg);
+                        });
+                });
+                // Clear content when modal hidden
+                $('#variant-remove-modal').on('hidden.bs.modal', function (e) {
+                    $('#variant-remove-modal .modal-body').html($modal_body);
+                    $('#variant-remove-modal .modal-footer').show();
+                    $('#variant-remove-modal-proceed').removeClass('disabled');
+                    loadVariants(); // reload list of product variants
+                });
+            });
+        }(window.jQuery);
+    </script>
     @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tagsinput')
 @stop

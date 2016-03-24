@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($announcements) >0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $announcements->firstItem() . ' to ' . $announcements->lastItem() . ' of ' . $announcements->total() }}</a>
+                @if (count($models) >0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 {!! HTML::link('admin/announcements/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
@@ -21,23 +21,23 @@
         </div>
     </div>
 
-    @if (count($announcements) >0)
+    @if (count($models) >0)
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>{{ Lang::get('redminportal::forms.title') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.created') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.updated') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.private') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/announcements', 'title', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/announcements', 'created_at', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/announcements', 'updated_at', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/announcements', 'private', $sortBy, $orderBy) !!}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-            @foreach ($announcements as $announcement)
+            @foreach ($models as $announcement)
                 <tr>
                     <td>{{ $announcement->title }}</td>
-                    <td>{{ date('d-M-y', strtotime($announcement->created_at)) }}</td>
-                    <td>{{ date('d-M-y', strtotime($announcement->updated_at)) }}</td>
+                    <td>{{ date('d/m/y h:i A', strtotime($announcement->created_at)) }}</td>
+                    <td>{{ date('d/m/y h:i A', strtotime($announcement->updated_at)) }}</td>
                     <td>
                         @if ($announcement->private)
                             <span class="label label-success"><span class='glyphicon glyphicon-ok'></span></span>
@@ -67,9 +67,14 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $announcements->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
+        @if ($models->lastPage())
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_announcement_found') }}</div>
+        @endif
     @endif
 @stop

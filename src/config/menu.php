@@ -7,28 +7,7 @@ return array(
         'path' => 'admin/dashboard',
         'hide' => false
     ),
-    array(
-        'name' => 'users_management',
-        'path' => '',
-        'hide' => false,
-        'children' => array(
-            array(
-                'name' => 'users',
-                'path' => 'admin/users',
-                'hide' => false
-            ),
-            array(
-                'name' => 'groups',
-                'path' => 'admin/groups',
-                'hide' => false
-            ),
-            array(
-                'name' => 'mailinglist',
-                'path' => 'admin/mailinglists',
-                'hide' => false
-            )
-        )
-    ),
+    
     array(
         'name' => 'contents_management',
         'path' => '',
@@ -120,6 +99,28 @@ return array(
                         'hide' => false
                     )
                 )
+            )
+        )
+    ),
+    array(
+        'name' => 'users_management',
+        'path' => '',
+        'hide' => false,
+        'children' => array(
+            array(
+                'name' => 'users',
+                'path' => 'admin/users',
+                'hide' => false
+            ),
+            array(
+                'name' => 'groups',
+                'path' => 'admin/groups',
+                'hide' => false
+            ),
+            array(
+                'name' => 'mailinglist',
+                'path' => 'admin/mailinglists',
+                'hide' => false
             )
         )
     )

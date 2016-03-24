@@ -1,5 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Helpers;
 
+use Redooor\Redminportal\App\UI\Html;
+
 class RHelper
 {
     public static function formatCurrency($value, $currency)
@@ -43,31 +45,18 @@ class RHelper
         return preg_replace('#/+#', '/', join('/', $paths));
     }
     
+    /*
+     * Generate an HTML unordered list menu
+     *
+     * For backward compatibility. This function has been moved to UI\Html.
+     *
+     * @param array $menus A list of menus
+     * @param string $class Optional class
+     * @return string HTML Unordered List
+     */
     public static function printMenu($menus, $class = null)
     {
-        echo '<ul' . ($class ? ' class="' . $class . '"' : '') . '>';
-        
-        foreach ($menus as $menu) {
-            if  (!$menu['hide']) {
-                if  (!array_key_exists('path', $menu)) {
-                    echo '<li class="nav-sub-header"><span>' . \Lang::get('redminportal::menus.' . $menu['name']) . '</span>';
-                } else if ($menu['path'] == '') {
-                    echo '<li class="nav-sub-header"><span>' . \Lang::get('redminportal::menus.' . $menu['name']) . '</span>';
-                } else {
-                    if (\Request::is($menu['path']) or \Request::is($menu['path'] . '/*')) {
-                        echo '<li class="active">';
-                    } else {
-                        echo '<li>';
-                    }
-                    echo '<a href="' . \URL::to($menu['path']) . '">' . \Lang::get('redminportal::menus.' . $menu['name']) . '</a>';
-                }
-                // If got children menu
-                if  (array_key_exists('children', $menu)) {
-                    RHelper::printMenu($menu['children']);
-                }
-                echo '</li>';
-            }
-        }
-        echo '</ul>';
+        $html = new Html;
+        return $html->printMenu($menus, $class);
     }
 }

@@ -1,15 +1,37 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class MembershipController extends Controller
 {
+    use SorterController;
+    
+    public function __construct(Membership $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'rank';
+        $this->orderBy = 'asc';
+        $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::memberships.view';
+        $this->pageRoute = 'admin/memberships';
+        
+        // For sorting
+        $this->query = $this->model;
+    }
+    
     public function getIndex()
     {
-        $memberships = Membership::orderBy('rank')->orderBy('name')->paginate(20);
-
-        return view('redminportal::memberships/view')->with('memberships', $memberships);
+        $models = Membership::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
+        
+        return view('redminportal::memberships/view', $data);
     }
 
     public function getCreate()
@@ -85,7 +107,7 @@ class MembershipController extends Controller
         if ($membership == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The membership cannot be found. It could have already been deleted.");
-            return \Redirect::to('/admin/memberships')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         // Cannot delete if in use
@@ -93,12 +115,12 @@ class MembershipController extends Controller
         if (count($modMediaMembership) > 0) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The membership cannot be deleted because it is in used.");
-            return \Redirect::to('/admin/memberships')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         // Delete the membership
         $membership->delete();
 
-        return \Redirect::to('admin/memberships');
+        return redirect()->back();
     }
 }

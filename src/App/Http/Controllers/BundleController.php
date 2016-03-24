@@ -1,6 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Input;
+use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Bundle;
 use Redooor\Redminportal\App\Models\Product;
@@ -12,17 +14,34 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
 {
+    use SorterController, DeleterController;
+    
+    public function __construct(Bundle $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'name';
+        $this->orderBy = 'asc';
+        $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::bundles.view';
+        $this->pageRoute = 'admin/bundles';
+        
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('categories', 'bundles.category_id', '=', 'categories.id')
+            ->select('bundles.*', 'categories.name as category_name');
+    }
+    
     public function getIndex()
     {
-        $sortBy = 'name';
-        $orderBy = 'asc';
+        $models = Bundle::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
         
-        $bundles = Bundle::orderBy($sortBy, $orderBy)->paginate(20);
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return view('redminportal::bundles/view')
-            ->with('bundles', $bundles)
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy);
+        return view('redminportal::bundles/view', $data);
     }
     
     public function getCreate()
@@ -286,51 +305,5 @@ class BundleController extends Controller
         }
 
         return redirect('admin/bundles');
-    }
-
-    public function getDelete($sid)
-    {
-        $bundle = Bundle::find($sid);
-
-        // No such id
-        if ($bundle == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The bundle may have been deleted.");
-            return redirect('admin/bundles')->withErrors($errors)->withInput();
-        }
-
-        $bundle->delete();
-
-        return redirect('admin/bundles');
-    }
-    
-    public function getSort($sortBy = 'create_at', $orderBy = 'desc')
-    {
-        $inputs = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy
-        );
-        
-        $rules = array(
-            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
-            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
-        );
-        
-        $validation = \Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/bundles')->withErrors($validation);
-        }
-        
-        if ($orderBy != 'asc' && $orderBy != 'desc') {
-            $orderBy = 'asc';
-        }
-        
-        $bundles = Bundle::orderBy($sortBy, $orderBy)->paginate(20);
-
-        return view('redminportal::bundles/view')
-            ->with('bundles', $bundles)
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy);
     }
 }

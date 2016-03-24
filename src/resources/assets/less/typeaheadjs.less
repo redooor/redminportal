@@ -1,0 +1,73 @@
+/* For Typeahead.js plugin */
+
+/* For Bootstrap tagsinput plugin */
+.bootstrap-tagsinput {
+    .twitter-typeahead {
+        .tt-query {
+            margin-bottom: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        }
+        .tt-hint {
+            margin-bottom: 0;
+            color: #999
+        }
+        .tt-menu {
+            min-width: 160px;
+            margin-top: 4px;
+            padding: 0px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+            -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+            -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+        }
+        .tt-suggestion {
+            padding: 3px 20px;
+            line-height: 24px;
+        }
+        .tt-suggestion.tt-cursor,
+        .tt-suggestion:hover {
+            color: #fff;
+            background-color: #0097cf;
+            cursor: pointer;
+        }
+        .tt-suggestion p {
+            margin: 0;
+        }
+    }
+}
+
+/* For email suggestions */
+.redmin-email-typeahead {
+    .twitter-typeahead {
+        width: 100%;
+    }
+
+    .tt-menu {
+        max-height: 150px;
+        overflow-y: auto;
+        background-color: #ffffff;
+        border: 1px solid #dddddd;
+    }
+
+    .tt-suggestion {
+        cursor: pointer;
+        padding: 0.5em 1em;
+
+        &:hover {
+            color: white;
+            background-color: #428bca;
+        }
+
+        p {
+            padding: 0;
+            margin: 0;
+        }
+    }
+}

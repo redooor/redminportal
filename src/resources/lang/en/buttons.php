@@ -8,6 +8,7 @@ return array(
     'save' => 'Save',
     'get_durations' => 'Get Durations',
     'export_csv' => 'Export CSV',
+    'export_excel' => 'Export Excel',
     'upload' => 'Upload',
     'edit' => 'Edit',
     'delete' => 'Delete',
@@ -17,4 +18,9 @@ return array(
     'delete_yes' => 'Yes, delete',
     'close' => 'Close',
     'download_csv' => 'Download CSV',
+    'download_excel' => 'Download Excel',
+    'add' => 'Add',
+    'previous_page' => 'Previous Page',
+    'insert' => 'Insert',
+    'clear' => 'Clear',
 );

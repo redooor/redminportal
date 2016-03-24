@@ -37,20 +37,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">{{ Lang::get('redminportal::forms.category') }}</div>
-                    </div>
-                    <div class="panel-body">
-                        {!! Form::hidden('category_id', $bundle->category_id, array('id' => 'category_id')) !!}
-                        <ul class="redooor-hierarchy">
-                            <li><a href="0"><span class="glyphicon glyphicon-chevron-right"></span> No Category</a></li>
-                        @foreach ($categories as $item)
-                            <li>{!! $item->printCategory() !!}</li>
-                        @endforeach
-                        </ul>
-                    </div>
-                </div>
+                {{-- Load Select Category partial form --}}
+                @include('redminportal::partials.form-select-category', [
+                    'select_category_selected_name' => 'category_id',
+                    'select_category_selected_id' => $bundle->category_id,
+                    'select_category_categories' => $categories
+                ])
                 <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
@@ -176,40 +168,14 @@
                         <p class="help-block">{{ Lang::get('redminportal::messages.how_to_deselect_multiple') }}</p>
                     </div>
                 </div>
-                @if (count($bundle->images) > 0)
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class='row'>
-                            @foreach ($bundle->images as $image)
-                            <div class='col-md-3'>
-                                {!! HTML::image($imagine->getUrl($image->path), $bundle->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
-                                <br><br>
-                                <div class="btn-group btn-group-sm">
-                                    <a href="{{ URL::to('admin/bundles/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </a>
-                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
-                                        <span class="glyphicon glyphicon-link"></span>
-                                    </a>
-                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
-                                        <span class="glyphicon glyphicon-eye-open"></span>
-                                    </a>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                @endif
+                {!! Redminportal::html()->uploadedImages($bundle) !!}
             </div>
         </div>
     {!! Form::close() !!}
 @stop
 
 @section('footer')
+    @parent
     <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
     <script>
         !function ($) {
@@ -219,30 +185,9 @@
                     e.preventDefault();
                     $(this).tab('show');
                 });
-                // On load, check if previous category exists for error message
-                function checkCategory() {
-                    $selected_val = $('#category_id').val();
-                    if ($selected_val == '') {
-                        $selected_val = '0';
-                        $('#category_id').val('0');
-                    }
-                    $('.redooor-hierarchy a').each(function() {
-                        if ($(this).attr('href') == $selected_val) {
-                            $(this).addClass('active');
-                        }
-                    });
-                }
-                checkCategory();
-                // Change selected category
-                $(document).on('click', '.redooor-hierarchy a', function(e) {
-                    e.preventDefault();
-                    $selected = $(this).attr('href');
-                    $('#category_id').val($selected);
-                    $('.redooor-hierarchy a.active').removeClass('active');
-                    $(this).addClass('active');
-                });
             })
         }(window.jQuery);
     </script>
     @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tagsinput')
 @stop

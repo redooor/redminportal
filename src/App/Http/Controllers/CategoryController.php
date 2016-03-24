@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Lang;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Media;
 use Redooor\Redminportal\App\Models\Image;
@@ -54,7 +55,7 @@ class CategoryController extends Controller
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'editError',
-                "The category cannot be found because it does not exist or may have been deleted."
+                Lang::get('redminportal::messages.category_error_category_not_found')
             );
             return redirect('/admin/categories')->withErrors($errors);
         }
@@ -113,7 +114,7 @@ class CategoryController extends Controller
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'editError',
-                "The category cannot be found because it does not exist or may have been deleted."
+                Lang::get('redminportal::messages.category_error_category_not_found')
             );
             return redirect('/admin/categories')->withErrors($errors);
         }
@@ -134,7 +135,7 @@ class CategoryController extends Controller
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'nameError',
-                "The category cannot be added because there's an existing category with the same name."
+                Lang::get('redminportal::messages.category_error_name_already_exists')
             );
 
             return redirect($return_path)->withErrors($errors)->withInput();
@@ -204,9 +205,9 @@ class CategoryController extends Controller
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'deleteError',
-                "The category cannot be found because it does not exist or may have been deleted."
+                Lang::get('redminportal::messages.category_error_category_not_found')
             );
-            return redirect('/admin/categories')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         // Find if there's any child
@@ -216,27 +217,18 @@ class CategoryController extends Controller
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
                 'deleteError',
-                "The category '" . $category->name .
-                "' cannot be deleted because it has " . $children . " children categories."
+                Lang::get(
+                    'redminportal::messages.category_error_cannot_delete_has_child',
+                    ['name' => $category->name, 'children' => $children]
+                )
             );
-            return redirect('/admin/categories')->withErrors($errors);
-        }
-
-        // Check in use by media
-        $medias = Media::where('category_id', $sid)->get();
-        if (count($medias) > 0) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'deleteError',
-                "The category '" . $category->name . "' cannot be deleted because it is in used."
-            );
-            return redirect('/admin/categories')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Delete the category
         $category->delete();
 
-        return redirect('admin/categories');
+        return redirect()->back();
     }
     
     public function getImgremove($sid)
