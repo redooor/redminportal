@@ -8,7 +8,7 @@ A Laravel 5 package as a **backend** administrating tool for Content Management 
 
 RedminPortal currently supports both Laravel 5.0 and 5.1. See [Compatibility](#compatibility).
 
-[![Build Status](https://travis-ci.org/redooor/redminportal.svg?branch=develop)](https://travis-ci.org/redooor/redminportal)
+[![Build Status](https://travis-ci.org/redooor/redminportal.svg?branch=v0.3)](https://travis-ci.org/redooor/redminportal)
 
 # Table of Content
 1. [Compatibility](#compatibility)
