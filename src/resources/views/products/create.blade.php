@@ -1,5 +1,13 @@
 @extends('redminportal::layouts.master')
 
+@section('head')
+<style>
+    .form-inline {
+        margin-bottom: 15px;
+    }
+</style>
+@stop
+
 @section('navbar-breadcrumb')
     <li><a href="{{ URL::to('admin/products') }}">{{ Lang::get('redminportal::menus.products') }}</a></li>
     <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::forms.create') }}</span></li>
@@ -36,19 +44,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">{{ Lang::get('redminportal::forms.category') }}</div>
-                    </div>
-                    <div class="panel-body">
-                        {!! Form::hidden('category_id', null, array('id' => 'category_id')) !!}
-                        <ul class="redooor-hierarchy">
-                        @foreach ($categories as $item)
-                            <li>{!! $item->printCategory() !!}</li>
-                        @endforeach
-                        </ul>
-                    </div>
-                </div>
+                {{-- Load Select Category partial form --}}
+                @include('redminportal::partials.form-select-category', [
+                    'select_category_selected_name' => 'category_id',
+                    'select_category_categories' => $categories,
+                    'select_category_required_field' => true
+                ])
 		        <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
@@ -66,49 +67,7 @@
                         <h4 class="panel-title">{{ Lang::get('redminportal::forms.create_product') }}</h4>
                     </div>
                     <div class="panel-body">
-                        <ul class="nav nav-tabs" id="lang-selector">
-                           @foreach(\Config::get('redminportal::translation') as $translation)
-                           <li><a href="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
-                           @endforeach
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="lang-en">
-                                <div class="form-group">
-                                    {!! Form::label('name', Lang::get('redminportal::forms.title')) !!}
-                                    {!! Form::text('name', null, array('class' => 'form-control')) !!}
-                                </div>
-
-                                <div class="form-group">
-                                    {!! Form::label('short_description', Lang::get('redminportal::forms.summary')) !!}
-                                    {!! Form::text('short_description', null, array('class' => 'form-control')) !!}
-                                </div>
-
-                                <div class="form-group">
-                                    {!! Form::label('long_description', Lang::get('redminportal::forms.description')) !!}
-                                    {!! Form::textarea('long_description', null, array('class' => 'form-control', 'style' => 'height:200px')) !!}
-                                </div>
-                            </div>
-                            @foreach(\Config::get('redminportal::translation') as $translation)
-                                @if($translation['lang'] != 'en')
-                                <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
-                                    <div class="form-group">
-                                        {!! Form::label($translation['lang'] . '_name', Lang::get('redminportal::forms.title')) !!}
-                                        {!! Form::text($translation['lang'] . '_name', null, array('class' => 'form-control')) !!}
-                                    </div>
-
-                                    <div class="form-group">
-                                        {!! Form::label($translation['lang'] . '_short_description', Lang::get('redminportal::forms.summary')) !!}
-                                        {!! Form::text($translation['lang'] . '_short_description', null, array('class' => 'form-control')) !!}
-                                    </div>
-
-                                    <div class="form-group">
-                                        {!! Form::label($translation['lang'] . '_long_description', Lang::get('redminportal::forms.description')) !!}
-                                        {!! Form::textarea($translation['lang'] . '_long_description', null, array('class' => 'form-control', 'style' => 'height:200px')) !!}
-                                    </div>
-                                </div>
-                                @endif
-                            @endforeach
-                        </div>
+                        @include('redminportal::partials.lang-selector-form')
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -133,12 +92,76 @@
                         </div>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            {{ Lang::get('redminportal::forms.product_shipping_properties') }}
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <!-- Weight information -->
+                        <div class="form-group">
+                            <label>{{ Lang::get('redminportal::forms.weight') }}</label>
+                            <div class="form-inline">
+                                @include('redminportal::partials.form-input', [
+                                    'label' => Lang::get('redminportal::forms.weight'),
+                                    'label_classes' => 'sr-only',
+                                    'input_name' => 'weight',
+                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00']
+                                ])
+                                @include('redminportal::partials.form-select-option', [
+                                    'label' => Lang::get('redminportal::forms.weight_unit'),
+                                    'label_classes' => 'sr-only',
+                                    'select_name' => 'weight_unit',
+                                    'select_options' => $weight_units,
+                                    'value_as_key' => true
+                                ])
+                            </div>
+                        </div>
+                        <!-- Volume information -->
+                        <div class="form-group">
+                            <label>{{ Lang::get('redminportal::forms.volume') }}</label>
+                            <div class="form-inline">
+                                @include('redminportal::partials.form-input', [
+                                    'label' => Lang::get('redminportal::forms.length'),
+                                    'label_classes' => 'sr-only',
+                                    'input_name' => 'length',
+                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'help_text' => Lang::get('redminportal::forms.length')
+                                ])
+                                @include('redminportal::partials.form-input', [
+                                    'label' => Lang::get('redminportal::forms.width'),
+                                    'label_classes' => 'sr-only',
+                                    'input_name' => 'width',
+                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'help_text' => Lang::get('redminportal::forms.width')
+                                ])
+                                @include('redminportal::partials.form-input', [
+                                    'label' => Lang::get('redminportal::forms.height'),
+                                    'label_classes' => 'sr-only',
+                                    'input_name' => 'height',
+                                    'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
+                                    'help_text' => Lang::get('redminportal::forms.height')
+                                ])
+                                @include('redminportal::partials.form-select-option', [
+                                    'label' => Lang::get('redminportal::forms.volume_unit'),
+                                    'label_classes' => 'sr-only',
+                                    'select_name' => 'volume_unit',
+                                    'select_options' => $volume_units,
+                                    'value_as_key' => true,
+                                    'help_text' => Lang::get('redminportal::messages.unit_applies_to_all_dimensions')
+                                ])
+                            </div>
+                        </div>
+                    </div>
+                </div>
 	        </div>
         </div>
     {!! Form::close() !!}
 @stop
 
 @section('footer')
+    @parent
     <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
     <script>
         !function ($) {
@@ -148,28 +171,9 @@
                     e.preventDefault();
                     $(this).tab('show');
                 });
-                // On load, check if previous category exists for error message
-                function checkCategory() {
-                    $selected_val = $('#category_id').val();
-                    if ($selected_val != '') {
-                        $('.redooor-hierarchy a').each(function() {
-                            if ($(this).attr('href') == $selected_val) {
-                                $(this).addClass('active');
-                            }
-                        });
-                    }
-                }
-                checkCategory();
-                // Change selected category
-                $(document).on('click', '.redooor-hierarchy a', function(e) {
-                    e.preventDefault();
-                    $selected = $(this).attr('href');
-                    $('#category_id').val($selected);
-                    $('.redooor-hierarchy a.active').removeClass('active');
-                    $(this).addClass('active');
-                });
             })
         }(window.jQuery);
     </script>
     @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tagsinput')
 @stop

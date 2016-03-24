@@ -1,7 +1,7 @@
 /*!
- * redminportal v0.2.1
+ * redminportal v0.3.3
  * Homepage: https://github.com/redooor/redminportal
- * Copyright 2014-2015 Redooor LLP
+ * Copyright 2014-2016 Redooor LLP
  * Licensed under MIT
 */
 
@@ -61,162 +61,10 @@ footer,
 .main-content .page-header {
   margin-top: 0;
 }
-/*
- * Sidebar
- */
-/* Hide for mobile, show later */
-#sidebar,
-#sidebar-overlay {
-  display: none;
-}
-@media (min-width: 768px) {
-  #sidebar {
-    position: fixed;
-    width: 240px;
-    top: 0;
-    bottom: 0;
-    left: -240px;
-    z-index: 1032;
-    display: block;
-    overflow-x: hidden;
-    overflow-y: auto;
-    /* Scrollable contents if viewport is shorter than content. */
-    background-color: #f5f5f5;
-    -webkit-transition: .3s ease all;
-         -o-transition: .3s ease all;
-            transition: .3s ease all;
-  }
-  #sidebar-title {
-    position: relative;
-    padding: 20px;
-    background-color: #2196F3;
-  }
-  #sidebar-title .redooor-nav-logo {
-    font-size: 24px;
-    color: #fff;
-  }
-  #sidebar-title .redooor-nav-logo:hover,
-  #sidebar-title .redooor-nav-logo:focus {
-    text-decoration: none;
-  }
-  #sidebar-title .redooor-nav-logo img {
-    height: 28px;
-    vertical-align: text-top;
-  }
-  #sidebar-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1031;
-    background: #333333;
-    background: rgba(0, 0, 0, 0.4);
-    -webkit-transition: .3s ease all;
-         -o-transition: .3s ease all;
-            transition: .3s ease all;
-  }
-  #sidebar-wrapper.active #sidebar {
-    left: 0px;
-  }
-  #sidebar-wrapper.active #sidebar-overlay {
-    display: block;
-  }
-  #sidebar-wrapper.active .main-content {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    position: fixed;
-    padding-right: 15px;
-    padding-left: 15px;
-    right: 0px;
-  }
-}
-/* Sidebar navigation */
-.nav-sidebar li.nav-sub-header:before {
-  content: '';
-  display: block;
-  border-top: 1px solid #ddd;
-}
-.nav-sidebar li.nav-sub-header span {
-  font-weight: 200;
-  color: #FF5722;
-}
-.nav-sidebar ul {
-  padding: 0;
-}
-.nav-sidebar ul li {
-  list-style: none;
-  display: block;
-  padding: 0;
-}
-.nav-sidebar li span {
-  display: block;
-  padding: 10px 20px;
-}
-.nav-sidebar li a {
-  display: block;
-  padding: 10px 20px;
-}
-.nav-sidebar li a:hover,
-.nav-sidebar li a:focus {
-  color: #23527c;
-  text-decoration: none;
-  background-color: #eee;
-}
-.nav-sidebar .active a,
-.nav-sidebar .active a:hover,
-.nav-sidebar .active a:focus {
-  color: #fff;
-  background-color: #428bca;
-}
-/* Override Redmaterials navbar */
-.navbar-nav.navbar-breadcrumb > li > a,
-.navbar-nav.navbar-breadcrumb > li > a:hover,
-.navbar-nav.navbar-breadcrumb > li > a:focus {
-  color: #428bca;
-}
-.navbar-nav.navbar-breadcrumb > li.active > a,
-.navbar-nav.navbar-breadcrumb > li.active > a:hover,
-.navbar-nav.navbar-breadcrumb > li.active > a:focus,
-.navbar-nav.navbar-breadcrumb > li.active > .navbar-text {
-  color: #898989;
-}
-/* For mobile screen navbar */
-.navbar-nav.navbar-xs li span {
-  padding: 10px 1.5em;
-  line-height: 23px;
-  position: relative;
-  display: block;
-  font-weight: 200;
-  color: #FF5722;
-}
-.navbar-nav.navbar-xs ul {
-  margin-left: -15px;
-  margin-right: -15px;
-}
-.navbar-nav.navbar-xs ul li {
-  list-style: none;
-  display: block;
-}
-.navbar-nav.navbar-xs ul li a {
-  color: #777;
-  padding: 10px 1.5em;
-  line-height: 23px;
-  position: relative;
-  display: block;
-  text-decoration: none;
-}
-.navbar-nav.navbar-xs ul li a:hover,
-.navbar-nav.navbar-xs ul li a:focus {
-  color: #333;
-  background-color: transparent;
-}
-.navbar-nav.navbar-xs ul li span {
-  padding: 10px 1.5em;
-  line-height: 23px;
-  position: relative;
-  display: block;
+/* Add size to media-object */
+.media .media-object.media-thumbnail {
+  width: 100px;
+  height: 100px;
 }
 /* Block componenets */
 .block-header {
@@ -321,56 +169,10 @@ i {
   -webkit-background-size: contain;
           background-size: contain;
 }
-ul.redooor-hierarchy {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  max-height: 200px;
-  overflow-y: scroll;
-}
-ul.redooor-hierarchy ul {
-  padding-left: 1.2em;
-  list-style: none;
-}
-ul.redooor-hierarchy li {
-  line-height: 1.8;
-}
-ul.redooor-hierarchy a {
-  padding: 0.3em 0.5em;
-}
-ul.redooor-hierarchy a.active {
-  color: #fff;
-  background: #428bca;
-}
-ul.redooor-hierarchy.no-max-height {
-  max-height: none;
-}
 .rdpt-preloader {
   text-align: center;
   padding: 1em;
   display: none;
-}
-/* twitter typeahead */
-.twitter-typeahead {
-  width: 100%;
-}
-.scrollable-dropdown-menu .tt-dropdown-menu {
-  max-height: 150px;
-  overflow-y: auto;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-}
-.tt-dropdown-menu .tt-suggestion {
-  cursor: pointer;
-  padding: 0.5em 1em;
-}
-.tt-dropdown-menu .tt-suggestion:hover {
-  color: white;
-  background-color: #428bca;
-}
-.tt-dropdown-menu .tt-suggestion p {
-  padding: 0;
-  margin: 0;
 }
 /* tables */
 .table td.table-actions {
@@ -381,6 +183,12 @@ ul.redooor-hierarchy.no-max-height {
   font-size: 14px;
   line-height: 1;
   padding: 0px;
+}
+/* Style for iframe in modal window */
+.modal .modal-dialog .modal-content .modal-body iframe {
+  width: 100%;
+  height: 500px;
+  border: 0;
 }
 /* Overwrite default padding on small screens */
 @media (max-width: 979px) {
@@ -426,6 +234,201 @@ ul.redooor-hierarchy.no-max-height {
     font-size: 2em;
   }
 }
+/* Override Bootstrap navbar toggle */
+.navbar-toggle {
+  margin: 0px;
+  padding: 20.5px 1.5em;
+  font-size: 17px;
+  line-height: 23px;
+  height: 64px;
+  border: 0px;
+  border-radius: 0px;
+}
+/* For mobile screen navbar */
+.navbar-nav.navbar-xs {
+  overflow-y: scroll;
+  margin-bottom: 50px;
+}
+.navbar-nav.navbar-xs li span {
+  padding: 10px 1.5em;
+  line-height: 23px;
+  position: relative;
+  display: block;
+  font-weight: 200;
+  color: #FF5722;
+}
+.navbar-nav.navbar-xs ul {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.navbar-nav.navbar-xs ul li {
+  list-style: none;
+  display: block;
+}
+.navbar-nav.navbar-xs ul li a {
+  color: #777;
+  padding: 10px 1.5em;
+  line-height: 23px;
+  position: relative;
+  display: block;
+  text-decoration: none;
+}
+.navbar-nav.navbar-xs ul li a:hover,
+.navbar-nav.navbar-xs ul li a:focus {
+  color: #333;
+  background-color: transparent;
+}
+.navbar-nav.navbar-xs ul li span {
+  padding: 10px 1.5em;
+  line-height: 23px;
+  position: relative;
+  display: block;
+}
+/*
+ * Sidebar
+ */
+/* Hide on load, show later when toggled */
+#sidebar,
+#sidebar-overlay {
+  display: none;
+}
+#sidebar {
+  position: fixed;
+  width: 240px;
+  top: 0;
+  bottom: 0;
+  left: -240px;
+  z-index: 1032;
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Scrollable contents if viewport is shorter than content. */
+  background-color: #f5f5f5;
+  -webkit-transition: .3s ease all;
+       -o-transition: .3s ease all;
+          transition: .3s ease all;
+  padding-bottom: 2em;
+}
+#sidebar-title {
+  position: relative;
+  padding: 15px;
+  background-color: #2196F3;
+}
+#sidebar-title .redooor-nav-logo {
+  font-size: 24px;
+  color: #fff;
+}
+#sidebar-title .redooor-nav-logo:hover,
+#sidebar-title .redooor-nav-logo:focus {
+  text-decoration: none;
+}
+#sidebar-title .redooor-nav-logo img {
+  height: 28px;
+  vertical-align: text-top;
+}
+#sidebar-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1031;
+  background: #333333;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-transition: .3s ease all;
+       -o-transition: .3s ease all;
+          transition: .3s ease all;
+}
+#sidebar-wrapper.active #sidebar {
+  left: 0px;
+}
+#sidebar-wrapper.active #sidebar-overlay {
+  display: block;
+}
+#sidebar-wrapper.active .main-content {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+  padding-right: 15px;
+  padding-left: 15px;
+  right: 0px;
+}
+/* Sidebar navigation */
+.nav-sidebar li.nav-sub-header:before {
+  content: '';
+  display: block;
+  border-top: 1px solid #ddd;
+}
+.nav-sidebar li.nav-sub-header span {
+  font-weight: 200;
+  color: #FF5722;
+}
+.nav-sidebar ul {
+  padding: 0;
+}
+.nav-sidebar ul li {
+  list-style: none;
+  display: block;
+  padding: 0;
+}
+.nav-sidebar li span {
+  display: block;
+  padding: 10px 20px;
+}
+.nav-sidebar li a {
+  display: block;
+  padding: 10px 20px;
+}
+.nav-sidebar li a:hover,
+.nav-sidebar li a:focus {
+  color: #23527c;
+  text-decoration: none;
+  background-color: #eee;
+}
+.nav-sidebar .active a,
+.nav-sidebar .active a:hover,
+.nav-sidebar .active a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+/* Override Redmaterials navbar */
+.navbar-nav.navbar-breadcrumb > li > a,
+.navbar-nav.navbar-breadcrumb > li > a:hover,
+.navbar-nav.navbar-breadcrumb > li > a:focus {
+  color: #428bca;
+}
+.navbar-nav.navbar-breadcrumb > li.active > a,
+.navbar-nav.navbar-breadcrumb > li.active > a:hover,
+.navbar-nav.navbar-breadcrumb > li.active > a:focus,
+.navbar-nav.navbar-breadcrumb > li.active > .navbar-text {
+  color: #898989;
+}
+ul.redmin-hierarchy {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+ul.redmin-hierarchy ul {
+  padding-left: 1.2em;
+  list-style: none;
+}
+ul.redmin-hierarchy li {
+  line-height: 1.8;
+  white-space: nowrap;
+}
+ul.redmin-hierarchy a {
+  padding: 0.3em 0.5em;
+}
+ul.redmin-hierarchy a.active {
+  color: #fff;
+  background: #428bca;
+}
+ul.redmin-hierarchy.no-max-height {
+  max-height: none;
+}
 .panel.panel-card .panel-heading {
   min-height: 80px;
   position: relative;
@@ -442,5 +445,177 @@ ul.redooor-hierarchy.no-max-height {
 .btn.disabled.btn-text {
   background-color: #eee;
   color: #333;
+}
+.panel .panel-progress {
+  margin-top: -1px;
+  height: 6px;
+}
+.panel .panel-progress .progress-bar:last-child {
+  border-radius: 0;
+}
+/* Fixed padding and margin issue with Panels */
+.panel .progress,
+.panel .table,
+.panel .list-group,
+.panel .panel-collapse .list-group {
+  margin-bottom: 0;
+}
+.panel .list-group .list-group-item,
+.panel .panel-collapse .list-group .list-group-item {
+  border-width: 1px 0;
+  border-radius: 0;
+}
+.panel .list-group .list-group-item:first-child {
+  border-top: 0;
+}
+.modal .modal-progress {
+  height: 6px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+.modal .modal-progress .progress {
+  margin-bottom: 0;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  background-color: #333;
+}
+.modal .modal-progress .progress-bar:last-child {
+  border-radius: 0;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+/* Customised CSS for Tinymce */
+.mce-content-body {
+  padding: 1em;
+}
+.mce-textbox:focus {
+  -webkit-box-shadow: initial;
+  box-shadow: initial;
+}
+.mce-btn.mce-primary .mce-txt {
+  color: #ffffff;
+}
+.bootstrap-tagsinput {
+  border: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -webkit-box-shadow: inset 0 -1px 0 #dddddd;
+  box-shadow: inset 0 -1px 0 #dddddd;
+  font-size: 16px;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+  vertical-align: middle;
+  max-width: 100%;
+  cursor: text;
+  margin-top: 8px;
+  min-height: 26px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  -webkit-transition: border-color ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
+  -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+.bootstrap-tagsinput.tagsinput-focus {
+  -webkit-box-shadow: inset 0 -2px 0 #2196f3;
+  box-shadow: inset 0 -2px 0 #2196f3;
+}
+.bootstrap-tagsinput input {
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  width: auto !important;
+  max-width: inherit;
+  display: inline-block;
+}
+.bootstrap-tagsinput input:focus {
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.bootstrap-tagsinput .tag {
+  margin-right: 2px;
+  color: white;
+  font-size: 0.8em;
+}
+.bootstrap-tagsinput .tag [data-role="remove"] {
+  margin-left: 8px;
+  cursor: pointer;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:after {
+  content: "x";
+  padding: 0px 2px;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:hover {
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:hover:active {
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+/* For Typeahead.js plugin */
+/* For Bootstrap tagsinput plugin */
+.bootstrap-tagsinput .twitter-typeahead .tt-query {
+  margin-bottom: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.bootstrap-tagsinput .twitter-typeahead .tt-hint {
+  margin-bottom: 0;
+  color: #999999;
+}
+.bootstrap-tagsinput .twitter-typeahead .tt-menu {
+  min-width: 160px;
+  margin-top: 4px;
+  padding: 0px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.bootstrap-tagsinput .twitter-typeahead .tt-suggestion {
+  padding: 3px 20px;
+  line-height: 24px;
+}
+.bootstrap-tagsinput .twitter-typeahead .tt-suggestion.tt-cursor,
+.bootstrap-tagsinput .twitter-typeahead .tt-suggestion:hover {
+  color: #fff;
+  background-color: #0097cf;
+  cursor: pointer;
+}
+.bootstrap-tagsinput .twitter-typeahead .tt-suggestion p {
+  margin: 0;
+}
+/* For email suggestions */
+.redmin-email-typeahead .twitter-typeahead {
+  width: 100%;
+}
+.redmin-email-typeahead .tt-menu {
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+}
+.redmin-email-typeahead .tt-suggestion {
+  cursor: pointer;
+  padding: 0.5em 1em;
+}
+.redmin-email-typeahead .tt-suggestion:hover {
+  color: white;
+  background-color: #428bca;
+}
+.redmin-email-typeahead .tt-suggestion p {
+  padding: 0;
+  margin: 0;
 }
 /*# sourceMappingURL=redminportal.css.map */

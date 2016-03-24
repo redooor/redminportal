@@ -18,6 +18,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-exec');
 
     var configBridge = grunt.file.readJSON('./bower_components/bootstrap/grunt/configBridge.json', {
         encoding: 'utf8'
@@ -45,6 +46,17 @@ module.exports = function (grunt) {
                 },
                 src: 'src/resources/assets/less/redminportal.less',
                 dest: 'src/public/css/<%= pkg.name %>.css'
+            },
+            tinymce: {
+                options: {
+                    strictMath: true,
+                    sourceMap: true,
+                    outputSourceFiles: true,
+                    sourceMapURL: 'redmin-tinymce.css.map',
+                    sourceMapFilename: 'src/public/css/redmin-tinymce.css.map'
+                },
+                src: 'src/resources/assets/less/redmin-tinymce.less',
+                dest: 'src/public/css/redmin-tinymce.css'
             }
         },
         autoprefixer: {
@@ -67,6 +79,21 @@ module.exports = function (grunt) {
             minifyCore: {
                 src: 'src/public/css/<%= pkg.name %>.css',
                 dest: 'src/public/css/<%= pkg.name %>.min.css'
+            },
+            minifyTinymce: {
+                src: 'src/public/css/redmin-tinymce.css',
+                dest: 'src/public/css/redmin-tinymce.min.css'
+            }
+        },
+        uglify: {
+            bootstrap_tagsinput: {
+                options: {
+                    sourceMap: true,
+                    sourceMapName: 'src/public/js/bootstrap-tagsinput.js.map'
+                },
+                files: {
+                    'src/public/js/bootstrap-tagsinput.min.js': ['src/resources/assets/js/bootstrap-tagsinput.js']
+                }
             }
         },
         usebanner: {
@@ -144,6 +171,10 @@ module.exports = function (grunt) {
             fontawesomecss: {
                 src: 'bower_components/font-awesome/css/font-awesome.min.css',
                 dest: 'src/public/css/font-awesome.min.css'
+            },
+            typeaheadjs: {
+                src: 'bower_components/typeahead.js/dist/typeahead.bundle.min.js',
+                dest: 'src/public/js/typeahead.bundle.min.js'
             }
         },
         watch: {
@@ -161,17 +192,23 @@ module.exports = function (grunt) {
                     base: '.'
                 }
             }
+        },
+        exec: {
+            publish_public: 'php ../../../artisan vendor:publish --provider="Redooor\\Redminportal\\RedminportalServiceProvider" --tag="public" --force'
         }
     });
 
     grunt.registerTask('none', function () {});
     
     // Copy Bootstrap less, compile and minify
-    grunt.registerTask('less-compile', ['less:compileCore', 'autoprefixer:core', 'usebanner', 'cssmin:minifyCore']);
+    grunt.registerTask('less-compile', ['less', 'autoprefixer:core', 'usebanner', 'cssmin']);
     
     // Distribute all assets to public folder
-    grunt.registerTask('dist-assets', ['copy:fonts', 'copy:jquery', 'copy:bootstrapjs', 'copy:bootstrapcss', 'copy:jqueryui', 'copy:jqueryuijs', 'copy:momentjs', 'copy:datetimepickerjs', 'copy:datetimepickercss', 'copy:redmaterialsjs', 'copy:redmaterialscss', 'copy:fontawesomefonts', 'copy:fontawesomecss']);
+    grunt.registerTask('dist-assets', ['copy', 'uglify']);
+    
+    // Publish to public
+    grunt.registerTask('publish-assets', ['exec:publish_public']);
     
     // Default task, compile and distribute all assets to public folder
-    grunt.registerTask('default', ['less-compile', 'dist-assets']);
+    grunt.registerTask('default', ['less-compile', 'dist-assets', 'publish-assets']);
 };

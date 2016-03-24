@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($groups) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $groups->firstItem() . ' to ' . $groups->lastItem() . ' of ' . $groups->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 {!! HTML::link('admin/groups/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
@@ -21,40 +21,25 @@
         </div>
     </div>
 
-	@if (count($groups) > 0)
+	@if (count($models) > 0)
 		<table class='table table-striped table-bordered table-condensed'>
 			<thead>
 				<tr>
                     <th>
-                        <a href="{{ URL::to('admin/groups/sort') . '/name/' . ($sortBy == 'name' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.name') }}
-                            @if ($sortBy == 'name')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/groups', 'name', $sortBy, $orderBy) !!}
                     </th>
 					<th>Permissions</th>
 					<th>
-                        <a href="{{ URL::to('admin/groups/sort') . '/created_at/' . ($sortBy == 'created_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.created') }}
-                            @if ($sortBy == 'created_at')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/groups', 'created_at', $sortBy, $orderBy) !!}
                     </th>
 					<th>
-                        <a href="{{ URL::to('admin/groups/sort') . '/updated_at/' . ($sortBy == 'updated_at' && $orderBy == 'asc' ? 'desc' : 'asc') }}">
-                            {{ Lang::get('redminportal::forms.updated') }}
-                            @if ($sortBy == 'updated_at')
-                            {!! ($orderBy == 'asc' ? '<span class="caret"></span>' : '<span class="dropup"><span class="caret"></span></span>') !!}
-                            @endif
-                        </a>
+                        {!! Redminportal::html()->sorter('admin/groups', 'updated_at', $sortBy, $orderBy) !!}
                     </th>
                     <th></th>
 				</tr>
 			</thead>
 			<tbody>
-				@foreach ($groups as $group)
+				@foreach ($models as $group)
 				<tr>
 			        <td>{{ $group->name }}</td>
 			        <td>
@@ -62,14 +47,16 @@
                             @foreach ($group->permissions() as $key => $value)
                                 @if ($value == 1)
                                     <span class="label label-success">{{ $key }}</span>
-                                @else
+                                @elseif ($value == -1)
                                     <span class="label label-danger">{{ $key }}</span>
+                                @else
+                                    <span class="label label-default">{{ $key }}</span>
                                 @endif
                             @endforeach
                         @endif
                     </td>
-			        <td>{{ $group->created_at }}</td>
-			        <td>{{ $group->updated_at }}</td>
+                    <td>{{ date("d/m/y h:i A", strtotime($group->created_at)) }}</td>
+                    <td>{{ date("d/m/y h:i A", strtotime($group->updated_at)) }}</td>
                     <td class="table-actions text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
@@ -92,9 +79,14 @@
 			</tbody>
 	    </table>
         <div class="text-center">
-		{!! $groups->render() !!}
+		{!! $models->render() !!}
         </div>
 	@else
-		<div class="alert alert-info">{{ Lang::get('redminportal::messages.no_group_found') }}</div>
+        @if ($models->lastPage())
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @else
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_group_found') }}</div>
+        @endif
 	@endif
 @stop

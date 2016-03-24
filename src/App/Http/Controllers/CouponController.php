@@ -1,5 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Coupon;
 use Redooor\Redminportal\App\Models\Product;
@@ -8,17 +10,32 @@ use Redooor\Redminportal\App\Models\Bundle;
 
 class CouponController extends Controller
 {
+    use SorterController, DeleterController;
+    
+    public function __construct(Coupon $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'start_date';
+        $this->orderBy = 'desc';
+        $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::coupons.view';
+        $this->pageRoute = 'admin/coupons';
+        
+        // For sorting
+        $this->query = $this->model;
+    }
+    
     public function getIndex()
     {
-        $sortBy = 'start_date';
-        $orderBy = 'desc';
-        
-        $coupons = Coupon::orderBy($sortBy, $orderBy)->paginate(20);
+        $models = Coupon::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
 
-        return view('redminportal::coupons/view')
-            ->with('coupons', $coupons)
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy);
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
+        
+        return view('redminportal::coupons/view', $data);
     }
     
     private function getCategories()
@@ -195,6 +212,7 @@ class CouponController extends Controller
         $limit_per_user         = \Input::get('usage_limit_per_user');
         $multiple_coupons       = (\Input::get('multiple_coupons') == '' ? false : true);
         $exclude_sale_item      = (\Input::get('exclude_sale_item') == '' ? false : true);
+        $automatically_apply    = (\Input::get('automatically_apply') == '' ? false : true);
 
         // Check that end date is after start date
         if ($end_date <= $start_date) {
@@ -277,6 +295,7 @@ class CouponController extends Controller
         $newCoupon->usage_limit_per_user   = ($limit_per_user == 0) ? null : $limit_per_user;
         $newCoupon->multiple_coupons       = $multiple_coupons;
         $newCoupon->exclude_sale_item      = $exclude_sale_item;
+        $newCoupon->automatically_apply    = $automatically_apply;
         $newCoupon->save();
 
         // Remove all existing relationships first
@@ -292,51 +311,5 @@ class CouponController extends Controller
         }
 
         return redirect('admin/coupons');
-    }
-
-    public function getDelete($sid)
-    {
-        $coupon = Coupon::find($sid);
-
-        // No such id
-        if ($coupon == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The coupon may have been deleted.");
-            return redirect('admin/coupons')->withErrors($errors)->withInput();
-        }
-
-        $coupon->delete();
-
-        return redirect('admin/coupons');
-    }
-    
-    public function getSort($sortBy = 'create_at', $orderBy = 'desc')
-    {
-        $inputs = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy
-        );
-        
-        $rules = array(
-            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
-            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
-        );
-        
-        $validation = \Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/coupons')->withErrors($validation);
-        }
-        
-        if ($orderBy != 'asc' && $orderBy != 'desc') {
-            $orderBy = 'asc';
-        }
-        
-        $coupons = Coupon::orderBy($sortBy, $orderBy)->paginate(20);
-
-        return view('redminportal::coupons/view')
-            ->with('coupons', $coupons)
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy);
     }
 }

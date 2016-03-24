@@ -32,6 +32,16 @@ class Tag extends Model
         return $this->morphedByMany('Redooor\Redminportal\App\Models\Module', 'taggable');
     }
     
+    public function pages()
+    {
+        return $this->morphedByMany('Redooor\Redminportal\App\Models\Page', 'taggable');
+    }
+    
+    public function posts()
+    {
+        return $this->morphedByMany('Redooor\Redminportal\App\Models\Post', 'taggable');
+    }
+    
     public static function addTag($model, $name)
     {
         if ($model == null || empty($name)) {

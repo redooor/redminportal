@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($products) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $products->firstItem() . ' to ' . $products->lastItem() . ' of ' . $products->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 {!! HTML::link('admin/products/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
@@ -21,23 +21,25 @@
         </div>
     </div>
 
-    @if (count($products) > 0)
+    @if (count($models) > 0)
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>{{ Lang::get('redminportal::forms.name') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.category') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.sku') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.price') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/products', 'name', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/products', 'category_name', $sortBy, $orderBy, trans('redminportal::forms.category')) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/products', 'sku', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/products', 'price', $sortBy, $orderBy) !!}</th>
                     <th>{{ Lang::get('redminportal::forms.summary') }}</th>
                     <th>{{ Lang::get('redminportal::forms.tags') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.featured') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.active') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/products', 'featured', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/products', 'active', $sortBy, $orderBy) !!}</th>
+                    <th>{{ Lang::get('redminportal::forms.variation') }}</th>
+                    
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-            @foreach ($products as $product)
+            @foreach ($models as $product)
                 <tr>
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->category->name }}</td>
@@ -63,6 +65,22 @@
                             <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
                         @endif
                     </td>
+                    <td class="table-actions text-center">
+                        @if (count($product->variants) > 0)
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<span class="fa fa-sitemap"></span>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu">
+                                @foreach ($product->variants as $variant)
+								<li>
+									<a href="#">{{ $variant->name }}<br><span class="label label-primary">{{ $variant->sku }}</span></a>
+								</li>
+                                @endforeach
+							</ul>
+						</div>
+                        @endif
+					</td>
                     <td class="table-actions text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
@@ -85,9 +103,14 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $products->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
+        @if ($models->lastPage())
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_product_found') }}</div>
+        @endif
     @endif
 @stop

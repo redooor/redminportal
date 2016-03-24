@@ -1,25 +1,61 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Auth;
+use Hash;
+use Input;
 use Lang;
+use Validator;
+use Illuminate\Support\MessageBag;
+use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\SearcherController;
+use Redooor\Redminportal\App\Http\Traits\PermissibleController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Group;
 
 class UserController extends Controller
 {
-    private $perpage = 50;
+    use SorterController, PermissibleController, SearcherController;
+    
+    public function __construct(User $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'email';
+        $this->orderBy = 'asc';
+        $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::users.view';
+        $this->pageRoute = 'admin/users';
+        
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('users_groups', 'users_groups.user_id', '=', 'users.id')
+            ->LeftJoin('groups', 'groups.id', '=', 'users_groups.group_id')
+            ->select('users.*', 'groups.name')
+            ->groupBy('email');
+        
+        // For searching
+        $this->searchable_fields = [
+            'all' => 'Search all',
+            'email' => 'Email',
+            'first_name' => 'First name',
+            'last_name' => 'Last name',
+            'name' => 'Group'
+        ];
+        
+        // Default data for sharing
+        $this->data = [
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy,
+            'searchable_fields' => $this->searchable_fields
+        ];
+    }
     
     public function getIndex()
     {
-        $sortBy = 'email';
-        $orderBy = 'asc';
+        $models = User::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
         
-        $users = User::orderBy($sortBy, $orderBy)->paginate($this->perpage);
-        
-        $data = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy,
-            'users' => $users
-        );
+        $data = array_merge($this->data, [
+            'models' => $models
+        ]);
 
         return view('redminportal::users/view', $data);
     }
@@ -36,26 +72,42 @@ class UserController extends Controller
         $user = User::find($sid);
         
         if ($user == null) {
-            $errors = new \Illuminate\Support\MessageBag;
+            $errors = new MessageBag;
             $errors->add(
                 'editError',
-                "The user cannot be found because it does not exist or may have been deleted."
+                Lang::get('redminportal::messages.user_error_user_not_found')
             );
             return redirect('/admin/users')->withErrors($errors);
         }
         
         $roles = Group::orderBy('name')->lists('name', 'id');
         
-        $group = $user->groups()->first();
+        $groups = [];
+        foreach ($user->groups as $group) {
+            $groups[$group->id] = $group->id;
+        }
         
-        if ($group == null) {
-            $group = Group::orderBy('name')->first();
+        $permission_inherit = [];
+        $permission_allow = [];
+        $permission_deny = [];
+        
+        foreach ($user->permissions() as $key => $value) {
+            if ($value < 0) {
+                $permission_deny[$key] = $key;
+            } elseif ($value > 0) {
+                $permission_allow[$key] = $key;
+            } else {
+                $permission_inherit[$key] = $key;
+            }
         }
         
         $data = array(
             'roles' => $roles,
             'user' => $user,
-            'group' => $group
+            'groups' => $groups,
+            'permission_inherit' => implode(',', $permission_inherit),
+            'permission_allow' => implode(',', $permission_allow),
+            'permission_deny' => implode(',', $permission_deny)
         );
         
         return view('redminportal::users/edit', $data);
@@ -63,99 +115,123 @@ class UserController extends Controller
 
     public function postStore()
     {
-        $sid = \Input::get('id');
+        $sid = Input::get('id');
+        $errors = new MessageBag;
         
         $rules = array(
             'first_name'    => 'required',
             'last_name'     => 'required',
-            'email'         => 'required|unique:users,email,' . $sid
+            'role'          => 'required',
+            'email'         => 'required|unique:users,email,' . $sid,
+            'permission-inherit' => 'regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-allow'   => 'regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-deny'    => 'regex:/^[a-z,0-9._\-?]+$/i'
         );
+        
+        // Get activated input first, for checking if user is deactivating own account
+        $activated = (Input::get('activated') == '' ? false : true);
         
         if (isset($sid)) {
             $rules['password'] = 'confirmed|min:6';
+            $path ='admin/users/edit/' . $sid;
+            $user = User::find($sid);
+            
+            // Check if this is logged in user, prevent deactivate
+            if (Auth::user()->id == $sid && $activated == false) {
+                $errors->add(
+                    'deactivateError',
+                    Lang::get('redminportal::messages.user_error_deactivate_own_account')
+                );
+                return redirect($path)->withErrors($errors)->withInput();
+            }
         } else {
             $rules['password'] = 'required|confirmed|min:6';
+            $path = 'admin/users/create';
+            $user = new User;
         }
-
-        $validation = \Validator::make(\Input::all(), $rules);
         
-        $path = (isset($sid) ? 'admin/users/edit/' . $sid : 'admin/users/create');
+        $messages = array(
+            'permission-inherit.regex' => 'The permission inherit format is invalid. Try using the Permission Builder.',
+            'permission-allow.regex' => 'The permission allow format is invalid. Try using the Permission Builder.',
+            'permission-deny.regex' => 'The permission deny format is invalid. Try using the Permission Builder.'
+        );
+
+        $validation = Validator::make(Input::all(), $rules, $messages);
         
         if ($validation->fails()) {
             return redirect($path)->withErrors($validation)->withInput();
         }
-
-        $first_name    = \Input::get('first_name');
-        $last_name    = \Input::get('last_name');
-        $email         = \Input::get('email');
-        $password     = \Input::get('password');
-        $role         = \Input::get('role');
-        $activated     = (\Input::get('activated') == '' ? false : true);
         
-        $user = (isset($sid) ? User::find($sid) : new User);
-        
+        // If user can't be created or found
         if ($user == null) {
-            $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
-                'editError',
-                "The user cannot be found or created. Please try again later."
+                'createError',
+                Lang::get('redminportal::messages.user_error_create_unknown')
             );
             return redirect('/admin/users')->withErrors($errors);
         }
         
+        $permissions = $this->populatePermission(
+            Input::get('permission-inherit'),
+            Input::get('permission-allow'),
+            Input::get('permission-deny')
+        );
+        
         // Save or Update
-        $user->email = $email;
+        $user->email = Input::get('email');
+        
+        $password = Input::get('password');
         if ($password != '') {
-            $user->password = \Hash::make($password);
+            $user->password = Hash::make($password);
         }
-        $user->first_name = $first_name;
-        $user->last_name = $last_name;
+        
+        $user->first_name = Input::get('first_name');
+        $user->last_name = Input::get('last_name');
         $user->activated = $activated;
+        $user->permissions = json_encode($permissions);
         
         if (! $user->save()) {
-            $errors = new \Illuminate\Support\MessageBag;
             $errors->add(
-                'editError',
-                "The user cannot be updated due to some problem. Please try again."
+                'saveError',
+                Lang::get('redminportal::messages.user_error_update_unknown')
             );
             return redirect($path)->withErrors($errors)->withInput();
         }
         
-        // Find user's group
-        $old_group = $user->groups()->first();
-        $new_group = Group::find($role);
-
-        if ($new_group == null) {
-            $errors = new \Illuminate\Support\MessageBag;
+        // Assign group(s) to user
+        // Return error message if group has error
+        if (! $user->addGroup(Input::get('role'))) {
             $errors->add(
-                'editError',
-                "The user cannot be updated because the selected group cannot be found. Please try again."
+                'groupError',
+                Lang::get('redminportal::messages.user_error_group_not_found')
             );
             return redirect($path)->withErrors($errors)->withInput();
-        }
-
-        // Assign the group to the user
-        if ($old_group == null) {
-            $user->groups()->save($new_group);
-        } elseif ($old_group->id != $new_group->id) {
-            $user->groups()->detach();
-            $user->groups()->save($new_group);
         }
 
         return redirect('admin/users');
     }
-
+    
     public function getDelete($sid)
     {
+        $this_user = Auth::user();
+        if ($this_user->id == $sid) {
+            $errors = new MessageBag;
+            $errors->add(
+                'deleteError',
+                Lang::get('redminportal::messages.user_error_delete_own_account')
+            );
+            return redirect()->back()->withErrors($errors);
+        }
+        
         $user = User::find($sid);
         
         if ($user == null) {
-            $errors = new \Illuminate\Support\MessageBag;
+            $errors = new MessageBag;
             $errors->add(
-                'editError',
-                "The user cannot be found because it does not exist or may have been deleted."
+                'deleteError',
+                Lang::get('redminportal::messages.user_error_user_not_found')
             );
-            return redirect('/admin/users')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Delete the user
@@ -169,10 +245,10 @@ class UserController extends Controller
         $user = User::find($sid);
         
         if ($user == null) {
-            $errors = new \Illuminate\Support\MessageBag;
+            $errors = new MessageBag;
             $errors->add(
                 'editError',
-                "The user cannot be found because it does not exist or may have been deleted."
+                Lang::get('redminportal::messages.user_error_user_not_found')
             );
             return redirect('/admin/users')->withErrors($errors);
         }
@@ -186,13 +262,23 @@ class UserController extends Controller
 
     public function getDeactivate($sid)
     {
+        $this_user = Auth::user();
+        if ($this_user->id == $sid) {
+            $errors = new MessageBag;
+            $errors->add(
+                'editError',
+                Lang::get('redminportal::messages.user_error_deactivate_own_account')
+            );
+            return redirect('/admin/users')->withErrors($errors);
+        }
+        
         $user = User::find($sid);
         
         if ($user == null) {
-            $errors = new \Illuminate\Support\MessageBag;
+            $errors = new MessageBag;
             $errors->add(
                 'editError',
-                "The user cannot be found because it does not exist or may have been deleted."
+                Lang::get('redminportal::messages.user_error_user_not_found')
             );
             return redirect('/admin/users')->withErrors($errors);
         }
@@ -202,187 +288,5 @@ class UserController extends Controller
         $user->save();
         
         return redirect()->back();
-    }
-    
-    public function getSort($sortBy = 'email', $orderBy = 'asc')
-    {
-        $inputs = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy
-        );
-        
-        $rules = array(
-            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
-            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
-        );
-        
-        $validation = \Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/users')->withErrors($validation);
-        }
-        
-        if ($orderBy != 'asc' && $orderBy != 'desc') {
-            $orderBy = 'asc';
-        }
-        
-        if ($sortBy == 'group') {
-            $users = User::LeftJoin('users_groups', 'users_groups.user_id', '=', 'users.id')
-                ->LeftJoin('groups', 'groups.id', '=', 'users_groups.group_id')
-                ->select('users.*', 'groups.name')
-                ->orderBy('groups.name', $orderBy)
-                ->paginate($this->perpage);
-        } else {
-            $users = User::orderBy($sortBy, $orderBy)->paginate($this->perpage);
-        }
-        
-        $data = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy,
-            'users' => $users
-        );
-        
-        return view('redminportal::users/view', $data);
-    }
-    
-    public function postSearch()
-    {
-        $pattern = '/^[a-zA-Z0-9 -:\@\.]+$/';
-        
-        $rules = array(
-            'search' => 'required|regex:' . $pattern
-        );
-
-        $validation = \Validator::make(\Input::all(), $rules);
-
-        if( $validation->fails() )
-        {
-            return redirect('admin/users')->withErrors($validation)->withInput();
-        }
-        
-        $search = trim(\Input::get('search'));
-        
-        // Check special characters
-        $errors = $this->checkSpecialChar($search);
-        if ($errors) {
-            return redirect('admin/users')->withErrors($errors)->withInput();
-        }
-        
-        // Check if the search is by group
-        if (preg_match("/^group:/i", $search)) {
-            $search = preg_replace("/^group:/i", "", $search);
-            return redirect('admin/users/group/' . $search);
-        }
-
-        // Else perform normal search
-        return redirect('admin/users/search/' . $search);
-    }
-
-    public function getSearch($search)
-    {
-        $pattern = '/^[a-zA-Z0-9 -@.]+$/';
-        
-        $rules = array(
-            'search' => 'required|regex:' . $pattern
-        );
-
-        $inputs = array(
-            'search' => $search
-        );
-
-        $validation = \Validator::make($inputs, $rules);
-
-        if( $validation->fails() )
-        {
-            return redirect('admin/users')->withErrors($validation)->with('search', $search);
-        }
-        
-        // Check special characters
-        $errors = $this->checkSpecialChar($search);
-        if ($errors) {
-            return redirect('admin/users')->withErrors($errors);
-        }
-        
-        $sortBy = 'email';
-        $orderBy = 'asc';
-
-        $users = User::where('first_name', 'LIKE', '%' . $search . '%')
-            ->orWhere('last_name', 'LIKE', '%' . $search . '%')
-            ->orWhere('email', 'LIKE', '%' . $search . '%')
-            ->orderBy($sortBy, $orderBy)
-            ->paginate($this->perpage);
-        
-        $data = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy,
-            'users' => $users,
-            'search' => $search
-        );
-
-        return view('redminportal::users/view', $data);
-    }
-    
-    public function getGroup($search)
-    {
-        $pattern = '/^[a-zA-Z0-9 -]+$/';
-        
-        $rules = array(
-            'search' => 'required|regex:' . $pattern
-        );
-
-        $inputs = array(
-            'search' => $search
-        );
-
-        $validation = \Validator::make($inputs, $rules);
-
-        if( $validation->fails() )
-        {
-            return redirect('admin/users')->withErrors($validation)->with('search', $search);
-        }
-        
-        // Check special characters
-        $errors = $this->checkSpecialChar($search);
-        if ($errors) {
-            return redirect('admin/users')->withErrors($errors);
-        }
-        
-        $sortBy = 'email';
-        $orderBy = 'asc';
-
-        $users = User::join('users_groups', 'users_groups.user_id', '=', 'users.id')
-            ->join('groups', 'groups.id', '=', 'users_groups.group_id')
-            ->where('groups.name', 'LIKE', $search)
-            ->select('users.*')
-            ->orderBy($sortBy, $orderBy)
-            ->paginate($this->perpage);
-        
-        $data = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy,
-            'users' => $users,
-            'search' => 'group:' . $search
-        );
-        
-        return view('redminportal::users/view', $data);
-    }
-    
-    /*
-     * Returns error message if found special characters
-     * return null if no special characters found
-     * @return MessageBag if special character found, null if not found
-     */
-    private function checkSpecialChar($search)
-    {
-        if (preg_match("/[%$&*]/i", $search)) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'stringError',
-                Lang::get('redminportal::messages.error_remove_special_characters')
-            );
-            return $errors;
-        }
-        
-        return null;
     }
 }

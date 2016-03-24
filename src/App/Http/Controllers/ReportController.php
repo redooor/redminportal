@@ -38,9 +38,9 @@ class ReportController extends Controller
             return \Redirect::to('admin/mailinglists')->withErrors($errors);
         }
 
-        \Excel::create('Redmin_Mailinglist_Report', function($excel) use ($data) {
+        \Excel::create('Redmin_Mailinglist_Report', function ($excel) use ($data) {
 
-            $excel->sheet('Mailinglist Report', function($sheet) use ($data) {
+            $excel->sheet('Mailinglist Report', function ($sheet) use ($data) {
 
                 $sheet->loadView('redminportal::reports/mailinglist')->with('data', $data);
 
@@ -76,9 +76,9 @@ class ReportController extends Controller
             return \Redirect::to('admin/purchases')->withErrors($errors);
         }
 
-        \Excel::create('Redmin_Purchases_Report', function($excel) use ($data) {
+        \Excel::create('Redmin_Purchases_Report', function ($excel) use ($data) {
 
-            $excel->sheet('Purchases Report', function($sheet) use ($data) {
+            $excel->sheet('Purchases Report', function ($sheet) use ($data) {
 
                 $sheet->loadView('redminportal::reports/purchases')->with('data', $data);
 
@@ -114,9 +114,9 @@ class ReportController extends Controller
             return \Redirect::to('admin/orders')->withErrors($errors);
         }
 
-        \Excel::create('Redmin_Orders_Report', function($excel) use ($data) {
+        \Excel::create('Redmin_Orders_Report', function ($excel) use ($data) {
 
-            $excel->sheet('Orders Report', function($sheet) use ($data) {
+            $excel->sheet('Orders Report', function ($sheet) use ($data) {
 
                 $sheet->loadView('redminportal::reports/orders')->with('data', $data);
 

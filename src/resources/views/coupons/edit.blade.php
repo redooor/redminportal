@@ -96,6 +96,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="is_percent" class="control-label col-md-4">{{ Lang::get('redminportal::forms.automatically_apply') }}</label>
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        <label>
+                                            {!! Form::checkbox('automatically_apply', $coupon->automatically_apply, $coupon->automatically_apply, array('id' => 'automatically_apply')) !!}
+                                            <i>{{ Lang::get('redminportal::forms.automatically_apply_explanation') }}</i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="control-label col-md-4">{{ Lang::get('redminportal::forms.min_spent') }}</label>
                                 <div class="col-md-8">
                                     {!! Form::text('min_spent', $coupon->min_spent, array('class' => 'form-control')) !!}

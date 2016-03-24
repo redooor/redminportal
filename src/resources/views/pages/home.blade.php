@@ -6,10 +6,141 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h1>RedminPortal <small>by Redooor</small></h1>
+                    <img src="https://travis-ci.org/redooor/redminportal.svg?branch=develop-v0.2">
                     <h2><u>Change log</u></h2>
-                    <h3>Version 0.2.2</h3>
+                    <p>Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.</p>
+                    <h3>Version 0.3.3 and 0.2.3</h3>
+                    <p>This update introduces some new tables and lots of changes.</p>
+                    <p><strong>IMPORTANT:</strong> Refer to UPGRADE.md for the upgrading instructions.</p>
+                    <h4>New features:</h4>
+                    <ol>
+                        <li>Added product variations. You can now add variations to each product. (issue #125)</li>
+                        <li>Added reusable partial templates for Modal Window and Language selector tab. (issue #130)</li>
+                        <li>Added shipping properties to products: Weight, Length, Width, Height, units. (issue #126)</li>
+                        <li>Allow Tinymce content to follow front end CSS. (issue #143)</li>
+                        <li>Moved pagination to config file so developer can set the default pagination size. (issue #121)</li>
+                        <li>Usable Redminportal Facade for HTML helpers.</li>
+                        <li>Added Sorting capability for (issue #15):
+                            <ul>
+                                <li>Orders</li>
+                                <li>Announcements</li>
+                                <li>Pages</li>
+                                <li>Posts</li>
+                                <li>Portfolios</li>
+                                <li>Promotions</li>
+                                <li>Products</li>
+                                <li>Memberships</li>
+                                <li>Modules</li>
+                                <li>Medias</li>
+                            </ul>
+                        </li>
+                        <li>Added capability to sort by Category for Bundle. (issue #15)</li>
+                        <li>Improve Tagging (issue #147)
+                            <ul>
+                                <li>Added Typeahead for tag suggestion</li>
+                                <li>Use label visual for tags</li>
+                            </ul>
+                        </li>
+                        <li>Added API for retrieving tag names
+                            <ul>
+                                <li>/api/tag: Get JSON list of tags with id and name</li>
+                                <li>/api/tag/name: Get JSON list of tags with name only</li>
+                                <li>Check <a href="https://github.com/redooor/redminportal/wiki/Public-API">list of API on github Wiki page</a></li>
+                            </ul>
+                        </li>
+                        <li>Able to add user to multiple groups. (issue #53)</li>
+                        <li>Introduced HTML and Form helpers
+                            <ul>
+                                <li>HTML and Form helpers provide a shortcut to partial views.</li>
+                                <li>Check <a href="https://github.com/redooor/redminportal/wiki/HTML-and-Form-Helpers">list of helpers on github Wiki page</a></li>
+                            </ul>
+                        </li>
+                        <li>Added tag to Page and Post (issue #146)</li>
+                        <li>Added API for retrieving emails for authenticated admin users only
+                            <ul>
+                                <li>/api/email: Unused, returns an empty JSON list</li>
+                                <li>/api/email/all: Get JSON list of emails</li>
+                                <li>Check <a href="https://github.com/redooor/redminportal/wiki/Private-API">list of Private API on github Wiki page</a></li>
+                            </ul>
+                        </li>
+                        <li>UI: Group permission management, able to edit group permission for any route. (issue #69)</li>
+                        <li>UI: User permission management, able to edit user permission for any route. (issue #69)</li>
+                        <li>Search order by transaction id and more! (issue #137)</li>
+                        <li>Search users by group, first name, last name, email and more!</li>
+                        <li>Able to change Order statuses with tracking changes in Order model. (issue #138)</li>
+                        <li>Added reusable Revision and Revisionable trait for tracking of changes in any model. (issue #138)</li>
+                        <li>Added UI for viewing Revision History for Orders.</li>
+                        <li>Allow User to change their password and names (issue #159)</li>
+                        <li>Create new Order with product quantities (issue #165)</li>
+                    </ol>
+                    <h4>Enhancements:</h4>
+                    <ol>
+                        <li>Category model missing relationships with other models. (issue #140)</li>
+                        <li>Fixed UI: Category hierarchy list word wrap. (issue #133)</li>
+                        <li>Developer: use grunt to publish assets to public folder automatically. (issue #139)</li>
+                        <li>Moved static text to translation file. (issue #102)</li>
+                        <li>Add getTotaldiscount method to Order. (issue #142)</li>
+                        <li>Improved Tinymce editor to match RedminPortal look and feel.</li>
+                        <li>Updated Tinymce to version 4.3.2.</li>
+                        <li>Create Category Select reusable form (issue #130)</li>
+                        <li>Rearranged menu to push User Management to bottom.</li>
+                        <li>Increase default pagination to 50. (issue #121)</li>
+                        <li>Introduced SorterController trait to reduce code for sortable pages.</li>
+                        <li>Introduced partial Blade template for sortable header.</li>
+                        <li>Overall Line count decreased from 23031 to 22805 with trait and partial template.</li>
+                        <li>Improve Usability: after delete action should go back to last visited page (issue #131)
+                            <ul>
+                                <li>Announcement</li>
+                                <li>Bundle</li>
+                                <li>Category</li>
+                                <li>Coupon</li>
+                                <li>Group</li>
+                                <li>Mailinglist</li>
+                                <li>Media</li>
+                                <li>Membership</li>
+                                <li>Module</li>
+                                <li>Order</li>
+                                <li>Page</li>
+                                <li>Portfolio</li>
+                                <li>Post</li>
+                                <li>Product</li>
+                                <li>Promotion</li>
+                                <li>Purchase</li>
+                                <li>User</li>
+                            </ul>
+                        </li>
+                        <li>Improved Permission management, allow granular control for every page and action. (issue #69)
+                            <ul>
+                                <li>When users are deactivated after they login, they should be logged out and require re-login.</li>
+                                <li>Various actions for create, update and delete are added in the permission checker.</li>
+                            </ul>
+                        </li>
+                        <li>Improved search engine to be reusable.</li>
+                        <li>Payment Statuses can now be edited via config file. See UPGRADE.md for instructions.</li>
+                        <li>Product variant should inherit category from main product (issue #160)</li>
+                        <li>Move printMenu to Html class and partial template (issue #155)</li>
+                        <li>Add field automatically_apply to Coupon model (issue #162)</li>
+                        <li>UI: Orders Items list should group into same product and show quantity (issue #166)</li>
+                    </ol>
+                    <h4>Bug fixes:</h4>
+                    <ol>
+                        <li>User deletion: prevent user from deleting or deactivating own account while they are logged in. (issue #136)</li>
+                        <li>UI: Page and Post cannot change category back to No Category. (issue #145)</li>
+                        <li>Fix Tinymce editor not showing Bootstrap components correctly by adding container-fluid class to body.</li>
+                        <li>Fix error message when deleting Category in used. Deleting Category will delete all related data. (issue #135)</li>
+                        <li>Fix Module on change category doesn't load media. (issue #150)</li>
+                        <li>Click menu overlay to close doesn't work on iPad. (issue #151)</li>
+                        <li>Fix Build error for PHP7 due to getID3 package. Switch to JamesHeinrich/getID3. (issue #152)</li>
+                        <li>Added delete image functionality to Bundles. (issue #149)</li>
+                        <li>Fixed Typeahead styling messed up for email suggestions. (issue #156)</li>
+                        <li>Upload image with same name will now be appended with number. (issue #154)</li>
+                        <li>Product variant create/edit form on error doesn't populate previous inputs. (issue #134)</li>
+                        <li>UI: menu unable to scroll on mobile screens (issue #161)</li>
+                    </ol>
+                    <hr>
+                    <h3>Version 0.3.2 and 0.2.2</h3>
                     <p>Code clean up, new features and UI improvements.</p>
-                    <p>This update is generally v0.2.* compatible but there's a change with UserPricelist. Refer to UPGRADE.md for the upgrading instructions.</p>
+                    <p>This update is generally v0.3.* compatible but there's a change with UserPricelist. Refer to UPGRADE.md for the upgrading instructions.</p>
                     <h4>Enhancement:</h4>
                     <ol>
                         <li>Move Purchases into Orders (issue #95).</li>
@@ -23,34 +154,28 @@
                     <ol>
                         <li>(legacy support) Purchase export to excel not working. Purchase has deprecated. Use Orders instead. (issue #115)</li>
                     </ol>
-                    <h3>Version 0.2.1</h3>
+                    <hr>
+                    <h3>Version 0.3.1 and 0.2.1</h3>
                     <p>New Bundle module and improvement to UI.</p>
                     <h4>New feature:</h4>
                     <ol>
-                        <li>Bundle module allow bundling physical and digital products on a single price (issue #94, #104).</li>
-                        <li>Get total value of a bundle (issue #97).</li>
-                        <li>Able to add multiple coupons to an order (issue #106, #107, #109).</li>
-                        <li>Coupon can be applied to bundles (issue #108).</li>
-                        <li>Verify and save coupon against all products in an order (issue #110).</li>
-                        <li>Order will now check coupon for multiple_coupons flag (issue #111).</li>
-                        <li>Cleaner UI.</li>
+                        <li>Bundle module allow bundling physical and digital products on a single price (issue #94).</li>
                     </ol>
                     <h4>Enhancement:</h4>
                     <ol>
                         <li>Added migrations to upgrade database from v0.1 to v0.2/v0.3 (issue #89).</li>
                         <li>Sidebar is now off-canvas (issue #91).</li>
-                        <li>Exclude tests and non-production files from release package (issue #96).</li>
                     </ol>
                     <h4>Bug fixes:</h4>
                     <ol>
                         <li>Resolves TokenMismatchException issue on login (issue #88).</li>
                         <li>User config file will override the default package config file (issue #90).</li>
-                        <li>Add Remember_token column users table never run in migration (issue #105).</li>
                     </ol>
-                    <h4>Upgrade scripts:</h4>
-                    <ol>
-                        <li>Add migration scripts to help migrate database and folder structure from v0.1 (issue #104).</li>
-                    </ol>
+                    <hr>
+                    <h3>Version 0.3.0</h3>
+                    <p>Focus on supporting Laravel 5.1 (issue #87).</p>
+                    <h4>Important:</h4>
+                    <p>If you're upgrading from v0.2.0, please refer to the Upgrade Guide in README.md.</p>
                     <hr>
                     <h3>Version 0.2.0</h3>
                     <p>Focus on supporting Laravel 5.0.</p>
