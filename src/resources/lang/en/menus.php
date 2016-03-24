@@ -29,4 +29,5 @@ return array(
     'pages' => 'Pages',
     'orders' => 'Orders',
     'bundles' => 'Bundles',
+    'my_account' => 'My Account',
 );

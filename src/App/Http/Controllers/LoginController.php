@@ -35,14 +35,14 @@ class LoginController extends Controller
         $validation = \Validator::make(\Input::all(), $rules);
 
         if ($validation->fails()) {
-            return redirect('admin')->withErrors($validation)->withInput();
+            return redirect('login')->withErrors($validation)->withInput();
         }
         
         $email      = \Input::get('email');
         $password   = \Input::get('password');
 
         if (Auth::attempt(['email' => $email, 'password' => $password, 'activated' => 1])) {
-            return redirect()->intended('admin');
+            return redirect()->intended('admin/dashboard');
         }
 
         $errors = new \Illuminate\Support\MessageBag;

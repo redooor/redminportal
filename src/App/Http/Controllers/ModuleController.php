@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use DB;
+use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Media;
 use Redooor\Redminportal\App\Models\Category;
@@ -15,11 +16,34 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
 {
+    use SorterController;
+    
+    public function __construct(Module $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'name';
+        $this->orderBy = 'asc';
+        $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::modules.view';
+        $this->pageRoute = 'admin/modules';
+        
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('categories', 'modules.category_id', '=', 'categories.id')
+            ->select('modules.*', 'categories.name as category_name');
+    }
+    
     public function getIndex()
     {
-        $modules = Module::orderBy('category_id')->orderBy('name')->paginate(20);
+        $models = Module::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return \View::make('redminportal::modules/view')->with('modules', $modules);
+        return \View::make('redminportal::modules/view', $data);
     }
 
     public function getMedias($sid)
@@ -136,11 +160,15 @@ class ModuleController extends Controller
             'name'              => 'required|unique:modules,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description' => 'required',
             'sku'               => 'required|alpha_dash|unique:modules,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required',
+            'category_id'       => 'required|numeric|min:1',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
         );
+        
+        $messages = [
+            'category_id.min' => 'The category field is required.'
+        ];
 
-        $validation = \Validator::make(\Input::all(), $rules);
+        $validation = \Validator::make(\Input::all(), $rules, $messages);
 
         if ($validation->passes()) {
             $name               = \Input::get('name');
@@ -297,7 +325,7 @@ class ModuleController extends Controller
         if ($module == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "We are having problem deleting this entry. Please try again.");
-            return \Redirect::to('admin/modules')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
 
         $purchases = Order::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
@@ -311,13 +339,13 @@ class ModuleController extends Controller
                 'deleteError',
                 "This module has been purchased before. You cannot delete it. Please disable it instead."
             );
-            return \Redirect::to('admin/modules')->withErrors($errors);
+            return redirect()->back()->withErrors($errors);
         }
         
         // Delete the module
         $module->delete();
 
-        return \Redirect::to('admin/modules');
+        return redirect()->back();
     }
     
     public function getImgremove($sid)

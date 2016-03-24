@@ -37,19 +37,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="panel-title">{{ Lang::get('redminportal::forms.category') }}</div>
-                    </div>
-                    <div class="panel-body">
-                        {!! Form::hidden('category_id', $module->category_id, array('id' => 'category_id')) !!}
-                        <ul class="redooor-hierarchy">
-                        @foreach ($categories as $item)
-                            <li>{!! $item->printCategory() !!}</li>
-                        @endforeach
-                        </ul>
-                    </div>
-                </div>
+                {{-- Load Select Category partial form --}}
+                @include('redminportal::partials.form-select-category', [
+                    'select_category_selected_name' => 'category_id',
+                    'select_category_selected_id' => $module->category_id,
+                    'select_category_categories' => $categories,
+                    'select_category_required_field' => true
+                ])
                 <div>
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
@@ -214,6 +208,7 @@
 @stop
 
 @section('footer')
+    @parent
     <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
     <script>
         !function ($) {
@@ -228,31 +223,13 @@
                     $selected_val = $('#category_id').val();
                     $('#media-wrapper').empty().load('../editmedias/' + $selected_val + '/' + {{ $module->id }});
                 }
-                // On load, check if previous category exists for error message
-                function checkCategory() {
-                    $selected_val = $('#category_id').val();
-                    if ($selected_val != '') {
-                        $('.redooor-hierarchy a').each(function() {
-                            if ($(this).attr('href') == $selected_val) {
-                                $(this).addClass('active');
-                            }
-                        });
-                        loadMedia();
-                    }
-                }
-                checkCategory();
-                // Change selected category
-                $(document).on('click', '.redooor-hierarchy a', function(e) {
-                    e.preventDefault();
-                    $selected = $(this).attr('href');
-                    $('#category_id').val($selected);
-                    $('.redooor-hierarchy a.active').removeClass('active');
-                    $(this).addClass('active');
-                    // Load medias
-                    loadMedia();
+                loadMedia(); // Initiate media list on load
+                $(document).on('click', '.redmin-hierarchy li', function() {
+                    loadMedia(); // Load media list on category change
                 });
             })
         }(window.jQuery);
     </script>
     @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tagsinput')
 @stop

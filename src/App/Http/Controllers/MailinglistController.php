@@ -1,47 +1,37 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Mailinglist;
 
 class MailinglistController extends Controller
 {
+    use SorterController, DeleterController;
+    
+    public function __construct(Mailinglist $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'created_at';
+        $this->orderBy = 'desc';
+        $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::mailinglists.view';
+        $this->pageRoute = 'admin/mailinglists';
+        
+        // For sorting
+        $this->query = $this->model;
+    }
+    
     public function getIndex()
     {
-        $mailinglists = Mailinglist::orderBy('email')->paginate(20);
+        $models = Mailinglist::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
 
-        return view('redminportal::mailinglists/view')
-            ->with('sortBy', 'email')
-            ->with('orderBy', 'asc')
-            ->with('mailinglists', $mailinglists);
-    }
-
-    public function getSort($sortBy = 'email', $orderBy = 'asc')
-    {
-        $inputs = array(
-            'sortBy' => $sortBy,
-            'orderBy' => $orderBy
-        );
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
         
-        $rules = array(
-            'sortBy'  => 'required|regex:/^[a-zA-Z0-9 _-]*$/',
-            'orderBy' => 'required|regex:/^[a-zA-Z0-9 _-]*$/'
-        );
-        
-        $validation = \Validator::make($inputs, $rules);
-
-        if ($validation->fails()) {
-            return redirect('admin/mailinglists')->withErrors($validation);
-        }
-        
-        if ($orderBy != 'asc' && $orderBy != 'desc') {
-            $orderBy = 'asc';
-        }
-
-        $mailinglists = Mailinglist::orderBy($sortBy, $orderBy)->paginate(20);
-
-        return view('redminportal::mailinglists/view')
-            ->with('sortBy', $sortBy)
-            ->with('orderBy', $orderBy)
-            ->with('mailinglists', $mailinglists);
+        return view('redminportal::mailinglists/view', $data);
     }
 
     public function getCreate()
@@ -72,21 +62,6 @@ class MailinglistController extends Controller
     {
         $sid = \Input::get('id');
 
-        if (isset($sid)) {
-            // Find the mailinglist using the user id
-            $mailinglist = Mailinglist::find($sid);
-
-            // No such id
-            if ($mailinglist == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'storeError',
-                    "We are having problem editing this entry. It may have already been deleted."
-                );
-                return redirect('admin/mailinglists')->withErrors($errors);
-            }
-        }
-
         /*
          * Validate
          */
@@ -105,6 +80,17 @@ class MailinglistController extends Controller
             $active      = (\Input::get('active') == '' ? false : true);
 
             $mailinglist = (isset($sid) ? Mailinglist::find($sid) : new Mailinglist);
+            
+            // No such id
+            if ($mailinglist == null) {
+                $errors = new \Illuminate\Support\MessageBag;
+                $errors->add(
+                    'storeError',
+                    "We are having problem editing this entry. It may have already been deleted."
+                );
+                return redirect('admin/mailinglists')->withErrors($errors);
+            }
+            
             $mailinglist->email = $email;
             $mailinglist->first_name = $first_name;
             $mailinglist->last_name = $last_name;
@@ -119,23 +105,6 @@ class MailinglistController extends Controller
                 return redirect('admin/mailinglists/create')->withErrors($validation)->withInput();
             }
         }
-
-        return redirect('admin/mailinglists');
-    }
-
-    public function getDelete($sid)
-    {
-        // Find the mailinglist using the user id
-        $mailinglist = Mailinglist::find($sid);
-
-        // Delete the mailinglist
-        if ($mailinglist == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "We are having problem deleting this entry. It may have already been deleted.");
-            return redirect('admin/mailinglists')->withErrors($errors);
-        }
-
-        $mailinglist->delete();
 
         return redirect('admin/mailinglists');
     }

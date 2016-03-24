@@ -14,7 +14,7 @@ use Redooor\Redminportal\App\Helpers\RHelper;
  * active           (boolean, default true)
  * options          (text, nullable)
  * order            (integer, default 0)
- * category_id      (integer, unsigned)
+ * category_id      (integer, unsigned, nullable)
  * created_at       (dateTime)
  * updated_at       (dateTime)
  *
@@ -43,6 +43,31 @@ class Category extends Model
     {
         return $this->hasMany('Redooor\Redminportal\App\Models\Portfolio');
     }
+    
+    public function medias()
+    {
+        return $this->hasMany('Redooor\Redminportal\App\Models\Media');
+    }
+    
+    public function modules()
+    {
+        return $this->hasMany('Redooor\Redminportal\App\Models\Module');
+    }
+    
+    public function pages()
+    {
+        return $this->hasMany('Redooor\Redminportal\App\Models\Page');
+    }
+    
+    public function posts()
+    {
+        return $this->hasMany('Redooor\Redminportal\App\Models\Post');
+    }
+    
+    public function bundles()
+    {
+        return $this->hasMany('Redooor\Redminportal\App\Models\Bundle');
+    }
 
     public function images()
     {
@@ -67,7 +92,7 @@ class Category extends Model
     public function printCategory($showActive = false)
     {
         $html = "<a href='" . $this->id .
-            "'><span class='glyphicon glyphicon-chevron-right'></span> " .
+            "'><span class='glyphicon glyphicon-menu-right'></span> " .
             $this->name . "</a>";
         if ($this->categories->count() > 0) {
             $html .= "<ul>";
@@ -96,9 +121,6 @@ class Category extends Model
 
     public function delete()
     {
-        // Remove all relationships
-        $this->coupons()->detach();
-        
         // Delete main category will delete all sub categories
         $this->categories()->delete();
         
@@ -107,7 +129,15 @@ class Category extends Model
             $image->delete();
         }
         
-        // Delete all translations
+        // Remove all relationships
+        $this->bundles()->delete();
+        $this->coupons()->detach();
+        $this->medias()->delete();
+        $this->modules()->delete();
+        $this->pages()->delete();
+        $this->portfolios()->delete();
+        $this->posts()->delete();
+        $this->products()->delete();
         $this->translations()->delete();
         
         // Delete category's images folder

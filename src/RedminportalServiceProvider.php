@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal;
 
 use Illuminate\Support\ServiceProvider;
+use Redooor\Redminportal\App\Classes\Redminportal;
 
 class RedminportalServiceProvider extends ServiceProvider
 {
@@ -39,7 +40,11 @@ class RedminportalServiceProvider extends ServiceProvider
             __DIR__.'/config/image.php' => config_path('vendor/redooor/redminportal/image.php'),
             __DIR__.'/config/menu.php' => config_path('vendor/redooor/redminportal/menu.php'),
             __DIR__.'/config/translation.php' => config_path('vendor/redooor/redminportal/translation.php'),
-            __DIR__.'/config/auth.php' => config_path('vendor/redooor/redminportal/auth.php')
+            __DIR__.'/config/auth.php' => config_path('vendor/redooor/redminportal/auth.php'),
+            __DIR__.'/config/tinymce.php' => config_path('vendor/redooor/redminportal/tinymce.php'),
+            __DIR__.'/config/pagination.php' => config_path('vendor/redooor/redminportal/pagination.php'),
+            __DIR__.'/config/permissions.php' => config_path('vendor/redooor/redminportal/permissions.php'),
+            __DIR__.'/config/payment_statuses.php' => config_path('vendor/redooor/redminportal/payment_statuses.php')
         ], 'config');
         
         // Publish your migrations
@@ -61,13 +66,31 @@ class RedminportalServiceProvider extends ServiceProvider
             require_once $autoloader;
         }
         
+        /**
+         * Include getID3 dependencies
+         * If app vendor folder exists, use that.
+         * Otherwise use development vendor folder
+         **/
+        if (file_exists(base_path('vendor/james-heinrich/getid3/getid3/getid3.php'))) {
+            include_once base_path('vendor/james-heinrich/getid3/getid3/getid3.php');
+        } else {
+            include_once __DIR__ . "/../vendor/james-heinrich/getid3/getid3/getid3.php";
+        }
+        if (file_exists(base_path('vendor/james-heinrich/getid3/getid3/write.php'))) {
+            include_once base_path('vendor/james-heinrich/getid3/getid3/write.php');
+        } else {
+            include_once __DIR__ . "/../vendor/james-heinrich/getid3/getid3/write.php";
+        }
+        
+        $this->bindSharedInstances();
+        
         $this->app->register('Illuminate\Html\HtmlServiceProvider');
         $this->app->register('Orchestra\Imagine\ImagineServiceProvider');
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
         
-        $this->app->booting(function() {
+        $this->app->booting(function () {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-            $loader->alias('Redminportal', 'Redooor\Redminportal\Facades\Redminportal');
+            $loader->alias('Redminportal', 'Redooor\Redminportal\App\Facades\Redminportal');
             $loader->alias('Form', 'Illuminate\Html\FormFacade');
             $loader->alias('HTML', 'Illuminate\Html\HtmlFacade');
             $loader->alias('Imagine', 'Orchestra\Imagine\Facade');
@@ -77,6 +100,10 @@ class RedminportalServiceProvider extends ServiceProvider
         $this->registerResources('image', 'redminportal::image');
         $this->registerResources('menu', 'redminportal::menu');
         $this->registerResources('translation', 'redminportal::translation');
+        $this->registerResources('tinymce', 'redminportal::tinymce');
+        $this->registerResources('pagination', 'redminportal::pagination');
+        $this->registerResources('permissions', 'redminportal::permissions');
+        $this->registerResources('payment_statuses', 'redminportal::payment_statuses');
         
         // Change Authentication model
         $this->registerResources('auth', 'auth');
@@ -99,5 +126,17 @@ class RedminportalServiceProvider extends ServiceProvider
         }
 
         $this->app['config']->set($setname, $config);
+    }
+    
+    /**
+     * Bind all shared instances.
+     *
+     * @return void
+     */
+    protected function bindSharedInstances()
+    {
+        $this->app->bindShared('redminportal', function ($app) {
+            return new Redminportal($app['url']);
+        });
     }
 }

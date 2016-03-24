@@ -1,5 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Traits\SorterController;
+use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Portfolio;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
@@ -8,13 +10,34 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PortfolioController extends Controller
 {
+    use SorterController, DeleterController;
+    
+    public function __construct(Portfolio $model)
+    {
+        $this->model = $model;
+        $this->sortBy = 'created_at';
+        $this->orderBy = 'desc';
+        $this->perpage = config('redminportal::pagination.size');
+        $this->pageView = 'redminportal::portfolios.view';
+        $this->pageRoute = 'admin/portfolios';
+        
+        // For sorting
+        $this->query = $this->model
+            ->LeftJoin('categories', 'portfolios.category_id', '=', 'categories.id')
+            ->select('portfolios.*', 'categories.name as category_name');
+    }
+    
     public function getIndex()
     {
-        $portfolios = Portfolio::orderBy('category_id')
-            ->orderBy('name')
-            ->paginate(20);
+        $models = Portfolio::orderBy($this->sortBy, $this->orderBy)->paginate($this->perpage);
+        
+        $data = [
+            'models' => $models,
+            'sortBy' => $this->sortBy,
+            'orderBy' => $this->orderBy
+        ];
 
-        return view('redminportal::portfolios/view')->with('portfolios', $portfolios);
+        return view('redminportal::portfolios/view', $data);
     }
 
     public function getCreate()
@@ -71,10 +94,14 @@ class PortfolioController extends Controller
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
             'name'              => 'required',
             'short_description' => 'required',
-            'category_id'       => 'required',
+            'category_id'       => 'required|numeric|min:1',
         );
+        
+        $messages = [
+            'category_id.min' => 'The category field is required.'
+        ];
 
-        $validation = \Validator::make(\Input::all(), $rules);
+        $validation = \Validator::make(\Input::all(), $rules, $messages);
 
         if ($validation->passes()) {
             $name               = \Input::get('name');
@@ -151,23 +178,6 @@ class PortfolioController extends Controller
                 return redirect('admin/portfolios/create')->withErrors($validation)->withInput();
             }
         }
-
-        return redirect('admin/portfolios');
-    }
-
-    public function getDelete($sid)
-    {
-        // Find the portfolio using the user id
-        $portfolio = Portfolio::find($sid);
-
-        if ($portfolio == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The data cannot be deleted at this time.");
-            return redirect('/admin/portfolios')->withErrors($errors);
-        }
-        
-        // Delete the portfolio
-        $portfolio->delete();
 
         return redirect('admin/portfolios');
     }

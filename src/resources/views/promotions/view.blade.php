@@ -12,8 +12,8 @@
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($promotions) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $promotions->firstItem() . ' to ' . $promotions->lastItem() . ' of ' . $promotions->total() }}</a>
+                @if (count($models) > 0)
+                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                 @endif
                 {!! HTML::link('admin/promotions/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
             </div>
@@ -21,25 +21,25 @@
         </div>
     </div>
     
-    @if (count($promotions) > 0)
+    @if (count($models) > 0)
         <table class='table table-striped table-bordered table-condensed'>
             <thead>
                 <tr>
-                    <th>{{ Lang::get('redminportal::forms.promotion_and_events') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.start_date') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.end_date') }}</th>
-                    <th>{{ Lang::get('redminportal::forms.active') }}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/promotions', 'name', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/promotions', 'start_date', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/promotions', 'end_date', $sortBy, $orderBy) !!}</th>
+                    <th>{!! Redminportal::html()->sorter('admin/promotions', 'active', $sortBy, $orderBy) !!}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-            @foreach ($promotions as $promotion)
+            @foreach ($models as $promotion)
                 <tr>
                     <td>
                         {{ $promotion->name }}
                     </td>
-                    <td>{{ $promotion->start_date }}</td>
-                    <td>{{ $promotion->end_date }}</td>
+                    <td>{{ date('d/m/y h:i A', strtotime($promotion->start_date)) }}</td>
+                    <td>{{ date('d/m/y h:i A', strtotime($promotion->end_date)) }}</td>
                     <td>
                         @if ($promotion->active)
                             <span class="label label-success"><span class='glyphicon glyphicon-ok'></span></span>
@@ -69,9 +69,14 @@
             </tbody>
         </table>
         <div class="text-center">
-        {!! $promotions->render() !!}
+        {!! $models->render() !!}
         </div>
     @else
+        @if ($models->lastPage())
+        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_promotion_found') }}</div>
+        @endif
     @endif
 @stop

@@ -10,13 +10,19 @@ use Redooor\Redminportal\App\Helpers\RHelper;
     sku                 (string, 255)
     short_description   (string, 255)
     long_description    (text, nullable)
-    price               (float, 0)
+    price               (decimal, 8, 2)
     featured            (boolean, false)
     active              (boolean, true)
     options             (text, nullable)
     category_id         (unsigned, nullable)
-    created_at  (dateTime)
-    updated_at  (dateTime)
+    weight_unit         (string, 3, nullable)
+    volume_unit         (string, 3, nullable)
+    length              (decimal, 8, 3, nullable)
+    width               (decimal, 8, 3, nullable)
+    height              (decimal, 8, 3, nullable)
+    weight              (decimal, 8, 3, nullable)
+    created_at          (dateTime)
+    updated_at          (dateTime)
 ***********************/
 class Product extends Model
 {
@@ -57,6 +63,16 @@ class Product extends Model
         return $this->morphMany('Redooor\Redminportal\App\Models\Translation', 'translatable');
     }
     
+    public function variantParents()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Product', 'product_variant', 'variant_id', 'product_id');
+    }
+    
+    public function variants()
+    {
+        return $this->belongsToMany('Redooor\Redminportal\App\Models\Product', 'product_variant', 'product_id', 'variant_id');
+    }
+    
     public function delete()
     {
         // Remove all relationships
@@ -64,6 +80,14 @@ class Product extends Model
         $this->coupons()->detach();
         $this->bundles()->detach();
         $this->orders()->detach();
+        $this->variantParents()->detach();
+        
+        // Detach and delete all variants
+        foreach ($this->variants as $variant) {
+            $variant->delete();
+        }
+        
+        $this->variants()->detach();
         
         // Delete all images
         foreach ($this->images as $image) {

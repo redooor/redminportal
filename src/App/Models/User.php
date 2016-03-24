@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Redooor\Redminportal\App\Models\Traits\Permissable;
 
 /* Columns
  *
@@ -28,7 +29,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-    use Authenticatable, CanResetPassword;
+    use Authenticatable, CanResetPassword, Permissable;
 
     /**
      * The database table used by the model.
@@ -62,10 +63,65 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('Redooor\Redminportal\App\Models\Order');
     }
     
+    /**
+     * Converts permission json string to array
+     * Returns an empty array if string is null
+     **/
+    public function permissions()
+    {
+        if ($this->permissions) {
+            return json_decode($this->permissions);
+        }
+        
+        return array();
+    }
+    
     public function delete()
     {
+        // Detach all groups from this user
         $this->groups()->detach();
         
         return parent::delete();
+    }
+    
+    /**
+    /* Add Group(s) to User
+    /* @param Group can be single Id or array of Group Id
+    /* @return bool True if successful
+     */
+    public function addGroup($group_id)
+    {
+        $successful = true;
+        
+        if ($group_id == null) {
+            return false;
+        }
+        
+        // Remove all existing group(s) from user
+        $this->groups()->detach();
+        
+        // Assign group(s) to user
+        if (is_array($group_id)) {
+            // If multiple roles
+            if (count($group_id) > 0) {
+                foreach ($group_id as $item) {
+                    $new_group = Group::find($item);
+                    if ($new_group == null) {
+                        $successful = false;
+                    } else {
+                        $this->groups()->save($new_group);
+                    }
+                }
+            }
+        } else {
+            $new_group = Group::find($group_id);
+            if ($new_group == null) {
+                $successful = false;
+            } else {
+                $this->groups()->save($new_group);
+            }
+        }
+        
+        return $successful;
     }
 }
