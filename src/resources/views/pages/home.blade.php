@@ -6,7 +6,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h1>RedminPortal <small>by Redooor</small></h1>
-                    <img src="https://travis-ci.org/redooor/redminportal.svg?branch=develop">
+                    <img src="https://travis-ci.org/redooor/redminportal.svg?branch=v0.3">
                     <h2><u>Change log</u></h2>
                     <p>Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.</p>
                     <h3>Version 0.3.3 and 0.2.3</h3>
