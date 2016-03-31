@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/redooor/redminportal.svg?branch=develop)](https://travis-ci.org/redooor/redminportal)
 
+* [Version 0.3.3.1 and 0.2.3.1](#version-0331-and-0231)
 * [Version 0.3.3 and 0.2.3](#version-033-and-023)
 * [Version 0.3.2 and 0.2.2](#version-032-and-022)
 * [Version 0.3.1 and 0.2.1](#version-031-and-021)
@@ -20,6 +21,17 @@
 Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
 
 Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
+
+## Version 0.3.3.1 and 0.2.3.1
+TinyMCE Improvement for all editors. Image handling improvements.
+
+**IMPORTANT:** Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+
+### Enhancements:
+1. Updated TinyMCE to 4.3.8.
+
+### Bug fixes:
+1. TinyMCE: Insert Image dialog box distorted (issue #176)
 
 ## Version 0.3.3 and 0.2.3
 This update introduces some new tables and lots of changes.
