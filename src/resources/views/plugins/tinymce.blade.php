@@ -33,7 +33,7 @@
                         {
                             title: '{{ pathinfo($tinyImage->path)["filename"] }}',
                             value: '{{ url(Redminportal::imagine()->getUrl($tinyImage->path, "large")) }}'
-                        }
+                        },
                     @endforeach
                 @endif
                 ]
