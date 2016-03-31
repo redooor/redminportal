@@ -89,5 +89,5 @@
 
 @section('footer')
     <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
-    @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tinymce', ['tinyImages' => $announcement->images])
 @stop

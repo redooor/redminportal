@@ -9,6 +9,19 @@
                     <img src="https://travis-ci.org/redooor/redminportal.svg?branch=develop-v0.2">
                     <h2><u>Change log</u></h2>
                     <p>Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.</p>
+                    <h3>Version 0.3.3.1 and 0.2.3.1</h3>
+                    <p>TinyMCE Improvement for all editors.</p>
+                    <p><strong>IMPORTANT:</strong> Refer to UPGRADE.md for the upgrading instructions.</p>
+                    <h4>Enhancements:</h4>
+                    <ol>
+                        <li>Updated TinyMCE to 4.3.8.</li>
+                        <li>TinyMCE: remove paste formatting from MS Office (issue #173)</li>
+                        <li>TinyMCE: ability to insert image from list of uploaded photos (issue #174)</li>
+                    </ol>
+                    <h4>Bug fixes:</h4>
+                    <ol>
+                        <li>TinyMCE: Insert Image dialog box distorted (issue #176)</li>
+                    </ol>
                     <h3>Version 0.3.3 and 0.2.3</h3>
                     <p>This update introduces some new tables and lots of changes.</p>
                     <p><strong>IMPORTANT:</strong> Refer to UPGRADE.md for the upgrading instructions.</p>

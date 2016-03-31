@@ -180,6 +180,6 @@
             })
         }(window.jQuery);
     </script>
-    @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tinymce', ['tinyImages' => $media->images])
     @include('redminportal::plugins/tagsinput')
 @stop
