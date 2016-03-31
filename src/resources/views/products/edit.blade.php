@@ -382,6 +382,6 @@
             });
         }(window.jQuery);
     </script>
-    @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tinymce', ['tinyImages' => $product->images])
     @include('redminportal::plugins/tagsinput')
 @stop

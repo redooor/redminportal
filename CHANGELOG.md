@@ -23,12 +23,14 @@ Version 0.2 and 0.3 are developed in parallel. The only difference between them 
 Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
 
 ## Version 0.3.3.1 and 0.2.3.1
-TinyMCE Improvement for all editors. Image handling improvements.
+TinyMCE Improvement for all editors.
 
 **IMPORTANT:** Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
 ### Enhancements:
 1. Updated TinyMCE to 4.3.8.
+2. TinyMCE: remove paste formatting from MS Office (issue #173)
+3. TinyMCE: ability to insert image from list of uploaded photos (issue #174)
 
 ### Bug fixes:
 1. TinyMCE: Insert Image dialog box distorted (issue #176)
