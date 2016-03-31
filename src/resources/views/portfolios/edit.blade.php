@@ -157,5 +157,5 @@
             })
         }(window.jQuery);
     </script>
-    @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tinymce', ['tinyImages' => $portfolio->images])
 @stop

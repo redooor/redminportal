@@ -170,5 +170,5 @@
             })
         }(window.jQuery);
     </script>
-    @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tinymce', ['tinyImages' => $category->images])
 @stop

@@ -222,6 +222,8 @@
             })
         }(window.jQuery);
     </script>
-    @include('redminportal::plugins/tinymce')
+    @if (isset($product))
+    @include('redminportal::plugins/tinymce', ['tinyImages' => $product->images])
+    @endif
     @include('redminportal::plugins/tagsinput')
 @stop
