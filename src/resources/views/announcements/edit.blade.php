@@ -9,22 +9,23 @@
     
     @include('redminportal::partials.errors')
 
-    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\AnnouncementController@postStore', 'role' => 'form')) !!}
-        {!! Form::hidden('id', $announcement->id)!!}
+    <form method="POST" action="{{ url('admin/announcements/store') }}" accept-charset="UTF-8" role="form" enctype="multipart/form-data">
+        {{ csrf_field() }}
+        <input name="id" type="hidden" value="{{ $announcement->id }}">
 
     	<div class='row'>
     	    <div class="col-md-3 col-md-push-9">
                 <div class="well">
                     <div class='form-actions'>
-                        {!! HTML::link('admin/announcements', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary btn-sm pull-right')) !!}
+                        <a href="{{ url('admin/announcements') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                        <input class="btn btn-primary btn-sm pull-right" type="submit" value="{{ Lang::get('redminportal::buttons.save') }}">
                     </div>
                 </div>
                 <div class='well well-sm'>
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="private-checker">
-                                {!! Form::checkbox('private', $announcement->private, $announcement->private, array('id' => 'private-checker')) !!} {{ Lang::get('redminportal::forms.private') }}
+                                <input id="private-checker" name="private" type="checkbox" value="{{ $announcement->private }}"@if($announcement->private) checked="checked"@endif> {{ Lang::get('redminportal::forms.private') }}
                             </label>
                         </div>
                     </div>
@@ -32,7 +33,7 @@
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                     <div>
-                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>{!! Form::file('image') !!}</span>
+                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span><input name="image" type="file"></span>
                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
                     </div>
                 </div>
@@ -44,12 +45,12 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            {!! Form::label('title', Lang::get('redminportal::forms.title')) !!}
-                            {!! Form::text('title', $announcement->title, array('class' => 'form-control')) !!}
+                            <label for="title">{{ Lang::get('redminportal::forms.title') }}</label>
+                            <input class="form-control" name="title" type="text" id="title" value="{{ $announcement->title }}">
                         </div>
                         <div class="form-group">
-                            {!! Form::label('content', Lang::get('redminportal::forms.content')) !!}
-                            {!! Form::textarea('content', $announcement->content, array('class' => 'form-control')) !!}
+                            <label for="content">{{ Lang::get('redminportal::forms.content') }}</label>
+                            <textarea class="form-control" name="content" rows="15" id="content">{{ $announcement->content }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -62,7 +63,7 @@
                         <div class='row'>
                             @foreach( $announcement->images as $image )
                             <div class='col-md-3'>
-                                {!! HTML::image($imagine->getUrl($image->path), $announcement->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                                <img src="{{ url($imagine->getUrl($image->path)) }}" class="img-thumbnail" alt="{{ $announcement->name }}"> 
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
                                     <a href="{{ URL::to('admin/announcements/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
@@ -83,8 +84,7 @@
                 @endif
             </div>
     	</div>
-
-    {!! Form::close() !!}
+    </form>
 @stop
 
 @section('footer')
