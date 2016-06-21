@@ -27,24 +27,17 @@ class RedminportalServiceProvider extends ServiceProvider
         
         // Allow end users to publish and modify views
         $this->publishes([
-            __DIR__.'/resources/views' => base_path('resources/views/vendor/redooor/redminportal'),
+            __DIR__.'/resources/views/' => base_path('resources/views/vendor/redooor/redminportal/'),
         ], 'views');
         
         // Allow end users to publish and modify public assets
         $this->publishes([
-            __DIR__.'/public' => public_path('vendor/redooor/redminportal'),
+            __DIR__.'/public/' => public_path('vendor/redooor/redminportal/'),
         ], 'public');
         
         // Publish a config file
         $this->publishes([
-            __DIR__.'/config/image.php' => config_path('vendor/redooor/redminportal/image.php'),
-            __DIR__.'/config/menu.php' => config_path('vendor/redooor/redminportal/menu.php'),
-            __DIR__.'/config/translation.php' => config_path('vendor/redooor/redminportal/translation.php'),
-            __DIR__.'/config/auth.php' => config_path('vendor/redooor/redminportal/auth.php'),
-            __DIR__.'/config/tinymce.php' => config_path('vendor/redooor/redminportal/tinymce.php'),
-            __DIR__.'/config/pagination.php' => config_path('vendor/redooor/redminportal/pagination.php'),
-            __DIR__.'/config/permissions.php' => config_path('vendor/redooor/redminportal/permissions.php'),
-            __DIR__.'/config/payment_statuses.php' => config_path('vendor/redooor/redminportal/payment_statuses.php')
+            __DIR__.'/config/' => config_path('vendor/redooor/redminportal/')
         ], 'config');
         
         // Publish your migrations
