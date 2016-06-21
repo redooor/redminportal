@@ -7,16 +7,16 @@
 @section('content')
 
     @include('redminportal::partials.errors')
-    
+
     <div class="row">
         <div class="col-md-12">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
                 @if (count($models) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
+                    <a href="" class="btn btn-default btn-sm disabled btn-text">{{ trans('redminportal::messages.list_from_to', ['firstItem' => $models->firstItem(), 'lastItem' => $models->lastItem(), 'totalItem' => $models->total()]) }}</a>
                 @endif
                 <a id="rd-media-get-all-duration" class="btn btn-default btn-sm">{{ Lang::get('redminportal::buttons.get_durations') }}</a>
-                {!! HTML::link('admin/medias/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+                <a href="{{ url('admin/medias/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
             </div>
             </div>
         </div>

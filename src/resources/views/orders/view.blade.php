@@ -15,12 +15,12 @@
         <div class="col-md-4">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($models) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
-                @endif
-                <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#export-csv">{{ Lang::get('redminportal::buttons.export_excel') }}</button>
-                {!! HTML::link('admin/orders/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
-            </div>
+                    @if (count($models) > 0)
+                        <a href="" class="btn btn-default btn-sm disabled btn-text">{{ trans('redminportal::messages.list_from_to', ['firstItem' => $models->firstItem(), 'lastItem' => $models->lastItem(), 'totalItem' => $models->total()]) }}</a>
+                    @endif
+                    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#export-csv">{{ Lang::get('redminportal::buttons.export_excel') }}</button>
+                    <a href="{{ url('admin/orders/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+                </div>
             </div>
         </div>
     </div>
@@ -181,7 +181,11 @@
         @endif
     @endif
     {{-- Include Export Modal --}}
-    @include('redminportal::orders.export-modal')
+    @include('redminportal::partials.modal-export', [
+        'export_id' => 'export-csv',
+        'export_title' => trans('redminportal::messages.export_to_excel'),
+        'export_url' => url('admin/reports/orders')
+    ])
 
     {{-- Modal window for Revision table --}}
     {!! Redminportal::html()->modalWindow(

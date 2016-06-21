@@ -15,11 +15,11 @@
         <div class="col-md-8">
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
-                @if (count($models) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
-                @endif
-                {!! HTML::link('admin/users/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
-            </div>
+                    @if (count($models) > 0)
+                    <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
+                    @endif
+                    <a href="{{ url('admin/users/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+                </div>
             </div>
         </div>
     </div>

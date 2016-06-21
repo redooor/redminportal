@@ -1,11 +1,22 @@
-<div id="export-csv" class="modal fade">
+{{--
+    Export Modal Window with date selector template for reuse
+    --------------------------------
+    Usage Example:
+    --------------------------------
+    @include('redminportal::partials.modal-export', [
+        'export_id' => 'export-modal-unique-id',
+        'export_title' => 'Export title',
+        'export_url' => 'Export POST Url'
+    ])
+--}}
+<div id="{{ $export_id }}" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ url('admin/reports/orders') }}" accept-charset="UTF-8" report="form">
+            <form method="POST" action="{{ $export_url }}" accept-charset="UTF-8" report="form">
                 {{ csrf_field() }}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ Lang::get('redminportal::buttons.close') }}</span></button>
-                    <h4 class="modal-title">{{ Lang::get('redminportal::messages.export_to_excel') }}</h4>
+                    <h4 class="modal-title">{{ $export_title }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class='row'>
@@ -30,7 +41,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">{{ Lang::get('redminportal::buttons.close') }}</button>
-                    <input class="btn btn-primary" type="submit" value="{{ Lang::get('redminportal::buttons.download_excel') }}">
+                    <input class="btn btn-primary" type="submit" value="{{ $export_title }}">
                 </div>
             </form>
         </div><!-- /.modal-content -->

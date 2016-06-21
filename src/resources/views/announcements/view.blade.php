@@ -8,18 +8,7 @@
 
     @include('redminportal::partials.errors')
     
-    <div class="row">
-        <div class="col-md-12">
-            <div class="nav-controls text-right">
-                <div class="btn-group" role="group">
-                @if (count($models) >0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
-                @endif
-                <a href="{{ url('admin/announcements/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
-            </div>
-            </div>
-        </div>
-    </div>
+    @include('redminportal::partials.html-view-nav-controls', ['models' => $models, 'model_view' => 'announcements'])
 
     @if (count($models) >0)
         <table class='table table-striped table-bordered table-condensed'>
