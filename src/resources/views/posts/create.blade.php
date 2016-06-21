@@ -23,7 +23,7 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label for="featured-checker">
-                            {!! Form::checkbox('featured', true, true, array('id' => 'featured-checker')) !!} {{ Lang::get('redminportal::forms.featured') }}
+                            <input id="featured-checker" checked="checked" name="featured" type="checkbox" value="1"> {{ Lang::get('redminportal::forms.featured') }}
                         </label>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label for="private-checker">
-                            {!! Form::checkbox('private', true, true, array('id' => 'private-checker')) !!} {{ Lang::get('redminportal::forms.private') }}
+                            <input id="private-checker" checked="checked" name="private" type="checkbox" value="1"> {{ Lang::get('redminportal::forms.private') }}
                         </label>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                   <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                   <div>
-                    <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>{!! Form::file('image') !!}</span>
+                    <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span><input name="image" type="file"></span>
                     <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
                   </div>
                 </div>

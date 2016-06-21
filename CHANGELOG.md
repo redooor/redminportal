@@ -22,6 +22,15 @@ Version 0.2 and 0.3 are developed in parallel. The only difference between them 
 
 Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
 
+## Version 0.3.4 and 0.2.4
+UI and Image handling improvements.
+
+**IMPORTANT:** Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+
+### Enhancements:
+1. Remove dependency of Illuminate HTML and Form (issue #168)
+2. Publish all files within the config folder instead of declaring one by one.
+
 ## Version 0.3.3.1 and 0.2.3.1
 TinyMCE Improvement for all editors.
 
