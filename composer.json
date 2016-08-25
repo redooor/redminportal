@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.4.0",
         "laravel/framework": "5.0.*",
-		"illuminate/html": "~5.0",
+        "laravelcollective/html": "5.0.*",
         "doctrine/dbal": "~2.3",
         "orchestra/imagine": "3.0.*",
         "maatwebsite/excel": "~2.0",

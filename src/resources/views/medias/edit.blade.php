@@ -48,7 +48,7 @@
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                       <div>
-                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>{!! Form::file('image') !!}</span>
+                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span><input name="image" type="file"></span>
                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
                       </div>
                     </div>
@@ -180,6 +180,6 @@
             })
         }(window.jQuery);
     </script>
-    @include('redminportal::plugins/tinymce')
+    @include('redminportal::plugins/tinymce', ['tinyImages' => $media->images])
     @include('redminportal::plugins/tagsinput')
 @stop

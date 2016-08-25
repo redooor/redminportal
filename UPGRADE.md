@@ -2,6 +2,31 @@
 
 Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
 
+## Upgrading to v0.3.3.1/v0.2.3.1 from v0.3.3/v0.2.3
+
+### Public assets
+
+You need to run the following command to re-publish the assets.
+
+**Caution**: This action will overwrite any changes made to the `public/vendor/redooor/redminportal` folder.
+
+As a general rule, do not save any customed files inside `public/vendor/redooor/redminportal` folder.
+
+    php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
+    
+### Views (optional)
+
+**This is optional.** Skip this step if you haven't publish the views before.
+
+You need to run the following command to re-publish the views.
+
+**Caution**: This action will overwrite any changes made to the `resources/views/vendor/redooor/redminportal` folder.
+
+As a general rule, submit your existing files to a version control system and then compare the difference.
+
+    php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" --force
+    
+
 ## Upgrading to v0.3.3/v0.2.3 from v0.3.2/v0.2.2
 
 ### Access Permission

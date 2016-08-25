@@ -81,7 +81,7 @@ class RedminTestCase extends TestBenchTestCase
     {
         return [
             'Redooor\Redminportal\RedminportalServiceProvider',
-            'Illuminate\Html\HtmlServiceProvider'
+            'Collective\Html\HtmlServiceProvider'
         ];
     }
 
@@ -92,8 +92,8 @@ class RedminTestCase extends TestBenchTestCase
     {
         return [
             'Redminportal' => 'Redooor\Redminportal\Facades\Redminportal',
-            'Form'      => 'Illuminate\Html\FormFacade',
-            'HTML'      => 'Illuminate\Html\HtmlFacade'
+            'Form'      => 'Collective\Html\FormFacade',
+            'HTML'      => 'Collective\Html\HtmlFacade'
         ];
     }
 }

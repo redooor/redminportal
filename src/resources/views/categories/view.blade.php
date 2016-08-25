@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="nav-controls text-right">
-                {!! HTML::link('admin/categories/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+                <a href="{{ url('admin/categories/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
             </div>
         </div>
     </div>
