@@ -9,21 +9,21 @@
     
     @include('redminportal::partials.errors')
 
-    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\BundleController@postStore', 'role' => 'form')) !!}
-
+    <form method="POST" action="{{ url('admin/bundles/store') }}" accept-charset="UTF-8" role="form" enctype="multipart/form-data">
+        {{ csrf_field() }}
     	<div class='row'>
             <div class="col-md-3 col-md-push-9">
                 <div class="well">
                     <div class='form-actions'>
-                        {!! HTML::link('admin/bundles', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                        {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm pull-right')) !!}
+                        <a href="{{ url('admin/bundles') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                        <input class="btn btn-primary btn-sm pull-right" type="submit" value="{{ Lang::get('redminportal::buttons.create') }}">
                     </div>
                 </div>
                 <div class='well well-small'>
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="featured-checker">
-                                {!! Form::checkbox('featured', true, true, array('id' => 'featured-checker')) !!} {{ Lang::get('redminportal::forms.featured') }}
+                                <input id="featured-checker" checked="checked" name="featured" type="checkbox" value="1"> {{ Lang::get('redminportal::forms.featured') }}
                             </label>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label for="active-checker">
-                                {!! Form::checkbox('active', true, true, array('id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
+                                <input id="active-checker" checked="checked" name="active" type="checkbox" value="1"> {{ Lang::get('redminportal::forms.active') }}
                             </label>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                       <div>
-                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>{!! Form::file('image') !!}</span>
+                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span><input name="image" type="file"></span>
                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
                       </div>
                     </div>
@@ -157,7 +157,7 @@
                 </div>
 	        </div>
         </div>
-    {!! Form::close() !!}
+    </form>
 @stop
 
 @section('footer')
