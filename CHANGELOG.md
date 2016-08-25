@@ -28,7 +28,7 @@ UI and Image handling improvements.
 **IMPORTANT:** Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
 ### Enhancements:
-1. Remove dependency of Illuminate HTML and Form (issue #168)
+1. Remove dependency of Illuminate HTML and Form, change to use Collective HTML and Form (issue #168)
 2. Publish all files within the config folder instead of declaring one by one.
 
 ## Version 0.3.3.1 and 0.2.3.1
