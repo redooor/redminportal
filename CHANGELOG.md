@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/redooor/redminportal.svg?branch=develop)](https://travis-ci.org/redooor/redminportal)
 
+* [Version 0.3.4 and 0.2.4](#version-034-and-024)
 * [Version 0.3.3.1 and 0.2.3.1](#version-0331-and-0231)
 * [Version 0.3.3 and 0.2.3](#version-033-and-023)
 * [Version 0.3.2 and 0.2.2](#version-032-and-022)
