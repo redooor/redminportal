@@ -6,9 +6,15 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h1>RedminPortal <small>by Redooor</small></h1>
-                    <img src="https://travis-ci.org/redooor/redminportal.svg?branch=v0.2">
+                    <img src="https://travis-ci.org/redooor/redminportal.svg?branch=develop-v0.2">
                     <h2><u>Change log</u></h2>
                     <p>Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.</p>
+                    <h3>Version 0.3.4 and 0.2.4</h3>
+                    <h4>Enhancements:</h4>
+                    <ol>
+                        <li>Remove dependency of Illuminate HTML and Form, change to use Collective HTML and Form (issue #168)</li>
+                        <li>Publish all files within the config folder instead of declaring one by one.</li>
+                    </ol>
                     <h3>Version 0.3.3.1 and 0.2.3.1</h3>
                     <p>TinyMCE Improvement for all editors.</p>
                     <p><strong>IMPORTANT:</strong> Refer to UPGRADE.md for the upgrading instructions.</p>
