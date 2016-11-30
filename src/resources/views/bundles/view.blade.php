@@ -30,7 +30,11 @@
             @foreach ($models as $bundle)
                 <tr>
                     <td>{{ $bundle->name }}</td>
-                    <td>{{ $bundle->category->name or 'No category' }}</td>
+                    @if (empty($bundle->category_id))
+                    <td>{{ Lang::get('redminportal::forms.no_category') }}</td>
+                    @else
+                    <td>{{ $bundle->category->name }}</td>
+                    @endif
                     <td>{{ $bundle->sku }}</td>
                     <td>{{ number_format($bundle->price, 2) }}</td>
                     <td>{{ number_format($bundle->totalvalue(), 2) }}</td>
