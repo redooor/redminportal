@@ -13,10 +13,10 @@
             <div class="nav-controls text-right">
                 <div class="btn-group" role="group">
                 @if (count($models) > 0)
-                <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
+                    <a href="" class="btn btn-default btn-sm disabled btn-text">{{ trans('redminportal::messages.list_from_to', ['firstItem' => $models->firstItem(), 'lastItem' => $models->lastItem(), 'totalItem' => $models->total()]) }}</a>
                 @endif
                 <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#export-csv">{{ Lang::get('redminportal::buttons.export_csv') }}</button>
-                {!! HTML::link('admin/mailinglists/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+                <a href="{{ url('admin/mailinglists/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
             </div>
             </div>
         </div>
@@ -94,43 +94,12 @@
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_mailinglist_found') }}</div>
         @endif
     @endif
-    <div id="export-csv" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\ReportController@postMailinglist', 'report' => 'form')) !!}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ Lang::get('redminportal::buttons.close') }}</span></button>
-                    <h4 class="modal-title">{{ Lang::get('redminportal::messages.export_to_csv') }}</h4>
-                </div>
-                <div class="modal-body">
-                    <div class='row'>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                {!! Form::label('start_date', Lang::get('redminportal::forms.start_date')) !!}
-                                <div class="input-group" id='start-date'>
-                                    {!! Form::input('text', 'start_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                {!! Form::label('end_date', Lang::get('redminportal::forms.end_date')) !!}
-                                <div class="input-group" id='end-date'>
-                                    {!! Form::input('text', 'end_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                </div>
-                            </div>
-                            <p class="help-block">{{ Lang::get('redminportal::messages.leave_all_blank_to_download_all') }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ Lang::get('redminportal::buttons.close') }}</button>
-                    {!! Form::submit(Lang::get('redminportal::buttons.download_csv'), array('class' => 'btn btn-primary')) !!}
-                </div>
-                {!! Form::close() !!}
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    {{-- Include Export Modal --}}
+    @include('redminportal::partials.modal-export', [
+        'export_id' => 'export-csv',
+        'export_title' => trans('redminportal::messages.export_to_csv'),
+        'export_url' => url('admin/reports/mailinglist')
+    ])
 @stop
 
 @section('footer')

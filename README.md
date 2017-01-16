@@ -1,6 +1,6 @@
 ![alt text][logo]
 
-[logo]: http://www.redooor.com/assets/img/redminportal_logo_sm.png "RedminPortal"
+[logo]: https://redooor.com/assets/img/services/sm/redminportal_redooor.jpg "RedminPortal"
 
 # RedminPortal by Redooor
 

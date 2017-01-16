@@ -37,7 +37,7 @@
                             <div class="form-group">
                                 <div class="checkbox">
                                     <label for="active-checker">
-                                        {!! Form::checkbox('active', true, true, array('id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
+                                        <input id="active-checker" checked="checked" name="active" type="checkbox" value="1"> {{ Lang::get('redminportal::forms.active') }}
                                     </label>
                                 </div>
                             </div>

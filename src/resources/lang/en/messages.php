@@ -178,4 +178,6 @@ return array(
         => "The bundles field is required when none of products or Module/Memberships are present",
     'order_error_pricelist_id_required_without_all'
         => "The Module/Memberships field is required when none of products or bundles are present",
+    'list_from_to'
+        => ":firstItem to :lastItem of :totalItem",
 );

@@ -145,7 +145,6 @@ class BundleController extends Controller
             'product_id' => $product_id,
             'pricelist_id' => $pricelist_id,
             'translated' => $translated,
-            'categories'=> $categories,
             'tagString' => $tagString,
             'imagine' => new RImage
         );
