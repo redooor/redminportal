@@ -1,8 +1,10 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Foundation\Bus\DispatchesCommands;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 
 abstract class Controller extends BaseController
 {
@@ -14,5 +16,5 @@ abstract class Controller extends BaseController
     protected $pageRoute;
     protected $data; // For storing shared data across views
     
-    use DispatchesCommands, ValidatesRequests;
+    use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
 }

@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Illuminate\Support\Facades\Input;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Mailinglist;
@@ -60,7 +61,7 @@ class MailinglistController extends Controller
 
     public function postStore()
     {
-        $sid = \Input::get('id');
+        $sid = Input::get('id');
 
         /*
          * Validate
@@ -71,13 +72,13 @@ class MailinglistController extends Controller
             'last_name'      => 'required'
         );
 
-        $validation = \Validator::make(\Input::all(), $rules);
+        $validation = \Validator::make(Input::all(), $rules);
 
         if ($validation->passes()) {
-            $email       = \Input::get('email');
-            $first_name  = \Input::get('first_name');
-            $last_name   = \Input::get('last_name');
-            $active      = (\Input::get('active') == '' ? false : true);
+            $email       = Input::get('email');
+            $first_name  = Input::get('first_name');
+            $last_name   = Input::get('last_name');
+            $active      = (Input::get('active') == '' ? false : true);
 
             $mailinglist = (isset($sid) ? Mailinglist::find($sid) : new Mailinglist);
             

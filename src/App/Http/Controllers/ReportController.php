@@ -3,6 +3,7 @@
 use Redooor\Redminportal\App\Models\Mailinglist;
 use Redooor\Redminportal\App\Models\UserPricelist;
 use Redooor\Redminportal\App\Models\Order;
+use Illuminate\Support\Facades\Input;
 
 class ReportController extends Controller
 {
@@ -13,13 +14,13 @@ class ReportController extends Controller
 
     public function postMailinglist()
     {
-        $input_start_date = \Input::get('start_date');
+        $input_start_date = Input::get('start_date');
         if ($input_start_date == "") {
             $input_start_date = "01/01/1900";
         }
         $start_date = \DateTime::createFromFormat('d/m/Y', $input_start_date);
 
-        $input_end_date = \Input::get('end_date');
+        $input_end_date = Input::get('end_date');
 
         if ($input_end_date == "") {
             $end_date = new \DateTime("NOW");
@@ -51,13 +52,13 @@ class ReportController extends Controller
 
     public function postPurchases()
     {
-        $input_start_date = \Input::get('start_date');
+        $input_start_date = Input::get('start_date');
         if ($input_start_date == "") {
             $input_start_date = "01/01/1900";
         }
         $start_date = \DateTime::createFromFormat('d/m/Y', $input_start_date);
 
-        $input_end_date = \Input::get('end_date');
+        $input_end_date = Input::get('end_date');
 
         if ($input_end_date == "") {
             $end_date = new \DateTime("NOW");
@@ -89,13 +90,13 @@ class ReportController extends Controller
     
     public function postOrders()
     {
-        $input_start_date = \Input::get('start_date');
+        $input_start_date = Input::get('start_date');
         if ($input_start_date == "") {
             $input_start_date = "01/01/1900";
         }
         $start_date = \DateTime::createFromFormat('d/m/Y', $input_start_date);
 
-        $input_end_date = \Input::get('end_date');
+        $input_end_date = Input::get('end_date');
 
         if ($input_end_date == "") {
             $end_date = new \DateTime("NOW");

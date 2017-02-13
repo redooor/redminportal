@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use DB;
+use Illuminate\Support\Facades\Input;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Media;
@@ -153,7 +154,7 @@ class ModuleController extends Controller
 
     public function postStore()
     {
-        $sid = \Input::get('id');
+        $sid = Input::get('id');
         
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
@@ -168,18 +169,18 @@ class ModuleController extends Controller
             'category_id.min' => 'The category field is required.'
         ];
 
-        $validation = \Validator::make(\Input::all(), $rules, $messages);
+        $validation = \Validator::make(Input::all(), $rules, $messages);
 
         if ($validation->passes()) {
-            $name               = \Input::get('name');
-            $sku                = \Input::get('sku');
-            $short_description  = \Input::get('short_description');
-            $long_description   = \Input::get('long_description');
-            $image              = \Input::file('image');
-            $featured           = (\Input::get('featured') == '' ? false : true);
-            $active             = (\Input::get('active') == '' ? false : true);
-            $category_id        = \Input::get('category_id');
-            $tags               = \Input::get('tags');
+            $name               = Input::get('name');
+            $sku                = Input::get('sku');
+            $short_description  = Input::get('short_description');
+            $long_description   = Input::get('long_description');
+            $image              = Input::file('image');
+            $featured           = (Input::get('featured') == '' ? false : true);
+            $active             = (Input::get('active') == '' ? false : true);
+            $category_id        = Input::get('category_id');
+            $tags               = Input::get('tags');
 
             $module = (isset($sid) ? Module::find($sid) : new Module);
             
@@ -212,9 +213,9 @@ class ModuleController extends Controller
                 }
 
                 $translated_content = array(
-                    'name'                  => \Input::get($lang . '_name'),
-                    'short_description'     => \Input::get($lang . '_short_description'),
-                    'long_description'      => \Input::get($lang . '_long_description')
+                    'name'                  => Input::get($lang . '_name'),
+                    'short_description'     => Input::get($lang . '_short_description'),
+                    'long_description'      => Input::get($lang . '_long_description')
                 );
 
                 // Check if lang exist
@@ -240,8 +241,8 @@ class ModuleController extends Controller
                     $pricelist->membership_id = $membership->id;
                 }
                 
-                $price_active = (\Input::get('price_active_' . $membership->id) == '' ? false : true);
-                $price = \Input::get('price_' . $membership->id);
+                $price_active = (Input::get('price_active_' . $membership->id) == '' ? false : true);
+                $price = Input::get('price_' . $membership->id);
 
                 if (! empty($price)) {
                     $pricelist->active = $price_active;
@@ -257,7 +258,7 @@ class ModuleController extends Controller
             }
 
             // Save medias
-            $media_checkbox = \Input::get('media_checkbox');
+            $media_checkbox = Input::get('media_checkbox');
 
             if (isset($sid)) {
                 // Remove all existing medias
@@ -291,7 +292,7 @@ class ModuleController extends Controller
                 }
             }
 
-            if (\Input::hasFile('image')) {
+            if (Input::hasFile('image')) {
                 //Upload the file
                 $helper_image = new RImage;
                 $filename = $helper_image->upload($image, 'modules/' . $module->id, true);

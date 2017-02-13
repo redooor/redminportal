@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Input;
+use Illuminate\Support\Facades\Input;
 use Exception;
 use Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;

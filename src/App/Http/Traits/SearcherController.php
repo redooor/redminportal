@@ -4,7 +4,7 @@
  * Add search capability to controller
  */
 
-use Input;
+use Illuminate\Support\Facades\Input;
 use Validator;
 use Illuminate\Support\MessageBag;
 

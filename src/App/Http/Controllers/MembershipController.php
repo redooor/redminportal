@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Illuminate\Support\Facades\Input;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
@@ -59,18 +60,18 @@ class MembershipController extends Controller
 
     public function postStore()
     {
-        $sid = \Input::get('id');
+        $sid = Input::get('id');
         
         $rules = array(
             'name'   => 'required|unique:memberships,name' . (isset($sid) ? ',' . $sid : ''),
             'rank'   => 'required|min:0',
         );
 
-        $validation = \Validator::make(\Input::all(), $rules);
+        $validation = \Validator::make(Input::all(), $rules);
 
         if ($validation->passes()) {
-            $name      = \Input::get('name');
-            $rank      = \Input::get('rank');
+            $name      = Input::get('name');
+            $rank      = Input::get('rank');
 
             $membership = (isset($sid) ? Membership::find($sid) : new Membership);
             

@@ -232,9 +232,9 @@ class ProductController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => \Input::get($lang . '_name'),
-                'short_description'     => \Input::get($lang . '_short_description'),
-                'long_description'      => \Input::get($lang . '_long_description')
+                'name'                  => Input::get($lang . '_name'),
+                'short_description'     => Input::get($lang . '_short_description'),
+                'long_description'      => Input::get($lang . '_long_description')
             );
 
             // Check if lang exist

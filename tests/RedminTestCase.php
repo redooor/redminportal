@@ -55,8 +55,6 @@ class RedminTestCase extends TestBenchTestCase
             '--database' => 'testbench',
             '--realpath' => realpath(__DIR__.'/../src/database/migrations'),
         ]);
-
-        \Mail::pretend(true);
     }
 
     /**

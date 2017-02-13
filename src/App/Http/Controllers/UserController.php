@@ -2,7 +2,7 @@
 
 use Auth;
 use Hash;
-use Input;
+use Illuminate\Support\Facades\Input;
 use Lang;
 use Validator;
 use Illuminate\Support\MessageBag;

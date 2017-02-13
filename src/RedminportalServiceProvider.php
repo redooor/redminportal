@@ -128,7 +128,7 @@ class RedminportalServiceProvider extends ServiceProvider
      */
     protected function bindSharedInstances()
     {
-        $this->app->bindShared('redminportal', function ($app) {
+        $this->app->singleton('redminportal', function ($app) {
             return new Redminportal($app['url']);
         });
     }
