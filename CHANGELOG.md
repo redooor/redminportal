@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/redooor/redminportal.svg?branch=develop)](https://travis-ci.org/redooor/redminportal)
 
-* [Version 0.3.4 and 0.2.4](#version-034-and-024)
+* [Version 0.4.4, 0.3.4 and 0.2.4](#version-044-034-and-024)
 * [Version 0.3.3.1 and 0.2.3.1](#version-0331-and-0231)
 * [Version 0.3.3 and 0.2.3](#version-033-and-023)
 * [Version 0.3.2 and 0.2.2](#version-032-and-022)
@@ -13,17 +13,19 @@
 
 #Compatibility
 
-| Laravel | RedminPortal | Branch |
-|:-------:|:------------:|:------:|
-| 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) |
-| 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) |
-| 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) |
+| Laravel | RedminPortal | Branch | Status |
+|:-------:|:------------:|:------:|:------:|
+| 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) | Inactive |
+| 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) | Active   |
+| 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) | Active   |
+| 5.2     | 0.4.x        | [v0.4](https://github.com/redooor/redminportal/tree/v0.4) | Active   |
 
-Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+Version 0.2, 0.3 and 0.4 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+The focus of the development will be on branch 0.3, which supports the LTS Laravel version 5.1.
 
-Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
+Development for branch v0.1 has stopped. Please upgrade to later versions.
 
-## Version 0.3.4 and 0.2.4
+## Version 0.4.4, 0.3.4 and 0.2.4
 UI and Image handling improvements.
 
 **IMPORTANT:** Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
@@ -31,6 +33,7 @@ UI and Image handling improvements.
 ### Enhancements:
 1. Remove dependency of Illuminate HTML and Form, change to use Collective HTML and Form (issue #168)
 2. Publish all files within the config folder instead of declaring one by one.
+3. Added support for Laravel 5.2 on branch 0.4 (issue #175).
 
 ## Version 0.3.3.1 and 0.2.3.1
 TinyMCE Improvement for all editors.
