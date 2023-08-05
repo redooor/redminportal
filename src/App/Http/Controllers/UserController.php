@@ -62,7 +62,7 @@ class UserController extends Controller
 
     public function getCreate()
     {
-        $roles = Group::orderBy('name')->lists('name', 'id');
+        $roles = Group::orderBy('name')->pluck('name', 'id');
         
         return view('redminportal::users/create')->with('roles', $roles);
     }
@@ -80,7 +80,7 @@ class UserController extends Controller
             return redirect('/admin/users')->withErrors($errors);
         }
         
-        $roles = Group::orderBy('name')->lists('name', 'id');
+        $roles = Group::orderBy('name')->pluck('name', 'id');
         
         $groups = [];
         foreach ($user->groups as $group) {

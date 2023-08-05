@@ -64,9 +64,9 @@ class OrderController extends Controller
     
     public function getCreate()
     {
-        $products = Product::where('active', true)->orderBy('name')->lists('name', 'id');
-        $bundles = Bundle::where('active', true)->orderBy('name')->lists('name', 'id');
-        $coupons = Coupon::orderBy('code')->lists('code', 'id');
+        $products = Product::where('active', true)->orderBy('name')->pluck('name', 'id');
+        $bundles = Bundle::where('active', true)->orderBy('name')->pluck('name', 'id');
+        $coupons = Coupon::orderBy('code')->pluck('code', 'id');
         
         $pricelists = array();
 

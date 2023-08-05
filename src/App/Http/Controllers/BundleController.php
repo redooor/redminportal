@@ -52,7 +52,7 @@ class BundleController extends Controller
             ->orderBy('name')
             ->get();
         
-        $products = Product::where('active', true)->lists('name', 'id');
+        $products = Product::where('active', true)->pluck('name', 'id');
         
         $membermodules = array();
 
@@ -96,7 +96,7 @@ class BundleController extends Controller
             ->orderBy('name')
             ->get();
         
-        $products = Product::where('active', true)->lists('name', 'id');
+        $products = Product::where('active', true)->pluck('name', 'id');
         
         $membermodules = array();
 

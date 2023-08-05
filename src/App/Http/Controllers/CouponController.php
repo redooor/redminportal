@@ -57,8 +57,8 @@ class CouponController extends Controller
     {
         $categories = $this->getCategories();
         
-        $products = Product::where('active', true)->lists('name', 'id');
-        $bundles = Bundle::where('active', true)->lists('name', 'id');
+        $products = Product::where('active', true)->pluck('name', 'id');
+        $bundles = Bundle::where('active', true)->pluck('name', 'id');
         
         $membermodules = array();
 
@@ -98,8 +98,8 @@ class CouponController extends Controller
         
         $categories = $this->getCategories();
         
-        $products = Product::where('active', true)->lists('name', 'id');
-        $bundles = Bundle::where('active', true)->lists('name', 'id');
+        $products = Product::where('active', true)->pluck('name', 'id');
+        $bundles = Bundle::where('active', true)->pluck('name', 'id');
         
         $membermodules = array();
 
