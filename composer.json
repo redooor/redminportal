@@ -12,8 +12,8 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.2.*",
-		"laravelcollective/html": "5.2.*",
+        "laravel/framework": "5.3.*",
+		"laravelcollective/html": "5.3.*",
         "doctrine/dbal": "~2.4",
         "orchestra/imagine": "~3.0",
         "maatwebsite/excel": "~2.0",
@@ -23,8 +23,8 @@
         "phpunit/phpunit": "~4.8",
 		"mockery/mockery": "~0.9.4",
         "orchestra/testbench": "~3.0",
-        "symfony/dom-crawler": "~3.0",
-        "symfony/css-selector": "~3.0"
+        "symfony/dom-crawler": "3.1.*",
+        "symfony/css-selector": "3.1.*"
 	},
     "autoload": {
         "classmap": [
