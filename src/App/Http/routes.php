@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::controller('login', 'Redooor\Redminportal\App\Http\Controllers\LoginController');
+Route::resource('login', 'Redooor\Redminportal\App\Http\Controllers\LoginController');
 Route::get('logout', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getLogout');
-Route::controller('myaccount', 'Redooor\Redminportal\App\Http\Controllers\MyaccountController');
+Route::resource('myaccount', 'Redooor\Redminportal\App\Http\Controllers\MyaccountController');
 
 Route::group(
     [
@@ -23,25 +23,25 @@ Route::group(
             return redirect('admin/dashboard');
         });
         Route::get('dashboard', 'HomeController@home');
-        Route::controller('announcements', 'AnnouncementController');
-        Route::controller('categories', 'CategoryController');
-        Route::controller('coupons', 'CouponController');
-        Route::controller('groups', 'GroupController');
-        Route::controller('medias', 'MediaController');
-        Route::controller('mailinglists', 'MailinglistController');
-        Route::controller('memberships', 'MembershipController');
-        Route::controller('modules', 'ModuleController');
-        Route::controller('portfolios', 'PortfolioController');
-        Route::controller('products', 'ProductController');
-        Route::controller('promotions', 'PromotionController');
-        Route::controller('purchases', 'PurchaseController');
-        Route::controller('reports', 'ReportController');
-        Route::controller('users', 'UserController');
-        Route::controller('posts', 'PostController');
-        Route::controller('pages', 'PageController');
-        Route::controller('orders', 'OrderController');
-        Route::controller('bundles', 'BundleController');
-        Route::controller('images', 'ImageController');
+        Route::resource('announcements', 'AnnouncementController');
+        Route::resource('categories', 'CategoryController');
+        Route::resource('coupons', 'CouponController');
+        Route::resource('groups', 'GroupController');
+        Route::resource('medias', 'MediaController');
+        Route::resource('mailinglists', 'MailinglistController');
+        Route::resource('memberships', 'MembershipController');
+        Route::resource('modules', 'ModuleController');
+        Route::resource('portfolios', 'PortfolioController');
+        Route::resource('products', 'ProductController');
+        Route::resource('promotions', 'PromotionController');
+        Route::resource('purchases', 'PurchaseController');
+        Route::resource('reports', 'ReportController');
+        Route::resource('users', 'UserController');
+        Route::resource('posts', 'PostController');
+        Route::resource('pages', 'PageController');
+        Route::resource('orders', 'OrderController');
+        Route::resource('bundles', 'BundleController');
+        Route::resource('images', 'ImageController');
     }
 );
 
@@ -52,7 +52,7 @@ Route::group(
         'prefix' => 'admin/api'
     ],
     function () {
-        Route::controller('email', 'EmailApi');
+        Route::resource('email', 'EmailApi');
     }
 );
 
@@ -65,6 +65,6 @@ Route::group(
         Route::get('/', function () {
             return redirect('/');
         });
-        Route::controller('tag', 'TagApi');
+        Route::resource('tag', 'TagApi');
     }
 );
