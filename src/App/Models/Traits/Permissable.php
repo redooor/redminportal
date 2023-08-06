@@ -67,7 +67,7 @@ trait Permissable
         } elseif ($request->is('*/delete/*')) {
             $type = 'delete';
         } elseif ($request->is('*/store') && $request->isMethod('post')) {
-            if ($request->has('id')) {
+            if ($request->filled('id')) {
                 $type = 'update';
             } else {
                 $type = 'create';
