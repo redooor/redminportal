@@ -55,8 +55,8 @@
                         <td>User deleted</td>
                         <td>User deleted</td>
                         @endif
-                        <td>{{ $purchase->pricelist->module->name or '' }}</td>
-                        <td>{{ $purchase->pricelist->membership->name or '' }}</td>
+                        <td>{{ $purchase->pricelist->module->name ?? '' }}</td>
+                        <td>{{ $purchase->pricelist->membership->name ?? '' }}</td>
                         <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($purchase->paid, Lang::get('redminportal::currency.currency')) }}</td>
                         <td>{{ $purchase->payment_status }}</td>
                         <td>{{ $purchase->transaction_id }}</td>

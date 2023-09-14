@@ -20,17 +20,17 @@
     <div class="tab-pane active" id="lang-en{{ isset($selector_name) ? $selector_name : '' }}">
         <div class="form-group">
             {!! Form::label('name', Lang::get('redminportal::forms.title')) !!}
-            <div>{!! $translatable->name or '' !!}</div>
+            <div>{!! $translatable->name ?? '' !!}</div>
         </div>
 
         <div class="form-group">
             {!! Form::label('short_description', Lang::get('redminportal::forms.summary')) !!}
-            <div>{!! $translatable->short_description or '' !!}</div>
+            <div>{!! $translatable->short_description ?? '' !!}</div>
         </div>
 
         <div class="form-group">
             {!! Form::label('long_description', Lang::get('redminportal::forms.description')) !!}
-            <div>{!! $translatable->long_description or '' !!}</div>
+            <div>{!! $translatable->long_description ?? '' !!}</div>
         </div>
     </div>
     @foreach(\Config::get('redminportal::translation') as $translation)

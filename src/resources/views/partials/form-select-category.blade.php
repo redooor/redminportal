@@ -16,18 +16,18 @@
 --}}
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="panel-title">{{ $select_category_title or trans('redminportal::forms.category') }}</div>
+        <div class="panel-title">{{ $select_category_title ?? trans('redminportal::forms.category') }}</div>
     </div>
     <div class="panel-body">
         <input type="hidden" 
                id="{{ $select_category_selected_name }}" 
                name="{{ $select_category_selected_name }}" 
-               value="{{ $select_category_selected_id or '0' }}">
+               value="{{ $select_category_selected_id ?? '0' }}">
         <ul class="redmin-hierarchy">
-        @if (!isset($select_category_required_field) or !$select_category_required_field)
+        @if (!isset($select_category_required_field) ?? !$select_category_required_field)
             <li>
                 <a href="0"><span class='glyphicon glyphicon-menu-right'></span> 
-                    {{ $select_category_default_text or trans('redminportal::forms.no_category') }}</a>
+                    {{ $select_category_default_text ?? trans('redminportal::forms.no_category') }}</a>
             </li>
         @endif
         @foreach ($select_category_categories as $item)

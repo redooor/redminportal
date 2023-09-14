@@ -60,7 +60,7 @@
                     <!-- Volume information -->
                     <div class="form-group">
                         <label>{{ Lang::get('redminportal::forms.volume') }}</label>
-                        @if ($product->length or $product->width or $product->height)
+                        @if ($product->length || $product->width || $product->height)
                         <div class="form-group">(L) {{ $product->length }} {{ $product->volume_unit }}, (W) {{ $product->width }} {{ $product->volume_unit }}, (H) {{ $product->height }} {{ $product->volume_unit }}</div>
                         @else
                         <div class="form-group">{{ Lang::get('redminportal::messages.no_volume_information_found') }}</div>

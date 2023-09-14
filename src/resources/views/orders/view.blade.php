@@ -117,7 +117,7 @@
                         @endif
 					</td>
                     <td class="table-actions text-center">
-                        @if ($order->products()->count() > 0 or $order->bundles()->count() > 0 or $order->pricelists()->count())
+                        @if ($order->products()->count() > 0 || $order->bundles()->count() > 0 || $order->pricelists()->count())
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
 								<span class="glyphicon glyphicon-shopping-cart"></span>

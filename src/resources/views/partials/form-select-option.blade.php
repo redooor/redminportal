@@ -20,11 +20,11 @@
     *NOTE: if value_as_key is set, then matching value will be marked as selected instead.
 */
 ?>
-<div class="form-group {{ $wrapper_classes or '' }}">
+<div class="form-group {{ $wrapper_classes ?? '' }}">
     @if (isset($label))
-    <label class="{{ $label_classes or '' }}" for="{{ $select_name }}">{{ $label }}</label>
+    <label class="{{ $label_classes ?? '' }}" for="{{ $select_name }}">{{ $label }}</label>
     @endif
-    <select class="form-control {{ $select_classes or '' }}" name="{{ $select_name }}" id="{{ $select_id or $select_name }}">
+    <select class="form-control {{ $select_classes ?? '' }}" name="{{ $select_name }}" id="{{ $select_id ?? $select_name }}">
         @foreach ($select_options as $select_option_key => $select_option_value)
             <?php $this_option_value = (isset($value_as_key) ? $select_option_value : $select_option_key); ?>
             @if (isset($selected) and ($selected == $this_option_value))

@@ -21,7 +21,7 @@
         @elseif ($menu['path'] == '')
             <li class="nav-sub-header"><span>{{ \Lang::get('redminportal::menus.' . $menu['name']) }}</span>
         @else
-            @if (\Request::is($menu['path']) or \Request::is($menu['path'] . '/*'))
+            @if (\Request::is($menu['path']) ?? \Request::is($menu['path'] . '/*'))
                 <li class="active">
             @else
                 <li>
