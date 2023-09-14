@@ -39,7 +39,7 @@ class RedminTestCase extends TestBenchTestCase
      * Sets up environment for each test.
      * Temporariliy increase memory limit, run migrations and set Mail::pretend to true.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

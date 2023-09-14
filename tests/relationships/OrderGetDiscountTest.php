@@ -15,7 +15,7 @@ class OrderGetDiscountTest extends BaseRelationshipTest
     /**
      * Setup initial data for use in tests
      */
-    public function setup()
+    public function setup(): void
     {
         parent::setup();
         
@@ -61,7 +61,7 @@ class OrderGetDiscountTest extends BaseRelationshipTest
         ));
     }
     
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->order);
         unset($this->product_1);

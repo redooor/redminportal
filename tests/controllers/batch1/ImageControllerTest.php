@@ -27,7 +27,7 @@ class ImageControllerTest extends RedminTestCase
     /**
      * Initialize Setup with seed
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

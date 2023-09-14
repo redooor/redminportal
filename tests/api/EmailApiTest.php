@@ -8,7 +8,7 @@ class EmailApiTest extends RedminTestCase
     /**
      * Setup initial data for use in tests
      */
-    public function setup()
+    public function setup(): void
     {
         parent::setup();
         

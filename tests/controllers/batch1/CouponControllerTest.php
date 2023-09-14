@@ -79,7 +79,7 @@ class CouponControllerTest extends BaseControllerTest
     /**
      * Setup initial data for use in tests
      */
-    public function setup()
+    public function setup(): void
     {
         parent::setup();
         
