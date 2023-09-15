@@ -4,34 +4,27 @@ use Redooor\Redminportal\App\Classes\File;
 
 class FileClassTest extends RedminTestCase
 {
-    private $path;
-    private $files;
-    
-    public function __construct()
-    {
-        $this->path = __DIR__ . '/../dummy/';
-        
-        $this->files = [
-            [
-                'name' => 'foo113a.pdf',
-                'type' => 'application/pdf',
-                'size' => 11941,
-                'duration' => null
-            ],
-            [
-                'name' => 'foo113audio.m4a',
-                'type' => 'audio/mp4',
-                'size' => 225613,
-                'duration' => '0:07'
-            ],
-            [
-                'name' => 'foo113audio.mp3',
-                'type' => 'audio/mpeg',
-                'size' => 174923,
-                'duration' => '0:07'
-            ]
-        ];
-    }
+    private $path = __DIR__ . '/../dummy/';
+    private $files = [
+        [
+            'name' => 'foo113a.pdf',
+            'type' => 'application/pdf',
+            'size' => 11941,
+            'duration' => null
+        ],
+        [
+            'name' => 'foo113audio.m4a',
+            'type' => 'audio/x-m4a',
+            'size' => 225613,
+            'duration' => '0:07'
+        ],
+        [
+            'name' => 'foo113audio.mp3',
+            'type' => 'audio/mpeg',
+            'size' => 174923,
+            'duration' => '0:07'
+        ]
+    ];
     
     /**
      * Test (Pass): test getMimeType() get correct Mime Type for .pdf
@@ -48,10 +41,10 @@ class FileClassTest extends RedminTestCase
      * PHP5 returns "audio/mp4" as MimeType
      * Don't test this for now. Inconsistency due to external plugin.
      */
-//    public function testGetMimeTypePassM4a()
-//    {
-//        $this->runSubtestGetMimeType($this->files[1]);
-//    }
+   public function testGetMimeTypePassM4a()
+   {
+       $this->runSubtestGetMimeType($this->files[1]);
+   }
     
     /**
      * Test (Pass): test getMimeType() get correct Mime Type for .mp3
@@ -95,7 +88,7 @@ class FileClassTest extends RedminTestCase
         $mimetype = $file->getMimeType();
 
         // Check Mime Type
-        $this->assertTrue($mimetype == $test['type']);
+        $this->assertTrue($mimetype == $test['type'], 'Type mismatched: ' . $mimetype . ' vs ' . $test['type']);
     }
     
     /**
@@ -109,7 +102,7 @@ class FileClassTest extends RedminTestCase
         $size = $file->getSize();
 
         // Check Mime Type
-        $this->assertTrue($duration == $test['duration']);
-        $this->assertTrue($size == $test['size']);
+        $this->assertTrue($duration == $test['duration'], 'Duration mismatched.');
+        $this->assertTrue($size == $test['size'], 'Size mismatched.');
     }
 }

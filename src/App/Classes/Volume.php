@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Classes;
 
-use Config;
+use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Interfaces\Measurable;
 
 class Volume implements Measurable
