@@ -139,7 +139,7 @@ trait Permissable
     {
         $permission_level = 0;
         
-        if (array_key_exists($route, $permissions)) {
+        if (property_exists($permissions, $route)) {
             $permission_level = $permissions->$route;
             
             // Check if type is bool, convert to int

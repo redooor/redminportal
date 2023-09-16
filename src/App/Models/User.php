@@ -85,9 +85,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
     
     /**
-    /* Add Group(s) to User
-    /* @param Group can be single Id or array of Group Id
-    /* @return bool True if successful
+     * Add Group(s) to User
+     * @param Group can be single Id or array of Group Id
+     * @return bool True if successful
      */
     public function addGroup($group_id)
     {

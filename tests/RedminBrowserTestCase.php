@@ -1,10 +1,10 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use \Orchestra\Testbench\TestCase as TestBenchTestCase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Orchestra\Testbench\BrowserKit\TestCase;
 
-class RedminTestCase extends TestBenchTestCase
+class RedminBrowserTestCase extends TestCase
 {
     /**
      * Overrides environment with in-memory sqlite database.

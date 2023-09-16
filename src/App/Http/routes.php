@@ -8,8 +8,13 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::resource('login', 'Redooor\Redminportal\App\Http\Controllers\LoginController');
+// Login controller
+Route::get('login', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getIndex');
+Route::post('login/login', 'Redooor\Redminportal\App\Http\Controllers\LoginController@postLogin');
+Route::get('login/unauthorized', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getUnauthorized');
 Route::get('logout', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getLogout');
+
+// Account controller
 Route::resource('myaccount', 'Redooor\Redminportal\App\Http\Controllers\MyaccountController');
 
 Route::group(
@@ -52,7 +57,8 @@ Route::group(
         'prefix' => 'admin/api'
     ],
     function () {
-        Route::resource('email', 'EmailApi');
+        Route::get('email', 'EmailApi@getIndex');
+        Route::get('email/all', 'EmailApi@getAll');
     }
 );
 
@@ -65,6 +71,7 @@ Route::group(
         Route::get('/', function () {
             return redirect('/');
         });
-        Route::resource('tag', 'TagApi');
+        Route::get('tag', 'TagApi@getIndex');
+        Route::get('tag/name', 'TagApi@getName');
     }
 );

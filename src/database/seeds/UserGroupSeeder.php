@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Group;
 
@@ -15,7 +16,7 @@ class UserGroupSeeder extends Seeder
         
         $user = new User;
         $user->email        = 'admin@admin.com';
-        $user->password     = \Hash::make("admin");
+        $user->password     = Hash::make("admin");
         $user->first_name   = 'System';
         $user->last_name    = 'Admin';
         $user->activated    = 1;

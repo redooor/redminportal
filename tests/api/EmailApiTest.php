@@ -1,9 +1,8 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
-use Redooor\Redminportal\App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
-class EmailApiTest extends RedminTestCase
+class EmailApiTest extends RedminBrowserTestCase
 {
     /**
      * Setup initial data for use in tests
@@ -14,14 +13,14 @@ class EmailApiTest extends RedminTestCase
         
         $this->seed('RedminSeeder');
     }
-    
+
     /**
      * Test (Pass): access /admin/api/email
      */
     public function testIndexPass()
     {
         Auth::loginUsingId(1); // Fake admin authentication
-        
+
         $response = $this->call('GET', '/admin/api/email');
         $this->assertResponseOk();
         
@@ -34,8 +33,19 @@ class EmailApiTest extends RedminTestCase
     /**
      * Test (Fail): access /admin/api/email without authentication
      */
-    public function testIndexFail()
+    public function testIndexNoAuthFail()
     {
+        $this->call('GET', '/admin/api/email');
+        $this->assertResponseStatus(302);
+    }
+
+    /**
+     * Test (Fail): access /admin/api/email with authentication but no permission
+     */
+    public function testIndexNoPermissionFail()
+    {
+        Auth::loginUsingId(2); // Fake user authentication
+
         $this->call('GET', '/admin/api/email');
         $this->assertResponseStatus(302);
     }
@@ -59,8 +69,19 @@ class EmailApiTest extends RedminTestCase
     /**
      * Test (Fail): access /admin/api/email/all without authentication
      */
-    public function testGetNameFail()
+    public function testGetNameNoAuthFail()
     {
+        $this->call('GET', '/admin/api/email/all');
+        $this->assertResponseStatus(302);
+    }
+
+    /**
+     * Test (Fail): access /admin/api/email/all with authentication but no permission
+     */
+    public function testGetNameNoPermissionFail()
+    {
+        Auth::loginUsingId(2); // Fake user authentication
+
         $this->call('GET', '/admin/api/email/all');
         $this->assertResponseStatus(302);
     }

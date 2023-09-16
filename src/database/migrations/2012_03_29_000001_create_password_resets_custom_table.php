@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
-class CreatePasswordResetsTable extends Migration {
+class CreatePasswordResetsCustomTable extends Migration {
 
 	/**
 	 * Run the migrations.

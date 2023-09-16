@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class RemoveUnqiueNameCategoryTable extends Migration {
 
@@ -14,7 +15,7 @@ class RemoveUnqiueNameCategoryTable extends Migration {
 	{
 		Schema::table('categories', function(Blueprint $table)
 		{
-			$table->dropUnique('categories_name_unique');
+			$table->dropUnique(['name']);
 		});
 	}
 

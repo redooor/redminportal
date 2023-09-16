@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddAutomaticallyApplyToCouponsTable extends Migration
 {
@@ -35,7 +36,7 @@ class AddAutomaticallyApplyToCouponsTable extends Migration
             Schema::table('coupons', function(Blueprint $table)
             {
                 if (Schema::hasColumn('coupons', 'automatically_apply')) {
-                    $table->dropColumn('automatically_apply');
+                    $table->dropColumn(['automatically_apply']);
                 }
             });
         }

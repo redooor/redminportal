@@ -1,7 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -33,7 +34,7 @@ class LoginController extends Controller
             'password'  => 'required',
         );
 
-        $validation = \Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules);
 
         if ($validation->fails()) {
             return redirect('login')->withErrors($validation)->withInput();

@@ -1,9 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Middleware;
 
 use Closure;
-use Auth;
 use Illuminate\Contracts\Auth\Guard;
-use Redooor\Redminportal\App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class Authenticate
 {
@@ -42,9 +41,9 @@ class Authenticate
             }
         }
         
-        $user = Auth::user();
-        
-        // Check if user has permission
+        $user = $request->user();
+
+        // Check if user is activated
         if ($user != null) {
             if (! $user->activated) {
                 // User logged in but was deactivated after
