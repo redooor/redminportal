@@ -4,17 +4,16 @@ class ProductControllerTest extends BaseControllerTest
 {
     use TraitSorterControllerTest, TraitProductVariantControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/products';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/products';
+        $this->viewhas = array(
             'singular' => 'product',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
@@ -52,16 +51,6 @@ class ProductControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'name';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
     }
     
     /**

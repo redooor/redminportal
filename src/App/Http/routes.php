@@ -37,7 +37,6 @@ Route::group(
         Route::resource('memberships', 'MembershipController');
         Route::resource('modules', 'ModuleController');
         Route::resource('portfolios', 'PortfolioController');
-        Route::resource('products', 'ProductController');
         Route::resource('promotions', 'PromotionController');
         Route::resource('purchases', 'PurchaseController');
         Route::resource('reports', 'ReportController');
@@ -47,6 +46,27 @@ Route::group(
         Route::resource('orders', 'OrderController');
         Route::resource('bundles', 'BundleController');
         Route::resource('images', 'ImageController');
+
+        // Products
+        // ---------
+        // Route::resource('products', 'ProductController');
+        // ---------
+        Route::group(['prefix' => 'products'], function () {
+            Route::get('/', 'ProductController@getIndex');
+            Route::get('create', 'ProductController@getCreate');
+            Route::get('edit/{sid}', 'ProductController@getEdit');
+            Route::post('store', 'ProductController@postStore');
+            Route::get('delete/{sid}', 'ProductController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'ProductController@getSort');
+            Route::get('imgremove/{sid}', 'ProductController@getImgremove');
+            // Product variant
+            Route::get('create-variant/{product_id}', 'ProductController@getCreateVariant');
+            Route::get('edit-variant/{product_id}/{sid}', 'ProductController@getEditVariant');
+            Route::get('view-variant/{sid}', 'ProductController@getViewVariant');
+            Route::get('list-variants/{sid}', 'ProductController@getListVariants');
+            Route::get('delete-variant-json/{sid}', 'ProductController@getDeleteVariantJson');
+            Route::get('variant-imgremove/{product_id}/{sid}', 'ProductController@getVariantImgremove');
+        });
     }
 );
 

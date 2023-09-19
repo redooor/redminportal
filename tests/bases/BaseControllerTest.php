@@ -1,14 +1,35 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
-use Redooor\Redminportal\App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
-class BaseControllerTest extends RedminTestCase
+class BaseControllerTest extends RedminBrowserTestCase
 {
     protected $page;
     protected $viewhas;
     protected $input;
     
+    /**
+     * Initialize Setup with seed
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed('RedminSeeder');
+        
+        Auth::loginUsingId(1);
+    }
+    
+    /**
+     * Remove saved states
+     */
+    public function tearDown(): void
+    {
+        $this->page = null;
+        $this->viewhas = null;
+        $this->input = null;
+    }
+
     /**
      * A template to create a new record
      */
@@ -31,41 +52,6 @@ class BaseControllerTest extends RedminTestCase
         foreach ($testcase as $key => $value) {
             $this->assertTrue($model->$key == $value);
         }
-    }
-    
-    /**
-     * Initialize Setup with seed
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->seed('RedminSeeder');
-        
-        Auth::loginUsingId(1);
-    }
-    
-    /**
-     * Contructor.
-     * Must be called explicitly by the child
-     *
-     * @param string $page The name of the page to be tested.
-     * @param string $view The name of the page to be tested.
-     */
-    public function __construct($page, $viewhas, $input)
-    {
-        $this->page = $page;
-        $this->viewhas = $viewhas;
-        $this->input = $input;
-    }
-    
-    /**
-     * Destructor.
-     * Must be called explicitly by the child
-     */
-    public function __destruct()
-    {
-        $this->page = null;
     }
     
     /**

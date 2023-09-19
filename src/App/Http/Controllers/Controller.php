@@ -14,6 +14,7 @@ abstract class Controller extends BaseController
     protected $pageView;
     protected $pageRoute;
     protected $data; // For storing shared data across views
+    protected $query;
     
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }
