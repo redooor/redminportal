@@ -28,8 +28,6 @@ Route::group(
             return redirect('admin/dashboard');
         });
         Route::get('dashboard', 'HomeController@home');
-        Route::resource('categories', 'CategoryController');
-        Route::resource('coupons', 'CouponController');
         Route::resource('groups', 'GroupController');
         Route::resource('medias', 'MediaController');
         Route::resource('mailinglists', 'MailinglistController');
@@ -43,10 +41,9 @@ Route::group(
         Route::resource('posts', 'PostController');
         Route::resource('pages', 'PageController');
         Route::resource('orders', 'OrderController');
-        Route::resource('bundles', 'BundleController');
         Route::resource('images', 'ImageController');
 
-        // Announcement
+        // Announcements
         // ------------
         // Route::resource('announcements', 'AnnouncementController');
         // ------------
@@ -57,7 +54,51 @@ Route::group(
             Route::post('store', 'AnnouncementController@postStore');
             Route::get('delete/{sid}', 'AnnouncementController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'AnnouncementController@getSort');
+            //
             Route::get('imgremove/{sid}', 'AnnouncementController@getImgremove');
+        });
+
+        // Bundles
+        // ------------
+        // Route::resource('bundles', 'BundleController');
+        // ------------
+        Route::group(['prefix' => 'bundles'], function () {
+            Route::get('/', 'BundleController@getIndex');
+            Route::get('create', 'BundleController@getCreate');
+            Route::get('edit/{sid}', 'BundleController@getEdit');
+            Route::post('store', 'BundleController@postStore');
+            Route::get('delete/{sid}', 'BundleController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'BundleController@getSort');
+        });
+
+        // Categories
+        // ------------
+        // Route::resource('categories', 'CategoryController');
+        // ------------
+        Route::group(['prefix' => 'categories'], function () {
+            Route::get('/', 'CategoryController@getIndex');
+            Route::get('create', 'CategoryController@getCreate');
+            Route::get('edit/{sid}', 'CategoryController@getEdit');
+            Route::post('store', 'CategoryController@postStore');
+            Route::get('delete/{sid}', 'CategoryController@getDelete');
+            //
+            Route::get('imgremove/{sid}', 'CategoryController@getImgremove');
+            Route::get('detail/{sid}', 'CategoryController@getDetail');
+        });
+
+        // Coupons
+        // ------------
+        // Route::resource('coupons', 'CouponController');
+        // ------------
+        Route::group(['prefix' => 'coupons'], function () {
+            Route::get('/', 'CouponController@getIndex');
+            Route::get('create', 'CouponController@getCreate');
+            Route::get('edit/{sid}', 'CouponController@getEdit');
+            Route::post('store', 'CouponController@postStore');
+            Route::get('delete/{sid}', 'CouponController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'CouponController@getSort');
+            //
+            Route::get('categories', 'CouponController@getCategories');
         });
 
         // Products
@@ -72,7 +113,9 @@ Route::group(
             Route::get('delete/{sid}', 'ProductController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'ProductController@getSort');
             Route::get('imgremove/{sid}', 'ProductController@getImgremove');
+            // ---------------
             // Product variant
+            // ---------------
             Route::get('create-variant/{product_id}', 'ProductController@getCreateVariant');
             Route::get('edit-variant/{product_id}/{sid}', 'ProductController@getEditVariant');
             Route::get('view-variant/{sid}', 'ProductController@getViewVariant');

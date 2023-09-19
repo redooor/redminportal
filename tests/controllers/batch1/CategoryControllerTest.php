@@ -4,17 +4,18 @@ use Redooor\Redminportal\App\Models\Category;
 
 class CategoryControllerTest extends BaseControllerTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    use TraitImageControllerTest;
+    
+    public function setUp(): void
     {
-        $page = '/admin/categories';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/categories';
+        $this->viewhas = array(
             'singular' => 'category',
             'plural' => 'categories'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name' => 'This is a name',
                 'short_description' => 'This is short description',
@@ -39,16 +40,24 @@ class CategoryControllerTest extends BaseControllerTest
                 'cn_long_description' => 'This is cn long description'
             )
         );
-        
-        parent::__construct($page, $viewhas, $input);
+
+        // For testing image
+        $this->img_parent_model = new Category;
+        $this->img_parent_create = [
+            'name' => 'This is a name',
+            'short_description' => 'This is short description',
+            'long_description' => 'This is long description',
+            'active' => true,
+            'order' => 1,
+        ];
     }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
+
+    public function tearDown(): void
     {
-        parent::__destruct();
+        parent::tearDown();
+
+        $this->img_parent_model = null;
+        $this->img_parent_create = null;
     }
     
     /**

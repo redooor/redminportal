@@ -4,6 +4,7 @@ use Redooor\Redminportal\App\Models\Pricelist;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Coupon;
 use Redooor\Redminportal\App\Models\Product;
 
 class CouponControllerTest extends BaseControllerTest
@@ -11,16 +12,18 @@ class CouponControllerTest extends BaseControllerTest
     use TraitSorterControllerTest;
     
     /**
-     * Contructor
+     * Setup initial data for use in tests
      */
-    public function __construct()
+    public function setup(): void
     {
-        $page = '/admin/coupons';
-        $viewhas = array(
+        parent::setup();
+
+        $this->page = '/admin/coupons';
+        $this->viewhas = array(
             'singular' => 'coupon',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'code' => 'ABC123',
                 'description' => 'This is a description',
@@ -64,24 +67,6 @@ class CouponControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'start_date';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * Setup initial data for use in tests
-     */
-    public function setup(): void
-    {
-        parent::setup();
         
         // Add membership
         $membership = new Membership;

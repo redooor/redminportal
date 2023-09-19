@@ -1,6 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Exception;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
@@ -175,7 +177,7 @@ class CouponController extends Controller
         } else {
             $url = 'admin/coupons/create';
         }
-        
+
         $rules = array(
             'code'          => 'required',
             'amount'        => 'required',
@@ -186,7 +188,7 @@ class CouponController extends Controller
             'max_spent'     => 'numeric'
         );
         
-        $validation = \Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules);
 
         if ($validation->fails()) {
             return redirect($url)->withErrors($validation)->withInput();
@@ -201,6 +203,7 @@ class CouponController extends Controller
                 return redirect('admin/coupons')->withErrors($errors);
             }
         }
+
         $code                   = Input::get('code');
         $description            = Input::get('description');
         $amount                 = Input::get('amount');
@@ -233,44 +236,53 @@ class CouponController extends Controller
 
         $apply_to_models = array();
 
-        $categories = Input::get('category_id');
-        if (count($categories) > 0) {
-            foreach ($categories as $item) {
-                $model = Category::find($item);
-                if ($model != null) {
-                    $apply_to_models[] = $model;
+        try {
+            $categories = Input::get('category_id');
+            if ($categories) {
+                foreach ($categories as $item) {
+                    $model = Category::find($item);
+                    if ($model != null) {
+                        $apply_to_models[] = $model;
+                    }
                 }
             }
-        }
 
-        $products = Input::get('product_id');
-        if (count($products) > 0) {
-            foreach ($products as $item) {
-                $model = Product::find($item);
-                if ($model != null) {
-                    $apply_to_models[] = $model;
+            $products = Input::get('product_id');
+            if ($products) {
+                foreach ($products as $item) {
+                    $model = Product::find($item);
+                    if ($model != null) {
+                        $apply_to_models[] = $model;
+                    }
                 }
             }
-        }
 
-        $pricelists = Input::get('pricelist_id');
-        if (count($pricelists) > 0) {
-            foreach ($pricelists as $item) {
-                $model = Pricelist::find($item);
-                if ($model != null) {
-                    $apply_to_models[] = $model;
+            $pricelists = Input::get('pricelist_id');
+            if ($pricelists) {
+                foreach ($pricelists as $item) {
+                    $model = Pricelist::find($item);
+                    if ($model != null) {
+                        $apply_to_models[] = $model;
+                    }
                 }
             }
-        }
-        
-        $bundles = Input::get('bundle_id');
-        if (count($bundles) > 0) {
-            foreach ($bundles as $item) {
-                $model = Bundle::find($item);
-                if ($model != null) {
-                    $apply_to_models[] = $model;
+            
+            $bundles = Input::get('bundle_id');
+            if ($bundles) {
+                foreach ($bundles as $item) {
+                    $model = Bundle::find($item);
+                    if ($model != null) {
+                        $apply_to_models[] = $model;
+                    }
                 }
             }
+        } catch (Exception $e) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'applyToError',
+                "There was a problem receiving your inputs."
+            );
+            return redirect($url)->withErrors($errors)->withInput();
         }
 
         // In the worst scenario, all select items have been deleted

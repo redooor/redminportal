@@ -1,6 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
@@ -172,7 +174,7 @@ class BundleController extends Controller
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
         );
         
-        $validation = \Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules);
 
         if ($validation->fails()) {
             return redirect($url)->withErrors($validation)->withInput();
@@ -253,7 +255,7 @@ class BundleController extends Controller
         }
         
         // Save translations
-        $translations = \Config::get('redminportal::translation');
+        $translations = Config::get('redminportal::translation');
         foreach ($translations as $translation) {
             $lang = $translation['lang'];
             if ($lang == 'en') {

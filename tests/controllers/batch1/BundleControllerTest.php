@@ -10,16 +10,18 @@ class BundleControllerTest extends BaseControllerTest
     use TraitSorterControllerTest;
     
     /**
-     * Contructor
+     * Setup initial data for use in tests
      */
-    public function __construct()
+    public function setup(): void
     {
-        $page = '/admin/bundles';
-        $viewhas = array(
+        parent::setup();
+
+        $this->page = '/admin/bundles';
+        $this->viewhas = array(
             'singular' => 'bundle',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
@@ -51,24 +53,6 @@ class BundleControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'name';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * Setup initial data for use in tests
-     */
-    public function setup(): void
-    {
-        parent::setup();
         
         // Add membership
         $membership = new Membership;
