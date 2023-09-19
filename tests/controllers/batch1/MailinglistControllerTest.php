@@ -4,17 +4,16 @@ class MailinglistControllerTest extends BaseControllerTest
 {
     use TraitSorterControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/mailinglists';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/mailinglists';
+        $this->viewhas = array(
             'singular' => 'mailinglist',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'email' => 'peter.lim@test.com',
                 'first_name' => 'Peter',
@@ -30,16 +29,6 @@ class MailinglistControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'email';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
     }
     
     /**

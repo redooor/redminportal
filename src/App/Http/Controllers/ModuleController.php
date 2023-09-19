@@ -1,7 +1,9 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use DB;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Media;
@@ -44,7 +46,7 @@ class ModuleController extends Controller
             'orderBy' => $this->orderBy
         ];
 
-        return \View::make('redminportal::modules/view', $data);
+        return view('redminportal::modules/view', $data);
     }
 
     public function getMedias($sid)
@@ -52,7 +54,7 @@ class ModuleController extends Controller
         $medias = Media::where('category_id', $sid)->orderBy('name')->get();
         $memberships = Membership::orderBy('rank')->get();
 
-        return \View::make('redminportal::modules/medias')
+        return view('redminportal::modules/medias')
             ->with('medias', $medias)
             ->with('memberships', $memberships);
     }
@@ -67,7 +69,7 @@ class ModuleController extends Controller
             $modMediaMembership[$mmm->media_id][$mmm->membership_id] = true;
         }
 
-        return \View::make('redminportal::modules/medias')
+        return view('redminportal::modules/medias')
             ->with('medias', $medias)
             ->with('memberships', $memberships)
             ->with('modMediaMembership', $modMediaMembership);
@@ -81,7 +83,7 @@ class ModuleController extends Controller
             ->orderBy('name')
             ->get();
 
-        return \View::make('redminportal::modules/create')
+        return view('redminportal::modules/create')
             ->with('categories', $categories)
             ->with('memberships', Membership::orderBy('rank')->get());
     }
@@ -143,7 +145,7 @@ class ModuleController extends Controller
             }
         }
 
-        return \View::make('redminportal::modules/edit')
+        return view('redminportal::modules/edit')
             ->with('module', $module)
             ->with('translated', $translated)
             ->with('categories', $categories)
@@ -169,153 +171,152 @@ class ModuleController extends Controller
             'category_id.min' => 'The category field is required.'
         ];
 
-        $validation = \Validator::make(Input::all(), $rules, $messages);
+        $validation = Validator::make(Input::all(), $rules, $messages);
 
-        if ($validation->passes()) {
-            $name               = Input::get('name');
-            $sku                = Input::get('sku');
-            $short_description  = Input::get('short_description');
-            $long_description   = Input::get('long_description');
-            $image              = Input::file('image');
-            $featured           = (Input::get('featured') == '' ? false : true);
-            $active             = (Input::get('active') == '' ? false : true);
-            $category_id        = Input::get('category_id');
-            $tags               = Input::get('tags');
-
-            $module = (isset($sid) ? Module::find($sid) : new Module);
-            
-            if ($module == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The module cannot be found because it does not exist or may have been deleted."
-                );
-                return \Redirect::to('/admin/modules')->withErrors($errors);
-            }
-            
-            $module->name = $name;
-            $module->sku = $sku;
-            $module->short_description = $short_description;
-            $module->long_description = $long_description;
-            $module->featured = $featured;
-            $module->active = $active;
-            $module->category_id = $category_id;
-
-            // Create or save changes
-            $module->save();
-            
-            // Save translations
-            $translations = \Config::get('redminportal::translation');
-            foreach ($translations as $translation) {
-                $lang = $translation['lang'];
-                if ($lang == 'en') {
-                    continue;
-                }
-
-                $translated_content = array(
-                    'name'                  => Input::get($lang . '_name'),
-                    'short_description'     => Input::get($lang . '_short_description'),
-                    'long_description'      => Input::get($lang . '_long_description')
-                );
-
-                // Check if lang exist
-                $translated_model = $module->translations->where('lang', $lang)->first();
-                if ($translated_model == null) {
-                    $translated_model = new Translation;
-                }
-
-                $translated_model->lang = $lang;
-                $translated_model->content = json_encode($translated_content);
-
-                $module->translations()->save($translated_model);
-            }
-
-            // Save pricelist
-            foreach (Membership::all() as $membership) {
-                $pricelist = Pricelist::where('module_id', $module->id)
-                    ->where('membership_id', $membership->id)->first();
-
-                if ($pricelist == null) {
-                    $pricelist = new Pricelist;
-                    $pricelist->module_id = $module->id;
-                    $pricelist->membership_id = $membership->id;
-                }
-                
-                $price_active = (Input::get('price_active_' . $membership->id) == '' ? false : true);
-                $price = Input::get('price_' . $membership->id);
-
-                if (! empty($price)) {
-                    $pricelist->active = $price_active;
-                    $pricelist->price = $price;
-                    $pricelist->save();
-                } else {
-                    // Empty price means to delete, but check that it is not used
-                    $pricelist_used = DB::table('order_pricelist')->where('pricelist_id', $pricelist->id)->get();
-                    if (count($pricelist_used) == 0) {
-                        $pricelist->delete();
-                    }
-                }
-            }
-
-            // Save medias
-            $media_checkbox = Input::get('media_checkbox');
-
+        if ($validation->fails()) {
             if (isset($sid)) {
-                // Remove all existing medias
-                $existing_medias = ModuleMediaMembership::where('module_id', $module->id)->get();
-                foreach ($existing_medias as $remove_media) {
-                    $remove_media->delete();
-                }
-            }
-
-            if (is_array($media_checkbox)) {
-                foreach ($media_checkbox as $check) {
-                    $media_pair = explode('_', $check);
-                    $media_id = $media_pair[0];
-                    $membership_id = $media_pair[1];
-
-                    $modMediaMembership = new ModuleMediaMembership;
-                    $modMediaMembership->module_id = $module->id;
-                    $modMediaMembership->membership_id = $membership_id;
-                    $modMediaMembership->media_id = $media_id;
-                    $modMediaMembership->save();
-                }
-            }
-
-            if (! empty($tags)) {
-                // Delete old tags
-                $module->tags()->detach();
-
-                // Save tags
-                foreach (explode(',', $tags) as $tagName) {
-                    Tag::addTag($module, $tagName);
-                }
-            }
-
-            if (Input::hasFile('image')) {
-                //Upload the file
-                $helper_image = new RImage;
-                $filename = $helper_image->upload($image, 'modules/' . $module->id, true);
-
-                if ($filename) {
-                    // create photo
-                    $newimage = new Image;
-                    $newimage->path = $filename;
-
-                    // save photo to the loaded model
-                    $module->images()->save($newimage);
-                }
-            }
-        //if it validate
-        } else {
-            if (isset($sid)) {
-                return \Redirect::to('admin/modules/edit/' . $sid)->withErrors($validation)->withInput();
+                return redirect('admin/modules/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
-                return \Redirect::to('admin/modules/create')->withErrors($validation)->withInput();
+                return redirect('admin/modules/create')->withErrors($validation)->withInput();
+            }
+        }
+        
+        $name               = Input::get('name');
+        $sku                = Input::get('sku');
+        $short_description  = Input::get('short_description');
+        $long_description   = Input::get('long_description');
+        $image              = Input::file('image');
+        $featured           = (Input::get('featured') == '' ? false : true);
+        $active             = (Input::get('active') == '' ? false : true);
+        $category_id        = Input::get('category_id');
+        $tags               = Input::get('tags');
+
+        $module = (isset($sid) ? Module::find($sid) : new Module);
+        
+        if ($module == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The module cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/modules')->withErrors($errors);
+        }
+        
+        $module->name = $name;
+        $module->sku = $sku;
+        $module->short_description = $short_description;
+        $module->long_description = $long_description;
+        $module->featured = $featured;
+        $module->active = $active;
+        $module->category_id = $category_id;
+
+        // Create or save changes
+        $module->save();
+        
+        // Save translations
+        $translations = Config::get('redminportal::translation');
+        foreach ($translations as $translation) {
+            $lang = $translation['lang'];
+            if ($lang == 'en') {
+                continue;
+            }
+
+            $translated_content = array(
+                'name'                  => Input::get($lang . '_name'),
+                'short_description'     => Input::get($lang . '_short_description'),
+                'long_description'      => Input::get($lang . '_long_description')
+            );
+
+            // Check if lang exist
+            $translated_model = $module->translations->where('lang', $lang)->first();
+            if ($translated_model == null) {
+                $translated_model = new Translation;
+            }
+
+            $translated_model->lang = $lang;
+            $translated_model->content = json_encode($translated_content);
+
+            $module->translations()->save($translated_model);
+        }
+
+        // Save pricelist
+        foreach (Membership::all() as $membership) {
+            $pricelist = Pricelist::where('module_id', $module->id)
+                ->where('membership_id', $membership->id)->first();
+
+            if ($pricelist == null) {
+                $pricelist = new Pricelist;
+                $pricelist->module_id = $module->id;
+                $pricelist->membership_id = $membership->id;
+            }
+            
+            $price_active = (Input::get('price_active_' . $membership->id) == '' ? false : true);
+            $price = Input::get('price_' . $membership->id);
+
+            if (! empty($price)) {
+                $pricelist->active = $price_active;
+                $pricelist->price = $price;
+                $pricelist->save();
+            } else {
+                // Empty price means to delete, but check that it is not used
+                $pricelist_used = DB::table('order_pricelist')->where('pricelist_id', $pricelist->id)->get();
+                if (count($pricelist_used) == 0) {
+                    $pricelist->delete();
+                }
             }
         }
 
-        return \Redirect::to('admin/modules');
+        // Save medias
+        $media_checkbox = Input::get('media_checkbox');
+
+        if (isset($sid)) {
+            // Remove all existing medias
+            $existing_medias = ModuleMediaMembership::where('module_id', $module->id)->get();
+            foreach ($existing_medias as $remove_media) {
+                $remove_media->delete();
+            }
+        }
+
+        if (is_array($media_checkbox)) {
+            foreach ($media_checkbox as $check) {
+                $media_pair = explode('_', $check);
+                $media_id = $media_pair[0];
+                $membership_id = $media_pair[1];
+
+                $modMediaMembership = new ModuleMediaMembership;
+                $modMediaMembership->module_id = $module->id;
+                $modMediaMembership->membership_id = $membership_id;
+                $modMediaMembership->media_id = $media_id;
+                $modMediaMembership->save();
+            }
+        }
+
+        if (! empty($tags)) {
+            // Delete old tags
+            $module->tags()->detach();
+
+            // Save tags
+            foreach (explode(',', $tags) as $tagName) {
+                Tag::addTag($module, $tagName);
+            }
+        }
+
+        if (Input::hasFile('image')) {
+            //Upload the file
+            $helper_image = new RImage;
+            $filename = $helper_image->upload($image, 'modules/' . $module->id, true);
+
+            if ($filename) {
+                // create photo
+                $newimage = new Image;
+                $newimage->path = $filename;
+
+                // save photo to the loaded model
+                $module->images()->save($newimage);
+            }
+        }
+
+        return redirect('admin/modules');
     }
 
     public function getDelete($sid)

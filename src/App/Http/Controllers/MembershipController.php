@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
@@ -67,37 +68,36 @@ class MembershipController extends Controller
             'rank'   => 'required|min:0',
         );
 
-        $validation = \Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules);
 
-        if ($validation->passes()) {
-            $name      = Input::get('name');
-            $rank      = Input::get('rank');
-
-            $membership = (isset($sid) ? Membership::find($sid) : new Membership);
-            
-            if ($membership == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The membership cannot be found because it does not exist or may have been deleted."
-                );
-                return \Redirect::to('/admin/memberships')->withErrors($errors);
-            }
-            
-            $membership->name = $name;
-            $membership->rank = $rank;
-
-            $membership->save();
-        //if it validate
-        } else {
+        if ($validation->fails()) {
             if (isset($sid)) {
-                return \Redirect::to('admin/memberships/edit/' . $sid)->withErrors($validation)->withInput();
+                return redirect('admin/memberships/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
-                return \Redirect::to('admin/memberships/create')->withErrors($validation)->withInput();
+                return redirect('admin/memberships/create')->withErrors($validation)->withInput();
             }
         }
 
-        return \Redirect::to('admin/memberships');
+        $name      = Input::get('name');
+        $rank      = Input::get('rank');
+
+        $membership = (isset($sid) ? Membership::find($sid) : new Membership);
+        
+        if ($membership == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The membership cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/memberships')->withErrors($errors);
+        }
+        
+        $membership->name = $name;
+        $membership->rank = $rank;
+
+        $membership->save();
+
+        return redirect('admin/memberships');
     }
 
     public function getDelete($sid)

@@ -1,7 +1,10 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Exception;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\MediaUploaderController;
 use Redooor\Redminportal\App\Models\Media;
@@ -117,7 +120,7 @@ class MediaController extends Controller
             'category_id.min' => 'The category field is required.'
         ];
 
-        $validation = \Validator::make(Input::all(), $rules, $messages);
+        $validation = Validator::make(Input::all(), $rules, $messages);
         
         if ($validation->fails()) {
             return redirect('admin/medias/' . (isset($sid) ? 'edit/' . $sid : 'create'))
@@ -177,7 +180,7 @@ class MediaController extends Controller
         $media->save();
 
         // Save translations
-        $translations = \Config::get('redminportal::translation');
+        $translations = Config::get('redminportal::translation');
         foreach ($translations as $translation) {
             $lang = $translation['lang'];
             if ($lang == 'en') {

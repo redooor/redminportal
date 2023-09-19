@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Mailinglist;
@@ -72,40 +73,39 @@ class MailinglistController extends Controller
             'last_name'      => 'required'
         );
 
-        $validation = \Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules);
 
-        if ($validation->passes()) {
-            $email       = Input::get('email');
-            $first_name  = Input::get('first_name');
-            $last_name   = Input::get('last_name');
-            $active      = (Input::get('active') == '' ? false : true);
-
-            $mailinglist = (isset($sid) ? Mailinglist::find($sid) : new Mailinglist);
-            
-            // No such id
-            if ($mailinglist == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'storeError',
-                    "We are having problem editing this entry. It may have already been deleted."
-                );
-                return redirect('admin/mailinglists')->withErrors($errors);
-            }
-            
-            $mailinglist->email = $email;
-            $mailinglist->first_name = $first_name;
-            $mailinglist->last_name = $last_name;
-            $mailinglist->active = $active;
-
-            $mailinglist->save();
-
-        } else {
+        if ($validation->fails()) {
             if (isset($sid)) {
                 return redirect('admin/mailinglists/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
                 return redirect('admin/mailinglists/create')->withErrors($validation)->withInput();
             }
         }
+
+        $email       = Input::get('email');
+        $first_name  = Input::get('first_name');
+        $last_name   = Input::get('last_name');
+        $active      = (Input::get('active') == '' ? false : true);
+
+        $mailinglist = (isset($sid) ? Mailinglist::find($sid) : new Mailinglist);
+        
+        // No such id
+        if ($mailinglist == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'storeError',
+                "We are having problem editing this entry. It may have already been deleted."
+            );
+            return redirect('admin/mailinglists')->withErrors($errors);
+        }
+        
+        $mailinglist->email = $email;
+        $mailinglist->first_name = $first_name;
+        $mailinglist->last_name = $last_name;
+        $mailinglist->active = $active;
+
+        $mailinglist->save();
 
         return redirect('admin/mailinglists');
     }

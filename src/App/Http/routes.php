@@ -9,9 +9,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Login controller
-Route::get('login', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getIndex');
-Route::post('login/login', 'Redooor\Redminportal\App\Http\Controllers\LoginController@postLogin');
-Route::get('login/unauthorized', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getUnauthorized');
+Route::group(
+    [
+        'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
+        'prefix' => 'login'
+    ],
+    function () {
+        Route::get('/', 'LoginController@getIndex');
+        Route::post('login', 'LoginController@postLogin');
+        Route::get('unauthorized', 'LoginController@getUnauthorized');
+    }
+);
+// Logout
 Route::get('logout', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getLogout');
 
 // Account controller
@@ -28,11 +37,6 @@ Route::group(
             return redirect('admin/dashboard');
         });
         Route::get('dashboard', 'HomeController@home');
-        Route::resource('groups', 'GroupController');
-        Route::resource('medias', 'MediaController');
-        Route::resource('mailinglists', 'MailinglistController');
-        Route::resource('memberships', 'MembershipController');
-        Route::resource('modules', 'ModuleController');
         Route::resource('portfolios', 'PortfolioController');
         Route::resource('promotions', 'PromotionController');
         Route::resource('purchases', 'PurchaseController');
@@ -41,12 +45,9 @@ Route::group(
         Route::resource('posts', 'PostController');
         Route::resource('pages', 'PageController');
         Route::resource('orders', 'OrderController');
-        Route::resource('images', 'ImageController');
 
         // Announcements
-        // ------------
-        // Route::resource('announcements', 'AnnouncementController');
-        // ------------
+        // -------------
         Route::group(['prefix' => 'announcements'], function () {
             Route::get('/', 'AnnouncementController@getIndex');
             Route::get('create', 'AnnouncementController@getCreate');
@@ -59,9 +60,7 @@ Route::group(
         });
 
         // Bundles
-        // ------------
-        // Route::resource('bundles', 'BundleController');
-        // ------------
+        // -------
         Route::group(['prefix' => 'bundles'], function () {
             Route::get('/', 'BundleController@getIndex');
             Route::get('create', 'BundleController@getCreate');
@@ -72,9 +71,7 @@ Route::group(
         });
 
         // Categories
-        // ------------
-        // Route::resource('categories', 'CategoryController');
-        // ------------
+        // ----------
         Route::group(['prefix' => 'categories'], function () {
             Route::get('/', 'CategoryController@getIndex');
             Route::get('create', 'CategoryController@getCreate');
@@ -87,9 +84,7 @@ Route::group(
         });
 
         // Coupons
-        // ------------
-        // Route::resource('coupons', 'CouponController');
-        // ------------
+        // -------
         Route::group(['prefix' => 'coupons'], function () {
             Route::get('/', 'CouponController@getIndex');
             Route::get('create', 'CouponController@getCreate');
@@ -101,10 +96,78 @@ Route::group(
             Route::get('categories', 'CouponController@getCategories');
         });
 
+        // Groups
+        // ------
+        Route::group(['prefix' => 'groups'], function () {
+            Route::get('/', 'GroupController@getIndex');
+            Route::get('create', 'GroupController@getCreate');
+            Route::get('edit/{sid}', 'GroupController@getEdit');
+            Route::post('store', 'GroupController@postStore');
+            Route::get('delete/{sid}', 'GroupController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'GroupController@getSort');
+        });
+
+        // Images
+        // ------
+        Route::group(['prefix' => 'images'], function () {
+            Route::get('/', 'ImageController@getIndex');
+            Route::get('delete/{sid}', 'ImageController@getDelete');
+        });
+
+        // Mailinglists
+        // ------------
+        Route::group(['prefix' => 'mailinglists'], function () {
+            Route::get('/', 'MailinglistController@getIndex');
+            Route::get('create', 'MailinglistController@getCreate');
+            Route::get('edit/{sid}', 'MailinglistController@getEdit');
+            Route::post('store', 'MailinglistController@postStore');
+            Route::get('delete/{sid}', 'MailinglistController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'MailinglistController@getSort');
+        });
+
+        // Medias
+        // ------
+        Route::group(['prefix' => 'medias'], function () {
+            Route::get('/', 'MediaController@getIndex');
+            Route::get('create', 'MediaController@getCreate');
+            Route::get('edit/{sid}', 'MediaController@getEdit');
+            Route::post('store', 'MediaController@postStore');
+            Route::get('delete/{sid}', 'MediaController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'MediaController@getSort');
+            //
+            Route::get('imgremove/{sid}', 'MediaController@getImgremove');
+            Route::get('duration/{sid}', 'MediaController@getDuration');
+            Route::get('uploadform/{sid}', 'MediaController@getUploadform');
+            Route::post('upload/{sid}', 'MediaController@postUpload');
+        });
+
+        // Membership
+        // ----------
+        Route::group(['prefix' => 'memberships'], function () {
+            Route::get('/', 'MembershipController@getIndex');
+            Route::get('create', 'MembershipController@getCreate');
+            Route::get('edit/{sid}', 'MembershipController@getEdit');
+            Route::post('store', 'MembershipController@postStore');
+            Route::get('delete/{sid}', 'MembershipController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'MembershipController@getSort');
+        });
+
+        // Modules
+        Route::group(['prefix' => 'modules'], function () {
+            Route::get('/', 'ModuleController@getIndex');
+            Route::get('create', 'ModuleController@getCreate');
+            Route::get('edit/{sid}', 'ModuleController@getEdit');
+            Route::post('store', 'ModuleController@postStore');
+            Route::get('delete/{sid}', 'ModuleController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'ModuleController@getSort');
+            //
+            Route::get('imgremove/{sid}', 'ModuleController@getImgremove');
+            Route::get('medias/{sid}', 'ModuleController@getMedias');
+            Route::get('editmedias/{sid}/{module_id}', 'ModuleController@getEditmedias');
+        });
+
         // Products
-        // ---------
-        // Route::resource('products', 'ProductController');
-        // ---------
+        // --------
         Route::group(['prefix' => 'products'], function () {
             Route::get('/', 'ProductController@getIndex');
             Route::get('create', 'ProductController@getCreate');

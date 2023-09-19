@@ -1,28 +1,12 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Redooor\Redminportal\App\Models\Announcement;
 use Redooor\Redminportal\App\Models\Image;
 
-class ImageControllerTest extends RedminTestCase
+class ImageControllerTest extends RedminBrowserTestCase
 {
     protected $page;
-    
-    /**
-     * Contructor
-     */
-    public function __construct()
-    {
-        $this->page = '/admin/images';
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        $this->page = null;
-    }
     
     /**
      * Initialize Setup with seed
@@ -34,6 +18,13 @@ class ImageControllerTest extends RedminTestCase
         $this->seed('RedminSeeder');
         
         Auth::loginUsingId(1);
+
+        $this->page = '/admin/images';
+    }
+
+    public function tearDown(): void
+    {
+        $this->page = null;
     }
     
     /**

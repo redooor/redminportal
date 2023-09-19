@@ -4,17 +4,16 @@ class MembershipControllerTest extends BaseControllerTest
 {
     use TraitSorterControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/memberships';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/memberships';
+        $this->viewhas = array(
             'singular' => 'membership',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name' => 'This is title',
                 'rank' => 1
@@ -28,16 +27,6 @@ class MembershipControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'rank';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
     }
     
     /**
