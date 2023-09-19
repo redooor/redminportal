@@ -28,7 +28,6 @@ Route::group(
             return redirect('admin/dashboard');
         });
         Route::get('dashboard', 'HomeController@home');
-        Route::resource('announcements', 'AnnouncementController');
         Route::resource('categories', 'CategoryController');
         Route::resource('coupons', 'CouponController');
         Route::resource('groups', 'GroupController');
@@ -46,6 +45,20 @@ Route::group(
         Route::resource('orders', 'OrderController');
         Route::resource('bundles', 'BundleController');
         Route::resource('images', 'ImageController');
+
+        // Announcement
+        // ------------
+        // Route::resource('announcements', 'AnnouncementController');
+        // ------------
+        Route::group(['prefix' => 'announcements'], function () {
+            Route::get('/', 'AnnouncementController@getIndex');
+            Route::get('create', 'AnnouncementController@getCreate');
+            Route::get('edit/{sid}', 'AnnouncementController@getEdit');
+            Route::post('store', 'AnnouncementController@postStore');
+            Route::get('delete/{sid}', 'AnnouncementController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'AnnouncementController@getSort');
+            Route::get('imgremove/{sid}', 'AnnouncementController@getImgremove');
+        });
 
         // Products
         // ---------

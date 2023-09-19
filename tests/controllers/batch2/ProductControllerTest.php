@@ -1,8 +1,10 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Redooor\Redminportal\App\Models\Product;
+
 class ProductControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest, TraitProductVariantControllerTest;
+    use TraitSorterControllerTest, TraitProductVariantControllerTest, TraitImageControllerTest;
     
     public function setUp(): void
     {
@@ -51,6 +53,23 @@ class ProductControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'name';
+
+        // For testing image
+        $this->img_parent_model = new Product;
+        $this->img_parent_create = [
+            'name'                  => 'This is title',
+            'short_description'     => 'This is body',
+            'category_id'           => 1,
+            'sku'                   => 'UNIQUESKU001',
+        ];
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->img_parent_model = null;
+        $this->img_parent_create = null;
     }
     
     /**

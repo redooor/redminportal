@@ -4,19 +4,18 @@ use Redooor\Redminportal\App\Models\Announcement;
 
 class AnnouncementControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest;
+    use TraitSorterControllerTest, TraitImageControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/announcements';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/announcements';
+        $this->viewhas = array(
             'singular' => 'announcement',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'title'     => 'This is title',
                 'content'   => 'This is body',
@@ -32,16 +31,22 @@ class AnnouncementControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'created_at';
-        
-        parent::__construct($page, $viewhas, $input);
+
+        // For testing image
+        $this->img_parent_model = new Announcement;
+        $this->img_parent_create = [
+            'title'     => 'This is title',
+            'content'   => 'This is body',
+            'private'   => false
+        ];
     }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
+
+    public function tearDown(): void
     {
-        parent::__destruct();
+        parent::tearDown();
+
+        $this->img_parent_model = null;
+        $this->img_parent_create = null;
     }
     
     /**
