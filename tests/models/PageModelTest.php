@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Page;
 
 class PageModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Page;
         $testcase = array(
             'title' => 'This is the title',
@@ -18,14 +17,6 @@ class PageModelTest extends BaseModelTest
             'category_id' => 1
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

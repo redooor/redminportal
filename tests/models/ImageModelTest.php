@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Image;
 
 class ImageModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Image;
         $testcase = array(
             'path' => '/path/to/image.jpg',
@@ -16,14 +15,6 @@ class ImageModelTest extends BaseModelTest
             'imageable_type' => 'Type'
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

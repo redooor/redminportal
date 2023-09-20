@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Portfolio;
 
 class PortfolioModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Portfolio;
         $testcase = array(
             'name' => 'This is the title',
@@ -16,14 +15,6 @@ class PortfolioModelTest extends BaseModelTest
             'category_id' => 1
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

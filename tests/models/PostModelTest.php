@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Post;
 
 class PostModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Post;
         $testcase = array(
             'title' => 'This is the title',
@@ -19,14 +18,6 @@ class PostModelTest extends BaseModelTest
             'category_id' => 1
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Mailinglist;
 
 class MailinglistModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Mailinglist;
         $testcase = array(
             'email' => 'email@test.com',
@@ -17,14 +16,6 @@ class MailinglistModelTest extends BaseModelTest
             'active' => true
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Category;
 
 class CategoryModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Category;
         $testcase = array(
             'name' => 'This is the title',
@@ -16,14 +15,6 @@ class CategoryModelTest extends BaseModelTest
             'active' => true
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

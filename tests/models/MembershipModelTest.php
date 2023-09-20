@@ -4,25 +4,16 @@ use Redooor\Redminportal\App\Models\Membership;
 
 class MembershipModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Membership;
         $testcase = array(
             'name' => 'This is the title',
             'rank' => 1
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

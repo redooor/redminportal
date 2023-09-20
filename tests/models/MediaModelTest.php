@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Media;
 
 class MediaModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Media;
         $testcase = array(
             'name' => 'This is the title',
@@ -19,14 +18,6 @@ class MediaModelTest extends BaseModelTest
             'active' => true
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

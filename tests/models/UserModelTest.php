@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\User;
 
 class UserModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new User;
         $testcase = array(
             'email'     => 'john.doe@example.com',
@@ -16,14 +15,6 @@ class UserModelTest extends BaseModelTest
             'activated' => true
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }
