@@ -19,6 +19,22 @@
             <exclude>./tests/dummy/</exclude>
             <exclude>./tests/.gitkeep</exclude>
         </testsuite>
+        <testsuite name="suite1">
+            <directory suffix=".php">./tests/api</directory>
+            <directory suffix=".php">./tests/classes</directory>
+            <directory suffix=".php">./tests/helpers</directory>
+        </testsuite>
+        <testsuite name="suite2">
+            <directory suffix=".php">./tests/controllers</directory>
+        </testsuite>
+        <testsuite name="suite3">
+            <directory suffix=".php">./tests/models</directory>
+        </testsuite>
+        <testsuite name="suite4">
+            <directory suffix=".php">./tests/middleware</directory>
+            <directory suffix=".php">./tests/relationships</directory>
+            <directory suffix=".php">./tests/ui</directory>
+        </testsuite>
     </testsuites>
     <php>
         <env name="APP_KEY" value="1234567890ABCDEFGHIJKLMNOPQRSTUV"/>

@@ -55,6 +55,9 @@ Every method in controller or model must have a test case.
         ?> vendor/bin/phpunit tests/controllers/
         ?> vendor/bin/phpunit tests/relationships/
 
+        ?> ./vendor/bin/phpunit --testsuite "suite1","suite2"
+        ?> ./vendor/bin/phpunit --testsuite "suite3","suite4"
+
 ## Model
 * All tests related to model must be store within tests/models folder. 
 * File name must be {ModelName}ModelTest.php.
