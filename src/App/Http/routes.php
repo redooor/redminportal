@@ -20,11 +20,21 @@ Route::group(
         Route::get('unauthorized', 'LoginController@getUnauthorized');
     }
 );
+
 // Logout
 Route::get('logout', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getLogout');
 
-// Account controller
-Route::resource('myaccount', 'Redooor\Redminportal\App\Http\Controllers\MyaccountController');
+// My Account controller
+Route::group(
+    [
+        'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
+        'prefix' => 'myaccount'
+    ],
+    function () {
+        Route::get('/', 'MyaccountController@getIndex');
+        Route::post('store', 'MyaccountController@postStore');
+    }
+);
 
 Route::group(
     [
@@ -37,14 +47,6 @@ Route::group(
             return redirect('admin/dashboard');
         });
         Route::get('dashboard', 'HomeController@home');
-        Route::resource('portfolios', 'PortfolioController');
-        Route::resource('promotions', 'PromotionController');
-        Route::resource('purchases', 'PurchaseController');
-        Route::resource('reports', 'ReportController');
-        Route::resource('users', 'UserController');
-        Route::resource('posts', 'PostController');
-        Route::resource('pages', 'PageController');
-        Route::resource('orders', 'OrderController');
 
         // Announcements
         // -------------
@@ -166,6 +168,61 @@ Route::group(
             Route::get('editmedias/{sid}/{module_id}', 'ModuleController@getEditmedias');
         });
 
+        // Orders
+        // ------
+        Route::group(['prefix' => 'orders'], function () {
+            Route::get('/', 'OrderController@getIndex');
+            Route::get('create', 'OrderController@getCreate');
+            Route::get('edit/{sid}', 'OrderController@getEdit'); // This will redirect to order
+            Route::post('store', 'OrderController@postStore');
+            Route::get('delete/{sid}', 'OrderController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'OrderController@getSort');
+            //
+            Route::get('update/{field?}/{sid?}/{status?}', 'OrderController@getUpdate');
+            Route::post('search', 'OrderController@postSearch');
+            Route::get('search-all/{search?}', 'OrderController@getSearchAll');
+            Route::get('search/{field?}/{search?}', 'OrderController@getSearch');
+        });
+
+        // Pages
+        // -----
+        Route::group(['prefix' => 'pages'], function () {
+            Route::get('/', 'PageController@getIndex');
+            Route::get('create', 'PageController@getCreate');
+            Route::get('edit/{sid}', 'PageController@getEdit');
+            Route::post('store', 'PageController@postStore');
+            Route::get('delete/{sid}', 'PageController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'PageController@getSort');
+            //
+            Route::get('imgremove/{sid}', 'PageController@getImgremove');
+        });
+
+        // Portfolio
+        // ---------
+        Route::group(['prefix' => 'portfolios'], function () {
+            Route::get('/', 'PortfolioController@getIndex');
+            Route::get('create', 'PortfolioController@getCreate');
+            Route::get('edit/{sid}', 'PortfolioController@getEdit');
+            Route::post('store', 'PortfolioController@postStore');
+            Route::get('delete/{sid}', 'PortfolioController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'PortfolioController@getSort');
+            //
+            Route::get('imgremove/{sid}', 'PortfolioController@getImgremove');
+        });
+
+        // Posts
+        // -----
+        Route::group(['prefix' => 'posts'], function () {
+            Route::get('/', 'PostController@getIndex');
+            Route::get('create', 'PostController@getCreate');
+            Route::get('edit/{sid}', 'PostController@getEdit');
+            Route::post('store', 'PostController@postStore');
+            Route::get('delete/{sid}', 'PostController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'PostController@getSort');
+            //
+            Route::get('imgremove/{sid}', 'PostController@getImgremove');
+        });
+
         // Products
         // --------
         Route::group(['prefix' => 'products'], function () {
@@ -185,6 +242,55 @@ Route::group(
             Route::get('list-variants/{sid}', 'ProductController@getListVariants');
             Route::get('delete-variant-json/{sid}', 'ProductController@getDeleteVariantJson');
             Route::get('variant-imgremove/{product_id}/{sid}', 'ProductController@getVariantImgremove');
+        });
+
+        // Promotions
+        // ----------
+        Route::group(['prefix' => 'promotions'], function () {
+            Route::get('/', 'PromotionController@getIndex');
+            Route::get('create', 'PromotionController@getCreate');
+            Route::get('edit/{sid}', 'PromotionController@getEdit');
+            Route::post('store', 'PromotionController@postStore');
+            Route::get('delete/{sid}', 'PromotionController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'PromotionController@getSort');
+            //
+            Route::get('imgremove/{sid}', 'PromotionController@getImgremove');
+        });
+
+        // Purchases
+        // ---------
+        Route::group(['prefix' => 'purchases'], function () {
+            Route::get('/', 'PurchaseController@getIndex');
+            Route::get('create', 'PurchaseController@getCreate');
+            Route::get('edit/{sid}', 'PurchaseController@getEdit');
+            Route::post('store', 'PurchaseController@postStore');
+            Route::get('delete/{sid}', 'PurchaseController@getDelete');
+        });
+
+        // Reports
+        // -------
+        Route::group(['prefix' => 'reports'], function () {
+            Route::get('/', 'ReportController@getIndex');
+            Route::post('mailinglist', 'ReportController@postMailinglist');
+            Route::post('purchases', 'ReportController@postPurchases');
+            Route::post('orders', 'ReportController@postOrders');
+        });
+        
+        // Users
+        // -----
+        Route::group(['prefix' => 'users'], function () {
+            Route::get('/', 'UserController@getIndex');
+            Route::get('create', 'UserController@getCreate');
+            Route::get('edit/{sid}', 'UserController@getEdit');
+            Route::post('store', 'UserController@postStore');
+            Route::get('delete/{sid}', 'UserController@getDelete');
+            Route::get('sort/{sortBy?}/{orderBy?}', 'UserController@getSort');
+            //
+            Route::get('activate/{sid}', 'UserController@getActivate');
+            Route::get('deactivate/{sid}', 'UserController@getDeactivate');
+            Route::post('search', 'UserController@postSearch');
+            Route::get('search-all/{search?}', 'UserController@getSearchAll');
+            Route::get('search/{field?}/{search?}', 'UserController@getSearch');
         });
     }
 );

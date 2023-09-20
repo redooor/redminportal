@@ -11,16 +11,16 @@ class OrderControllerTest extends BaseControllerTest
     use TraitSorterControllerTest, TraitSearcherControllerTest;
     
     /**
-     * Contructor
+     * Prepare all variables
      */
-    public function __construct()
+    public function prepare()
     {
-        $page = '/admin/orders';
-        $viewhas = array(
+        $this->page = '/admin/orders';
+        $this->viewhas = array(
             'singular' => 'order',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'selected_products' => array('{"id":"1","name":"This is title","quantity":"1"}'),
                 'selected_bundles' => array('{"id":"1","name":"This is the title","quantity":"1"}'),
@@ -50,16 +50,6 @@ class OrderControllerTest extends BaseControllerTest
         // For testing search
         $this->searchable_field = 'payment_status';
         $this->search_text = 'Completed';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
     }
     
     /**
@@ -68,6 +58,8 @@ class OrderControllerTest extends BaseControllerTest
     public function setup(): void
     {
         parent::setup();
+
+        $this->prepare();
         
         // Add product
         $product = new Product;
@@ -112,7 +104,8 @@ class OrderControllerTest extends BaseControllerTest
      */
     public function testEditPass()
     {
-        return;
+        $this->call('GET', '/admin/orders/edit/1');
+        $this->assertRedirectedTo('/admin/orders');
     }
     
     /**
@@ -120,7 +113,8 @@ class OrderControllerTest extends BaseControllerTest
      */
     public function testStoreEdit()
     {
-        return;
+        $this->call('GET', '/admin/orders/edit/1');
+        $this->assertRedirectedTo('/admin/orders');
     }
 
     public function testStoreCreateFailedNoProduct()
@@ -181,5 +175,25 @@ class OrderControllerTest extends BaseControllerTest
         $this->call('POST', '/admin/orders/store', $input);
 
         $this->assertRedirectedTo('/admin/orders/create');
+    }
+
+    /**
+     * Test (Pass): Get update of an order
+     */
+    public function testOrderUpdate()
+    {
+        $this->call('POST', '/admin/orders/store', $this->input['create']);
+        $this->assertRedirectedTo('/admin/orders');
+
+        $this->call('GET', '/admin/orders/update');
+        $this->assertResponseStatus(302);
+
+        $this->call('GET', '/admin/orders/update/status/1');
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedTo('/admin/orders');
+
+        $this->call('GET', '/admin/orders/update/status/1/completed');
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedTo('/admin/orders/update/status/1');
     }
 }

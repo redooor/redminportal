@@ -4,12 +4,13 @@ use Redooor\Redminportal\App\Models\Mailinglist;
 use Redooor\Redminportal\App\Models\UserPricelist;
 use Redooor\Redminportal\App\Models\Order;
 use Illuminate\Support\Facades\Input;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
     public function getIndex()
     {
-        return \View::make('redminportal::pages/404');
+        return view('redminportal::pages/404');
     }
 
     public function postMailinglist()
@@ -33,13 +34,13 @@ class ReportController extends Controller
             ->orderBy('email')
             ->get();
 
-        if (count($data) == 0) {
+        if (is_countable($data) && count($data) == 0) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('downloadError', "There's no data within the dates specified.");
-            return \Redirect::to('admin/mailinglists')->withErrors($errors);
+            return redirect('admin/mailinglists')->withErrors($errors);
         }
 
-        \Excel::create('Redmin_Mailinglist_Report', function ($excel) use ($data) {
+        Excel::create('Redmin_Mailinglist_Report', function ($excel) use ($data) {
 
             $excel->sheet('Mailinglist Report', function ($sheet) use ($data) {
 
@@ -71,13 +72,13 @@ class ReportController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        if (count($data) == 0) {
+        if (is_countable($data) && count($data) == 0) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('downloadError', "There's no data within the dates specified.");
-            return \Redirect::to('admin/purchases')->withErrors($errors);
+            return redirect('admin/purchases')->withErrors($errors);
         }
 
-        \Excel::create('Redmin_Purchases_Report', function ($excel) use ($data) {
+        Excel::create('Redmin_Purchases_Report', function ($excel) use ($data) {
 
             $excel->sheet('Purchases Report', function ($sheet) use ($data) {
 
@@ -109,13 +110,13 @@ class ReportController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        if (count($data) == 0) {
+        if (is_countable($data) && count($data) == 0) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('downloadError', "There's no data within the dates specified.");
-            return \Redirect::to('admin/orders')->withErrors($errors);
+            return redirect('admin/orders')->withErrors($errors);
         }
 
-        \Excel::create('Redmin_Orders_Report', function ($excel) use ($data) {
+        Excel::create('Redmin_Orders_Report', function ($excel) use ($data) {
 
             $excel->sheet('Orders Report', function ($sheet) use ($data) {
 

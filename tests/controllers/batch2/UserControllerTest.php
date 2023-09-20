@@ -4,17 +4,16 @@ class UserControllerTest extends BaseControllerTest
 {
     use TraitSorterControllerTest, TraitSearcherControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/users';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/users';
+        $this->viewhas = array(
             'singular' => 'user',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'first_name' => 'Peter',
                 'last_name'  => 'Lim',
@@ -48,16 +47,6 @@ class UserControllerTest extends BaseControllerTest
         // For testing search
         $this->searchable_field = 'name';
         $this->search_text = 'user';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
     }
     
     /**

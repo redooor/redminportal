@@ -5,7 +5,7 @@
  */
 
 use Illuminate\Support\Facades\Input;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 
 trait SearcherController

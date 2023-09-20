@@ -1,8 +1,8 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
-class MyaccountControllerTest extends RedminTestCase
+class MyaccountControllerTest extends RedminBrowserTestCase
 {
     /**
      * Initialize Setup with seed

@@ -1,20 +1,21 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Redooor\Redminportal\App\Models\Portfolio;
+
 class PortfolioControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest;
+    use TraitSorterControllerTest, TraitImageControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/portfolios';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/portfolios';
+        $this->viewhas = array(
             'singular' => 'portfolio',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
@@ -40,16 +41,14 @@ class PortfolioControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'created_at';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+
+        // For testing image
+        $this->img_parent_model = new Portfolio;
+        $this->img_parent_create = [
+            'name' => 'This is the title',
+            'short_description' => 'This is the body',
+            'category_id' => 1
+        ];
     }
     
     /**

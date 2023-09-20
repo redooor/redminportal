@@ -4,19 +4,18 @@ use Redooor\Redminportal\App\Models\Post;
 
 class PostControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest;
+    use TraitSorterControllerTest, TraitImageControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/posts';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/posts';
+        $this->viewhas = array(
             'singular' => 'post',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'title' => 'This is the title',
                 'slug' => 'this_is_a_slug',
@@ -44,16 +43,17 @@ class PostControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'created_at';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+
+        // For testing image
+        $this->img_parent_model = new Post;
+        $this->img_parent_create = [
+            'title' => 'This is the title',
+            'slug' => 'this_is_a_slug',
+            'content' => 'This is the body',
+            'private' => false,
+            'featured' => true,
+            'category_id' => 1
+        ];
     }
     
     /**

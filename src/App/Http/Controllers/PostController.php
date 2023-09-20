@@ -1,6 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Post;
@@ -109,7 +111,7 @@ class PostController extends Controller
             'content'       => 'required',
         );
 
-        $validation = \Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules);
         
         if ($validation->fails()) {
             return redirect('admin/posts/' . (isset($sid) ? 'edit/' . $sid : 'create'))
@@ -151,7 +153,7 @@ class PostController extends Controller
         $post->save();
 
         // Save translations
-        $translations = \Config::get('redminportal::translation');
+        $translations = Config::get('redminportal::translation');
         foreach ($translations as $translation) {
             $lang = $translation['lang'];
             if ($lang == 'en') {

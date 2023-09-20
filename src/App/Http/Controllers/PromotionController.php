@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use DateTime;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Promotion;
@@ -8,7 +9,7 @@ use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
-use DateTime;
+use Illuminate\Support\Facades\Config;
 
 class PromotionController extends Controller
 {
@@ -87,82 +88,81 @@ class PromotionController extends Controller
         
         $validation = Validator::make(Input::all(), $rules);
          
-        if ($validation->passes()) {
-            $name               = Input::get('name');
-            $short_description  = Input::get('short_description');
-            $long_description   = Input::get('long_description');
-            $image              = Input::file('image');
-            $active             = (Input::get('active') == '' ? false : true);
-            
-            $start_date = DateTime::createFromFormat('d/m/Y', Input::get('start_date'));
-            $end_date   = DateTime::createFromFormat('d/m/Y', Input::get('end_date'));
-            
-            $promotion = (isset($sid) ? Promotion::find($sid) : new Promotion);
-            
-            if ($promotion == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The promotion cannot be found because it does not exist or may have been deleted."
-                );
-                return redirect('/admin/promotions')->withErrors($errors);
-            }
-            
-            $promotion->name = $name;
-            $promotion->start_date = $start_date;
-            $promotion->end_date = $end_date;
-            $promotion->short_description = $short_description;
-            $promotion->long_description = $long_description;
-            $promotion->active = $active;
-            
-            $promotion->save();
-            
-            // Save translations
-            $translations = \Config::get('redminportal::translation');
-            foreach ($translations as $translation) {
-                $lang = $translation['lang'];
-                if ($lang == 'en') {
-                    continue;
-                }
-
-                $translated_content = array(
-                    'name'                  => Input::get($lang . '_name'),
-                    'short_description'     => Input::get($lang . '_short_description'),
-                    'long_description'      => Input::get($lang . '_long_description')
-                );
-
-                // Check if lang exist
-                $translated_model = $promotion->translations->where('lang', $lang)->first();
-                if ($translated_model == null) {
-                    $translated_model = new Translation;
-                }
-
-                $translated_model->lang = $lang;
-                $translated_model->content = json_encode($translated_content);
-
-                $promotion->translations()->save($translated_model);
-            }
-            
-            if (Input::hasFile('image')) {
-                //Upload the file
-                $helper_image = new RImage;
-                $filename = $helper_image->upload($image, 'promotions/' . $promotion->id, true);
-
-                if ($filename) {
-                    // create photo
-                    $newimage = new Image;
-                    $newimage->path = $filename;
-
-                    // save photo to the loaded model
-                    $promotion->images()->save($newimage);
-                }
-            }
-        //if it validate
-        } else {
+        if ($validation->fails()) {
             if (isset($sid)) {
                 return redirect('admin/promotions/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
                 return redirect('admin/promotions/create')->withErrors($validation)->withInput();
+            }
+        }
+
+        $name               = Input::get('name');
+        $short_description  = Input::get('short_description');
+        $long_description   = Input::get('long_description');
+        $image              = Input::file('image');
+        $active             = (Input::get('active') == '' ? false : true);
+        
+        $start_date = DateTime::createFromFormat('d/m/Y', Input::get('start_date'));
+        $end_date   = DateTime::createFromFormat('d/m/Y', Input::get('end_date'));
+        
+        $promotion = (isset($sid) ? Promotion::find($sid) : new Promotion);
+        
+        if ($promotion == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The promotion cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/promotions')->withErrors($errors);
+        }
+        
+        $promotion->name = $name;
+        $promotion->start_date = $start_date;
+        $promotion->end_date = $end_date;
+        $promotion->short_description = $short_description;
+        $promotion->long_description = $long_description;
+        $promotion->active = $active;
+        
+        $promotion->save();
+        
+        // Save translations
+        $translations = Config::get('redminportal::translation');
+        foreach ($translations as $translation) {
+            $lang = $translation['lang'];
+            if ($lang == 'en') {
+                continue;
+            }
+
+            $translated_content = array(
+                'name'                  => Input::get($lang . '_name'),
+                'short_description'     => Input::get($lang . '_short_description'),
+                'long_description'      => Input::get($lang . '_long_description')
+            );
+
+            // Check if lang exist
+            $translated_model = $promotion->translations->where('lang', $lang)->first();
+            if ($translated_model == null) {
+                $translated_model = new Translation;
+            }
+
+            $translated_model->lang = $lang;
+            $translated_model->content = json_encode($translated_content);
+
+            $promotion->translations()->save($translated_model);
+        }
+        
+        if (Input::hasFile('image')) {
+            //Upload the file
+            $helper_image = new RImage;
+            $filename = $helper_image->upload($image, 'promotions/' . $promotion->id, true);
+
+            if ($filename) {
+                // create photo
+                $newimage = new Image;
+                $newimage->path = $filename;
+
+                // save photo to the loaded model
+                $promotion->images()->save($newimage);
             }
         }
         
