@@ -1,14 +1,16 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class PublicAuthenticateTest extends BaseAuthenticateTest
 {
     /**
      * Constructs dataset for tests later
      **/
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+        
         $this->test_pages = [
             'login',
             'login/unauthorized',

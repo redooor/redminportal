@@ -1,10 +1,11 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Group;
 
-class BaseAuthenticateTest extends RedminTestCase
+class BaseAuthenticateTest extends RedminBrowserTestCase
 {
     protected $user;
     protected $test_pages;
@@ -21,7 +22,7 @@ class BaseAuthenticateTest extends RedminTestCase
         /* Creates a user for each test */
         $this->user = new User;
         $this->user->email        = 'peter@test.com';
-        $this->user->password     = \Hash::make("test");
+        $this->user->password     = Hash::make("test");
         $this->user->first_name   = 'Peter';
         $this->user->last_name    = 'Tester';
         $this->user->activated    = 1;
