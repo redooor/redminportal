@@ -6,8 +6,10 @@ class FormUITest extends RedminTestCase
 {
     private $model;
     
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+        
         $this->model = new Form;
     }
     
