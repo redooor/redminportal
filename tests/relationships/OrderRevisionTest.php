@@ -1,8 +1,7 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
-use DB;
-use Redooor\Redminportal\App\Models\Revision;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Redooor\Redminportal\App\Models\Order;
 
 class OrderRevisionTest extends BaseRelationshipTest

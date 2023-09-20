@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Order;
 
