@@ -1,7 +1,6 @@
 # Change log
 
-[![Build Status](https://travis-ci.org/redooor/redminportal.svg?branch=develop)](https://travis-ci.org/redooor/redminportal)
-
+* [Version 0.58.0](#version-0580)
 * [Version 0.4.4, 0.3.4 and 0.2.4](#version-044-034-and-024)
 * [Version 0.3.3.1 and 0.2.3.1](#version-0331-and-0231)
 * [Version 0.3.3 and 0.2.3](#version-033-and-023)
@@ -15,15 +14,19 @@
 
 | Laravel | RedminPortal | Branch | Status |
 |:-------:|:------------:|:------:|:------:|
-| 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) | Inactive |
-| 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) | Active   |
-| 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) | Active   |
-| 5.2     | 0.4.x        | [v0.4](https://github.com/redooor/redminportal/tree/v0.4) | Active   |
+| 5.8     | 0.58.x       | [v0.58](https://github.com/redooor/redminportal/tree/v0.58) | Active   |
+| 5.2     | 0.4.x        | [v0.4](https://github.com/redooor/redminportal/tree/v0.4)   | Inactive |
+| 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3)   | Inactive |
+| 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2)   | Inactive |
+| 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1)   | Inactive |
 
-Version 0.2, 0.3 and 0.4 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
-The focus of the development will be on branch 0.3, which supports the LTS Laravel version 5.1.
+The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.
 
-Development for branch v0.1 has stopped. Please upgrade to later versions.
+Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.
+
+## Version 0.58.0
+
+Focus on supporting Laravel 5.8 and making sure all models and controllers work.
 
 ## Version 0.4.4, 0.3.4 and 0.2.4
 UI and Image handling improvements.

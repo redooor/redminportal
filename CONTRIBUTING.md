@@ -32,7 +32,7 @@ Also ensure that your Pull Request satisfies the following coding standards:
 * [PSR 1 Basic Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 * [PSR 2 Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 
-As of RedminPortal 0.2.0, we're changing our autoloading standard from PSR-0 to PSR-4 in order to match the same in Laravel 5.0.
+As of RedminPortal 0.2.0, we're changing our autoloading standard from PSR-0 to PSR-4 in order to match the same in Laravel 5.*.
 
 Please use [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) to detect violations of coding standard.
 
@@ -80,10 +80,9 @@ All deployment-related documentation should be done within our Wiki page.
 We're using these tools in our development of RedminPortal. It'll help if you use the same tool too.
 Please feel free to suggest a better alternative.
 
-* [Laravel Homestead](http://laravel.com/docs/5.0/homestead) for consistent environment.
-* [Brackets](http://brackets.io/) for text editing.
-* [Brackets PHP Code Quality Tools](https://github.com/mikaeljorhult/brackets-php-code-quality-tools) a plugin for Brackets.
-* [Brackets PHP Syntax Hint](http://www.oslibrary.in/brackets/) a plugin for Brackets.
+* [Laravel Herd](https://herd.laravel.com/) for consistent environment.
+* [Visual Studio Code](https://code.visualstudio.com/) for text editing.
+* [PHP by Devsense](https://marketplace.visualstudio.com/items?itemName=DEVSENSE.phptools-vscode) a PHP plugin for Visual Studio Code.
 
 # Dealing with Case-sensitive naming convention
 
