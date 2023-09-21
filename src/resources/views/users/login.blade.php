@@ -2,7 +2,7 @@
 
 @section('content')
     @if (isset($errors))
-        @if($errors->has())
+        @if(count($errors) > 0)
         <div class="col-md-6 col-md-offset-3">
             <div class='alert alert-danger'>
                 {{ Lang::get('redminportal::messages.error') }}
