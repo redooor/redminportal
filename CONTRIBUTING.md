@@ -81,6 +81,7 @@ We're using these tools in our development of RedminPortal. It'll help if you us
 Please feel free to suggest a better alternative.
 
 * [Laravel Herd](https://herd.laravel.com/) for consistent environment.
+* [DBngin](https://dbngin.com/) for database environment to be used with Herd.
 * [Visual Studio Code](https://code.visualstudio.com/) for text editing.
 * [PHP by Devsense](https://marketplace.visualstudio.com/items?itemName=DEVSENSE.phptools-vscode) a PHP plugin for Visual Studio Code.
 

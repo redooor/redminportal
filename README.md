@@ -25,7 +25,7 @@ RedminPortal currently supports Laravel 5.8. See [Compatibility](#compatibility)
 #Compatibility
 
 | Laravel | RedminPortal | Branch | Status |
-|:-------:|:------------:|:------:| :---- :|
+|:--------|:-------------|:-------|:-------|
 | 5.8     | 0.58.x       | [v0.58](https://github.com/redooor/redminportal/tree/v0.58) | Active |
 | 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) | Inactive |
 | 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) | Inactive |
