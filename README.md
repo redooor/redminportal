@@ -166,26 +166,27 @@ You can install Laravel version 5.8 using the command:
 4. Then run `php composer dump-autoload` in a terminal.
 5. Run the following commands in a terminal to perform database migration for Redminportal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
-        ?> php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
 
     **CAUTION: using --force will overwrite existing files**
     
 6. Run the following in a terminal to seed the database with initial admin username and password:
 
-        ?> php artisan db:seed --class="RedminSeeder"
+        php artisan db:seed --class="RedminSeeder"
         
         Username/password: admin@admin.com/admin
 
 7. Publish package assets by running this in a terminal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
 8. Publish package config by running this in a terminal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
         
     **CAUTION: using --force will overwrite existing files**
     
@@ -193,7 +194,7 @@ You can install Laravel version 5.8 using the command:
 
     Only do this if you want to modify Redminportal views without editing the source code.
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
@@ -245,26 +246,27 @@ You can install Laravel version 5.8 using the command:
 
 8. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
-        ?> php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
         
     **CAUTION: using --force will overwrite existing files**
 
 9. Run the following in a terminal to seed the database with initial admin username and password:
 
-        ?> php artisan db:seed --class="RedminSeeder"
+        php artisan db:seed --class="RedminSeeder"
         
         Username/password: admin@admin.com/admin
 
 10. Publish package assets by running this in a terminal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
 11. Publish package config by running this in a terminal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
@@ -272,7 +274,7 @@ You can install Laravel version 5.8 using the command:
 
     Only do this if you want to modify Redminportal views without editing the source code.
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
         
     **CAUTION: using --force will overwrite existing files**
         
@@ -289,14 +291,21 @@ You can install Laravel version 5.8 using the command:
 
 * In packages\redooor\redminportal folder, run 
 
-        ?> composer update --prefer-dist -vvv --profile
-        ?> vendor/bin/phpunit
+        composer update --prefer-dist -vvv --profile
+        
+        vendor/bin/phpunit
 
     **NOTE: If you run out of memory while running the full tests, try running the tests by sub-folders.**
     
-        ?> vendor/bin/phpunit tests/models/
-        ?> vendor/bin/phpunit tests/controllers/
-        ?> vendor/bin/phpunit tests/relationships/
+        vendor/bin/phpunit tests/models/
+        
+        vendor/bin/phpunit tests/controllers/
+        
+        vendor/bin/phpunit tests/relationships/
+
+        ./vendor/bin/phpunit --testsuite "suite1","suite2"
+        
+        ./vendor/bin/phpunit --testsuite "suite3","suite4"
 
 # Versioning
 
