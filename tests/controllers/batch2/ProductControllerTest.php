@@ -19,8 +19,6 @@ class ProductControllerTest extends BaseControllerTest
             'create' => array(
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
-                'cn_name'               => 'CN name',
-                'cn_short_description'  => 'CN short body',
                 'category_id'           => 1,
                 'sku'                   => 'UNIQUESKU001',
                 'cn_name'               => 'This is cn name',
@@ -36,8 +34,6 @@ class ProductControllerTest extends BaseControllerTest
                 'id'   => 1,
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
-                'cn_name'               => 'CN name',
-                'cn_short_description'  => 'CN short body',
                 'category_id'           => 1,
                 'sku'                   => 'UNIQUESKU001',
                 'cn_name' => 'This is cn name',
