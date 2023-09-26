@@ -160,7 +160,6 @@ class RedminportalServiceProvider extends ServiceProvider
             $authConfig = $this->app['files']->getRequire($userAuthFile);
             $packageAuthConfig = $this->app['files']->getRequire($packageAuthFile);
 
-            // $authConfig['defaults'] = array_merge($authConfig['defaults'], $packageAuthConfig['defaults']);
             $authConfig['guards'] = array_merge($authConfig['guards'], $packageAuthConfig['guards']);
             $authConfig['providers'] = array_merge($authConfig['providers'], $packageAuthConfig['providers']);
 
