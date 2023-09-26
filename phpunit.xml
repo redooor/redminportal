@@ -15,6 +15,7 @@
             <directory suffix=".php">./tests/</directory>
             <exclude>./tests/RedminTestCase.php</exclude>
             <exclude>./tests/RedminBrowserTestCase.php</exclude>
+            <exclude>./tests/RedminTestTrait.php</exclude>
             <exclude>./tests/bases/</exclude>
             <exclude>./tests/dummy/</exclude>
             <exclude>./tests/.gitkeep</exclude>
