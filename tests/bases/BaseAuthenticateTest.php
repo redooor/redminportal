@@ -50,8 +50,8 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
     protected function echoText($text)
     {
         return; // Remove this line for debug only
-        echo '
-' . $text;
+//         echo '
+// ' . $text;
     }
     
     /**
