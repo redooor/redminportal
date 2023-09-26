@@ -48,7 +48,7 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         // This part is different from parent
         $this->runThroughAllPagesAllowedAccess();
@@ -70,7 +70,7 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -91,7 +91,7 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -114,7 +114,7 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         $this->user->groups()->save($deny_group_3);
         $this->user->groups()->save($deny_group_4);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }

@@ -19,7 +19,7 @@ class EmailApiTest extends RedminBrowserTestCase
      */
     public function testIndexPass()
     {
-        Auth::loginUsingId(1); // Fake admin authentication
+        Auth::guard('redminguard')->loginUsingId(1); // Fake admin authentication
 
         $response = $this->call('GET', '/admin/api/email');
         $this->assertResponseOk();
@@ -44,7 +44,7 @@ class EmailApiTest extends RedminBrowserTestCase
      */
     public function testIndexNoPermissionFail()
     {
-        Auth::loginUsingId(2); // Fake user authentication
+        Auth::guard('redminguard')->loginUsingId(2); // Fake user authentication
 
         $this->call('GET', '/admin/api/email');
         $this->assertResponseStatus(302);
@@ -55,7 +55,7 @@ class EmailApiTest extends RedminBrowserTestCase
      */
     public function testGetNamePass()
     {
-        Auth::loginUsingId(1); // Fake admin authentication
+        Auth::guard('redminguard')->loginUsingId(1); // Fake admin authentication
         
         $response = $this->call('GET', '/admin/api/email/all');
         $this->assertResponseOk();
@@ -80,7 +80,7 @@ class EmailApiTest extends RedminBrowserTestCase
      */
     public function testGetNameNoPermissionFail()
     {
-        Auth::loginUsingId(2); // Fake user authentication
+        Auth::guard('redminguard')->loginUsingId(2); // Fake user authentication
 
         $this->call('GET', '/admin/api/email/all');
         $this->assertResponseStatus(302);

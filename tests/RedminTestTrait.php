@@ -21,9 +21,6 @@ trait RedminTestTrait
             'database' => ':memory:',
             'prefix'   => '',
         ]);
-        
-        /* Required for Request::old to work */
-        $app->make(Kernel::class)->pushMiddleware(StartSession::class);
     }
     
     /**

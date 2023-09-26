@@ -23,7 +23,7 @@
             <div class="navbar navbar-default navbar-fixed-top">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        @if (Auth::check())
+                        @if (Auth::guard('redminguard')->check())
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                             <span class="glyphicon glyphicon-user"></span>
                         </button>
@@ -33,7 +33,7 @@
                         </a>
                     </div>
                     <div class="navbar-collapse collapse">
-                        @if (Auth::check())
+                        @if (Auth::guard('redminguard')->check())
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>

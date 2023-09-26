@@ -13,7 +13,7 @@ class MyaccountControllerTest extends RedminBrowserTestCase
 
         $this->seed('RedminSeeder');
         
-        Auth::loginUsingId(1);
+        Auth::guard('redminguard')->loginUsingId(1);
     }
     
     /**
@@ -31,7 +31,7 @@ class MyaccountControllerTest extends RedminBrowserTestCase
      */
     public function testIndexFail()
     {
-        Auth::logout();
+        Auth::guard('redminguard')->logout();
         
         $this->call('GET', 'myaccount');
 
@@ -72,7 +72,7 @@ class MyaccountControllerTest extends RedminBrowserTestCase
 
         $this->call('POST', 'myaccount/store', $input);
 
-        $this->assertTrue(Auth::check() == false); // Logged out after save
+        $this->assertTrue(Auth::guard('redminguard')->check() == false); // Logged out after save
         $this->assertRedirectedTo('myaccount');
     }
     

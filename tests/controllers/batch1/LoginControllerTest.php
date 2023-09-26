@@ -13,7 +13,7 @@ class LoginControllerTest extends RedminBrowserTestCase
 
         $this->seed('RedminSeeder');
         
-        Auth::loginUsingId(1);
+        Auth::guard('redminguard')->loginUsingId(1);
     }
     
     /**
@@ -48,7 +48,7 @@ class LoginControllerTest extends RedminBrowserTestCase
      */
     public function testStoreCreatePass()
     {
-        Auth::logout();
+        Auth::guard('redminguard')->logout();
         
         $input = array(
             'email' => 'admin@admin.com',
@@ -56,6 +56,11 @@ class LoginControllerTest extends RedminBrowserTestCase
         );
 
         $this->call('POST', '/login/login', $input);
+
+        // Check custom guard
+        $this->assertNotTrue(Auth::getDefaultDriver() === 'redminportal');
+        $this->assertNotTrue(Auth::guard('web')->check()); // Not using 'web' guard
+        $this->assertTrue(Auth::guard('redminguard')->check()); // Using custom guard
 
         $this->assertRedirectedTo('/admin/dashboard');
     }
@@ -65,7 +70,7 @@ class LoginControllerTest extends RedminBrowserTestCase
      */
     public function testStoreCreateFailWrongPassword()
     {
-        Auth::logout();
+        Auth::guard('redminguard')->logout();
         
         $input = array(
             'email' => 'admin@admin.com',
@@ -74,6 +79,55 @@ class LoginControllerTest extends RedminBrowserTestCase
 
         $this->call('POST', '/login/login', $input);
 
+        // Check custom guard
+        $this->assertNotTrue(Auth::guard('redminguard')->check());
+        $this->assertNotTrue(Auth::getDefaultDriver() === 'redminportal');
+        $this->assertNotTrue(Auth::guard('web')->check()); // Check 'web' guard
+        $this->assertNotTrue(Auth::guard('redminguard')->check()); // Check custom guard
+        $this->assertRedirectedTo('/login');
+        $this->assertSessionHasErrors();
+    }
+
+    /**
+     * Test (Fail): access postLogin with correct username but no password
+     */
+    public function testStoreCreateFailNoPassword()
+    {
+        Auth::guard('redminguard')->logout();
+        
+        $input = array(
+            'email' => 'admin@admin.com'
+        );
+
+        $this->call('POST', '/login/login', $input);
+
+        // Check custom guard
+        $this->assertNotTrue(Auth::guard('redminguard')->check());
+        $this->assertNotTrue(Auth::getDefaultDriver() === 'redminportal');
+        $this->assertNotTrue(Auth::guard('web')->check()); // Check 'web' guard
+        $this->assertNotTrue(Auth::guard('redminguard')->check()); // Check custom guard
+        $this->assertRedirectedTo('/login');
+        $this->assertSessionHasErrors();
+    }
+
+    /**
+     * Test (Fail): access postLogin with no username but with password
+     */
+    public function testStoreCreateFailNoUsername()
+    {
+        Auth::guard('redminguard')->logout();
+        
+        $input = array(
+            'password' => 'wrong'
+        );
+
+        $this->call('POST', '/login/login', $input);
+
+        // Check custom guard
+        $this->assertNotTrue(Auth::guard('redminguard')->check());
+        $this->assertNotTrue(Auth::getDefaultDriver() === 'redminportal');
+        $this->assertNotTrue(Auth::guard('web')->check()); // Check 'web' guard
+        $this->assertNotTrue(Auth::guard('redminguard')->check()); // Check custom guard
         $this->assertRedirectedTo('/login');
         $this->assertSessionHasErrors();
     }

@@ -17,7 +17,7 @@ class BaseControllerTest extends RedminBrowserTestCase
 
         $this->seed('RedminSeeder');
         
-        Auth::loginUsingId(1);
+        Auth::guard('redminguard')->loginUsingId(1);
     }
     
     /**

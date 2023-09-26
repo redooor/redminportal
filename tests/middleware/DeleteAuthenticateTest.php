@@ -81,7 +81,7 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -129,7 +129,7 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }

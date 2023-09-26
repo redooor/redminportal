@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 // Login controller
 Route::group(
     [
+        'middleware' => 'redminsession',
         'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
         'prefix' => 'login'
     ],
@@ -22,11 +23,21 @@ Route::group(
 );
 
 // Logout
-Route::get('logout', 'Redooor\Redminportal\App\Http\Controllers\LoginController@getLogout');
+Route::group(
+    [
+        'middleware' => 'redminsession',
+        'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
+        'prefix' => 'logout'
+    ],
+    function () {
+        Route::get('/', 'LoginController@getLogout');
+    }
+);
 
 // My Account controller
 Route::group(
     [
+        'middleware' => 'redminsession',
         'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
         'prefix' => 'myaccount'
     ],
@@ -38,7 +49,7 @@ Route::group(
 
 Route::group(
     [
-        'middleware' => 'Redooor\Redminportal\App\Http\Middleware\Authenticate',
+        'middleware' => ['redminsession', 'redminauth'],
         'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
         'prefix' => 'admin'
     ],
@@ -297,7 +308,7 @@ Route::group(
 
 Route::group(
     [
-        'middleware' => 'Redooor\Redminportal\App\Http\Middleware\Authenticate',
+        'middleware' => ['redminsession', 'redminauth'],
         'namespace' => 'Redooor\Redminportal\App\Http\API',
         'prefix' => 'admin/api'
     ],
@@ -309,6 +320,7 @@ Route::group(
 
 Route::group(
     [
+        'middleware' => 'redminsession',
         'namespace' => 'Redooor\Redminportal\App\Http\API',
         'prefix' => 'api'
     ],

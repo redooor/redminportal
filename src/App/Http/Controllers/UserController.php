@@ -137,7 +137,7 @@ class UserController extends Controller
             $user = User::find($sid);
             
             // Check if this is logged in user, prevent deactivate
-            if (Auth::user()->id == $sid && $activated == false) {
+            if (Auth::guard('redminguard')->user()->id == $sid && $activated == false) {
                 $errors->add(
                     'deactivateError',
                     Lang::get('redminportal::messages.user_error_deactivate_own_account')
@@ -213,7 +213,7 @@ class UserController extends Controller
     
     public function getDelete($sid)
     {
-        $this_user = Auth::user();
+        $this_user = Auth::guard('redminguard')->user();
         if ($this_user->id == $sid) {
             $errors = new MessageBag;
             $errors->add(
@@ -262,7 +262,7 @@ class UserController extends Controller
 
     public function getDeactivate($sid)
     {
-        $this_user = Auth::user();
+        $this_user = Auth::guard('redminguard')->user();
         if ($this_user->id == $sid) {
             $errors = new MessageBag;
             $errors->add(

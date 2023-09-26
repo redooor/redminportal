@@ -52,7 +52,7 @@ class TagApiTest extends RedminBrowserTestCase
      */
     public function testIndexWithAuth()
     {
-        Auth::loginUsingId(1); // Fake admin authentication
+        Auth::guard('redminguard')->loginUsingId(1); // Fake admin authentication
 
         $response = $this->call('GET', '/api/tag');
         $this->assertResponseOk();
@@ -82,7 +82,7 @@ class TagApiTest extends RedminBrowserTestCase
      */
     public function testGetNameWithAuth()
     {
-        Auth::loginUsingId(1); // Fake admin authentication
+        Auth::guard('redminguard')->loginUsingId(1); // Fake admin authentication
         
         $response = $this->call('GET', '/api/tag/name');
         $this->assertResponseOk();

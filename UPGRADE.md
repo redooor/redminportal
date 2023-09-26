@@ -1,8 +1,22 @@
 # Upgrade Guide
 
-Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+## Upgrading to v0.58
+
+This version is focused on upgrading the code to support Laravel 5.8. Most of the models should remain unchanged. But there's an addition of a new guard 'redminguard' to all authentication.
+
+Change any Auth calls to include the guard `redminguard`.
+
+E.g.
+
+    Auth::check();
+
+Should be changed to:
+
+    Auth::guard('redminguard')->check();
 
 ## Upgrading to v0.3.3.1/v0.2.3.1 from v0.3.3/v0.2.3
+
+Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
 
 ### Public assets
 
@@ -99,11 +113,13 @@ means that the user/group can view but not delete or update record.
 
 To check if the user is allowed to view the page, use the hasAccess method in User model.
 
+NOTE: You need to specify the guard 'redminguard'.
+
 Example:
 ```
     public function getIndex(Request $request)
     {
-        $user = \Auth::user();
+        $user = \Auth::guard('redminguard')->user();
         if ($user->hasAccess($request)) {
             // Do something
             return view('has_access');

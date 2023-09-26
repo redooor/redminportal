@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'redminguard',
+        'passwords' => 'redminpasswords',
     ],
 
     /*
@@ -36,14 +36,13 @@ return [
     */
 
     'guards' => [
+        'redminguard' => [
+            'driver' => 'session',
+            'provider' => 'redminprovider',
+        ],
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
-        ],
-
-        'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
+            'provider' => 'redminprovider',
         ],
     ],
 
@@ -65,15 +64,10 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'redminprovider' => [
             'driver' => 'eloquent',
             'model' => Redooor\Redminportal\App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -96,8 +90,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'redminpasswords' => [
+            'provider' => 'redminprovider',
             'email' => 'auth.emails.password',
             'table' => 'password_resets',
             'expire' => 60,

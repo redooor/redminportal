@@ -20,11 +20,11 @@ class MyaccountController extends Controller
     
     public function getIndex()
     {
-        if (! Auth::check()) {
+        if (! Auth::guard('redminguard')->check()) {
             return redirect('login');
         }
         
-        $user = Auth::user();
+        $user = Auth::guard('redminguard')->user();
         
         $data = array(
             'user' => $user
@@ -35,11 +35,11 @@ class MyaccountController extends Controller
     
     public function postStore()
     {
-        if (! Auth::check()) {
+        if (! Auth::guard('redminguard')->check()) {
             return redirect('login');
         }
         
-        $authUser = Auth::user();
+        $authUser = Auth::guard('redminguard')->user();
         $errors = new MessageBag;
         $sid = $authUser->id;
         $user = User::find($sid);
@@ -83,7 +83,7 @@ class MyaccountController extends Controller
             }
             
             if ($password != '') {
-                Auth::logout();
+                Auth::guard('redminguard')->logout();
                 return redirect($this->pageRoute);
             } else {
                 $message = trans('redminportal::messages.user_myaccount_save_success');

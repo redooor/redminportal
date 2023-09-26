@@ -24,9 +24,9 @@ class OrderRevisionTest extends BaseRelationshipTest
         
         $this->seed('RedminSeeder');
         
-        Auth::loginUsingId(1);
+        Auth::guard('redminguard')->loginUsingId(1);
         
-        $this->user = Auth::user();
+        $this->user = Auth::guard('redminguard')->user();
         
         $this->order = $this->createNewModel(new Order, array(
             'user_id' => $this->user->id,

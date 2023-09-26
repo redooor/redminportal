@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
+    function __construct()
+    {
+        $this->guard = 'redminguard';
+    }
+    
     public function getIndex()
     {
         return view('redminportal::users/login');
@@ -19,13 +24,13 @@ class LoginController extends Controller
     public function getLogout()
     {
         // Logs the user out
-        Auth::logout();
+        Auth::guard($this->guard)->logout();
         return redirect('/');
     }
 
     public function postLogin()
     {
-        if (Auth::check()) {
+        if (Auth::guard($this->guard)->check()) {
             return redirect('/');
         }
         
@@ -43,7 +48,7 @@ class LoginController extends Controller
         $email      = Input::get('email');
         $password   = Input::get('password');
 
-        if (Auth::attempt(['email' => $email, 'password' => $password, 'activated' => 1])) {
+        if (Auth::guard($this->guard)->attempt(['email' => $email, 'password' => $password, 'activated' => 1])) {
             return redirect()->intended('admin/dashboard');
         }
 
