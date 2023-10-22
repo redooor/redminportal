@@ -123,7 +123,7 @@
 								<span class="glyphicon glyphicon-shopping-cart"></span>
 							</button>
 							<ul class="dropdown-menu pull-right" role="menu">
-                                @foreach ($order->products()->groupBy('name')->get() as $product)
+                                @foreach ($order->products()->get() as $product)
 								<li>
 									<a href="#">{{ $product->name }}<br>
                                         <span class="label label-primary">{{ $product->sku }}</span><br>
@@ -131,7 +131,7 @@
                                     </a>
 								</li>
                                 @endforeach
-                                @foreach ($order->bundles()->groupBy('name')->get() as $bundle)
+                                @foreach ($order->bundles()->get() as $bundle)
 								<li>
                                     <a href="#">{{ $bundle->name }}<br>
                                         <span class="label label-primary">{{ $bundle->sku }}</span><br>

@@ -38,10 +38,10 @@
                     @endforeach
                 </td>
                 <td>
-                    @foreach ($order->products()->groupBy('name')->get() as $product)
+                    @foreach ($order->products()->get() as $product)
                         {{ str_replace(',', '.', $product->name) }} ({{ str_replace(',', '.', $product->sku) }}) Qty: {{ $order->products()->where('name', $product->name)->count() }}, 
                     @endforeach
-                    @foreach ($order->bundles()->groupBy('name')->get() as $bundle)
+                    @foreach ($order->bundles()->get() as $bundle)
                         {{ str_replace(',', '.', $bundle->name) }} ({{ str_replace(',', '.', $bundle->sku) }}) Qty: {{ $order->bundles()->where('name', $bundle->name)->count() }}, 
                     @endforeach
                     @foreach ($order->pricelists as $pricelist)

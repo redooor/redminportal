@@ -6,9 +6,15 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h1>RedminPortal <small>by Redooor</small></h1>
-                    <img src="https://travis-ci.org/redooor/redminportal.svg?branch=develop">
                     <h2><u>Change log</u></h2>
-                    <p>Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.</p>
+                    <p>The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.</p>
+                    <p>Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.</p>
+                    <h3>Version 0.58.0</h3>
+                    <p>Focus on supporting Laravel 5.8 and making sure all models and controllers work.</p>
+                    <ol>
+                        <li>Supports Laravel 5.8</li>
+                        <li>Requires at least PHP 7.4</li>
+                    </ol>
                     <h3>Version 0.3.4 and 0.2.4</h3>
                     <h4>Enhancements:</h4>
                     <ol>

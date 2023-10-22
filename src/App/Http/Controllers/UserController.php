@@ -29,8 +29,7 @@ class UserController extends Controller
         $this->query = $this->model
             ->LeftJoin('users_groups', 'users_groups.user_id', '=', 'users.id')
             ->LeftJoin('groups', 'groups.id', '=', 'users_groups.group_id')
-            ->select('users.*', 'groups.name')
-            ->groupBy('email');
+            ->select('users.*', 'groups.name');
         
         // For searching
         $this->searchable_fields = [

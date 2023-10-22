@@ -194,7 +194,7 @@ You can install Laravel version 5.8 using the command:
 
     The package will append neccesary guards and providers to your `auth` config. If you've added a guard with the same name as `redminguard` and provider as `redminprovider`, they'll be replaced by the package's setting.
 
-    If you're going to use your own `auth` config but would like to use Redminportal for authentication, you need to add a guard in your `auth` config as below:
+    If you're going to use your own `auth` config but would like to use Redminportal for authentication, you need to add the a guard in your `auth` config as below:
 
     ```
     'defaults' => [
