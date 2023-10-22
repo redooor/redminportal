@@ -189,6 +189,52 @@ You can install Laravel version 5.8 using the command:
         php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
         
     **CAUTION: using --force will overwrite existing files**
+
+    IMPORTANT:
+
+    The package will append neccesary guards and providers to your `auth` config. If you've added a guard with the same name as `redminguard` and provider as `redminprovider`, they'll be replaced by the package's setting.
+
+    If you're going to use your own `auth` config but would like to use Redminportal for authentication, you need to add a guard in your `auth` config as below:
+
+    ```
+    'defaults' => [
+        'guard' => 'web', // or it could be 'redminguard'
+        'passwords' => 'redminpasswords',
+    ],
+    ```
+
+    ```
+    'guards' => [
+        'redminguard' => [
+            'driver' => 'session',
+            'provider' => 'redminprovider',
+        ],
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'redminprovider',
+        ],
+    ],
+    ```
+
+    ```
+    'providers' => [
+        'redminprovider' => [
+            'driver' => 'eloquent',
+            'model' => Redooor\Redminportal\App\Models\User::class,
+        ],
+    ],
+    ```
+
+    ```
+    'passwords' => [
+        'redminpasswords' => [
+            'provider' => 'redminprovider',
+            'email' => 'auth.emails.password',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+    ],
+    ```
     
 9. _**Optional:**_ Publish package views by running this in a terminal:
 
