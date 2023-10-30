@@ -4,8 +4,8 @@
  * Add search capability to controller
  */
 
-use Input;
-use Validator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 
 trait SearcherController

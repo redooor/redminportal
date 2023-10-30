@@ -1,19 +1,19 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
-class MyaccountControllerTest extends RedminTestCase
+class MyaccountControllerTest extends RedminBrowserTestCase
 {
     /**
      * Initialize Setup with seed
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->seed('RedminSeeder');
         
-        Auth::loginUsingId(1);
+        Auth::guard('redminguard')->loginUsingId(1);
     }
     
     /**
@@ -31,7 +31,7 @@ class MyaccountControllerTest extends RedminTestCase
      */
     public function testIndexFail()
     {
-        Auth::logout();
+        Auth::guard('redminguard')->logout();
         
         $this->call('GET', 'myaccount');
 
@@ -72,7 +72,7 @@ class MyaccountControllerTest extends RedminTestCase
 
         $this->call('POST', 'myaccount/store', $input);
 
-        $this->assertTrue(Auth::check() == false); // Logged out after save
+        $this->assertTrue(Auth::guard('redminguard')->check() == false); // Logged out after save
         $this->assertRedirectedTo('myaccount');
     }
     

@@ -1,23 +1,22 @@
 <?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\App\Models\Pricelist;
-use Redooor\Redminportal\App\Models\UserPricelist;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Membership;
 
 class PurchaseControllerTest extends BaseControllerTest
 {
     /**
-     * Contructor
+     * Prepare data for tests
      */
-    public function __construct()
+    public function prepare()
     {
-        $page = '/admin/purchases';
-        $viewhas = array(
+        $this->page = '/admin/purchases';
+        $this->viewhas = array(
             'singular' => 'purchase',
             'plural' => 'purchases'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'pricelist_id'   => 1,
                 'payment_status' => 'Completed',
@@ -34,24 +33,16 @@ class PurchaseControllerTest extends BaseControllerTest
                 'email'          => 'admin@admin.com'
             )
         );
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
     }
     
     /**
      * Setup initial data for use in tests
      */
-    public function setup()
+    public function setup(): void
     {
         parent::setup();
+
+        $this->prepare();
         
         // Add membership
         $membership = new Membership;
@@ -77,13 +68,14 @@ class PurchaseControllerTest extends BaseControllerTest
         $pricelist->membership_id = 1;
         $pricelist->save();
     }
-    
+
     /**
      * Overwrite base functions, no edit for Purchase
      */
     public function testEditPass()
     {
-        return;
+        $this->call('GET', '/admin/purchases/edit/1');
+        $this->assertRedirectedTo('/admin/purchases');
     }
     
     /**
@@ -91,7 +83,8 @@ class PurchaseControllerTest extends BaseControllerTest
      */
     public function testStoreEdit()
     {
-        return;
+        $this->call('GET', '/admin/purchases/edit/1');
+        $this->assertRedirectedTo('/admin/purchases');
     }
 
     public function testStoreCreateFailedNoPricelist()

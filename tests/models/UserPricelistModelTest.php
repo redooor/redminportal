@@ -5,11 +5,10 @@ use Redooor\Redminportal\App\Models\UserPricelist;
 
 class UserPricelistModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new UserPricelist;
         $testcase = array(
             'user_id' => 1,
@@ -19,15 +18,7 @@ class UserPricelistModelTest extends BaseModelTest
             'payment_status' => 'Completed'
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
     
     /**

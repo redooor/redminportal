@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use DB, DateTime;
+use DateTime;
+use Illuminate\Support\Facades\DB;
 use Redooor\Redminportal\App\Models\Coupon;
 use Redooor\Redminportal\App\Models\Order;
 

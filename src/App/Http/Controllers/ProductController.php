@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Lang;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\ProductVariantController;
 use Redooor\Redminportal\App\Models\Product;
@@ -13,6 +14,7 @@ use Redooor\Redminportal\App\Classes\Weight;
 use Redooor\Redminportal\App\Classes\Volume;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Lang;
 
 class ProductController extends Controller
 {
@@ -37,7 +39,7 @@ class ProductController extends Controller
         $this->query = $this->model
             ->whereNotExists(function ($query) {
                 // Get all products but not variants
-                $query->select(\DB::raw(1))
+                $query->select(DB::raw(1))
                       ->from('product_variant')
                       ->whereRaw('product_variant.variant_id = products.id');
             })
@@ -121,8 +123,6 @@ class ProductController extends Controller
         
         return view('redminportal::products/edit', $data);
     }
-    
-    
 
     public function postStore()
     {
@@ -224,7 +224,7 @@ class ProductController extends Controller
         }
 
         // Save translations
-        $translations = \Config::get('redminportal::translation');
+        $translations = Config::get('redminportal::translation');
         foreach ($translations as $translation) {
             $lang = $translation['lang'];
             if ($lang == 'en') {
@@ -232,9 +232,9 @@ class ProductController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => \Input::get($lang . '_name'),
-                'short_description'     => \Input::get($lang . '_short_description'),
-                'long_description'      => \Input::get($lang . '_long_description')
+                'name'                  => Input::get($lang . '_name'),
+                'short_description'     => Input::get($lang . '_short_description'),
+                'long_description'      => Input::get($lang . '_long_description')
             );
 
             // Check if lang exist

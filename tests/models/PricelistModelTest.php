@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Pricelist;
 
 class PricelistModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Pricelist;
         $testcase = array(
             'price' => 0,
@@ -17,14 +16,6 @@ class PricelistModelTest extends BaseModelTest
             'active' => true
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

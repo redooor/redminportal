@@ -1,10 +1,10 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Auth;
-use Hash;
-use Input;
-use Lang;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\SearcherController;
@@ -29,8 +29,7 @@ class UserController extends Controller
         $this->query = $this->model
             ->LeftJoin('users_groups', 'users_groups.user_id', '=', 'users.id')
             ->LeftJoin('groups', 'groups.id', '=', 'users_groups.group_id')
-            ->select('users.*', 'groups.name')
-            ->groupBy('email');
+            ->select('users.*', 'groups.name');
         
         // For searching
         $this->searchable_fields = [
@@ -62,7 +61,7 @@ class UserController extends Controller
 
     public function getCreate()
     {
-        $roles = Group::orderBy('name')->lists('name', 'id');
+        $roles = Group::orderBy('name')->pluck('name', 'id');
         
         return view('redminportal::users/create')->with('roles', $roles);
     }
@@ -80,7 +79,7 @@ class UserController extends Controller
             return redirect('/admin/users')->withErrors($errors);
         }
         
-        $roles = Group::orderBy('name')->lists('name', 'id');
+        $roles = Group::orderBy('name')->pluck('name', 'id');
         
         $groups = [];
         foreach ($user->groups as $group) {
@@ -137,7 +136,7 @@ class UserController extends Controller
             $user = User::find($sid);
             
             // Check if this is logged in user, prevent deactivate
-            if (Auth::user()->id == $sid && $activated == false) {
+            if (Auth::guard('redminguard')->user()->id == $sid && $activated == false) {
                 $errors->add(
                     'deactivateError',
                     Lang::get('redminportal::messages.user_error_deactivate_own_account')
@@ -213,7 +212,7 @@ class UserController extends Controller
     
     public function getDelete($sid)
     {
-        $this_user = Auth::user();
+        $this_user = Auth::guard('redminguard')->user();
         if ($this_user->id == $sid) {
             $errors = new MessageBag;
             $errors->add(
@@ -262,7 +261,7 @@ class UserController extends Controller
 
     public function getDeactivate($sid)
     {
-        $this_user = Auth::user();
+        $this_user = Auth::guard('redminguard')->user();
         if ($this_user->id == $sid) {
             $errors = new MessageBag;
             $errors->add(

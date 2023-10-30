@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Promotion;
 
 class PromotionModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Promotion;
         $testcase = array(
             'name' => 'This is the title',
@@ -18,14 +17,6 @@ class PromotionModelTest extends BaseModelTest
             'end_date' => '2016-02-29 00:00:00'
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

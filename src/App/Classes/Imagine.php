@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Redooor\Redminportal\App\Helpers\RHelper;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Imagine
 {
@@ -119,7 +120,7 @@ class Imagine
 
     /**
      * Upload an image to the public storage
-     * @param  File $file
+     * @param  UploadedFile $file
      * @param string Directory (optional, defaults to null)
      * @param bool Whether to create all dimensions (optional, defaults to false)
      * @param bool Automatically appends number if file already exists (optional, defaults to true)

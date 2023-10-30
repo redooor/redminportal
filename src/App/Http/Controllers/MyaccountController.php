@@ -1,13 +1,12 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Auth;
-use Hash;
-use Input;
-use Lang;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Redooor\Redminportal\App\Models\User;
-use Redooor\Redminportal\App\Models\Group;
 
 class MyaccountController extends Controller
 {
@@ -21,11 +20,11 @@ class MyaccountController extends Controller
     
     public function getIndex()
     {
-        if (! Auth::check()) {
+        if (! Auth::guard('redminguard')->check()) {
             return redirect('login');
         }
         
-        $user = Auth::user();
+        $user = Auth::guard('redminguard')->user();
         
         $data = array(
             'user' => $user
@@ -36,13 +35,14 @@ class MyaccountController extends Controller
     
     public function postStore()
     {
-        if (! Auth::check()) {
+        if (! Auth::guard('redminguard')->check()) {
             return redirect('login');
         }
         
-        $user = Auth::user();
+        $authUser = Auth::guard('redminguard')->user();
         $errors = new MessageBag;
-        $sid = $user->id;
+        $sid = $authUser->id;
+        $user = User::find($sid);
         
         $rules = array(
             'first_name'    => 'required',
@@ -83,7 +83,7 @@ class MyaccountController extends Controller
             }
             
             if ($password != '') {
-                Auth::logout();
+                Auth::guard('redminguard')->logout();
                 return redirect($this->pageRoute);
             } else {
                 $message = trans('redminportal::messages.user_myaccount_save_success');

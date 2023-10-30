@@ -12,7 +12,7 @@ class EmailApi extends Api
     
     public function getAll()
     {
-        $list = User::lists('email');
+        $list = User::pluck('email');
         return response()->json($list);
     }
 }

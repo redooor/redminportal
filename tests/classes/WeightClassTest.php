@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Config;
+use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Classes\Weight;
 
 class WeightClassTest extends RedminTestCase

@@ -1,11 +1,10 @@
 <?php namespace Redooor\Redminportal\App\Http\Traits;
 
+use Illuminate\Support\Facades\Validator;
+
 /*
  * Add sorting capability to controller
  */
-
-use Validator;
-
 trait SorterController
 {
     /* -- Requires --

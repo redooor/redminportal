@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Config;
+use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Classes\Volume;
 
 class VolumeClassTest extends RedminTestCase

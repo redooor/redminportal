@@ -8,22 +8,7 @@ class RImageHelperTest extends RedminTestCase
     protected $model;
     protected $library;
     
-    /**
-     * Contructor.
-     * Must be called explicitly by the child
-     *
-     * @param object $model A new instance of the model to be tested.
-     * @param array $testcase An array of property-value to be used in model creation.
-     */
-    public function __construct()
-    {
-    }
-    
-    /**
-     * Destructor.
-     * Must be called explicitly by the child
-     */
-    public function __destruct()
+    public function tearDown(): void
     {
         $this->library = null;
         $this->model = null;

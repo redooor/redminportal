@@ -9,6 +9,7 @@ class Redminportal
     public $url;
     private $this_html;
     private $this_form;
+    private $this_imagine;
     
     public function __construct($url)
     {

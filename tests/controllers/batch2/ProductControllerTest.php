@@ -1,25 +1,24 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Redooor\Redminportal\App\Models\Product;
+
 class ProductControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest, TraitProductVariantControllerTest;
+    use TraitSorterControllerTest, TraitProductVariantControllerTest, TraitImageControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/products';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/products';
+        $this->viewhas = array(
             'singular' => 'product',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
-                'cn_name'               => 'CN name',
-                'cn_short_description'  => 'CN short body',
                 'category_id'           => 1,
                 'sku'                   => 'UNIQUESKU001',
                 'cn_name'               => 'This is cn name',
@@ -35,8 +34,6 @@ class ProductControllerTest extends BaseControllerTest
                 'id'   => 1,
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
-                'cn_name'               => 'CN name',
-                'cn_short_description'  => 'CN short body',
                 'category_id'           => 1,
                 'sku'                   => 'UNIQUESKU001',
                 'cn_name' => 'This is cn name',
@@ -52,16 +49,23 @@ class ProductControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'name';
-        
-        parent::__construct($page, $viewhas, $input);
+
+        // For testing image
+        $this->img_parent_model = new Product;
+        $this->img_parent_create = [
+            'name'                  => 'This is title',
+            'short_description'     => 'This is body',
+            'category_id'           => 1,
+            'sku'                   => 'UNIQUESKU001',
+        ];
     }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
+
+    public function tearDown(): void
     {
-        parent::__destruct();
+        parent::tearDown();
+
+        $this->img_parent_model = null;
+        $this->img_parent_create = null;
     }
     
     /**

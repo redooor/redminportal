@@ -1,8 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Input;
 use Exception;
-use Validator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Http\Traits\SearcherController;
@@ -64,9 +64,9 @@ class OrderController extends Controller
     
     public function getCreate()
     {
-        $products = Product::where('active', true)->orderBy('name')->lists('name', 'id');
-        $bundles = Bundle::where('active', true)->orderBy('name')->lists('name', 'id');
-        $coupons = Coupon::orderBy('code')->lists('code', 'id');
+        $products = Product::where('active', true)->orderBy('name')->pluck('name', 'id');
+        $bundles = Bundle::where('active', true)->orderBy('name')->pluck('name', 'id');
+        $coupons = Coupon::orderBy('code')->pluck('code', 'id');
         
         $pricelists = array();
 
@@ -127,7 +127,7 @@ class OrderController extends Controller
             $errors->add('userError', "The user may have been deleted. Please try again.");
             return redirect($redirect_url)->withErrors($errors)->withInput();
         }
-        
+
         $apply_to_models = array();
         
         // Save products to order
@@ -141,7 +141,7 @@ class OrderController extends Controller
         // Save pricelists to order
         $pricelists = Input::get('pricelist_id');
         $apply_to_models = array_merge($apply_to_models, $this->addModelToArraySimpleMode($pricelists, new Pricelist));
-        
+
         // No product/bundle to add
         if (count($apply_to_models) == 0) {
             $errors = new \Illuminate\Support\MessageBag;
@@ -168,6 +168,7 @@ class OrderController extends Controller
         if ($errors) {
             return redirect($this->pageRoute)->withErrors($errors);
         }
+    
         
         return redirect($this->pageRoute);
     }
@@ -184,7 +185,7 @@ class OrderController extends Controller
     {
         $apply_to_models = array();
         
-        if (count($models) > 0) {
+        if (is_countable($models) && count($models) > 0) {
             foreach ($models as $item_json) {
                 $item = json_decode($item_json);
                 $object = $model->find($item->id);
@@ -195,7 +196,7 @@ class OrderController extends Controller
                 }
             }
         }
-        
+
         return $apply_to_models;
     }
     
@@ -211,7 +212,7 @@ class OrderController extends Controller
     {
         $apply_to_models = array();
         
-        if (count($models) > 0) {
+        if (is_countable($models) && count($models) > 0) {
             foreach ($models as $item) {
                 $object = $model->find($item);
                 if ($object != null) {
@@ -235,7 +236,7 @@ class OrderController extends Controller
     {
         $errors = new \Illuminate\Support\MessageBag;
         
-        if (count($coupons) > 0) {
+        if (is_countable($coupons) && count($coupons) > 0) {
             foreach ($coupons as $item) {
                 $model = Coupon::find($item);
                 if ($model != null) {

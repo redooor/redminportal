@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 /* Columns
@@ -33,7 +33,7 @@ class Image extends Model
         $imagine = new RImage;
         
         // Remove all dimenions
-        $defaultDimensions = \Config::get('redminportal::image.dimensions');
+        $defaultDimensions = Config::get('redminportal::image.dimensions');
         
         foreach (array_keys($defaultDimensions) as $key) {
             $filename_variant = $imagine->getUrl($filename, $key);

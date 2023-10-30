@@ -1,11 +1,11 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Input;
-use Validator;
 use Illuminate\Support\MessageBag;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\PermissibleController;
 use Redooor\Redminportal\App\Models\Group;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {

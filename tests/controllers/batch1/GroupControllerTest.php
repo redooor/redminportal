@@ -4,17 +4,16 @@ class GroupControllerTest extends BaseControllerTest
 {
     use TraitSorterControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/groups';
-        $viewhas = array(
+        parent::setUp();
+        
+        $this->page = '/admin/groups';
+        $this->viewhas = array(
             'singular' => 'group',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name'  => 'This is a group name',
                 'permission-inherit' => 'admin.view,admin.users.view',
@@ -32,16 +31,6 @@ class GroupControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'email';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
     }
     
     /**

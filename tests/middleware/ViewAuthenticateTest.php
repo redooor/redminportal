@@ -1,14 +1,18 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Product;
 
 class ViewAuthenticateTest extends BaseAuthenticateTest
 {
     /**
      * Constructs dataset for tests later
      **/
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $this->test_pages = [
             'admin/dashboard',
             'admin/announcements',
@@ -26,7 +30,6 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
             'admin/portfolios',
             'admin/posts',
             'admin/products',
-            'admin/products/view-variant/1',
             'admin/promotions',
             'admin/purchases',
             'admin/reports',
@@ -38,6 +41,7 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
         $this->test_redirects = [
             'admin' => 'admin/dashboard',
             'admin/products/list-variants/1' => 'admin/products',
+            'admin/products/view-variant/1' => 'admin/products',
         ];
         
         $this->test_posts = [];
@@ -48,7 +52,6 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesAllowedButNotOthers()
     {
-        $this->test_pages = null; // Empty
         $this->test_pages = [
             'admin/announcements',
             'admin/coupons',
@@ -57,7 +60,6 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
             'admin/promotions',
         ];
         
-        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             'admin/dashboard'       => 'login/unauthorized',
             'admin/bundles'         => 'login/unauthorized',
@@ -89,7 +91,7 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -99,7 +101,23 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesDeniedButNotOthers()
     {
-        $this->test_pages = null; // Empty
+        // Create a category for testing
+        $category = new Category;
+        $category->name = 'This is a name';
+        $category->short_description = 'This is short description';
+        $category->long_description = 'This is long description';
+        $category->active = true;
+        $category->order = 1;
+        $category->save();
+
+        // Create a product for testing
+        $product = new Product;
+        $product->name = 'This is title';
+        $product->short_description = 'This is body';
+        $product->category_id = 1;
+        $product->sku = 'UNIQUESKU001';
+        $product->save();
+
         $this->test_pages = [
             'admin/dashboard',
             'admin/bundles',
@@ -121,7 +139,6 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
             'admin/api/email/all',
         ];
         
-        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             'admin/announcements'   => 'login/unauthorized',
             'admin/coupons'         => 'login/unauthorized',
@@ -141,7 +158,7 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }

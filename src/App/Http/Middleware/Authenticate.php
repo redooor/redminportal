@@ -1,30 +1,10 @@
 <?php namespace Redooor\Redminportal\App\Http\Middleware;
 
 use Closure;
-use Auth;
-use Illuminate\Contracts\Auth\Guard;
-use Redooor\Redminportal\App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class Authenticate
 {
-    /**
-     * The Guard implementation.
-     *
-     * @var Guard
-     */
-    protected $auth;
-
-    /**
-     * Create a new filter instance.
-     *
-     * @param  Guard  $auth
-     * @return void
-     */
-    public function __construct(Guard $auth)
-    {
-        $this->auth = $auth;
-    }
-
     /**
      * Handle an incoming request.
      *
@@ -32,9 +12,9 @@ class Authenticate
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $guard = 'redminguard')
     {
-        if ($this->auth->guest()) {
+        if (Auth::guard($guard)->guest()) {
             if ($request->ajax()) {
                 return view('redminportal::users.notauthorized');
             } else {
@@ -42,16 +22,17 @@ class Authenticate
             }
         }
         
-        $user = Auth::user();
-        
-        // Check if user has permission
+        $user = Auth::guard($guard)->user();
+
+        // Check if user is activated
         if ($user != null) {
             if (! $user->activated) {
                 // User logged in but was deactivated after
                 // Log out this user and bring to login page
-                Auth::logout();
+                Auth::guard($guard)->logout();
                 return redirect()->guest('login');
             }
+
             // Proceed to check user permission
             if ($user->hasAccess($request)) {
                 // Save login time

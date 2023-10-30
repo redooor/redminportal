@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Module;
 
 class ModuleModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Module;
         $testcase = array(
             'name' => 'This is the title',
@@ -18,14 +17,6 @@ class ModuleModelTest extends BaseModelTest
             'active' => true
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

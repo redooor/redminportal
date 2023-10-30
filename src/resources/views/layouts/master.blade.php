@@ -38,7 +38,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right hidden-xs">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; {{ Auth::guard('redminguard')->user()->first_name }} {{ Auth::guard('redminguard')->user()->last_name }}</a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url('myaccount') }}"><span class="glyphicon glyphicon-cog"></span> {{ Lang::get('redminportal::menus.my_account') }}</a></li>
                                 <li><a href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
@@ -47,7 +47,7 @@
                     </ul>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav navbar-right visible-xs">
-                            <li class="disabled"><a>Signed in as {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</a></li>
+                            <li class="disabled"><a>Signed in as {{ Auth::guard('redminguard')->user()->first_name }} {{ Auth::guard('redminguard')->user()->last_name }}</a></li>
                             <li><a href="#"><span class="glyphicon glyphicon-cog"></span> {{ Lang::get('redminportal::menus.my_account') }}</a></li>
                             <li><a href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>

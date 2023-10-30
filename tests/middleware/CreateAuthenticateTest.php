@@ -1,14 +1,16 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class CreateAuthenticateTest extends BaseAuthenticateTest
 {
     /**
      * Constructs dataset for tests later
      **/
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setup();
+
         $this->test_pages = [
             'admin/announcements/create',
             'admin/bundles/create',
@@ -62,7 +64,6 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesAllowedButNotOthers()
     {
-        $this->test_pages = null; // Empty
         $this->test_pages = [
             'admin/announcements/create',
             'admin/coupons/create',
@@ -71,7 +72,6 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
             'admin/promotions/create',
         ];
         
-        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             'admin/dashboard'               => 'login/unauthorized',
             'admin/bundles/create'          => 'login/unauthorized',
@@ -85,7 +85,7 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
             'admin/orders/create'           => 'login/unauthorized',
             'admin/portfolios/create'       => 'login/unauthorized',
             'admin/products/create'         => 'login/unauthorized',
-            'admin/products/create-variant' => 'login/unauthorized',
+            'admin/products/create-variant/1' => 'login/unauthorized',
             'admin/purchases/create'        => 'login/unauthorized',
             'admin/reports'                 => 'login/unauthorized',
             'admin/users/create'            => 'login/unauthorized',
@@ -93,7 +93,6 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
             'admin/api/email/all'           => 'login/unauthorized',
         ];
         
-        $this->test_posts = null; // Empty
         $this->test_posts = [
             'admin/reports/mailinglist' => 'login/unauthorized',
             'admin/reports/purchases'   => 'login/unauthorized',
@@ -127,7 +126,7 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -197,7 +196,7 @@ class CreateAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }

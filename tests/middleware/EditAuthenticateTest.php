@@ -1,17 +1,18 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class EditAuthenticateTest extends BaseAuthenticateTest
 {
     /**
      * Constructs dataset for tests later
      **/
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+        
         $this->test_pages = [
             'admin/groups/edit/1',
-            'admin/products/edit-variant/1/1',
             'admin/users/edit/1'
         ];
         
@@ -31,6 +32,7 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/products/edit/1'         => 'admin/products',
             'admin/promotions/edit/1'       => 'admin/promotions',
             'admin/purchases/edit/1'        => 'admin/purchases',
+            'admin/products/edit-variant/1/1' => 'admin/products',
         ];
         
         $this->test_posts = [];
@@ -71,10 +73,8 @@ class EditAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesAllowedButNotOthers()
     {
-        $this->test_pages = null; // Empty
         $this->test_pages = [];
         
-        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             'admin/dashboard'               => 'login/unauthorized',
             'admin/bundles/edit/1'          => 'login/unauthorized',
@@ -88,15 +88,13 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/orders/edit/1'           => 'login/unauthorized',
             'admin/portfolios/edit/1'       => 'login/unauthorized',
             'admin/products/edit/1'         => 'login/unauthorized',
-            'admin/products/create-variant' => 'login/unauthorized',
+            'admin/products/create-variant/1' => 'login/unauthorized',
             'admin/purchases/edit/1'        => 'login/unauthorized',
             'admin/reports'                 => 'login/unauthorized',
             'admin/users/edit/1'            => 'login/unauthorized',
             'admin/api/email'               => 'login/unauthorized',
             'admin/api/email/all'           => 'login/unauthorized',
-            'admin/groups/edit/1'           => 'login/unauthorized',
             'admin/products/edit-variant/1/1'   => 'login/unauthorized',
-            'admin/users/edit/1'            => 'login/unauthorized',
             'admin/announcements/edit/1'    => 'admin/announcements',
             'admin/coupons/edit/1'          => 'admin/coupons',
             'admin/pages/edit/1'            => 'admin/pages',
@@ -104,7 +102,6 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/promotions/edit/1'       => 'admin/promotions',
         ];
         
-        $this->test_posts = null; // Empty
         $this->test_posts = [
             'admin/reports/mailinglist' => 'login/unauthorized',
             'admin/reports/purchases'   => 'login/unauthorized',
@@ -138,7 +135,7 @@ class EditAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -148,10 +145,8 @@ class EditAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesDeniedButNotOthers()
     {
-        $this->test_pages = null; // Empty
         $this->test_pages = [];
         
-        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             'admin/bundles/edit/1'          => 'admin/bundles',
             'admin/categories/edit/1'       => 'admin/categories',
@@ -170,7 +165,6 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/promotions/edit/1'      => 'login/unauthorized',
         ];
         
-        $this->test_posts = null; // Empty
         $this->test_posts = [
             'admin/reports/mailinglist' => 'admin/mailinglists',
             'admin/reports/purchases'   => 'admin/purchases',
@@ -205,7 +199,7 @@ class EditAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }

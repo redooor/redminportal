@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Coupon;
 
@@ -11,7 +11,7 @@ class CategoryCouponTest extends BaseRelationshipTest
     /**
      * Setup initial data for use in tests
      */
-    public function setup()
+    public function setup(): void
     {
         parent::setup();
         
@@ -48,7 +48,7 @@ class CategoryCouponTest extends BaseRelationshipTest
         
         $this->model->coupons()->save($new_coupon);
 
-        $this->assertTrue(count($this->model->coupons()) == 1);
+        $this->assertTrue($this->model->coupons()->count() == 1);
         
         $check_count = DB::table('coupon_category')->where('category_id', $check_id)->count();
         $this->assertTrue($check_count == 1);

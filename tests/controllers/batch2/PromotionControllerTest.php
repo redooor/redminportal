@@ -1,20 +1,21 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Redooor\Redminportal\App\Models\Promotion;
+
 class PromotionControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest;
+    use TraitSorterControllerTest, TraitImageControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/promotions';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/promotions';
+        $this->viewhas = array(
             'singular' => 'promotion',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
@@ -48,16 +49,16 @@ class PromotionControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'end_date';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+
+        // For testing image
+        $this->img_parent_model = new Promotion;
+        $this->img_parent_create = [
+            'name' => 'This is the title',
+            'short_description' => 'This is the body',
+            'active' => true,
+            'start_date' => '2016-02-29 00:00:00',
+            'end_date' => '2016-02-29 00:00:00'
+        ];
     }
     
     /**

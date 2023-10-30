@@ -3,23 +3,23 @@
 use Redooor\Redminportal\App\Models\Pricelist;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\Media;
+use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class ModuleControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest;
+    use TraitSorterControllerTest, TraitImageControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/modules';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/modules';
+        $this->viewhas = array(
             'singular' => 'module',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
@@ -47,16 +47,16 @@ class ModuleControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'name';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+
+        // For testing image
+        $this->img_parent_model = new Module;
+        $this->img_parent_create = [
+            'name' => 'This is the title',
+            'sku' => 'UNIQUESKU001',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'active' => true
+        ];
     }
     
     /**

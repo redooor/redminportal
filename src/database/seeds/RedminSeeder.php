@@ -12,7 +12,7 @@ class RedminSeeder extends Seeder
      */
     public function run()
     {
-        Eloquent::unguard();
+        Model::unguard();
 
         $this->call('UserGroupSeeder');
     }

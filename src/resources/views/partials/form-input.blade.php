@@ -16,11 +16,11 @@
     --------------------------------
     NOTE: if value_as_key is set, then matching value will be marked as selected instead.
 --}}
-<div class="form-group {{ $wrapper_classes or '' }}">
+<div class="form-group {{ $wrapper_classes ?? '' }}">
     @if (isset($label))
-    <label class="{{ $label_classes or '' }}" for="{{ $input_name }}">{{ $label }}</label>
+    <label class="{{ $label_classes ?? '' }}" for="{{ $input_name }}">{{ $label }}</label>
     @endif
-    <input class="form-control" name="{{ $input_name }}" id="{{ $input_id or $input_name }}"
+    <input class="form-control" name="{{ $input_name }}" id="{{ $input_id ?? $input_name }}"
         @if (isset($input_options))
             @foreach ($input_options as $input_option_key => $input_option_value)
                 {{ $input_option_key }}="{{ $input_option_value }}"

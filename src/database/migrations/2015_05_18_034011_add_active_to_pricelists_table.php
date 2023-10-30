@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddActiveToPricelistsTable extends Migration {
 
@@ -32,7 +33,7 @@ class AddActiveToPricelistsTable extends Migration {
         if (Schema::hasColumn('pricelists', 'active')) {
             Schema::table('pricelists', function(Blueprint $table)
             {
-                $table->dropColumn('active');
+                $table->dropColumn(['active']);
             });
         }
 	}

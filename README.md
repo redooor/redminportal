@@ -6,9 +6,7 @@
 
 A Laravel 5 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
 
-RedminPortal currently supports both Laravel 5.0 and 5.1. See [Compatibility](#compatibility).
-
-[![Build Status](https://travis-ci.org/redooor/redminportal.svg?branch=master)](https://travis-ci.org/redooor/redminportal)
+RedminPortal currently supports Laravel 5.8. See [Compatibility](#compatibility).
 
 # Table of Content
 1. [Compatibility](#compatibility)
@@ -26,19 +24,22 @@ RedminPortal currently supports both Laravel 5.0 and 5.1. See [Compatibility](#c
 
 #Compatibility
 
-| Laravel | RedminPortal | Branch |
-|:-------:|:------------:|:------:|
-| 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) |
-| 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) |
-| 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) |
+| Laravel | RedminPortal | Branch | Status |
+|:--------|:-------------|:-------|:-------|
+| 5.8     | 0.58.x       | [v0.58](https://github.com/redooor/redminportal/tree/v0.58) | Active |
+| 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) | Inactive |
+| 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) | Inactive |
+| 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) | Inactive |
 
-Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.
 
-Development for branch v0.1 has stopped. Please upgrade to v0.2 or v0.3 instead.
+Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.
 
 # Important note
 
 Version >=0.3.2 and >=0.2.2 **may break** your front-end due to the change in UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+
+Version 0.58 is backward compatible to Version 0.3.
 
 Version 0.3 is backward compatible to Version 0.2.
 
@@ -46,7 +47,7 @@ Version 0.3 and 0.2 are **SOMEWHAT** backward compatible to Version 0.1. Refer t
 
 **Upgrading from v0.1?**
 
-We've included a few database migrations to upgrade the database to support v0.2/v0.3. However, use this at your own risk. The upgrade scripts were not thoroughly tested and it may not be complete. If you find something missing, please report to us using the issue ticket. We welcome any contribution too.
+We've included a few database migrations to upgrade the database to support v0.2/v0.3/v0.58. However, use this at your own risk. The upgrade scripts were not thoroughly tested and it may not be complete. If you find something missing, please report to us using the issue ticket. We welcome any contribution too.
 
 Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
 
@@ -133,20 +134,20 @@ To use it, get the model's translations and use json_decode to convert content i
 
 # Installation guide for Users
 
-You can install Laravel version 5.1 using the command:
+You can install Laravel version 5.8 using the command:
 
-    composer create-project laravel/laravel myproject 5.1.*
+    composer create-project laravel/laravel myproject 5.8.*
 
 1. Add Redminportal to composer.json of a new Laravel application, under "require". Like this:
 
         "require": {
-            "laravel/framework": "5.1.*",
-            "redooor/redminportal": "0.3.[*|specify a version]"
+            "laravel/framework": "5.8.*",
+            "redooor/redminportal": "0.58.[*|specify a version]"
         },
     
     **NOTE:**
     
-    It is advisable to specify the minor version (e.g. 0.3.3) so that it's more controlled. Although we try to be as backward compatible as possible, many changes are added into each version, so it may sometimes break your front end code.
+    It is advisable to specify the minor version (e.g. 0.58.0) so that it's more controlled. Although we try to be as backward compatible as possible, many changes are added into each version, so it may sometimes break your front end code.
 
 2. Then run `php composer update [--prefer-dist]` in a terminal.
 
@@ -165,34 +166,81 @@ You can install Laravel version 5.1 using the command:
 4. Then run `php composer dump-autoload` in a terminal.
 5. Run the following commands in a terminal to perform database migration for Redminportal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
-        ?> php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
 
     **CAUTION: using --force will overwrite existing files**
     
 6. Run the following in a terminal to seed the database with initial admin username and password:
 
-        ?> php artisan db:seed --class="RedminSeeder"
+        php artisan db:seed --class="RedminSeeder"
         
         Username/password: admin@admin.com/admin
 
 7. Publish package assets by running this in a terminal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
 8. Publish package config by running this in a terminal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
         
     **CAUTION: using --force will overwrite existing files**
+
+    IMPORTANT:
+
+    The package will append neccesary guards and providers to your `auth` config. If you've added a guard with the same name as `redminguard` and provider as `redminprovider`, they'll be replaced by the package's setting.
+
+    If you're going to use your own `auth` config but would like to use Redminportal for authentication, you need to add the a guard in your `auth` config as below:
+
+    ```
+    'defaults' => [
+        'guard' => 'web', // or it could be 'redminguard'
+        'passwords' => 'redminpasswords',
+    ],
+    ```
+
+    ```
+    'guards' => [
+        'redminguard' => [
+            'driver' => 'session',
+            'provider' => 'redminprovider',
+        ],
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'redminprovider',
+        ],
+    ],
+    ```
+
+    ```
+    'providers' => [
+        'redminprovider' => [
+            'driver' => 'eloquent',
+            'model' => Redooor\Redminportal\App\Models\User::class,
+        ],
+    ],
+    ```
+
+    ```
+    'passwords' => [
+        'redminpasswords' => [
+            'provider' => 'redminprovider',
+            'email' => 'auth.emails.password',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+    ],
+    ```
     
 9. _**Optional:**_ Publish package views by running this in a terminal:
 
     Only do this if you want to modify Redminportal views without editing the source code.
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
@@ -200,11 +248,13 @@ You can install Laravel version 5.1 using the command:
 
 It is recommended that contributors use Laravel Homestead for development because it will provide the same development environment for all of us. Read more about Laravel Homestead [here](http://laravel.com/docs/master/homestead).
 
-1. Install Laravel 5.1 using [this guide](http://laravel.com/docs/5.1/installation). We'll call this the [root].
+For Mac users, you may want to try out [Laravel Herd](https://herd.laravel.com/).
 
-You can install Laravel version 5.1 using the command:
+1. Install Laravel 5.8 using [this guide](http://laravel.com/docs/5.8/installation). We'll call this the [root].
 
-    composer create-project laravel/laravel myproject 5.1.*
+You can install Laravel version 5.8 using the command:
+
+    composer create-project laravel/laravel myproject 5.8.*
 
 2. Create a folder named "packages" inside the [root] folder.
 3. Clone the Redooor\Redminportal repository into [root]\packages\redooor\redminportal folder.
@@ -242,26 +292,27 @@ You can install Laravel version 5.1 using the command:
 
 8. Run the following commands in a terminal to perform database migration for Redminportal inside the [root] folder:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
-        ?> php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
+
+        php artisan migrate --path=/database/migrations/vendor/redooor/redminportal
         
     **CAUTION: using --force will overwrite existing files**
 
 9. Run the following in a terminal to seed the database with initial admin username and password:
 
-        ?> php artisan db:seed --class="RedminSeeder"
+        php artisan db:seed --class="RedminSeeder"
         
         Username/password: admin@admin.com/admin
 
 10. Publish package assets by running this in a terminal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
 11. Publish package config by running this in a terminal:
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="config" [--force]
         
     **CAUTION: using --force will overwrite existing files**
 
@@ -269,7 +320,7 @@ You can install Laravel version 5.1 using the command:
 
     Only do this if you want to modify Redminportal views without editing the source code.
 
-        ?> php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
         
     **CAUTION: using --force will overwrite existing files**
         
@@ -286,14 +337,21 @@ You can install Laravel version 5.1 using the command:
 
 * In packages\redooor\redminportal folder, run 
 
-        ?> composer update --prefer-dist -vvv --profile
-        ?> vendor/bin/phpunit
+        composer update --prefer-dist -vvv --profile
+        
+        vendor/bin/phpunit
 
     **NOTE: If you run out of memory while running the full tests, try running the tests by sub-folders.**
     
-        ?> vendor/bin/phpunit tests/models/
-        ?> vendor/bin/phpunit tests/controllers/
-        ?> vendor/bin/phpunit tests/relationships/
+        vendor/bin/phpunit tests/models/
+        
+        vendor/bin/phpunit tests/controllers/
+        
+        vendor/bin/phpunit tests/relationships/
+
+        ./vendor/bin/phpunit --testsuite "suite1","suite2"
+        
+        ./vendor/bin/phpunit --testsuite "suite3","suite4"
 
 # Versioning
 
@@ -308,7 +366,6 @@ Before any submission, please spend some time reading through the [CONTRIBUTING.
 
 Andrews Ang
 
-* [http://twitter.com/kongnir](http://twitter.com/kongnir)
 * [http://github.com/kongnir](http://github.com/kongnir)
 
 # License

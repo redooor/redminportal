@@ -1,5 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Page;
@@ -99,7 +102,7 @@ class PageController extends Controller
 
     public function postStore()
     {
-        $sid = \Input::get('id');
+        $sid = Input::get('id');
         
         $rules = array(
             'image'         => 'mimes:jpg,jpeg,png,gif|max:500',
@@ -108,7 +111,7 @@ class PageController extends Controller
             'content'       => 'required',
         );
 
-        $validation = \Validator::make(\Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules);
         
         if ($validation->fails()) {
             return redirect('admin/pages/' . (isset($sid) ? 'edit/' . $sid : 'create'))
@@ -116,13 +119,13 @@ class PageController extends Controller
                 ->withInput();
         }
         
-        $title              = \Input::get('title');
-        $slug               = \Input::get('slug');
-        $content            = \Input::get('content');
-        $image              = \Input::file('image');
-        $private            = (\Input::get('private') == '' ? false : true);
-        $category_id        = \Input::get('category_id');
-        $tags               = \Input::get('tags');
+        $title              = Input::get('title');
+        $slug               = Input::get('slug');
+        $content            = Input::get('content');
+        $image              = Input::file('image');
+        $private            = (Input::get('private') == '' ? false : true);
+        $category_id        = Input::get('category_id');
+        $tags               = Input::get('tags');
 
         $page = (isset($sid) ? Page::find($sid) : new Page);
 
@@ -148,7 +151,7 @@ class PageController extends Controller
         $page->save();
 
         // Save translations
-        $translations = \Config::get('redminportal::translation');
+        $translations = Config::get('redminportal::translation');
         foreach ($translations as $translation) {
             $lang = $translation['lang'];
             if ($lang == 'en') {
@@ -156,9 +159,9 @@ class PageController extends Controller
             }
 
             $translated_content = array(
-                'title'     => \Input::get($lang . '_title'),
-                'slug'      => str_replace(' ', '_', \Input::get($lang . '_slug')),
-                'content'   => \Input::get($lang . '_content')
+                'title'     => Input::get($lang . '_title'),
+                'slug'      => str_replace(' ', '_', Input::get($lang . '_slug')),
+                'content'   => Input::get($lang . '_content')
             );
 
             // Check if lang exist
@@ -173,7 +176,7 @@ class PageController extends Controller
             $page->translations()->save($translated_model);
         }
 
-        if (\Input::hasFile('image')) {
+        if (Input::hasFile('image')) {
             //Upload the file
             $helper_image = new RImage;
             $filename = $helper_image->upload($image, 'pages/' . $page->id, true);

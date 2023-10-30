@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Bundle;
 
 class BundleModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Bundle;
         $testcase = array(
             'name' => 'This is the title',
@@ -18,14 +17,6 @@ class BundleModelTest extends BaseModelTest
             'active' => true
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

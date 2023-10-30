@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class ModuleMediaMembershipModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new ModuleMediaMembership;
         $testcase = array(
             'module_id' => 1,
@@ -16,14 +15,6 @@ class ModuleMediaMembershipModelTest extends BaseModelTest
             'membership_id' => 1
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

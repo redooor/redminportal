@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Portfolio;
 
@@ -14,7 +14,7 @@ class CategoryPortfolioTest extends BaseRelationshipTest
     /**
      * Setup initial data for use in tests
      */
-    public function setup()
+    public function setup(): void
     {
         parent::setup();
         
@@ -36,13 +36,13 @@ class CategoryPortfolioTest extends BaseRelationshipTest
         );
     }
     
-    public function testCreateBundle()
+    public function testCreatePortfolio()
     {
         $check_id = $this->model->id;
         
         $this->createNewModel($this->testmodel, $this->testcase);
 
-        $this->assertTrue(count($this->model->bundles()) == 1);
+        $this->assertTrue($this->model->portfolios()->count() == 1);
         
         $check_count = DB::table($this->db_table)->where('category_id', $check_id)->count();
         $this->assertTrue($check_count == 1);

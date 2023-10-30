@@ -6,23 +6,18 @@ class BaseModelTest extends RedminTestCase
     protected $testcase;
     
     /**
-     * Contructor.
      * Must be called explicitly by the child
      *
      * @param object $model A new instance of the model to be tested.
      * @param array $testcase An array of property-value to be used in model creation.
      */
-    public function __construct($model, $testcase)
+    public function prepare($model, $testcase)
     {
         $this->model = $model;
         $this->testcase = $testcase;
     }
     
-    /**
-     * Destructor.
-     * Must be called explicitly by the child
-     */
-    public function __destruct()
+    public function tearDown(): void
     {
         $this->model = null;
         $this->testcase = null;

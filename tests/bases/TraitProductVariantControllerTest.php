@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Lang;
+use Illuminate\Support\Facades\Lang;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Order;
@@ -354,9 +354,10 @@ trait TraitProductVariantControllerTest
     public function testViewVariantFail()
     {
         $this->call('GET', $this->page . '/view-variant/1');
-
-        $this->assertResponseOk();
-        $this->assertViewHas('errors');
+        
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedTo('/admin/products');
+        $this->assertSessionHasErrors();
     }
     
     /**
@@ -416,8 +417,9 @@ trait TraitProductVariantControllerTest
     {
         $this->call('GET', $this->page . '/edit-variant/1/2');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('errors');
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedTo('/admin/products');
+        $this->assertSessionHasErrors();
     }
     
     /**

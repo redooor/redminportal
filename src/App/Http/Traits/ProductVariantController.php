@@ -4,9 +4,9 @@
  * Add Product Variant capability to controller
  */
 
-use Lang;
+use Exception;
+use Illuminate\Support\Facades\Lang;
 use Redooor\Redminportal\App\Models\Product;
-use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\MessageBag;
@@ -48,7 +48,7 @@ trait ProductVariantController
         if ($product == null) {
             $errors = new MessageBag;
             $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return view('redminportal::products/edit-variant')->withErrors($errors);
+            return redirect($this->pageRoute)->withErrors($errors);
         }
         
         // Find the parent product
@@ -58,7 +58,7 @@ trait ProductVariantController
         if ($parent == null) {
             $errors = new MessageBag;
             $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return view('redminportal::products/edit-variant')->withErrors($errors);
+            return redirect($this->pageRoute)->withErrors($errors);
         }
 
         $tagString = "";
@@ -98,7 +98,7 @@ trait ProductVariantController
         if ($product == null) {
             $errors = new MessageBag;
             $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return view('redminportal::products/view-variant')->withErrors($errors);
+            return redirect($this->pageRoute)->withErrors($errors);
         }
 
         $translated = array();
@@ -177,7 +177,7 @@ trait ProductVariantController
         if ($image == null) {
             $errors = new MessageBag;
             $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
-            return redirect($this->pageRoute . '/edit-variant/'. $product_id . '/' . $model_id)->withErrors($errors);
+            return redirect($this->pageRoute . '/edit-variant/'. $product_id . '/' . $sid)->withErrors($errors);
         }
         
         $model_id = $image->imageable_id;

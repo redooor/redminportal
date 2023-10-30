@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Announcement;
 
 class AnnouncementModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+        
         $model = new Announcement;
         $testcase = array(
             'title' => 'This is the title',
@@ -16,15 +15,7 @@ class AnnouncementModelTest extends BaseModelTest
             'private' => false
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
     
     public function testValidateSuccess()

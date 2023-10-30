@@ -1,6 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Input;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
@@ -52,7 +54,7 @@ class BundleController extends Controller
             ->orderBy('name')
             ->get();
         
-        $products = Product::where('active', true)->lists('name', 'id');
+        $products = Product::where('active', true)->pluck('name', 'id');
         
         $membermodules = array();
 
@@ -96,7 +98,7 @@ class BundleController extends Controller
             ->orderBy('name')
             ->get();
         
-        $products = Product::where('active', true)->lists('name', 'id');
+        $products = Product::where('active', true)->pluck('name', 'id');
         
         $membermodules = array();
 
@@ -154,7 +156,7 @@ class BundleController extends Controller
     
     public function postStore()
     {
-        $sid = \Input::get('id');
+        $sid = Input::get('id');
         
         if (isset($sid)) {
             $url = 'admin/bundles/edit/' . $sid;
@@ -172,7 +174,7 @@ class BundleController extends Controller
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
         );
         
-        $validation = \Validator::make(\Input::all(), $rules);
+        $validation = Validator::make(Input::all(), $rules);
 
         if ($validation->fails()) {
             return redirect($url)->withErrors($validation)->withInput();
@@ -201,7 +203,7 @@ class BundleController extends Controller
 
         $apply_to_models = array();
 
-        $products = \Input::get('product_id');
+        $products = Input::get('product_id');
         if (count($products) > 0) {
             foreach ($products as $item) {
                 $model = Product::find($item);
@@ -211,7 +213,7 @@ class BundleController extends Controller
             }
         }
 
-        $pricelists = \Input::get('pricelist_id');
+        $pricelists = Input::get('pricelist_id');
         if (count($pricelists) > 0) {
             foreach ($pricelists as $item) {
                 $model = Pricelist::find($item);
@@ -253,7 +255,7 @@ class BundleController extends Controller
         }
         
         // Save translations
-        $translations = \Config::get('redminportal::translation');
+        $translations = Config::get('redminportal::translation');
         foreach ($translations as $translation) {
             $lang = $translation['lang'];
             if ($lang == 'en') {
@@ -261,9 +263,9 @@ class BundleController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => \Input::get($lang . '_name'),
-                'short_description'     => \Input::get($lang . '_short_description'),
-                'long_description'      => \Input::get($lang . '_long_description')
+                'name'                  => Input::get($lang . '_name'),
+                'short_description'     => Input::get($lang . '_short_description'),
+                'long_description'      => Input::get($lang . '_long_description')
             );
 
             // Check if lang exist

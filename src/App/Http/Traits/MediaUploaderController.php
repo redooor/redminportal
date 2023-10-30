@@ -3,7 +3,9 @@
 /*
  * Add uploading capability to controller
  */
-use Lang;
+
+use Exception;
+use Illuminate\Support\Facades\Lang;
 use Redooor\Redminportal\App\Classes\File as FileInfo;
 
 trait MediaUploaderController
@@ -76,7 +78,7 @@ trait MediaUploaderController
         $filePath = $model_tmp_folder . "/$fileName";
         
         $chunk = $this->checkRequest("chunk");
-        $chunks = $this->checkRequest("chunks");
+        $chunks = $this->checkRequest("chunks", null);
         
         // Create the directory
         $this->checkFolder($model_tmp_folder);
@@ -152,15 +154,15 @@ trait MediaUploaderController
      * @param string Request Name
      * @param string Default value (optional)
      *
-     * @return Request|default
+     * @return
      **/
     protected function checkRequest($name, $default = 0)
     {
         if ($name == 'name') {
             return (isset($_REQUEST[$name]) ? ($_REQUEST[$name]) : $default);
-        } else {
-            return (isset($_REQUEST[$name]) ? intval($_REQUEST[$name]) : $default);
         }
+        
+        return (isset($_REQUEST[$name]) ? intval($_REQUEST[$name]) : $default);
     }
     
     /**

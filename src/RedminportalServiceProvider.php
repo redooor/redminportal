@@ -1,7 +1,9 @@
 <?php namespace Redooor\Redminportal;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Redooor\Redminportal\App\Classes\Redminportal;
+use Illuminate\Routing\Router;
 
 class RedminportalServiceProvider extends ServiceProvider
 {
@@ -10,10 +12,10 @@ class RedminportalServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Router $router)
     {
         // Get routes
-        include __DIR__.'/App/Http/routes.php';
+        $this->loadRoutesFrom(__DIR__.'/App/Http/routes.php');
         
         // Get views
         if (file_exists(base_path('resources/views/vendor/redooor/redminportal'))) {
@@ -24,6 +26,9 @@ class RedminportalServiceProvider extends ServiceProvider
         
         // Establish Translator Namespace
         $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'redminportal');
+
+        // Load migrations
+        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
         
         // Allow end users to publish and modify views
         $this->publishes([
@@ -44,6 +49,15 @@ class RedminportalServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/database/migrations/' => base_path('database/migrations/vendor/redooor/redminportal/')
         ], 'migrations');
+
+        $router->middlewareGroup('redminsession', [
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ]);
+
+        $router->aliasMiddleware('redminauth', \Redooor\Redminportal\App\Http\Middleware\Authenticate::class);
     }
 
     /**
@@ -90,6 +104,7 @@ class RedminportalServiceProvider extends ServiceProvider
             $loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
         });
         
+        // Register all config files
         $this->registerResources('image', 'redminportal::image');
         $this->registerResources('menu', 'redminportal::menu');
         $this->registerResources('translation', 'redminportal::translation');
@@ -99,7 +114,7 @@ class RedminportalServiceProvider extends ServiceProvider
         $this->registerResources('payment_statuses', 'redminportal::payment_statuses');
         
         // Change Authentication model
-        $this->registerResources('auth', 'auth');
+        $this->mergeAuthConfig();
     }
     
     /**
@@ -128,8 +143,27 @@ class RedminportalServiceProvider extends ServiceProvider
      */
     protected function bindSharedInstances()
     {
-        $this->app->bindShared('redminportal', function ($app) {
+        $this->app->singleton('redminportal', function ($app) {
             return new Redminportal($app['url']);
         });
+    }
+
+    /**
+     * Merge user's auth.php with package's.
+     */
+    private function mergeAuthConfig()
+    {
+        $userAuthFile = config_path('auth.php');
+        $packageAuthFile = __DIR__.'/config/' . 'auth.php';
+
+        if (file_exists($userAuthFile) && file_exists($packageAuthFile)) {
+            $authConfig = $this->app['files']->getRequire($userAuthFile);
+            $packageAuthConfig = $this->app['files']->getRequire($packageAuthFile);
+
+            $authConfig['guards'] = array_merge($authConfig['guards'], $packageAuthConfig['guards']);
+            $authConfig['providers'] = array_merge($authConfig['providers'], $packageAuthConfig['providers']);
+
+            $this->app['config']->set('auth', $authConfig);
+        }
     }
 }

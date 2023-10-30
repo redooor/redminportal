@@ -30,7 +30,7 @@
             @foreach ($models as $bundle)
                 <tr>
                     <td>{{ $bundle->name }}</td>
-                    <td>{{ $bundle->category->name or 'No category' }}</td>
+                    <td>{{ $bundle->category->name ?? 'No category' }}</td>
                     <td>{{ $bundle->sku }}</td>
                     <td>{{ number_format($bundle->price, 2) }}</td>
                     <td>{{ number_format($bundle->totalvalue(), 2) }}</td>

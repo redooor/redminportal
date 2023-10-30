@@ -1,10 +1,11 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Group;
 
-class BaseAuthenticateTest extends RedminTestCase
+class BaseAuthenticateTest extends RedminBrowserTestCase
 {
     protected $user;
     protected $test_pages;
@@ -14,14 +15,14 @@ class BaseAuthenticateTest extends RedminTestCase
     /**
      * Setup initial data for use in tests
      **/
-    public function setup()
+    public function setup(): void
     {
         parent::setup();
         
         /* Creates a user for each test */
         $this->user = new User;
         $this->user->email        = 'peter@test.com';
-        $this->user->password     = \Hash::make("test");
+        $this->user->password     = Hash::make("test");
         $this->user->first_name   = 'Peter';
         $this->user->last_name    = 'Tester';
         $this->user->activated    = 1;
@@ -49,8 +50,8 @@ class BaseAuthenticateTest extends RedminTestCase
     protected function echoText($text)
     {
         return; // Remove this line for debug only
-        echo '
-' . $text;
+//         echo '
+// ' . $text;
     }
     
     /**
@@ -130,7 +131,7 @@ class BaseAuthenticateTest extends RedminTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -147,7 +148,7 @@ class BaseAuthenticateTest extends RedminTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesDeniedAccess();
     }
@@ -166,7 +167,7 @@ class BaseAuthenticateTest extends RedminTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -185,7 +186,7 @@ class BaseAuthenticateTest extends RedminTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesDeniedAccess();
     }
@@ -204,7 +205,7 @@ class BaseAuthenticateTest extends RedminTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -223,7 +224,7 @@ class BaseAuthenticateTest extends RedminTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesDeniedAccess();
     }
@@ -244,7 +245,7 @@ class BaseAuthenticateTest extends RedminTestCase
         $this->user->groups()->save($allow_group_3);
         $this->user->groups()->save($allow_group_4);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -265,7 +266,7 @@ class BaseAuthenticateTest extends RedminTestCase
         $this->user->groups()->save($deny_group_3);
         $this->user->groups()->save($deny_group_4);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesDeniedAccess();
     }

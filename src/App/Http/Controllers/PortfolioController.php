@@ -1,5 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Portfolio;
@@ -85,7 +88,7 @@ class PortfolioController extends Controller
 
     public function postStore()
     {
-        $sid = \Input::get('id');
+        $sid = Input::get('id');
 
         /*
          * Validate
@@ -101,81 +104,80 @@ class PortfolioController extends Controller
             'category_id.min' => 'The category field is required.'
         ];
 
-        $validation = \Validator::make(\Input::all(), $rules, $messages);
+        $validation = Validator::make(Input::all(), $rules, $messages);
 
-        if ($validation->passes()) {
-            $name               = \Input::get('name');
-            $short_description  = \Input::get('short_description');
-            $long_description   = \Input::get('long_description');
-            $image              = \Input::file('image');
-            $active             = (\Input::get('active') == '' ? false : true);
-            $category_id        = \Input::get('category_id');
-
-            $portfolio = (isset($sid) ? Portfolio::find($sid) : new Portfolio);
-            
-            if ($portfolio == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
-                    "The portfolio cannot be found because it does not exist or may have been deleted."
-                );
-                return redirect('/admin/portfolios')->withErrors($errors);
-            }
-
-            $portfolio->name = $name;
-            $portfolio->short_description = $short_description;
-            $portfolio->long_description = $long_description;
-            $portfolio->active = $active;
-            $portfolio->category_id = $category_id;
-
-            $portfolio->save();
-            
-            // Save translations
-            $translations = \Config::get('redminportal::translation');
-            foreach ($translations as $translation) {
-                $lang = $translation['lang'];
-                if ($lang == 'en') {
-                    continue;
-                }
-
-                $translated_content = array(
-                    'name'                  => \Input::get($lang . '_name'),
-                    'short_description'     => \Input::get($lang . '_short_description'),
-                    'long_description'      => \Input::get($lang . '_long_description')
-                );
-
-                // Check if lang exist
-                $translated_model = $portfolio->translations->where('lang', $lang)->first();
-                if ($translated_model == null) {
-                    $translated_model = new Translation;
-                }
-
-                $translated_model->lang = $lang;
-                $translated_model->content = json_encode($translated_content);
-
-                $portfolio->translations()->save($translated_model);
-            }
-
-            if (\Input::hasFile('image')) {
-                //Upload the file
-                $helper_image = new RImage;
-                $filename = $helper_image->upload($image, 'portfolios/' . $portfolio->id, true);
-
-                if ($filename) {
-                    // create photo
-                    $newimage = new Image;
-                    $newimage->path = $filename;
-
-                    // save photo to the loaded model
-                    $portfolio->images()->save($newimage);
-                }
-            }
-        //if it validate
-        } else {
+        if ($validation->fails()) {
             if (isset($sid)) {
                 return redirect('admin/portfolios/edit/' . $sid)->withErrors($validation)->withInput();
             } else {
                 return redirect('admin/portfolios/create')->withErrors($validation)->withInput();
+            }
+        }
+
+        $name               = Input::get('name');
+        $short_description  = Input::get('short_description');
+        $long_description   = Input::get('long_description');
+        $image              = Input::file('image');
+        $active             = (Input::get('active') == '' ? false : true);
+        $category_id        = Input::get('category_id');
+
+        $portfolio = (isset($sid) ? Portfolio::find($sid) : new Portfolio);
+        
+        if ($portfolio == null) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'editError',
+                "The portfolio cannot be found because it does not exist or may have been deleted."
+            );
+            return redirect('/admin/portfolios')->withErrors($errors);
+        }
+
+        $portfolio->name = $name;
+        $portfolio->short_description = $short_description;
+        $portfolio->long_description = $long_description;
+        $portfolio->active = $active;
+        $portfolio->category_id = $category_id;
+
+        $portfolio->save();
+        
+        // Save translations
+        $translations = Config::get('redminportal::translation');
+        foreach ($translations as $translation) {
+            $lang = $translation['lang'];
+            if ($lang == 'en') {
+                continue;
+            }
+
+            $translated_content = array(
+                'name'                  => Input::get($lang . '_name'),
+                'short_description'     => Input::get($lang . '_short_description'),
+                'long_description'      => Input::get($lang . '_long_description')
+            );
+
+            // Check if lang exist
+            $translated_model = $portfolio->translations->where('lang', $lang)->first();
+            if ($translated_model == null) {
+                $translated_model = new Translation;
+            }
+
+            $translated_model->lang = $lang;
+            $translated_model->content = json_encode($translated_content);
+
+            $portfolio->translations()->save($translated_model);
+        }
+
+        if (Input::hasFile('image')) {
+            //Upload the file
+            $helper_image = new RImage;
+            $filename = $helper_image->upload($image, 'portfolios/' . $portfolio->id, true);
+
+            if ($filename) {
+                // create photo
+                $newimage = new Image;
+                $newimage->path = $filename;
+
+                // save photo to the loaded model
+                $portfolio->images()->save($newimage);
             }
         }
 

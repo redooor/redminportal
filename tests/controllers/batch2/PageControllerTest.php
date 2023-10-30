@@ -4,19 +4,18 @@ use Redooor\Redminportal\App\Models\Page;
 
 class PageControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest;
+    use TraitSorterControllerTest, TraitImageControllerTest;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/pages';
-        $viewhas = array(
+        parent::setUp();
+        
+        $this->page = '/admin/pages';
+        $this->viewhas = array(
             'singular' => 'page',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'title' => 'This is the title',
                 'slug' => 'this_is_a_slug',
@@ -42,16 +41,16 @@ class PageControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'created_at';
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+
+        // For testing image
+        $this->img_parent_model = new Page;
+        $this->img_parent_create = [
+            'title' => 'This is the title',
+            'slug' => 'this_is_a_slug',
+            'content' => 'This is the body',
+            'private' => false,
+            'category_id' => 1
+        ];
     }
     
     /**

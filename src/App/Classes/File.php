@@ -1,7 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Classes;
 
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
-use Illuminate\Support\Facades\File as IlluminateFile;
 use getID3;
 
 /*

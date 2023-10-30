@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Coupon;
 
 class CouponModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Coupon;
         $testcase = array(
             'code' => 'ABC123',
@@ -26,15 +25,7 @@ class CouponModelTest extends BaseModelTest
             'usage_limit_per_coupon_count' => 0
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
     
     /**

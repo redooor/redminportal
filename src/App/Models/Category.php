@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Helpers\RHelper;
 
@@ -141,7 +141,7 @@ class Category extends Model
         $this->translations()->delete();
         
         // Delete category's images folder
-        $upload_dir = \Config::get('redminportal::image.upload_dir');
+        $upload_dir = Config::get('redminportal::image.upload_dir');
         $deleteFolder = new Image;
         $url_path = RHelper::joinPaths($upload_dir, $this->table, $this->id);
         $deleteFolder->deleteFiles($url_path);

@@ -1,5 +1,8 @@
 <?php namespace Redooor\Redminportal\App\Models\Traits;
 
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Redooor\Redminportal\App\Models\Revision;
 
 trait Revisionable
@@ -110,7 +113,7 @@ trait Revisionable
         
         if (count($revisions) > 0) {
             $revision = new Revision;
-            \DB::table($revision->getTable())->insert($revisions);
+            DB::table($revision->getTable())->insert($revisions);
         }
     }
     
@@ -130,7 +133,7 @@ trait Revisionable
             'updated_at' => new \DateTime(),
         );
         $revision = new Revision;
-        \DB::table($revision->getTable())->insert($revisions);
+        DB::table($revision->getTable())->insert($revisions);
     }
     
     /**
@@ -151,7 +154,7 @@ trait Revisionable
                 'updated_at' => new \DateTime(),
             );
             $revision = new Revision;
-            \DB::table($revision->getTable())->insert($revisions);
+            DB::table($revision->getTable())->insert($revisions);
         } else {
             // Delete all associated revisions
             $this->revisions()->delete();
@@ -191,10 +194,10 @@ trait Revisionable
                 || class_exists($class = '\Cartalyst\Sentinel\Laravel\Facades\Sentinel')
             ) {
                 return ($class::check()) ? $class::getUser()->id : null;
-            } elseif (\Auth::check()) {
-                return \Auth::user()->getAuthIdentifier();
+            } elseif (Auth::guard('redminguard')->check()) {
+                return Auth::guard('redminguard')->user()->getAuthIdentifier();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
         

@@ -4,22 +4,21 @@ use Redooor\Redminportal\App\Models\Media;
 
 class MediaControllerTest extends BaseControllerTest
 {
-    use TraitSorterControllerTest;
+    use TraitSorterControllerTest, TraitImageControllerTest;
     
     private $path;
     private $files;
     
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
-        $page = '/admin/medias';
-        $viewhas = array(
+        parent::setUp();
+
+        $this->page = '/admin/medias';
+        $this->viewhas = array(
             'singular' => 'media',
             'plural' => 'models'
         );
-        $input = array(
+        $this->input = array(
             'create' => array(
                 'name'                  => 'This is title',
                 'short_description'     => 'This is body',
@@ -47,6 +46,17 @@ class MediaControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'created_at';
+
+        // For testing image
+        $this->img_parent_model = new Media;
+        $this->img_parent_create = [
+            'name' => 'This is the title',
+            'path' => 'path/to/somewhere',
+            'sku' => 'UNIQUESKU001',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'active' => true
+        ];
         
         $this->path = __DIR__ . '/../../dummy/';
         
@@ -59,7 +69,7 @@ class MediaControllerTest extends BaseControllerTest
             ],
             [
                 'name' => 'foo113audio.m4a',
-                'type' => 'audio/mp4',
+                'type' => 'audio/x-m4a',
                 'size' => 225613,
                 'duration' => '{"duration":"0:07"}'
             ],
@@ -70,16 +80,6 @@ class MediaControllerTest extends BaseControllerTest
                 'duration' => '{"duration":"0:07"}'
             ]
         ];
-        
-        parent::__construct($page, $viewhas, $input);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
     }
     
     /**
@@ -119,12 +119,12 @@ class MediaControllerTest extends BaseControllerTest
      * PHP5 returns "audio/mp4" as MimeType
      * Don't test this for now. Inconsistency due to external plugin.
      */
-//    public function testUploadFilePassM4a()
-//    {
-//        $this->testStoreCreatePass(); // Create for upload
-//        
-//        $this->runSubtestUpload($this->files[1]);
-//    }
+   public function testUploadFilePassM4a()
+   {
+       $this->testStoreCreatePass(); // Create for upload
+       
+       $this->runSubtestUpload($this->files[1]);
+   }
     
     /**
      * Test (Pass): upload file pass for .mp3
@@ -134,6 +134,35 @@ class MediaControllerTest extends BaseControllerTest
         $this->testStoreCreatePass(); // Create for upload
         
         $this->runSubtestUpload($this->files[2]);
+
+        $this->call('GET', '/admin/medias/duration/1');
+        $this->assertResponseOk();
+    }
+
+    /**
+     * Test (Pass): check duration of .mp3
+     */
+    public function testDurationPass()
+    {
+        $this->testStoreCreatePass(); // Create for upload
+        
+        $this->runSubtestUpload($this->files[2]);
+
+        $response = $this->call('GET', '/admin/medias/duration/1');
+        $this->assertResponseOk();
+        $result = json_decode($response->content());
+        $this->assertTrue($result->status == 'success');
+    }
+
+    /**
+     * Test (Fail): check duration of .mp3
+     */
+    public function testDurationFails()
+    {
+        $response = $this->call('GET', '/admin/medias/duration/1');
+        $this->assertResponseOk();
+        $result = json_decode($response->content());
+        $this->assertTrue($result->status == 'error');
     }
     
     /**

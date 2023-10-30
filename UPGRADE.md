@@ -1,8 +1,38 @@
 # Upgrade Guide
 
-Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
+## Upgrading to v0.58
+
+This version is focused on upgrading the code to support Laravel 5.8. Most of the models should remain unchanged.
+
+### Guard 'redminguard'
+
+There's an addition of a new guard 'redminguard' to all authentication.
+
+Change any Auth calls to include the guard `redminguard`.
+
+E.g.
+
+    Auth::check();
+
+Should be changed to:
+
+    Auth::guard('redminguard')->check();
+
+### New auth config
+
+There's a new auth config file. If you've published the config files, remember to publish again to get the latest changes. If you're not modifying the config files, you can remove them from your source. The package will use its own config files if it cannot find published configs.
+
+IMPORTANT:
+
+The package will append neccesary guards and providers to your `auth` config. If you've added a guard with the same name as `redminguard` and provider as `redminprovider`, they'll be replaced by the package's setting.
+
+### Views update
+
+There have been some changes to how we check for errors, hence some views were modified. Please publish the views again to get the latest changes.
 
 ## Upgrading to v0.3.3.1/v0.2.3.1 from v0.3.3/v0.2.3
+
+Version 0.2 and 0.3 are developed in parallel. The only difference between them is the Laravel version they support. However, this may change in future.
 
 ### Public assets
 
@@ -99,11 +129,13 @@ means that the user/group can view but not delete or update record.
 
 To check if the user is allowed to view the page, use the hasAccess method in User model.
 
+NOTE: You need to specify the guard 'redminguard'.
+
 Example:
 ```
     public function getIndex(Request $request)
     {
-        $user = \Auth::user();
+        $user = \Auth::guard('redminguard')->user();
         if ($user->hasAccess($request)) {
             // Do something
             return view('has_access');

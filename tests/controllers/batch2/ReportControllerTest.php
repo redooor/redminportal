@@ -1,19 +1,19 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
-class ReportControllerTest extends RedminTestCase
+class ReportControllerTest extends RedminBrowserTestCase
 {
     /**
      * Initialize Setup with seed
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->seed('RedminSeeder');
         
-        Auth::loginUsingId(1);
+        Auth::guard('redminguard')->loginUsingId(1);
     }
     
     /**

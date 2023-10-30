@@ -13,7 +13,7 @@
     ])
 --}}
 <div id="{{ $modal_id }}" class="modal fade">
-    <div class="modal-dialog {{ $modal_size or '' }}">
+    <div class="modal-dialog {{ $modal_size ?? '' }}">
         @if (isset($modal_progress))
         <div class="modal-progress">
             <div class="progress">

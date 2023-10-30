@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddRemembertokenToUsersTable extends Migration
 {
@@ -35,7 +36,7 @@ class AddRemembertokenToUsersTable extends Migration
             if (! Schema::hasColumn('users', 'remember_token')) {
                 Schema::table('users', function(Blueprint $table)
                 {
-                    $table->dropColumn('remember_token');
+                    $table->dropColumn(['remember_token']);
                 });
             }   
         }

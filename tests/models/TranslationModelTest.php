@@ -4,11 +4,10 @@ use Redooor\Redminportal\App\Models\Translation;
 
 class TranslationModelTest extends BaseModelTest
 {
-    /**
-     * Contructor
-     */
-    public function __construct()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $model = new Translation;
         $testcase = array(
             'lang' => 'cn',
@@ -17,14 +16,6 @@ class TranslationModelTest extends BaseModelTest
             'translatable_type' => 'Type'
         );
         
-        parent::__construct($model, $testcase);
-    }
-    
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
+        $this->prepare($model, $testcase);
     }
 }

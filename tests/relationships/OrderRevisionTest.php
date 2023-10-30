@@ -1,8 +1,7 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
-use DB;
-use Redooor\Redminportal\App\Models\Revision;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Redooor\Redminportal\App\Models\Order;
 
 class OrderRevisionTest extends BaseRelationshipTest
@@ -15,7 +14,7 @@ class OrderRevisionTest extends BaseRelationshipTest
     /**
      * Initialize Setup with seed
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -25,9 +24,9 @@ class OrderRevisionTest extends BaseRelationshipTest
         
         $this->seed('RedminSeeder');
         
-        Auth::loginUsingId(1);
+        Auth::guard('redminguard')->loginUsingId(1);
         
-        $this->user = Auth::user();
+        $this->user = Auth::guard('redminguard')->user();
         
         $this->order = $this->createNewModel(new Order, array(
             'user_id' => $this->user->id,

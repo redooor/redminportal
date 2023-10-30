@@ -1,14 +1,16 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class DeleteAuthenticateTest extends BaseAuthenticateTest
 {
     /**
      * Constructs dataset for tests later
      **/
-    public function __construct()
+    public function setup(): void
     {
+        parent::setUp();
+
         $this->test_pages = [
             '/admin/products/delete-variant-json/1',
         ];
@@ -43,11 +45,9 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesAllowedButNotOthers()
     {
-        $this->test_pages = null; // Empty
         $this->test_pages = [];
         
         // Redirected to previous page
-        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             '/admin/bundles/delete/1'        => 'login/unauthorized',
             '/admin/categories/delete/1'     => 'login/unauthorized',
@@ -69,7 +69,6 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
             '/admin/promotions/delete/1'     => '/admin/posts/delete/1'
         ];
         
-        $this->test_posts = null; // Empty
         $this->test_posts = [];
         
         $group = $this->createGroup('Specific', array(
@@ -82,7 +81,7 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -92,11 +91,9 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
      **/
     public function testSpecificPagesDeniedButNotOthers()
     {
-        $this->test_pages = null; // Empty
         $this->test_pages = [];
         
         // Redirected to previous page
-        $this->test_redirects = null; // Empty
         $this->test_redirects = [
             '/admin/bundles/delete/1'        => '/',
             '/admin/categories/delete/1'     => '/admin/bundles/delete/1',
@@ -118,7 +115,6 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
             '/admin/promotions/delete/1'     => 'login/unauthorized',
         ];
         
-        $this->test_posts = null; // Empty
         $this->test_posts = [];
         
         $group = $this->createGroup('Specific', array(
@@ -133,7 +129,7 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::loginUsingId($this->user->id);
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
