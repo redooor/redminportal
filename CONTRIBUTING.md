@@ -34,7 +34,7 @@ Also ensure that your Pull Request satisfies the following coding standards:
 
 As of RedminPortal 0.2.0, we're changing our autoloading standard from PSR-0 to PSR-4 in order to match the same in Laravel 5.*.
 
-Please use [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) to detect violations of coding standard.
+Please use [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer) to detect violations of coding standard.
 
 If you're using [Adobe Brackets](http://brackets.io), you may want to install this extension: [Brackets PHP Code Quality Tools](https://github.com/mikaeljorhult/brackets-php-code-quality-tools).
 
