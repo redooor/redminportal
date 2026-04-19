@@ -92,7 +92,6 @@ class RedminportalServiceProvider extends ServiceProvider
         $this->bindSharedInstances();
         
         $this->app->register('Collective\Html\HtmlServiceProvider');
-        $this->app->register('Orchestra\Imagine\ImagineServiceProvider');
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
         
         $this->app->booting(function () {
@@ -100,7 +99,6 @@ class RedminportalServiceProvider extends ServiceProvider
             $loader->alias('Redminportal', 'Redooor\Redminportal\App\Facades\Redminportal');
             $loader->alias('Form', 'Collective\Html\FormFacade');
             $loader->alias('HTML', 'Collective\Html\HtmlFacade');
-            $loader->alias('Imagine', 'Orchestra\Imagine\Facade');
             $loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
         });
         
