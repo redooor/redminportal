@@ -1,6 +1,30 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Redooor\Redminportal\App\Http\Controllers\AnnouncementController;
+use Redooor\Redminportal\App\Http\Controllers\BundleController;
+use Redooor\Redminportal\App\Http\Controllers\CategoryController;
+use Redooor\Redminportal\App\Http\Controllers\CouponController;
+use Redooor\Redminportal\App\Http\Controllers\GroupController;
+use Redooor\Redminportal\App\Http\Controllers\HomeController;
+use Redooor\Redminportal\App\Http\Controllers\ImageController;
+use Redooor\Redminportal\App\Http\Controllers\LoginController;
+use Redooor\Redminportal\App\Http\Controllers\MailinglistController;
+use Redooor\Redminportal\App\Http\Controllers\MediaController;
+use Redooor\Redminportal\App\Http\Controllers\MembershipController;
+use Redooor\Redminportal\App\Http\Controllers\ModuleController;
+use Redooor\Redminportal\App\Http\Controllers\MyaccountController;
+use Redooor\Redminportal\App\Http\Controllers\OrderController;
+use Redooor\Redminportal\App\Http\Controllers\PageController;
+use Redooor\Redminportal\App\Http\Controllers\PortfolioController;
+use Redooor\Redminportal\App\Http\Controllers\PostController;
+use Redooor\Redminportal\App\Http\Controllers\ProductController;
+use Redooor\Redminportal\App\Http\Controllers\PromotionController;
+use Redooor\Redminportal\App\Http\Controllers\PurchaseController;
+use Redooor\Redminportal\App\Http\Controllers\ReportController;
+use Redooor\Redminportal\App\Http\Controllers\UserController;
+use Redooor\Redminportal\App\Http\API\EmailApi;
+use Redooor\Redminportal\App\Http\API\TagApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,13 +36,12 @@ use Illuminate\Support\Facades\Route;
 Route::group(
     [
         'middleware' => 'redminsession',
-        'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
         'prefix' => 'login'
     ],
     function () {
-        Route::get('/', 'LoginController@getIndex');
-        Route::post('login', 'LoginController@postLogin');
-        Route::get('unauthorized', 'LoginController@getUnauthorized');
+        Route::get('/', [LoginController::class, 'getIndex']);
+        Route::post('login', [LoginController::class, 'postLogin']);
+        Route::get('unauthorized', [LoginController::class, 'getUnauthorized']);
     }
 );
 
@@ -26,11 +49,10 @@ Route::group(
 Route::group(
     [
         'middleware' => 'redminsession',
-        'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
         'prefix' => 'logout'
     ],
     function () {
-        Route::get('/', 'LoginController@getLogout');
+        Route::get('/', [LoginController::class, 'getLogout']);
     }
 );
 
@@ -38,270 +60,268 @@ Route::group(
 Route::group(
     [
         'middleware' => 'redminsession',
-        'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
         'prefix' => 'myaccount'
     ],
     function () {
-        Route::get('/', 'MyaccountController@getIndex');
-        Route::post('store', 'MyaccountController@postStore');
+        Route::get('/', [MyaccountController::class, 'getIndex']);
+        Route::post('store', [MyaccountController::class, 'postStore']);
     }
 );
 
 Route::group(
     [
         'middleware' => ['redminsession', 'redminauth'],
-        'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
         'prefix' => 'admin'
     ],
     function () {
         Route::get('/', function () {
             return redirect('admin/dashboard');
         });
-        Route::get('dashboard', 'HomeController@home');
+        Route::get('dashboard', [HomeController::class, 'home']);
 
         // Announcements
         // -------------
         Route::group(['prefix' => 'announcements'], function () {
-            Route::get('/', 'AnnouncementController@getIndex');
-            Route::get('create', 'AnnouncementController@getCreate');
-            Route::get('edit/{sid}', 'AnnouncementController@getEdit');
-            Route::post('store', 'AnnouncementController@postStore');
-            Route::get('delete/{sid}', 'AnnouncementController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'AnnouncementController@getSort');
+            Route::get('/', [AnnouncementController::class, 'getIndex']);
+            Route::get('create', [AnnouncementController::class, 'getCreate']);
+            Route::get('edit/{sid}', [AnnouncementController::class, 'getEdit']);
+            Route::post('store', [AnnouncementController::class, 'postStore']);
+            Route::get('delete/{sid}', [AnnouncementController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [AnnouncementController::class, 'getSort']);
             //
-            Route::get('imgremove/{sid}', 'AnnouncementController@getImgremove');
+            Route::get('imgremove/{sid}', [AnnouncementController::class, 'getImgremove']);
         });
 
         // Bundles
         // -------
         Route::group(['prefix' => 'bundles'], function () {
-            Route::get('/', 'BundleController@getIndex');
-            Route::get('create', 'BundleController@getCreate');
-            Route::get('edit/{sid}', 'BundleController@getEdit');
-            Route::post('store', 'BundleController@postStore');
-            Route::get('delete/{sid}', 'BundleController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'BundleController@getSort');
+            Route::get('/', [BundleController::class, 'getIndex']);
+            Route::get('create', [BundleController::class, 'getCreate']);
+            Route::get('edit/{sid}', [BundleController::class, 'getEdit']);
+            Route::post('store', [BundleController::class, 'postStore']);
+            Route::get('delete/{sid}', [BundleController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [BundleController::class, 'getSort']);
         });
 
         // Categories
         // ----------
         Route::group(['prefix' => 'categories'], function () {
-            Route::get('/', 'CategoryController@getIndex');
-            Route::get('create', 'CategoryController@getCreate');
-            Route::get('edit/{sid}', 'CategoryController@getEdit');
-            Route::post('store', 'CategoryController@postStore');
-            Route::get('delete/{sid}', 'CategoryController@getDelete');
+            Route::get('/', [CategoryController::class, 'getIndex']);
+            Route::get('create', [CategoryController::class, 'getCreate']);
+            Route::get('edit/{sid}', [CategoryController::class, 'getEdit']);
+            Route::post('store', [CategoryController::class, 'postStore']);
+            Route::get('delete/{sid}', [CategoryController::class, 'getDelete']);
             //
-            Route::get('imgremove/{sid}', 'CategoryController@getImgremove');
-            Route::get('detail/{sid}', 'CategoryController@getDetail');
+            Route::get('imgremove/{sid}', [CategoryController::class, 'getImgremove']);
+            Route::get('detail/{sid}', [CategoryController::class, 'getDetail']);
         });
 
         // Coupons
         // -------
         Route::group(['prefix' => 'coupons'], function () {
-            Route::get('/', 'CouponController@getIndex');
-            Route::get('create', 'CouponController@getCreate');
-            Route::get('edit/{sid}', 'CouponController@getEdit');
-            Route::post('store', 'CouponController@postStore');
-            Route::get('delete/{sid}', 'CouponController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'CouponController@getSort');
+            Route::get('/', [CouponController::class, 'getIndex']);
+            Route::get('create', [CouponController::class, 'getCreate']);
+            Route::get('edit/{sid}', [CouponController::class, 'getEdit']);
+            Route::post('store', [CouponController::class, 'postStore']);
+            Route::get('delete/{sid}', [CouponController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [CouponController::class, 'getSort']);
             //
-            Route::get('categories', 'CouponController@getCategories');
+            Route::get('categories', [CouponController::class, 'getCategories']);
         });
 
         // Groups
         // ------
         Route::group(['prefix' => 'groups'], function () {
-            Route::get('/', 'GroupController@getIndex');
-            Route::get('create', 'GroupController@getCreate');
-            Route::get('edit/{sid}', 'GroupController@getEdit');
-            Route::post('store', 'GroupController@postStore');
-            Route::get('delete/{sid}', 'GroupController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'GroupController@getSort');
+            Route::get('/', [GroupController::class, 'getIndex']);
+            Route::get('create', [GroupController::class, 'getCreate']);
+            Route::get('edit/{sid}', [GroupController::class, 'getEdit']);
+            Route::post('store', [GroupController::class, 'postStore']);
+            Route::get('delete/{sid}', [GroupController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [GroupController::class, 'getSort']);
         });
 
         // Images
         // ------
         Route::group(['prefix' => 'images'], function () {
-            Route::get('/', 'ImageController@getIndex');
-            Route::get('delete/{sid}', 'ImageController@getDelete');
+            Route::get('/', [ImageController::class, 'getIndex']);
+            Route::get('delete/{sid}', [ImageController::class, 'getDelete']);
         });
 
         // Mailinglists
         // ------------
         Route::group(['prefix' => 'mailinglists'], function () {
-            Route::get('/', 'MailinglistController@getIndex');
-            Route::get('create', 'MailinglistController@getCreate');
-            Route::get('edit/{sid}', 'MailinglistController@getEdit');
-            Route::post('store', 'MailinglistController@postStore');
-            Route::get('delete/{sid}', 'MailinglistController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'MailinglistController@getSort');
+            Route::get('/', [MailinglistController::class, 'getIndex']);
+            Route::get('create', [MailinglistController::class, 'getCreate']);
+            Route::get('edit/{sid}', [MailinglistController::class, 'getEdit']);
+            Route::post('store', [MailinglistController::class, 'postStore']);
+            Route::get('delete/{sid}', [MailinglistController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [MailinglistController::class, 'getSort']);
         });
 
         // Medias
         // ------
         Route::group(['prefix' => 'medias'], function () {
-            Route::get('/', 'MediaController@getIndex');
-            Route::get('create', 'MediaController@getCreate');
-            Route::get('edit/{sid}', 'MediaController@getEdit');
-            Route::post('store', 'MediaController@postStore');
-            Route::get('delete/{sid}', 'MediaController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'MediaController@getSort');
+            Route::get('/', [MediaController::class, 'getIndex']);
+            Route::get('create', [MediaController::class, 'getCreate']);
+            Route::get('edit/{sid}', [MediaController::class, 'getEdit']);
+            Route::post('store', [MediaController::class, 'postStore']);
+            Route::get('delete/{sid}', [MediaController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [MediaController::class, 'getSort']);
             //
-            Route::get('imgremove/{sid}', 'MediaController@getImgremove');
-            Route::get('duration/{sid}', 'MediaController@getDuration');
-            Route::get('uploadform/{sid}', 'MediaController@getUploadform');
-            Route::post('upload/{sid}', 'MediaController@postUpload');
+            Route::get('imgremove/{sid}', [MediaController::class, 'getImgremove']);
+            Route::get('duration/{sid}', [MediaController::class, 'getDuration']);
+            Route::get('uploadform/{sid}', [MediaController::class, 'getUploadform']);
+            Route::post('upload/{sid}', [MediaController::class, 'postUpload']);
         });
 
         // Membership
         // ----------
         Route::group(['prefix' => 'memberships'], function () {
-            Route::get('/', 'MembershipController@getIndex');
-            Route::get('create', 'MembershipController@getCreate');
-            Route::get('edit/{sid}', 'MembershipController@getEdit');
-            Route::post('store', 'MembershipController@postStore');
-            Route::get('delete/{sid}', 'MembershipController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'MembershipController@getSort');
+            Route::get('/', [MembershipController::class, 'getIndex']);
+            Route::get('create', [MembershipController::class, 'getCreate']);
+            Route::get('edit/{sid}', [MembershipController::class, 'getEdit']);
+            Route::post('store', [MembershipController::class, 'postStore']);
+            Route::get('delete/{sid}', [MembershipController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [MembershipController::class, 'getSort']);
         });
 
         // Modules
         Route::group(['prefix' => 'modules'], function () {
-            Route::get('/', 'ModuleController@getIndex');
-            Route::get('create', 'ModuleController@getCreate');
-            Route::get('edit/{sid}', 'ModuleController@getEdit');
-            Route::post('store', 'ModuleController@postStore');
-            Route::get('delete/{sid}', 'ModuleController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'ModuleController@getSort');
+            Route::get('/', [ModuleController::class, 'getIndex']);
+            Route::get('create', [ModuleController::class, 'getCreate']);
+            Route::get('edit/{sid}', [ModuleController::class, 'getEdit']);
+            Route::post('store', [ModuleController::class, 'postStore']);
+            Route::get('delete/{sid}', [ModuleController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [ModuleController::class, 'getSort']);
             //
-            Route::get('imgremove/{sid}', 'ModuleController@getImgremove');
-            Route::get('medias/{sid}', 'ModuleController@getMedias');
-            Route::get('editmedias/{sid}/{module_id}', 'ModuleController@getEditmedias');
+            Route::get('imgremove/{sid}', [ModuleController::class, 'getImgremove']);
+            Route::get('medias/{sid}', [ModuleController::class, 'getMedias']);
+            Route::get('editmedias/{sid}/{module_id}', [ModuleController::class, 'getEditmedias']);
         });
 
         // Orders
         // ------
         Route::group(['prefix' => 'orders'], function () {
-            Route::get('/', 'OrderController@getIndex');
-            Route::get('create', 'OrderController@getCreate');
-            Route::get('edit/{sid}', 'OrderController@getEdit'); // This will redirect to order
-            Route::post('store', 'OrderController@postStore');
-            Route::get('delete/{sid}', 'OrderController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'OrderController@getSort');
+            Route::get('/', [OrderController::class, 'getIndex']);
+            Route::get('create', [OrderController::class, 'getCreate']);
+            Route::get('edit/{sid}', [OrderController::class, 'getEdit']);
+            Route::post('store', [OrderController::class, 'postStore']);
+            Route::get('delete/{sid}', [OrderController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [OrderController::class, 'getSort']);
             //
-            Route::get('update/{field?}/{sid?}/{status?}', 'OrderController@getUpdate');
-            Route::post('search', 'OrderController@postSearch');
-            Route::get('search-all/{search?}', 'OrderController@getSearchAll');
-            Route::get('search/{field?}/{search?}', 'OrderController@getSearch');
+            Route::get('update/{field?}/{sid?}/{status?}', [OrderController::class, 'getUpdate']);
+            Route::post('search', [OrderController::class, 'postSearch']);
+            Route::get('search-all/{search?}', [OrderController::class, 'getSearchAll']);
+            Route::get('search/{field?}/{search?}', [OrderController::class, 'getSearch']);
         });
 
         // Pages
         // -----
         Route::group(['prefix' => 'pages'], function () {
-            Route::get('/', 'PageController@getIndex');
-            Route::get('create', 'PageController@getCreate');
-            Route::get('edit/{sid}', 'PageController@getEdit');
-            Route::post('store', 'PageController@postStore');
-            Route::get('delete/{sid}', 'PageController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'PageController@getSort');
+            Route::get('/', [PageController::class, 'getIndex']);
+            Route::get('create', [PageController::class, 'getCreate']);
+            Route::get('edit/{sid}', [PageController::class, 'getEdit']);
+            Route::post('store', [PageController::class, 'postStore']);
+            Route::get('delete/{sid}', [PageController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [PageController::class, 'getSort']);
             //
-            Route::get('imgremove/{sid}', 'PageController@getImgremove');
+            Route::get('imgremove/{sid}', [PageController::class, 'getImgremove']);
         });
 
         // Portfolio
         // ---------
         Route::group(['prefix' => 'portfolios'], function () {
-            Route::get('/', 'PortfolioController@getIndex');
-            Route::get('create', 'PortfolioController@getCreate');
-            Route::get('edit/{sid}', 'PortfolioController@getEdit');
-            Route::post('store', 'PortfolioController@postStore');
-            Route::get('delete/{sid}', 'PortfolioController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'PortfolioController@getSort');
+            Route::get('/', [PortfolioController::class, 'getIndex']);
+            Route::get('create', [PortfolioController::class, 'getCreate']);
+            Route::get('edit/{sid}', [PortfolioController::class, 'getEdit']);
+            Route::post('store', [PortfolioController::class, 'postStore']);
+            Route::get('delete/{sid}', [PortfolioController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [PortfolioController::class, 'getSort']);
             //
-            Route::get('imgremove/{sid}', 'PortfolioController@getImgremove');
+            Route::get('imgremove/{sid}', [PortfolioController::class, 'getImgremove']);
         });
 
         // Posts
         // -----
         Route::group(['prefix' => 'posts'], function () {
-            Route::get('/', 'PostController@getIndex');
-            Route::get('create', 'PostController@getCreate');
-            Route::get('edit/{sid}', 'PostController@getEdit');
-            Route::post('store', 'PostController@postStore');
-            Route::get('delete/{sid}', 'PostController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'PostController@getSort');
+            Route::get('/', [PostController::class, 'getIndex']);
+            Route::get('create', [PostController::class, 'getCreate']);
+            Route::get('edit/{sid}', [PostController::class, 'getEdit']);
+            Route::post('store', [PostController::class, 'postStore']);
+            Route::get('delete/{sid}', [PostController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [PostController::class, 'getSort']);
             //
-            Route::get('imgremove/{sid}', 'PostController@getImgremove');
+            Route::get('imgremove/{sid}', [PostController::class, 'getImgremove']);
         });
 
         // Products
         // --------
         Route::group(['prefix' => 'products'], function () {
-            Route::get('/', 'ProductController@getIndex');
-            Route::get('create', 'ProductController@getCreate');
-            Route::get('edit/{sid}', 'ProductController@getEdit');
-            Route::post('store', 'ProductController@postStore');
-            Route::get('delete/{sid}', 'ProductController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'ProductController@getSort');
-            Route::get('imgremove/{sid}', 'ProductController@getImgremove');
+            Route::get('/', [ProductController::class, 'getIndex']);
+            Route::get('create', [ProductController::class, 'getCreate']);
+            Route::get('edit/{sid}', [ProductController::class, 'getEdit']);
+            Route::post('store', [ProductController::class, 'postStore']);
+            Route::get('delete/{sid}', [ProductController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [ProductController::class, 'getSort']);
+            Route::get('imgremove/{sid}', [ProductController::class, 'getImgremove']);
             // ---------------
             // Product variant
             // ---------------
-            Route::get('create-variant/{product_id}', 'ProductController@getCreateVariant');
-            Route::get('edit-variant/{product_id}/{sid}', 'ProductController@getEditVariant');
-            Route::get('view-variant/{sid}', 'ProductController@getViewVariant');
-            Route::get('list-variants/{sid}', 'ProductController@getListVariants');
-            Route::get('delete-variant-json/{sid}', 'ProductController@getDeleteVariantJson');
-            Route::get('variant-imgremove/{product_id}/{sid}', 'ProductController@getVariantImgremove');
+            Route::get('create-variant/{product_id}', [ProductController::class, 'getCreateVariant']);
+            Route::get('edit-variant/{product_id}/{sid}', [ProductController::class, 'getEditVariant']);
+            Route::get('view-variant/{sid}', [ProductController::class, 'getViewVariant']);
+            Route::get('list-variants/{sid}', [ProductController::class, 'getListVariants']);
+            Route::get('delete-variant-json/{sid}', [ProductController::class, 'getDeleteVariantJson']);
+            Route::get('variant-imgremove/{product_id}/{sid}', [ProductController::class, 'getVariantImgremove']);
         });
 
         // Promotions
         // ----------
         Route::group(['prefix' => 'promotions'], function () {
-            Route::get('/', 'PromotionController@getIndex');
-            Route::get('create', 'PromotionController@getCreate');
-            Route::get('edit/{sid}', 'PromotionController@getEdit');
-            Route::post('store', 'PromotionController@postStore');
-            Route::get('delete/{sid}', 'PromotionController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'PromotionController@getSort');
+            Route::get('/', [PromotionController::class, 'getIndex']);
+            Route::get('create', [PromotionController::class, 'getCreate']);
+            Route::get('edit/{sid}', [PromotionController::class, 'getEdit']);
+            Route::post('store', [PromotionController::class, 'postStore']);
+            Route::get('delete/{sid}', [PromotionController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [PromotionController::class, 'getSort']);
             //
-            Route::get('imgremove/{sid}', 'PromotionController@getImgremove');
+            Route::get('imgremove/{sid}', [PromotionController::class, 'getImgremove']);
         });
 
         // Purchases
         // ---------
         Route::group(['prefix' => 'purchases'], function () {
-            Route::get('/', 'PurchaseController@getIndex');
-            Route::get('create', 'PurchaseController@getCreate');
-            Route::get('edit/{sid}', 'PurchaseController@getEdit');
-            Route::post('store', 'PurchaseController@postStore');
-            Route::get('delete/{sid}', 'PurchaseController@getDelete');
+            Route::get('/', [PurchaseController::class, 'getIndex']);
+            Route::get('create', [PurchaseController::class, 'getCreate']);
+            Route::get('edit/{sid}', [PurchaseController::class, 'getEdit']);
+            Route::post('store', [PurchaseController::class, 'postStore']);
+            Route::get('delete/{sid}', [PurchaseController::class, 'getDelete']);
         });
 
         // Reports
         // -------
         Route::group(['prefix' => 'reports'], function () {
-            Route::get('/', 'ReportController@getIndex');
-            Route::post('mailinglist', 'ReportController@postMailinglist');
-            Route::post('purchases', 'ReportController@postPurchases');
-            Route::post('orders', 'ReportController@postOrders');
+            Route::get('/', [ReportController::class, 'getIndex']);
+            Route::post('mailinglist', [ReportController::class, 'postMailinglist']);
+            Route::post('purchases', [ReportController::class, 'postPurchases']);
+            Route::post('orders', [ReportController::class, 'postOrders']);
         });
-        
+
         // Users
         // -----
         Route::group(['prefix' => 'users'], function () {
-            Route::get('/', 'UserController@getIndex');
-            Route::get('create', 'UserController@getCreate');
-            Route::get('edit/{sid}', 'UserController@getEdit');
-            Route::post('store', 'UserController@postStore');
-            Route::get('delete/{sid}', 'UserController@getDelete');
-            Route::get('sort/{sortBy?}/{orderBy?}', 'UserController@getSort');
+            Route::get('/', [UserController::class, 'getIndex']);
+            Route::get('create', [UserController::class, 'getCreate']);
+            Route::get('edit/{sid}', [UserController::class, 'getEdit']);
+            Route::post('store', [UserController::class, 'postStore']);
+            Route::get('delete/{sid}', [UserController::class, 'getDelete']);
+            Route::get('sort/{sortBy?}/{orderBy?}', [UserController::class, 'getSort']);
             //
-            Route::get('activate/{sid}', 'UserController@getActivate');
-            Route::get('deactivate/{sid}', 'UserController@getDeactivate');
-            Route::post('search', 'UserController@postSearch');
-            Route::get('search-all/{search?}', 'UserController@getSearchAll');
-            Route::get('search/{field?}/{search?}', 'UserController@getSearch');
+            Route::get('activate/{sid}', [UserController::class, 'getActivate']);
+            Route::get('deactivate/{sid}', [UserController::class, 'getDeactivate']);
+            Route::post('search', [UserController::class, 'postSearch']);
+            Route::get('search-all/{search?}', [UserController::class, 'getSearchAll']);
+            Route::get('search/{field?}/{search?}', [UserController::class, 'getSearch']);
         });
     }
 );
@@ -309,26 +329,24 @@ Route::group(
 Route::group(
     [
         'middleware' => ['redminsession', 'redminauth'],
-        'namespace' => 'Redooor\Redminportal\App\Http\API',
         'prefix' => 'admin/api'
     ],
     function () {
-        Route::get('email', 'EmailApi@getIndex');
-        Route::get('email/all', 'EmailApi@getAll');
+        Route::get('email', [EmailApi::class, 'getIndex']);
+        Route::get('email/all', [EmailApi::class, 'getAll']);
     }
 );
 
 Route::group(
     [
         'middleware' => 'redminsession',
-        'namespace' => 'Redooor\Redminportal\App\Http\API',
         'prefix' => 'api'
     ],
     function () {
         Route::get('/', function () {
             return redirect('/');
         });
-        Route::get('tag', 'TagApi@getIndex');
-        Route::get('tag/name', 'TagApi@getName');
+        Route::get('tag', [TagApi::class, 'getIndex']);
+        Route::get('tag/name', [TagApi::class, 'getName']);
     }
 );
