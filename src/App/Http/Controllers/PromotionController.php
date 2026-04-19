@@ -8,7 +8,7 @@ use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Config;
 
 class PromotionController extends Controller
@@ -75,7 +75,7 @@ class PromotionController extends Controller
     
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
         
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
@@ -86,7 +86,7 @@ class PromotionController extends Controller
             'end_date'          => 'required',
         );
         
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Request::all(), $rules);
          
         if ($validation->fails()) {
             if (isset($sid)) {
@@ -96,14 +96,14 @@ class PromotionController extends Controller
             }
         }
 
-        $name               = Input::get('name');
-        $short_description  = Input::get('short_description');
-        $long_description   = Input::get('long_description');
-        $image              = Input::file('image');
-        $active             = (Input::get('active') == '' ? false : true);
+        $name               = Request::get('name');
+        $short_description  = Request::get('short_description');
+        $long_description   = Request::get('long_description');
+        $image              = Request::file('image');
+        $active             = (Request::get('active') == '' ? false : true);
         
-        $start_date = DateTime::createFromFormat('d/m/Y', Input::get('start_date'));
-        $end_date   = DateTime::createFromFormat('d/m/Y', Input::get('end_date'));
+        $start_date = DateTime::createFromFormat('d/m/Y', Request::get('start_date'));
+        $end_date   = DateTime::createFromFormat('d/m/Y', Request::get('end_date'));
         
         $promotion = (isset($sid) ? Promotion::find($sid) : new Promotion);
         
@@ -134,9 +134,9 @@ class PromotionController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => Input::get($lang . '_name'),
-                'short_description'     => Input::get($lang . '_short_description'),
-                'long_description'      => Input::get($lang . '_long_description')
+                'name'                  => Request::get($lang . '_name'),
+                'short_description'     => Request::get($lang . '_short_description'),
+                'long_description'      => Request::get($lang . '_long_description')
             );
 
             // Check if lang exist
@@ -151,7 +151,7 @@ class PromotionController extends Controller
             $promotion->translations()->save($translated_model);
         }
         
-        if (Input::hasFile('image')) {
+        if (Request::hasFile('image')) {
             //Upload the file
             $helper_image = new RImage;
             $filename = $helper_image->upload($image, 'promotions/' . $promotion->id, true);

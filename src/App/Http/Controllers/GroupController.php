@@ -4,7 +4,7 @@ use Illuminate\Support\MessageBag;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\PermissibleController;
 use Redooor\Redminportal\App\Models\Group;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
@@ -81,7 +81,7 @@ class GroupController extends Controller
     
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
         
         $rules = array(
             'name' => 'required',
@@ -96,7 +96,7 @@ class GroupController extends Controller
             'permission-deny.regex' => 'The permission deny format is invalid. Try using the Permission Builder.'
         );
 
-        $validation = Validator::make(Input::all(), $rules, $messages);
+        $validation = Validator::make(Request::all(), $rules, $messages);
         
         if (isset($sid)) {
             $redirect_url = 'admin/groups/edit/' . $sid;
@@ -111,9 +111,9 @@ class GroupController extends Controller
         }
         
         $permissions = $this->populatePermission(
-            Input::get('permission-inherit'),
-            Input::get('permission-allow'),
-            Input::get('permission-deny')
+            Request::get('permission-inherit'),
+            Request::get('permission-allow'),
+            Request::get('permission-deny')
         );
         
         if ($group == null) {
@@ -127,7 +127,7 @@ class GroupController extends Controller
         
         try {
             // Save the group details
-            $group->name = Input::get('name');
+            $group->name = Request::get('name');
             $group->permissions = json_encode($permissions);
             $group->save();
         } catch (\Exception $exp) {

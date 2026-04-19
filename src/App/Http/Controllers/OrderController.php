@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
@@ -107,16 +107,16 @@ class OrderController extends Controller
     {
         $redirect_url = 'admin/orders/create';
         
-        $validation = $this->validateStoreInputs(Input::all());
+        $validation = $this->validateStoreInputs(Request::all());
         
         if ($validation->fails()) {
             return redirect($redirect_url)->withErrors($validation)->withInput();
         }
         
-        $transaction_id = Input::get('transaction_id');
-        $payment_status = Input::get('payment_status');
-        $paid           = Input::get('paid');
-        $email          = Input::get('email');
+        $transaction_id = Request::get('transaction_id');
+        $payment_status = Request::get('payment_status');
+        $paid           = Request::get('paid');
+        $email          = Request::get('email');
         
         // Check user first
         $user = User::where('email', $email)->first();
@@ -131,15 +131,15 @@ class OrderController extends Controller
         $apply_to_models = array();
         
         // Save products to order
-        $selected_products = Input::get('selected_products');
+        $selected_products = Request::get('selected_products');
         $apply_to_models = array_merge($apply_to_models, $this->addModelToArray($selected_products, new Product));
         
         // Save bundles to order
-        $selected_bundles = Input::get('selected_bundles');
+        $selected_bundles = Request::get('selected_bundles');
         $apply_to_models = array_merge($apply_to_models, $this->addModelToArray($selected_bundles, new Bundle));
         
         // Save pricelists to order
-        $pricelists = Input::get('pricelist_id');
+        $pricelists = Request::get('pricelist_id');
         $apply_to_models = array_merge($apply_to_models, $this->addModelToArraySimpleMode($pricelists, new Pricelist));
 
         // No product/bundle to add
@@ -162,7 +162,7 @@ class OrderController extends Controller
         }
         
         // Save coupons to order
-        $coupons = Input::get('coupon_id');
+        $coupons = Request::get('coupon_id');
         $errors = $this->addCouponToOrder($coupons, $new_order);
         
         if ($errors) {

@@ -4,7 +4,7 @@ use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\UserPricelist;
 use Redooor\Redminportal\App\Models\Pricelist;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 
 class PurchaseController extends Controller
@@ -69,7 +69,7 @@ class PurchaseController extends Controller
 
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
 
         $rules = array(
             'pricelist_id'      => 'required|integer',
@@ -79,7 +79,7 @@ class PurchaseController extends Controller
             'email'             => 'required|email'
         );
 
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Request::all(), $rules);
 
         $redirect_url = (isset($sid)) ? 'admin/purchases/edit/' . $sid : 'admin/purchases/create';
         
@@ -87,11 +87,11 @@ class PurchaseController extends Controller
             return redirect($redirect_url)->withErrors($validation)->withInput();
         }
         
-        $pricelist_id   = Input::get('pricelist_id');
-        $transaction_id = Input::get('transaction_id');
-        $payment_status = Input::get('payment_status');
-        $paid           = Input::get('paid');
-        $email          = Input::get('email');
+        $pricelist_id   = Request::get('pricelist_id');
+        $transaction_id = Request::get('transaction_id');
+        $payment_status = Request::get('payment_status');
+        $paid           = Request::get('paid');
+        $email          = Request::get('email');
 
         $pricelist = Pricelist::find($pricelist_id);
 

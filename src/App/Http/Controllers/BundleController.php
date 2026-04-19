@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
@@ -156,7 +156,7 @@ class BundleController extends Controller
     
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
         
         if (isset($sid)) {
             $url = 'admin/bundles/edit/' . $sid;
@@ -174,7 +174,7 @@ class BundleController extends Controller
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
         );
         
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Request::all(), $rules);
 
         if ($validation->fails()) {
             return redirect($url)->withErrors($validation)->withInput();
@@ -190,20 +190,20 @@ class BundleController extends Controller
             }
         }
         
-        $name               = Input::get('name');
-        $sku                = Input::get('sku');
-        $price              = Input::get('price');
-        $short_description  = Input::get('short_description');
-        $long_description   = Input::get('long_description');
-        $image              = Input::file('image');
-        $featured           = (Input::get('featured') == '' ? false : true);
-        $active             = (Input::get('active') == '' ? false : true);
-        $category_id        = Input::get('category_id');
-        $tags               = Input::get('tags');
+        $name               = Request::get('name');
+        $sku                = Request::get('sku');
+        $price              = Request::get('price');
+        $short_description  = Request::get('short_description');
+        $long_description   = Request::get('long_description');
+        $image              = Request::file('image');
+        $featured           = (Request::get('featured') == '' ? false : true);
+        $active             = (Request::get('active') == '' ? false : true);
+        $category_id        = Request::get('category_id');
+        $tags               = Request::get('tags');
 
         $apply_to_models = array();
 
-        $products = Input::get('product_id');
+        $products = Request::get('product_id');
         if (count($products) > 0) {
             foreach ($products as $item) {
                 $model = Product::find($item);
@@ -213,7 +213,7 @@ class BundleController extends Controller
             }
         }
 
-        $pricelists = Input::get('pricelist_id');
+        $pricelists = Request::get('pricelist_id');
         if (count($pricelists) > 0) {
             foreach ($pricelists as $item) {
                 $model = Pricelist::find($item);
@@ -263,9 +263,9 @@ class BundleController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => Input::get($lang . '_name'),
-                'short_description'     => Input::get($lang . '_short_description'),
-                'long_description'      => Input::get($lang . '_long_description')
+                'name'                  => Request::get($lang . '_name'),
+                'short_description'     => Request::get($lang . '_short_description'),
+                'long_description'      => Request::get($lang . '_long_description')
             );
 
             // Check if lang exist
@@ -290,7 +290,7 @@ class BundleController extends Controller
             }
         }
 
-        if (Input::hasFile('image')) {
+        if (Request::hasFile('image')) {
             //Upload the file
             $helper_image = new RImage;
             $filename = $helper_image->upload($image, 'bundles/' . $newBundle->id, true);
