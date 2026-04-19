@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
@@ -114,7 +114,7 @@ class UserController extends Controller
 
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
         $errors = new MessageBag;
         
         $rules = array(
@@ -128,7 +128,7 @@ class UserController extends Controller
         );
         
         // Get activated input first, for checking if user is deactivating own account
-        $activated = (Input::get('activated') == '' ? false : true);
+        $activated = (Request::get('activated') == '' ? false : true);
         
         if (isset($sid)) {
             $rules['password'] = 'confirmed|min:6';
@@ -155,7 +155,7 @@ class UserController extends Controller
             'permission-deny.regex' => 'The permission deny format is invalid. Try using the Permission Builder.'
         );
 
-        $validation = Validator::make(Input::all(), $rules, $messages);
+        $validation = Validator::make(Request::all(), $rules, $messages);
         
         if ($validation->fails()) {
             return redirect($path)->withErrors($validation)->withInput();
@@ -171,21 +171,21 @@ class UserController extends Controller
         }
         
         $permissions = $this->populatePermission(
-            Input::get('permission-inherit'),
-            Input::get('permission-allow'),
-            Input::get('permission-deny')
+            Request::get('permission-inherit'),
+            Request::get('permission-allow'),
+            Request::get('permission-deny')
         );
         
         // Save or Update
-        $user->email = Input::get('email');
+        $user->email = Request::get('email');
         
-        $password = Input::get('password');
+        $password = Request::get('password');
         if ($password != '') {
             $user->password = Hash::make($password);
         }
         
-        $user->first_name = Input::get('first_name');
-        $user->last_name = Input::get('last_name');
+        $user->first_name = Request::get('first_name');
+        $user->last_name = Request::get('last_name');
         $user->activated = $activated;
         $user->permissions = json_encode($permissions);
         
@@ -199,7 +199,7 @@ class UserController extends Controller
         
         // Assign group(s) to user
         // Return error message if group has error
-        if (! $user->addGroup(Input::get('role'))) {
+        if (! $user->addGroup(Request::get('role'))) {
             $errors->add(
                 'groupError',
                 Lang::get('redminportal::messages.user_error_group_not_found')

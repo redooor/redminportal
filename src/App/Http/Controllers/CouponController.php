@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
@@ -170,7 +170,7 @@ class CouponController extends Controller
     
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
         
         if (isset($sid)) {
             $url = 'admin/coupons/edit/' . $sid;
@@ -188,7 +188,7 @@ class CouponController extends Controller
             'max_spent'     => 'numeric'
         );
         
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Request::all(), $rules);
 
         if ($validation->fails()) {
             return redirect($url)->withErrors($validation)->withInput();
@@ -204,19 +204,19 @@ class CouponController extends Controller
             }
         }
 
-        $code                   = Input::get('code');
-        $description            = Input::get('description');
-        $amount                 = Input::get('amount');
-        $is_percent             = (Input::get('is_percent') == '' ? false : true);
-        $start_date             = \DateTime::createFromFormat('d/m/Y h:i A', Input::get('start_date'));
-        $end_date               = \DateTime::createFromFormat('d/m/Y h:i A', Input::get('end_date'));
-        $max_spent              = Input::get('max_spent');
-        $min_spent              = Input::get('min_spent');
-        $limit_per_coupon       = Input::get('usage_limit_per_coupon');
-        $limit_per_user         = Input::get('usage_limit_per_user');
-        $multiple_coupons       = (Input::get('multiple_coupons') == '' ? false : true);
-        $exclude_sale_item      = (Input::get('exclude_sale_item') == '' ? false : true);
-        $automatically_apply    = (Input::get('automatically_apply') == '' ? false : true);
+        $code                   = Request::get('code');
+        $description            = Request::get('description');
+        $amount                 = Request::get('amount');
+        $is_percent             = (Request::get('is_percent') == '' ? false : true);
+        $start_date             = \DateTime::createFromFormat('d/m/Y h:i A', Request::get('start_date'));
+        $end_date               = \DateTime::createFromFormat('d/m/Y h:i A', Request::get('end_date'));
+        $max_spent              = Request::get('max_spent');
+        $min_spent              = Request::get('min_spent');
+        $limit_per_coupon       = Request::get('usage_limit_per_coupon');
+        $limit_per_user         = Request::get('usage_limit_per_user');
+        $multiple_coupons       = (Request::get('multiple_coupons') == '' ? false : true);
+        $exclude_sale_item      = (Request::get('exclude_sale_item') == '' ? false : true);
+        $automatically_apply    = (Request::get('automatically_apply') == '' ? false : true);
 
         // Check that end date is after start date
         if ($end_date <= $start_date) {
@@ -237,7 +237,7 @@ class CouponController extends Controller
         $apply_to_models = array();
 
         try {
-            $categories = Input::get('category_id');
+            $categories = Request::get('category_id');
             if ($categories) {
                 foreach ($categories as $item) {
                     $model = Category::find($item);
@@ -247,7 +247,7 @@ class CouponController extends Controller
                 }
             }
 
-            $products = Input::get('product_id');
+            $products = Request::get('product_id');
             if ($products) {
                 foreach ($products as $item) {
                     $model = Product::find($item);
@@ -257,7 +257,7 @@ class CouponController extends Controller
                 }
             }
 
-            $pricelists = Input::get('pricelist_id');
+            $pricelists = Request::get('pricelist_id');
             if ($pricelists) {
                 foreach ($pricelists as $item) {
                     $model = Pricelist::find($item);
@@ -267,7 +267,7 @@ class CouponController extends Controller
                 }
             }
             
-            $bundles = Input::get('bundle_id');
+            $bundles = Request::get('bundle_id');
             if ($bundles) {
                 foreach ($bundles as $item) {
                     $model = Bundle::find($item);

@@ -3,7 +3,7 @@
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\MediaUploaderController;
@@ -105,7 +105,7 @@ class MediaController extends Controller
 
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
         
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
@@ -120,7 +120,7 @@ class MediaController extends Controller
             'category_id.min' => 'The category field is required.'
         ];
 
-        $validation = Validator::make(Input::all(), $rules, $messages);
+        $validation = Validator::make(Request::all(), $rules, $messages);
         
         if ($validation->fails()) {
             return redirect('admin/medias/' . (isset($sid) ? 'edit/' . $sid : 'create'))
@@ -128,15 +128,15 @@ class MediaController extends Controller
                 ->withInput();
         }
         
-        $name               = Input::get('name');
-        $sku                = Input::get('sku');
-        $short_description  = Input::get('short_description');
-        $long_description   = Input::get('long_description');
-        $image              = Input::file('image');
-        $featured           = (Input::get('featured') == '' ? false : true);
-        $active             = (Input::get('active') == '' ? false : true);
-        $category_id        = Input::get('category_id');
-        $tags               = Input::get('tags');
+        $name               = Request::get('name');
+        $sku                = Request::get('sku');
+        $short_description  = Request::get('short_description');
+        $long_description   = Request::get('long_description');
+        $image              = Request::file('image');
+        $featured           = (Request::get('featured') == '' ? false : true);
+        $active             = (Request::get('active') == '' ? false : true);
+        $category_id        = Request::get('category_id');
+        $tags               = Request::get('tags');
 
         $media = (isset($sid) ? Media::find($sid) : new Media);
 
@@ -188,9 +188,9 @@ class MediaController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => Input::get($lang . '_name'),
-                'short_description'     => Input::get($lang . '_short_description'),
-                'long_description'      => Input::get($lang . '_long_description')
+                'name'                  => Request::get($lang . '_name'),
+                'short_description'     => Request::get($lang . '_short_description'),
+                'long_description'      => Request::get($lang . '_long_description')
             );
 
             // Check if lang exist
@@ -215,7 +215,7 @@ class MediaController extends Controller
             }
         }
 
-        if (Input::hasFile('image')) {
+        if (Request::hasFile('image')) {
             //Upload the file
             $helper_image = new RImage;
             $filename = $helper_image->upload($image, 'medias/' . $media->id, true);

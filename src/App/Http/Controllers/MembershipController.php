@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Membership;
@@ -61,14 +61,14 @@ class MembershipController extends Controller
 
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
         
         $rules = array(
             'name'   => 'required|unique:memberships,name' . (isset($sid) ? ',' . $sid : ''),
             'rank'   => 'required|min:0',
         );
 
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Request::all(), $rules);
 
         if ($validation->fails()) {
             if (isset($sid)) {
@@ -78,8 +78,8 @@ class MembershipController extends Controller
             }
         }
 
-        $name      = Input::get('name');
-        $rank      = Input::get('rank');
+        $name      = Request::get('name');
+        $rank      = Request::get('rank');
 
         $membership = (isset($sid) ? Membership::find($sid) : new Membership);
         

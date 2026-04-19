@@ -1,6 +1,6 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Announcement;
@@ -73,15 +73,15 @@ class AnnouncementController extends Controller
     
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
             
-        $validation = Announcement::validate(Input::all());
+        $validation = Announcement::validate(Request::all());
         
         if ($validation->passes()) {
-            $title              = Input::get('title');
-            $content            = Input::get('content');
-            $image              = Input::file('image');
-            $private            = (Input::get('private') == '' ? false : true);
+            $title              = Request::get('title');
+            $content            = Request::get('content');
+            $image              = Request::file('image');
+            $private            = (Request::get('private') == '' ? false : true);
             
             $announcement = (isset($sid) ? Announcement::find($sid) : new Announcement);
             
@@ -100,7 +100,7 @@ class AnnouncementController extends Controller
             
             $announcement->save();
             
-            if (Input::hasFile('image')) {
+            if (Request::hasFile('image')) {
                 //Upload the file
                 $helper_image = new RImage;
                 $filename = $helper_image->upload($image, 'announcements/' . $announcement->id, true);

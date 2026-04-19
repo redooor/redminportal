@@ -13,7 +13,7 @@ use Redooor\Redminportal\App\Helpers\RImage;
 use Redooor\Redminportal\App\Classes\Weight;
 use Redooor\Redminportal\App\Classes\Volume;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
 
 class ProductController extends Controller
@@ -126,8 +126,8 @@ class ProductController extends Controller
 
     public function postStore()
     {
-        $sid = Input::get('id');
-        $product_id = Input::get('product_id');
+        $sid = Request::get('id');
+        $product_id = Request::get('product_id');
         
         /*
          * Validate
@@ -150,7 +150,7 @@ class ProductController extends Controller
             'category_id.min' => 'The category field is required.'
         ];
 
-        $validation = Validator::make(Input::all(), $rules, $messages);
+        $validation = Validator::make(Request::all(), $rules, $messages);
         
         if ($validation->fails()) {
             $redirect_url = $this->pageRoute . '/create';
@@ -175,22 +175,22 @@ class ProductController extends Controller
             }
         }
 
-        $name               = Input::get('name');
-        $sku                = Input::get('sku');
-        $price              = Input::get('price');
-        $short_description  = Input::get('short_description');
-        $long_description   = Input::get('long_description');
-        $image              = Input::file('image');
-        $featured           = (Input::get('featured') == '' ? false : true);
-        $active             = (Input::get('active') == '' ? false : true);
-        $category_id        = Input::get('category_id');
-        $tags               = Input::get('tags');
-        $weight_unit        = Input::get('weight_unit');
-        $volume_unit        = Input::get('volume_unit');
-        $weight             = Input::get('weight');
-        $length             = Input::get('length');
-        $width              = Input::get('width');
-        $height             = Input::get('height');
+        $name               = Request::get('name');
+        $sku                = Request::get('sku');
+        $price              = Request::get('price');
+        $short_description  = Request::get('short_description');
+        $long_description   = Request::get('long_description');
+        $image              = Request::file('image');
+        $featured           = (Request::get('featured') == '' ? false : true);
+        $active             = (Request::get('active') == '' ? false : true);
+        $category_id        = Request::get('category_id');
+        $tags               = Request::get('tags');
+        $weight_unit        = Request::get('weight_unit');
+        $volume_unit        = Request::get('volume_unit');
+        $weight             = Request::get('weight');
+        $length             = Request::get('length');
+        $width              = Request::get('width');
+        $height             = Request::get('height');
         
         $product = (isset($sid) ? Product::find($sid) : new Product);
 
@@ -232,9 +232,9 @@ class ProductController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => Input::get($lang . '_name'),
-                'short_description'     => Input::get($lang . '_short_description'),
-                'long_description'      => Input::get($lang . '_long_description')
+                'name'                  => Request::get($lang . '_name'),
+                'short_description'     => Request::get($lang . '_short_description'),
+                'long_description'      => Request::get($lang . '_long_description')
             );
 
             // Check if lang exist
@@ -259,7 +259,7 @@ class ProductController extends Controller
             }
         }
 
-        if (Input::hasFile('image')) {
+        if (Request::hasFile('image')) {
             //Upload the file
             $helper_image = new RImage;
             $filename = $helper_image->upload($image, 'products/' . $product->id, true);
