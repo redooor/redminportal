@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File as Filesystem;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Redooor\Redminportal\App\Helpers\RHelper;
@@ -131,7 +132,7 @@ class Imagine
         if ($file) {
             // Generate random dir
             if (! $dir) {
-                $dir = str_random(8);
+                $dir = Str::random(8);
             }
      
             // Get file info and try to move
