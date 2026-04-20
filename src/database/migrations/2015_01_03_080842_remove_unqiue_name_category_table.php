@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveUnqiueNameCategoryTable extends Migration {
+return new class extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -32,4 +32,4 @@ class RemoveUnqiueNameCategoryTable extends Migration {
 		});
 	}
 
-}
+};

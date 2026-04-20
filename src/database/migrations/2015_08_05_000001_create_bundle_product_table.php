@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBundleProductTable extends Migration {
+return new class extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -35,4 +35,4 @@ class CreateBundleProductTable extends Migration {
 		Schema::dropIfExists('bundle_product');
 	}
 
-}
+};

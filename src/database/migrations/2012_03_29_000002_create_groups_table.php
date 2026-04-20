@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGroupsTable extends Migration {
+return new class extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -38,4 +38,4 @@ class CreateGroupsTable extends Migration {
 		Schema::dropIfExists('groups');
 	}
 
-}
+};
