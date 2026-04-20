@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class CreateModuleMediaMembershipsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -37,4 +37,4 @@ class CreateModuleMediaMembershipsTable extends Migration
     {
         Schema::dropIfExists('module_media_memberships');
     }
-}
+};

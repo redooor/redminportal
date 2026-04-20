@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBundleOrderTable extends Migration {
+return new class extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -35,4 +35,4 @@ class CreateBundleOrderTable extends Migration {
 		Schema::dropIfExists('bundle_order');
 	}
 
-}
+};
