@@ -1,6 +1,5 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +21,7 @@ trait RedminTestTrait
             'prefix'   => '',
         ]);
     }
-    
+
     /**
      * Sets up environment for each test.
      * Temporariliy increase memory limit, run migrations and set Mail::pretend to true.
@@ -32,34 +31,16 @@ trait RedminTestTrait
         parent::setUp();
 
         ini_set('memory_limit', '400M'); // Temporarily increase memory limit to 400MB
-        
+
         /**
          * By default, Laravel keeps a log in memory of all queries that have been run for
          * the current request. Disable logging for test to reduce memory.
          */
         DB::disableQueryLog();
 
-        $this->loadMigrationsFrom([
-            '--database' => 'testing',
-            '--path' => realpath(__DIR__.'/../src/database/migrations'),
-        ]);
+        $this->loadMigrationsFrom(realpath(__DIR__.'/../src/database/migrations'));
     }
 
-    /**
-     * Points base path to testbench's fixture.
-     */
-    protected function getApplicationPaths()
-    {
-        $basePath = realpath(__DIR__.'/../vendor/orchestra/testbench/fixture');
-
-        return array(
-            'app'     => "{$basePath}/app",
-            'public'  => "{$basePath}/public",
-            'base'    => $basePath,
-            'storage' => "{$basePath}/storage",
-        );
-    }
-    
     /**
      * Appends additional ServiceProvider for the test.
      */
@@ -67,7 +48,7 @@ trait RedminTestTrait
     {
         return [
             'Redooor\Redminportal\RedminportalServiceProvider',
-            'Collective\Html\HtmlServiceProvider'
+            'Collective\Html\HtmlServiceProvider',
         ];
     }
 
@@ -78,8 +59,8 @@ trait RedminTestTrait
     {
         return [
             'Redminportal' => 'Redooor\Redminportal\Facades\Redminportal',
-            'Form'      => 'Collective\Html\FormFacade',
-            'HTML'      => 'Collective\Html\HtmlFacade'
+            'Form'         => 'Collective\Html\FormFacade',
+            'HTML'         => 'Collective\Html\HtmlFacade',
         ];
     }
 }

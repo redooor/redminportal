@@ -28,11 +28,9 @@
         "filp/whoops": "~2.0"
     },
     "autoload": {
-        "classmap": [
-            "src/database/seeds"
-        ],
         "psr-4": {
-            "Redooor\\Redminportal\\": "src/"
+            "Redooor\\Redminportal\\": "src/",
+            "Database\\Seeders\\": "src/database/seeds/"
         }
     },
     "autoload-dev": {
