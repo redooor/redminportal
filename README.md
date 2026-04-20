@@ -4,9 +4,9 @@
 
 # RedminPortal by Redooor
 
-A Laravel 5 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
+A Laravel package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
 
-RedminPortal currently supports Laravel 5.8. See [Compatibility](#compatibility).
+RedminPortal currently supports Laravel 12. See [Compatibility](#compatibility).
 
 # Table of Content
 1. [Compatibility](#compatibility)
@@ -22,34 +22,23 @@ RedminPortal currently supports Laravel 5.8. See [Compatibility](#compatibility)
 11. [Change log](#change-log)
 12. [Upgrade Guide](#upgrade-guide)
 
-#Compatibility
+# Compatibility
 
 | Laravel | RedminPortal | Branch | Status |
 |:--------|:-------------|:-------|:-------|
-| 5.8     | 0.58.x       | [v0.58](https://github.com/redooor/redminportal/tree/v0.58) | Active |
+| 12.x    | 2.x          | [v2](https://github.com/redooor/redminportal/tree/v2) | Active |
+| 5.8     | 0.58.x       | [v0.58](https://github.com/redooor/redminportal/tree/v0.58) | Inactive |
 | 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) | Inactive |
 | 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) | Inactive |
 | 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) | Inactive |
 
-The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.
+The focus of the development will be on branch v2, which supports Laravel 12.
 
-Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.
+Development for branch v0.1, v0.2, v0.3 and v0.58 has stopped. Please upgrade to v2.
 
-# Important note
+# Upgrading
 
-Version >=0.3.2 and >=0.2.2 **may break** your front-end due to the change in UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
-
-Version 0.58 is backward compatible to Version 0.3.
-
-Version 0.3 is backward compatible to Version 0.2.
-
-Version 0.3 and 0.2 are **SOMEWHAT** backward compatible to Version 0.1. Refer to [UPGRADE.md](UPGRADE.md).
-
-**Upgrading from v0.1?**
-
-We've included a few database migrations to upgrade the database to support v0.2/v0.3/v0.58. However, use this at your own risk. The upgrade scripts were not thoroughly tested and it may not be complete. If you find something missing, please report to us using the issue ticket. We welcome any contribution too.
-
-Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+Refer to [UPGRADE.md](UPGRADE.md) for upgrading instructions from any previous version.
 
 # Models and Features
 
@@ -134,20 +123,16 @@ To use it, get the model's translations and use json_decode to convert content i
 
 # Installation guide for Users
 
-You can install Laravel version 5.8 using the command:
+You can create a new Laravel 12 application using the command:
 
-    composer create-project laravel/laravel myproject 5.8.*
+    composer create-project laravel/laravel myproject
 
 1. Add Redminportal to composer.json of a new Laravel application, under "require". Like this:
 
         "require": {
-            "laravel/framework": "5.8.*",
-            "redooor/redminportal": "0.58.[*|specify a version]"
+            "laravel/framework": "^12.0",
+            "redooor/redminportal": "^2.0"
         },
-    
-    **NOTE:**
-    
-    It is advisable to specify the minor version (e.g. 0.58.0) so that it's more controlled. Although we try to be as backward compatible as possible, many changes are added into each version, so it may sometimes break your front end code.
 
 2. Then run `php composer update [--prefer-dist]` in a terminal.
 
@@ -174,7 +159,7 @@ You can install Laravel version 5.8 using the command:
     
 6. Run the following in a terminal to seed the database with initial admin username and password:
 
-        php artisan db:seed --class="RedminSeeder"
+        php artisan db:seed --class="Database\Seeders\RedminSeeder"
         
         Username/password: admin@admin.com/admin
 
@@ -229,8 +214,7 @@ You can install Laravel version 5.8 using the command:
     'passwords' => [
         'redminpasswords' => [
             'provider' => 'redminprovider',
-            'email' => 'auth.emails.password',
-            'table' => 'password_resets',
+            'table' => 'password_reset_tokens',
             'expire' => 60,
         ],
     ],
@@ -250,11 +234,11 @@ It is recommended that contributors use Laravel Homestead for development becaus
 
 For Mac users, you may want to try out [Laravel Herd](https://herd.laravel.com/).
 
-1. Install Laravel 5.8 using [this guide](http://laravel.com/docs/5.8/installation). We'll call this the [root].
+1. Install Laravel 12 using [this guide](https://laravel.com/docs/12.x/installation). We'll call this the [root].
 
-You can install Laravel version 5.8 using the command:
+You can create a new Laravel 12 application using the command:
 
-    composer create-project laravel/laravel myproject 5.8.*
+    composer create-project laravel/laravel myproject
 
 2. Create a folder named "packages" inside the [root] folder.
 3. Clone the Redooor\Redminportal repository into [root]\packages\redooor\redminportal folder.
@@ -300,7 +284,7 @@ You can install Laravel version 5.8 using the command:
 
 9. Run the following in a terminal to seed the database with initial admin username and password:
 
-        php artisan db:seed --class="RedminSeeder"
+        php artisan db:seed --class="Database\Seeders\RedminSeeder"
         
         Username/password: admin@admin.com/admin
 
