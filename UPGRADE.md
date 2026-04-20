@@ -1,5 +1,154 @@
 # Upgrade Guide
 
+## Upgrading to Laravel 12 (v2.x)
+
+This release upgrades the package from Laravel 5.8 to Laravel 12. The changes
+are extensive internally, but most applications need only a handful of steps.
+
+### Requirements
+
+| Requirement | Version |
+|---|---|
+| PHP | ^8.2 |
+| Laravel | ^12.0 |
+
+---
+
+### Step 1 — Update your application to Laravel 12
+
+Follow the [official Laravel upgrade guides](https://laravel.com/docs/upgrade)
+for each major version your application passes through on the way to 12.
+
+The most common breaking changes encountered along the way:
+
+- **Laravel 9**: `Input` facade removed (use `Request`), `str_random()` /
+  `array_get()` helpers removed, route `namespace` group key removed.
+- **Laravel 10**: Anonymous migration classes required, `password_resets` table
+  renamed to `password_reset_tokens`.
+- **Laravel 11**: `AuthorizesRequests`, `DispatchesJobs`, `ValidatesRequests`
+  traits removed from the base controller skeleton.
+
+---
+
+### Step 2 — Replace `laravelcollective/html` with `rdx/laravelcollective-html`
+
+The original `laravelcollective/html` package is no longer maintained and does
+not support Laravel 12. The drop-in replacement keeps identical class names so
+no view changes are required.
+
+Remove the old package and add the new one:
+
+```bash
+composer remove laravelcollective/html
+composer require rdx/laravelcollective-html:^6.10
+```
+
+If you registered the service provider or aliases manually in
+`config/app.php`, **no changes are needed** — the class names are identical:
+
+```php
+// These remain exactly the same
+Collective\Html\HtmlServiceProvider::class
+'Form' => Collective\Html\FormFacade::class
+'HTML' => Collective\Html\HtmlFacade::class
+```
+
+---
+
+### Step 3 — Remove `orchestra/imagine` (if required by your app)
+
+`orchestra/imagine` is no longer maintained and is not a dependency of this
+package. If your own `composer.json` requires it, remove it:
+
+```bash
+composer remove orchestra/imagine
+```
+
+The underlying `imagine/imagine` library is already pulled in directly. No
+code changes are needed if you were only using it through this package.
+
+---
+
+### Step 4 — Update your `password_resets` table (existing installs)
+
+Laravel 10+ uses `password_reset_tokens` as the default table name. Fresh
+installs will get the new table automatically via the updated migration.
+
+**Existing installs** must either rename the table:
+
+```sql
+ALTER TABLE password_resets RENAME TO password_reset_tokens;
+```
+
+Or override the table name in your published auth config
+(`config/vendor/redooor/redminportal/auth.php`) to keep using the old name:
+
+```php
+'redminpasswords' => [
+    'provider' => 'redminprovider',
+    'table'    => 'password_resets',   // keep your existing table name
+    'expire'   => 60,
+],
+```
+
+---
+
+### Step 5 — Re-publish the config (recommended)
+
+Re-publish to pick up the updated `auth.php` (removed deprecated `email` key,
+updated table name):
+
+```bash
+php artisan vendor:publish \
+    --provider="Redooor\Redminportal\RedminportalServiceProvider" \
+    --tag=config --force
+```
+
+Merge any local customisations back in afterwards.
+
+---
+
+### Step 6 — Re-publish the migrations (if previously published)
+
+Re-publish to get the updated anonymous-class migrations and the updated
+password reset migration:
+
+```bash
+php artisan vendor:publish \
+    --provider="Redooor\Redminportal\RedminportalServiceProvider" \
+    --tag=migrations --force
+```
+
+---
+
+### Step 7 — Remove `Session::token()` from a published login view
+
+If you published and customised the login view, remove any explicit CSRF hidden
+field that uses `Session::token()`. The `Form::open()` call already injects the
+token automatically:
+
+```blade
+{{-- Remove this line if present --}}
+<input type="hidden" name="_token" value="{{ Session::token() }}" />
+```
+
+---
+
+### Changelog summary
+
+| Area | Old | New |
+|---|---|---|
+| PHP | ^7.1.3 | ^8.2 |
+| Laravel | ^5.8 | ^12.0 |
+| HTML/Form package | `laravelcollective/html` | `rdx/laravelcollective-html ^6.10` |
+| Image processing | `orchestra/imagine` (wrapper) | `imagine/imagine ^1.4` (direct) |
+| Excel exports | Laravel Excel 2.x (`Excel::create`) | Laravel Excel 3.1 (`Excel::download`) |
+| Password reset table | `password_resets` | `password_reset_tokens` |
+| Migrations | Named classes | Anonymous classes |
+| CSRF in login view | `Session::token()` | Handled by `Form::open()` |
+
+---
+
 ## Upgrading to v0.58
 
 This version is focused on upgrading the code to support Laravel 5.8. Most of the models should remain unchanged.
