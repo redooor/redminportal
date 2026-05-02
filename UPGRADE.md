@@ -1,5 +1,54 @@
 # Upgrade Guide
 
+## Upgrading to Laravel 13 (v3.x)
+
+This is a low-impact upgrade. All dependencies already support Laravel 13 and
+**no PHP source code changes are required** — every Laravel 13 breaking change
+was either cleaned up in the v2.x release or is not present in this codebase.
+
+### Requirements
+
+| Requirement | Version |
+|---|---|
+| PHP | ^8.3 |
+| Laravel | ^13.0 |
+
+### Step 1 — Update your application to Laravel 13
+
+Follow the [official Laravel 13 upgrade guide](https://laravel.com/docs/13.x/upgrade).
+Notable changes from Laravel 12:
+
+- `Route::controller()` removed (not used by this package)
+- `Model::paginate()` default page size changed from 15 to 25 (this package
+  always passes an explicit size from config, so no impact)
+- Job serialisation format changed — drain queues before deploying
+
+### Step 2 — Update the package constraint
+
+In your application's `composer.json`:
+
+```json
+"redooor/redminportal": "^3.0"
+```
+
+Then run:
+
+```bash
+composer update redooor/redminportal
+```
+
+### Step 3 — Re-publish the config (recommended)
+
+```bash
+php artisan vendor:publish \
+    --provider="Redooor\Redminportal\RedminportalServiceProvider" \
+    --tag=config --force
+```
+
+That's it. No view changes, no migration changes, no source edits needed.
+
+---
+
 ## Upgrading to Laravel 12 (v2.x)
 
 This release upgrades the package from Laravel 5.8 to Laravel 12. The changes

@@ -6,7 +6,7 @@
 
 A Laravel package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
 
-RedminPortal currently supports Laravel 12. See [Compatibility](#compatibility).
+RedminPortal currently supports Laravel 13. See [Compatibility](#compatibility).
 
 # Table of Content
 1. [Compatibility](#compatibility)
@@ -26,15 +26,16 @@ RedminPortal currently supports Laravel 12. See [Compatibility](#compatibility).
 
 | Laravel | RedminPortal | Branch | Status |
 |:--------|:-------------|:-------|:-------|
-| 12.x    | 2.x          | [v2](https://github.com/redooor/redminportal/tree/v2) | Active |
+| 13.x    | 3.x          | [v3](https://github.com/redooor/redminportal/tree/v3) | Active |
+| 12.x    | 2.x          | [v2](https://github.com/redooor/redminportal/tree/v2) | Inactive |
 | 5.8     | 0.58.x       | [v0.58](https://github.com/redooor/redminportal/tree/v0.58) | Inactive |
 | 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) | Inactive |
 | 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) | Inactive |
 | 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) | Inactive |
 
-The focus of the development will be on branch v2, which supports Laravel 12.
+The focus of the development will be on branch v3, which supports Laravel 13.
 
-Development for branch v0.1, v0.2, v0.3 and v0.58 has stopped. Please upgrade to v2.
+Development for branch v0.1, v0.2, v0.3, v0.58, and v2 has stopped. Please upgrade to v3.
 
 # Upgrading
 
@@ -130,8 +131,8 @@ You can create a new Laravel 12 application using the command:
 1. Add Redminportal to composer.json of a new Laravel application, under "require". Like this:
 
         "require": {
-            "laravel/framework": "^12.0",
-            "redooor/redminportal": "^2.0"
+            "laravel/framework": "^13.0",
+            "redooor/redminportal": "^3.0"
         },
 
 2. Then run `php composer update [--prefer-dist]` in a terminal.
