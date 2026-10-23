@@ -149,7 +149,17 @@ You can create a new Laravel 13 application using the command:
         ),
 
 4. Then run `php composer dump-autoload` in a terminal.
-5. Run the following commands in a terminal to perform database migration for Redminportal:
+5. **Important: remove Laravel's default `users` migration first.**
+
+    Redminportal creates its own `users` table (with extra columns such as `first_name`, `last_name`, `permissions` and `activated`). Its migration is skipped when a `users` table already exists, so if Laravel's default one has been migrated, the later seeding step fails with `table users has no column named first_name`.
+
+    In a new Laravel application, delete `database/migrations/0001_01_01_000000_create_users_table.php` **before** running any migration. If you have already migrated, delete the file and run `php artisan migrate:fresh` (this drops all tables).
+
+    That default migration also creates the `sessions` table. If you keep `SESSION_DRIVER=database`, add the `sessions` table back yourself, or set `SESSION_DRIVER=file` in your `.env`.
+
+    If your application already has its own `users` table, Redminportal will not alter it. You must add the missing columns yourself, or use a separate database for Redminportal.
+
+    Then run the following commands in a terminal to perform database migration for Redminportal:
 
         php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
 
