@@ -71,6 +71,10 @@ composer remove orchestra/imagine
 The underlying `imagine/imagine` library is already pulled in directly. No
 code changes are needed if you were only using it through this package.
 
+The package no longer registers the Orchestra `Imagine` facade alias. If your
+own code calls `Imagine::...`, use the `Imagine\...` classes from
+`imagine/imagine` directly, or register your own alias.
+
 ---
 
 ### Step 4 — Update your `password_resets` table (existing installs)
@@ -135,6 +139,30 @@ token automatically:
 {{-- Remove this line if present --}}
 <input type="hidden" name="_token" value="{{ Session::token() }}" />
 ```
+
+---
+
+### Upgrade checklist
+
+Database: **no table other than `password_reset_tokens` changed.** Your existing
+data and the other 44 migrations need no changes, and already-run migrations
+will not run again.
+
+- [ ] Application is on PHP 8.3+ and Laravel 13 (Step 1)
+- [ ] `laravelcollective/html` replaced with `rdx/laravelcollective-html` (Step 2)
+- [ ] `orchestra/imagine` removed, and any `Imagine::` facade calls replaced (Step 3)
+- [ ] `password_reset_tokens` table created or renamed from `password_resets` (Step 4)
+- [ ] Config re-published, so `auth.php` points to `password_reset_tokens` (Step 5)
+- [ ] Published migrations re-published, if you had published them (Step 6)
+- [ ] `Session::token()` removed from a published login view (Step 7)
+- [ ] Seeder command updated to `db:seed --class="Database\Seeders\RedminSeeder"`
+- [ ] If you subclass `Api` or the report controllers: they no longer use the
+      `AuthorizesRequests`, `DispatchesJobs` or `ValidatesRequests` traits, and
+      reports now use `Excel::download(new ...Export)` instead of `Excel::create`
+- [ ] Unauthenticated visits to `/admin/*` now redirect to `login` without
+      remembering the intended URL (behaviour change from `redirect()->guest()`)
+
+Admin URLs, routes, models and table names are otherwise unchanged.
 
 ---
 
