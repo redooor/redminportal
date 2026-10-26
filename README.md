@@ -12,15 +12,16 @@ RedminPortal currently supports Laravel 13. See [Compatibility](#compatibility).
 1. [Compatibility](#compatibility)
 2. [Models and Features](#models-and-features)
 3. [Installation guide for Users](#installation-guide-for-users)
-4. [Installation guide for Contributors](#installation-guide-for-contributors)
-5. [Testing](#testing)
-6. [Versioning](#versioning)
-7. [Contributing](#contributing)
-8. [Creator](#creator)
-9. [License](#license)
-10. [External Libraries Used](#external-libraries-used)
-11. [Change log](#change-log)
-12. [Upgrade Guide](#upgrade-guide)
+4. [Showing pages on your own frontend](#showing-pages-on-your-own-frontend)
+5. [Installation guide for Contributors](#installation-guide-for-contributors)
+6. [Testing](#testing)
+7. [Versioning](#versioning)
+8. [Contributing](#contributing)
+9. [Creator](#creator)
+10. [License](#license)
+11. [External Libraries Used](#external-libraries-used)
+12. [Change log](#change-log)
+13. [Upgrade Guide](#upgrade-guide)
 
 # Compatibility
 
@@ -237,6 +238,62 @@ You can create a new Laravel 13 application using the command:
         php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
         
     **CAUTION: using --force will overwrite existing files**
+
+# Showing pages on your own frontend
+
+RedminPortal is an admin dashboard only. It stores your content, and your Laravel application decides how to show it. This example shows pages created in **Admin > Pages** at the site root, so a page with slug `about` appears at `/about` (not `/page/about`).
+
+If you would rather not build this yourself, the optional [RedminStore](https://github.com/redooor/redminstore) package does exactly this out of the box.
+
+1. In the admin, create a page: set a **Title**, **Content** and **Slug** (for example `about`), and leave **Private** unchecked. Private pages should never be shown publicly.
+
+2. Create a controller, `app/Http/Controllers/PageController.php`:
+
+        <?php
+
+        namespace App\Http\Controllers;
+
+        use Illuminate\Http\Request;
+        use Redooor\Redminportal\App\Models\Page;
+
+        class PageController extends Controller
+        {
+            public function show(Request $request)
+            {
+                $slug = trim($request->path(), '/');
+
+                // Only single-segment URLs such as /about; anything else is a normal 404.
+                abort_if(str_contains($slug, '/'), 404);
+
+                $page = Page::where('slug', $slug)
+                    ->where('private', false)   // never show pages marked Private in the admin
+                    ->firstOrFail();
+
+                return view('page', ['page' => $page]);
+            }
+        }
+
+3. Create the view, `resources/views/page.blade.php`. Use your own layout here:
+
+        <h1>{{ $page->title }}</h1>
+
+        {{-- Page content is HTML written by trusted admins in RedminPortal's editor. --}}
+        {!! $page->content !!}
+
+4. Register a fallback route at the **end** of `routes/web.php`:
+
+        use App\Http\Controllers\PageController;
+
+        Route::fallback([PageController::class, 'show']);
+
+A fallback route runs only when no other route matches, so it never takes over your own routes or RedminPortal's `/admin` and `/login`, whatever order they are registered in. A page with the same slug as a real route (for example `login`) is therefore never shown. Unknown URLs return your normal 404 page. Use a controller rather than a closure so that `php artisan route:cache` keeps working.
+
+Notes:
+
+- Slugs are stored with spaces replaced by underscores. Use letters, numbers, `-` and `_` in slugs.
+- `$page->content` is raw HTML, so only print it unescaped (`{!! !!}`) if only trusted admins can edit pages.
+- A page also has `category`, `tags`, `images` and `translations` relationships, for example `$page->images` and `$page->tags`.
+- Posts work the same way: use the `Post` model with `where('private', false)`, and give them a prefix such as `/blog/{slug}` to avoid clashing with page slugs.
 
 # Installation guide for Contributors
 
