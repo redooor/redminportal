@@ -18,10 +18,10 @@ class Authenticate
             if ($request->ajax()) {
                 return view('redminportal::users.notauthorized');
             } else {
-                return redirect()->guest('login');
+                return redirect('login');
             }
         }
-        
+
         $user = Auth::guard($guard)->user();
 
         // Check if user is activated
@@ -30,7 +30,7 @@ class Authenticate
                 // User logged in but was deactivated after
                 // Log out this user and bring to login page
                 Auth::guard($guard)->logout();
-                return redirect()->guest('login');
+                return redirect('login');
             }
 
             // Proceed to check user permission

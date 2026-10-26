@@ -4,52 +4,42 @@
 
 # RedminPortal by Redooor
 
-A Laravel 5 package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
+A Laravel package as a **backend** administrating tool for Content Management and Ecommerce sites. Gives you ability to add, edit and remove category, product, promotions and many more. Provides User Interface for administrating users and groups.
 
-RedminPortal currently supports Laravel 5.8. See [Compatibility](#compatibility).
+RedminPortal currently supports Laravel 13. See [Compatibility](#compatibility).
 
 # Table of Content
 1. [Compatibility](#compatibility)
 2. [Models and Features](#models-and-features)
 3. [Installation guide for Users](#installation-guide-for-users)
-4. [Installation guide for Contributors](#installation-guide-for-contributors)
-5. [Testing](#testing)
-6. [Versioning](#versioning)
-7. [Contributing](#contributing)
-8. [Creator](#creator)
-9. [License](#license)
-10. [External Libraries Used](#external-libraries-used)
-11. [Change log](#change-log)
-12. [Upgrade Guide](#upgrade-guide)
+4. [Showing pages on your own frontend](#showing-pages-on-your-own-frontend)
+5. [Installation guide for Contributors](#installation-guide-for-contributors)
+6. [Testing](#testing)
+7. [Versioning](#versioning)
+8. [Contributing](#contributing)
+9. [Creator](#creator)
+10. [License](#license)
+11. [External Libraries Used](#external-libraries-used)
+12. [Change log](#change-log)
+13. [Upgrade Guide](#upgrade-guide)
 
-#Compatibility
+# Compatibility
 
 | Laravel | RedminPortal | Branch | Status |
 |:--------|:-------------|:-------|:-------|
-| 5.8     | 0.58.x       | [v0.58](https://github.com/redooor/redminportal/tree/v0.58) | Active |
+| 13.x    | 2.x          | [v2](https://github.com/redooor/redminportal/tree/v2) | Active |
+| 5.8     | 0.58.x       | [v0.58](https://github.com/redooor/redminportal/tree/v0.58) | Inactive |
 | 5.1     | 0.3.x        | [v0.3](https://github.com/redooor/redminportal/tree/v0.3) | Inactive |
 | 5.0     | 0.2.x        | [v0.2](https://github.com/redooor/redminportal/tree/v0.2) | Inactive |
 | 4.2     | 0.1.x        | [v0.1](https://github.com/redooor/redminportal/tree/v0.1) | Inactive |
 
-The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.
+The focus of the development will be on branch v2, which supports Laravel 13.
 
-Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.
+Development for branch v0.1, v0.2, v0.3, and v0.58 has stopped. Please upgrade to v2.
 
-# Important note
+# Upgrading
 
-Version >=0.3.2 and >=0.2.2 **may break** your front-end due to the change in UserPricelist. Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
-
-Version 0.58 is backward compatible to Version 0.3.
-
-Version 0.3 is backward compatible to Version 0.2.
-
-Version 0.3 and 0.2 are **SOMEWHAT** backward compatible to Version 0.1. Refer to [UPGRADE.md](UPGRADE.md).
-
-**Upgrading from v0.1?**
-
-We've included a few database migrations to upgrade the database to support v0.2/v0.3/v0.58. However, use this at your own risk. The upgrade scripts were not thoroughly tested and it may not be complete. If you find something missing, please report to us using the issue ticket. We welcome any contribution too.
-
-Refer to [UPGRADE.md](UPGRADE.md) for the upgrading instructions.
+Refer to [UPGRADE.md](UPGRADE.md) for upgrading instructions from any previous version.
 
 # Models and Features
 
@@ -134,20 +124,16 @@ To use it, get the model's translations and use json_decode to convert content i
 
 # Installation guide for Users
 
-You can install Laravel version 5.8 using the command:
+You can create a new Laravel 13 application using the command:
 
-    composer create-project laravel/laravel myproject 5.8.*
+    composer create-project laravel/laravel myproject
 
 1. Add Redminportal to composer.json of a new Laravel application, under "require". Like this:
 
         "require": {
-            "laravel/framework": "5.8.*",
-            "redooor/redminportal": "0.58.[*|specify a version]"
+            "laravel/framework": "^13.0",
+            "redooor/redminportal": "^2.0"
         },
-    
-    **NOTE:**
-    
-    It is advisable to specify the minor version (e.g. 0.58.0) so that it's more controlled. Although we try to be as backward compatible as possible, many changes are added into each version, so it may sometimes break your front end code.
 
 2. Then run `php composer update [--prefer-dist]` in a terminal.
 
@@ -164,7 +150,17 @@ You can install Laravel version 5.8 using the command:
         ),
 
 4. Then run `php composer dump-autoload` in a terminal.
-5. Run the following commands in a terminal to perform database migration for Redminportal:
+5. **Important: remove Laravel's default `users` migration first.**
+
+    Redminportal creates its own `users` table (with extra columns such as `first_name`, `last_name`, `permissions` and `activated`). Its migration is skipped when a `users` table already exists, so if Laravel's default one has been migrated, the later seeding step fails with `table users has no column named first_name`.
+
+    In a new Laravel application, delete `database/migrations/0001_01_01_000000_create_users_table.php` **before** running any migration. If you have already migrated, delete the file and run `php artisan migrate:fresh` (this drops all tables).
+
+    That default migration also creates the `sessions` table. If you keep `SESSION_DRIVER=database`, add the `sessions` table back yourself, or set `SESSION_DRIVER=file` in your `.env`.
+
+    If your application already has its own `users` table, Redminportal will not alter it. You must add the missing columns yourself, or use a separate database for Redminportal.
+
+    Then run the following commands in a terminal to perform database migration for Redminportal:
 
         php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="migrations" [--force]
 
@@ -174,7 +170,7 @@ You can install Laravel version 5.8 using the command:
     
 6. Run the following in a terminal to seed the database with initial admin username and password:
 
-        php artisan db:seed --class="RedminSeeder"
+        php artisan db:seed --class="Database\Seeders\RedminSeeder"
         
         Username/password: admin@admin.com/admin
 
@@ -229,8 +225,7 @@ You can install Laravel version 5.8 using the command:
     'passwords' => [
         'redminpasswords' => [
             'provider' => 'redminprovider',
-            'email' => 'auth.emails.password',
-            'table' => 'password_resets',
+            'table' => 'password_reset_tokens',
             'expire' => 60,
         ],
     ],
@@ -244,17 +239,73 @@ You can install Laravel version 5.8 using the command:
         
     **CAUTION: using --force will overwrite existing files**
 
+# Showing pages on your own frontend
+
+RedminPortal is an admin dashboard only. It stores your content, and your Laravel application decides how to show it. This example shows pages created in **Admin > Pages** at the site root, so a page with slug `about` appears at `/about` (not `/page/about`).
+
+If you would rather not build this yourself, the optional [RedminStore](https://github.com/redooor/redminstore) package does exactly this out of the box.
+
+1. In the admin, create a page: set a **Title**, **Content** and **Slug** (for example `about`), and leave **Private** unchecked. Private pages should never be shown publicly.
+
+2. Create a controller, `app/Http/Controllers/PageController.php`:
+
+        <?php
+
+        namespace App\Http\Controllers;
+
+        use Illuminate\Http\Request;
+        use Redooor\Redminportal\App\Models\Page;
+
+        class PageController extends Controller
+        {
+            public function show(Request $request)
+            {
+                $slug = trim($request->path(), '/');
+
+                // Only single-segment URLs such as /about; anything else is a normal 404.
+                abort_if(str_contains($slug, '/'), 404);
+
+                $page = Page::where('slug', $slug)
+                    ->where('private', false)   // never show pages marked Private in the admin
+                    ->firstOrFail();
+
+                return view('page', ['page' => $page]);
+            }
+        }
+
+3. Create the view, `resources/views/page.blade.php`. Use your own layout here:
+
+        <h1>{{ $page->title }}</h1>
+
+        {{-- Page content is HTML written by trusted admins in RedminPortal's editor. --}}
+        {!! $page->content !!}
+
+4. Register a fallback route at the **end** of `routes/web.php`:
+
+        use App\Http\Controllers\PageController;
+
+        Route::fallback([PageController::class, 'show']);
+
+A fallback route runs only when no other route matches, so it never takes over your own routes or RedminPortal's `/admin` and `/login`, whatever order they are registered in. A page with the same slug as a real route (for example `login`) is therefore never shown. Unknown URLs return your normal 404 page. Use a controller rather than a closure so that `php artisan route:cache` keeps working.
+
+Notes:
+
+- Slugs are stored with spaces replaced by underscores. Use letters, numbers, `-` and `_` in slugs.
+- `$page->content` is raw HTML, so only print it unescaped (`{!! !!}`) if only trusted admins can edit pages.
+- A page also has `category`, `tags`, `images` and `translations` relationships, for example `$page->images` and `$page->tags`.
+- Posts work the same way: use the `Post` model with `where('private', false)`, and give them a prefix such as `/blog/{slug}` to avoid clashing with page slugs.
+
 # Installation guide for Contributors
 
 It is recommended that contributors use Laravel Homestead for development because it will provide the same development environment for all of us. Read more about Laravel Homestead [here](http://laravel.com/docs/master/homestead).
 
 For Mac users, you may want to try out [Laravel Herd](https://herd.laravel.com/).
 
-1. Install Laravel 5.8 using [this guide](http://laravel.com/docs/5.8/installation). We'll call this the [root].
+1. Install Laravel 13 using [this guide](https://laravel.com/docs/13.x/installation). We'll call this the [root].
 
-You can install Laravel version 5.8 using the command:
+You can create a new Laravel 13 application using the command:
 
-    composer create-project laravel/laravel myproject 5.8.*
+    composer create-project laravel/laravel myproject
 
 2. Create a folder named "packages" inside the [root] folder.
 3. Clone the Redooor\Redminportal repository into [root]\packages\redooor\redminportal folder.
@@ -300,7 +351,7 @@ You can install Laravel version 5.8 using the command:
 
 9. Run the following in a terminal to seed the database with initial admin username and password:
 
-        php artisan db:seed --class="RedminSeeder"
+        php artisan db:seed --class="Database\Seeders\RedminSeeder"
         
         Username/password: admin@admin.com/admin
 

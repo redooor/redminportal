@@ -3,7 +3,10 @@
 use Redooor\Redminportal\App\Models\Mailinglist;
 use Redooor\Redminportal\App\Models\UserPricelist;
 use Redooor\Redminportal\App\Models\Order;
-use Illuminate\Support\Facades\Input;
+use Redooor\Redminportal\App\Exports\MailinglistExport;
+use Redooor\Redminportal\App\Exports\PurchasesExport;
+use Redooor\Redminportal\App\Exports\OrdersExport;
+use Illuminate\Support\Facades\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
@@ -15,13 +18,13 @@ class ReportController extends Controller
 
     public function postMailinglist()
     {
-        $input_start_date = Input::get('start_date');
+        $input_start_date = Request::get('start_date');
         if ($input_start_date == "") {
             $input_start_date = "01/01/1900";
         }
         $start_date = \DateTime::createFromFormat('d/m/Y', $input_start_date);
 
-        $input_end_date = Input::get('end_date');
+        $input_end_date = Request::get('end_date');
 
         if ($input_end_date == "") {
             $end_date = new \DateTime("NOW");
@@ -40,26 +43,18 @@ class ReportController extends Controller
             return redirect('admin/mailinglists')->withErrors($errors);
         }
 
-        Excel::create('Redmin_Mailinglist_Report', function ($excel) use ($data) {
-
-            $excel->sheet('Mailinglist Report', function ($sheet) use ($data) {
-
-                $sheet->loadView('redminportal::reports/mailinglist')->with('data', $data);
-
-            });
-
-        })->download('csv');
+        return Excel::download(new MailinglistExport($data), 'Redmin_Mailinglist_Report.csv');
     }
 
     public function postPurchases()
     {
-        $input_start_date = Input::get('start_date');
+        $input_start_date = Request::get('start_date');
         if ($input_start_date == "") {
             $input_start_date = "01/01/1900";
         }
         $start_date = \DateTime::createFromFormat('d/m/Y', $input_start_date);
 
-        $input_end_date = Input::get('end_date');
+        $input_end_date = Request::get('end_date');
 
         if ($input_end_date == "") {
             $end_date = new \DateTime("NOW");
@@ -78,26 +73,18 @@ class ReportController extends Controller
             return redirect('admin/purchases')->withErrors($errors);
         }
 
-        Excel::create('Redmin_Purchases_Report', function ($excel) use ($data) {
-
-            $excel->sheet('Purchases Report', function ($sheet) use ($data) {
-
-                $sheet->loadView('redminportal::reports/purchases')->with('data', $data);
-
-            });
-
-        })->download('csv');
+        return Excel::download(new PurchasesExport($data), 'Redmin_Purchases_Report.csv');
     }
-    
+
     public function postOrders()
     {
-        $input_start_date = Input::get('start_date');
+        $input_start_date = Request::get('start_date');
         if ($input_start_date == "") {
             $input_start_date = "01/01/1900";
         }
         $start_date = \DateTime::createFromFormat('d/m/Y', $input_start_date);
 
-        $input_end_date = Input::get('end_date');
+        $input_end_date = Request::get('end_date');
 
         if ($input_end_date == "") {
             $end_date = new \DateTime("NOW");
@@ -116,14 +103,6 @@ class ReportController extends Controller
             return redirect('admin/orders')->withErrors($errors);
         }
 
-        Excel::create('Redmin_Orders_Report', function ($excel) use ($data) {
-
-            $excel->sheet('Orders Report', function ($sheet) use ($data) {
-
-                $sheet->loadView('redminportal::reports/orders')->with('data', $data);
-
-            });
-
-        })->download('xlsx');
+        return Excel::download(new OrdersExport($data), 'Redmin_Orders_Report.xlsx');
     }
 }

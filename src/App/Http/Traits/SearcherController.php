@@ -4,7 +4,7 @@
  * Add search capability to controller
  */
 
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 
@@ -37,14 +37,14 @@ trait SearcherController
             'search.regex'      => trans('redminportal::messages.error_remove_special_characters')
         ];
 
-        $validation = Validator::make(Input::all(), $rules, $messages);
+        $validation = Validator::make(Request::all(), $rules, $messages);
         
         if ($validation->fails()) {
             return redirect($this->pageRoute)->withErrors($validation)->withInput();
         }
         
-        $search = trim(Input::get('search'));
-        $field  = trim(Input::get('field'));
+        $search = trim(Request::get('search'));
+        $field  = trim(Request::get('field'));
         
         if ($field and $field != 'all') {
             // Perform a field search

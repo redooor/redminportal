@@ -1,7 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
@@ -102,7 +102,7 @@ class PostController extends Controller
 
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
         
         $rules = array(
             'image'         => 'mimes:jpg,jpeg,png,gif|max:500',
@@ -111,7 +111,7 @@ class PostController extends Controller
             'content'       => 'required',
         );
 
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Request::all(), $rules);
         
         if ($validation->fails()) {
             return redirect('admin/posts/' . (isset($sid) ? 'edit/' . $sid : 'create'))
@@ -119,14 +119,14 @@ class PostController extends Controller
                 ->withInput();
         }
         
-        $title              = Input::get('title');
-        $slug               = Input::get('slug');
-        $content            = Input::get('content');
-        $image              = Input::file('image');
-        $private            = (Input::get('private') == '' ? false : true);
-        $featured           = (Input::get('featured') == '' ? false : true);
-        $category_id        = Input::get('category_id');
-        $tags               = Input::get('tags');
+        $title              = Request::get('title');
+        $slug               = Request::get('slug');
+        $content            = Request::get('content');
+        $image              = Request::file('image');
+        $private            = (Request::get('private') == '' ? false : true);
+        $featured           = (Request::get('featured') == '' ? false : true);
+        $category_id        = Request::get('category_id');
+        $tags               = Request::get('tags');
 
         $post = (isset($sid) ? Post::find($sid) : new Post);
 
@@ -161,9 +161,9 @@ class PostController extends Controller
             }
 
             $translated_content = array(
-                'title'     => Input::get($lang . '_title'),
-                'slug'      => str_replace(' ', '_', Input::get($lang . '_slug')),
-                'content'   => Input::get($lang . '_content')
+                'title'     => Request::get($lang . '_title'),
+                'slug'      => str_replace(' ', '_', Request::get($lang . '_slug')),
+                'content'   => Request::get($lang . '_content')
             );
 
             // Check if lang exist
@@ -178,7 +178,7 @@ class PostController extends Controller
             $post->translations()->save($translated_model);
         }
 
-        if (Input::hasFile('image')) {
+        if (Request::hasFile('image')) {
             //Upload the file
             $helper_image = new RImage;
             $filename = $helper_image->upload($image, 'posts/' . $post->id, true);

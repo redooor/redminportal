@@ -5,7 +5,7 @@ use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 
@@ -80,7 +80,7 @@ class CategoryController extends Controller
 
     public function postStore()
     {
-        $sid = Input::get('id');
+        $sid = Request::get('id');
         
         $return_path = (isset($sid) ? 'admin/categories/edit/' . $sid : 'admin/categories/create');
 
@@ -94,19 +94,19 @@ class CategoryController extends Controller
             'order'                 => 'required|min:0',
         );
 
-        $validation = Validator::make(Input::all(), $rules);
+        $validation = Validator::make(Request::all(), $rules);
         
         if ($validation->fails()) {
             return redirect($return_path)->withErrors($validation)->withInput();
         }
         
-        $name               = Input::get('name');
-        $short_description  = Input::get('short_description');
-        $long_description   = Input::get('long_description');
-        $image              = Input::file('image');
-        $active             = (Input::get('active') == '' ? false : true);
-        $order              = Input::get('order');
-        $parent_id          = Input::get('parent_id');
+        $name               = Request::get('name');
+        $short_description  = Request::get('short_description');
+        $long_description   = Request::get('long_description');
+        $image              = Request::file('image');
+        $active             = (Request::get('active') == '' ? false : true);
+        $order              = Request::get('order');
+        $parent_id          = Request::get('parent_id');
 
         $category = (isset($sid) ? Category::find($sid) : new Category);
 
@@ -161,9 +161,9 @@ class CategoryController extends Controller
             }
             
             $translated_content = array(
-                'name'                  => Input::get($lang . '_name'),
-                'short_description'     => Input::get($lang . '_short_description'),
-                'long_description'      => Input::get($lang . '_long_description')
+                'name'                  => Request::get($lang . '_name'),
+                'short_description'     => Request::get($lang . '_short_description'),
+                'long_description'      => Request::get($lang . '_long_description')
             );
             
             // Check if lang exist
@@ -178,7 +178,7 @@ class CategoryController extends Controller
             $category->translations()->save($translated_model);
         }
 
-        if (Input::hasFile('image')) {
+        if (Request::hasFile('image')) {
             //Upload the file
             $helper_image = new RImage;
             $filename = $helper_image->upload($image, 'categories/' . $category->id, true);

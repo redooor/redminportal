@@ -92,8 +92,7 @@ return [
     'passwords' => [
         'redminpasswords' => [
             'provider' => 'redminprovider',
-            'email' => 'auth.emails.password',
-            'table' => 'password_resets',
+            'table' => 'password_reset_tokens',
             'expire' => 60,
         ],
     ],

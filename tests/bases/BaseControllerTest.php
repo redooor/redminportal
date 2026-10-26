@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Database\Seeders\RedminSeeder;
 use Illuminate\Support\Facades\Auth;
 
 class BaseControllerTest extends RedminBrowserTestCase
@@ -15,7 +16,7 @@ class BaseControllerTest extends RedminBrowserTestCase
     {
         parent::setUp();
 
-        $this->seed('RedminSeeder');
+        $this->seed(RedminSeeder::class);
         
         Auth::guard('redminguard')->loginUsingId(1);
     }

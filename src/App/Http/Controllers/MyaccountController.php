@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
@@ -55,24 +55,24 @@ class MyaccountController extends Controller
             'old_password.required' => trans('redminportal::messages.user_error_old_password_required')
         );
 
-        $validation = Validator::make(Input::all(), $rules, $messages);
+        $validation = Validator::make(Request::all(), $rules, $messages);
         
         if ($validation->fails()) {
             return redirect($this->pageRoute)->withErrors($validation)->withInput();
         }
         
-        $old_password = Input::get('old_password');
+        $old_password = Request::get('old_password');
         
         // Check that the existing password mataches
         if (Hash::check($old_password, $user->password)) {
             // Update password if not empty
-            $password = Input::get('password');
+            $password = Request::get('password');
             if ($password != '') {
                 $user->password = Hash::make($password);
             }
             // Update First and Last name
-            $user->first_name = Input::get('first_name');
-            $user->last_name = Input::get('last_name');
+            $user->first_name = Request::get('first_name');
+            $user->last_name = Request::get('last_name');
             
             if (! $user->save()) {
                 $errors->add(

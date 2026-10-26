@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCouponProductTable extends Migration {
+return new class extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -35,4 +35,4 @@ class CreateCouponProductTable extends Migration {
 		Schema::dropIfExists('coupon_product');
 	}
 
-}
+};
