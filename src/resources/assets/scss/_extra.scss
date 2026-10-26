@@ -1,10 +1,12 @@
+@use 'variables' as *;
+
 /* Overwrite Bootstrap style */
 body { padding-top: 70px; } /* Shift down to make space for navbar */
 body.modal-open, .modal-open .navbar-fixed-top{ margin-right:0px;} /* Fix strange right margin when opening modal dialog */
 .navbar-brand>img { display: inline-block; }
 
 /* Redooor style */
-body { 
+body {
     padding-bottom: 70px;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -17,17 +19,17 @@ header,
 footer,
 #footer {
     padding: 2em 0;
-    color: @gray-light;
+    color: $gray-light;
 }
 
 .official-color {
-    color: @redooorRed;
+    color: $redooor-red;
 }
 
 .redooor-nav-logo {
-    color: @gray-dark;
+    color: $gray-dark;
     &:hover {
-        color: @gray-dark;
+        color: $gray-dark;
         text-decoration: none;
     }
     img {

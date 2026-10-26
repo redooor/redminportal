@@ -21,7 +21,7 @@ If you have an idea for a new feature you would like to see added to RedminPorta
 * Describe the problem clearly in the Pull Request description
 * If you are submitting a bug-fix, or an enhancement that is not a breaking change, submit your pull request to the branch corresponding to the latest stable release of the project, such as the 0.1 branch.
 * If you are submitting a breaking change or an entirely new component, submit your pull request to the master branch.
-* Do not edit compiled asset files such as redooor.css directly. Instead, please edit the LESS files inside the src/less/ directory and then use a compiler. Such submission should include both the less file and the css file.
+* Do not edit compiled asset files such as redooor.css directly. Instead, please edit the Sass files inside the src/resources/assets/scss/ directory and then run `npm run build`. Such submission should include both the Sass and the compiled CSS files.
 * For any change that you make, please try to add a test case(s) in the tests/unit or tests/integration directory. This helps us understand the issue and make sure that it will stay fixed forever.
 
 # PSR Coding standards

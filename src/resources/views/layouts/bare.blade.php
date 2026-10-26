@@ -34,7 +34,7 @@
         <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery/jquery.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/moment/moment.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery-ui/jquery-ui.min.js') }}"></script>
-        <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/datetimepicker/bootstrap-datetimepicker.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmaterials.min.js') }}"></script>
 
