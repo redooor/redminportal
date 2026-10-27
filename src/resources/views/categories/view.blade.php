@@ -1,7 +1,7 @@
 @extends('redminportal::layouts.master')
 
 @section('navbar-breadcrumb')
-    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::menus.categories') }}</span></li>
+    <li class="nav-item"><span class="nav-link active">{{ Lang::get('redminportal::menus.categories') }}</span></li>
 @stop
 
 @section('content')
@@ -9,8 +9,8 @@
     @include('redminportal::partials.errors')
     
     <div class="row">
-        <div class="col-md-12">
-            <div class="nav-controls text-right">
+        <div class="col-lg-12">
+            <div class="nav-controls text-end">
                 <a href="{{ url('admin/categories/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
             </div>
         </div>
@@ -18,9 +18,9 @@
 
     @if (count($categories) > 0)
         <div class="row">
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-body">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
                         <ul class="redmin-hierarchy no-max-height">
                         @foreach ($categories as $item)
                             <li>{!! $item->printCategory(true) !!}</li>
@@ -29,11 +29,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="rdpt-preloader"><img src="{{ URL::to('vendor/redooor/redminportal/img/Preloader_2.gif') }}" class="img-circle"/></div>
+            <div class="col-lg-8">
+                <div class="rdpt-preloader"><img src="{{ URL::to('vendor/redooor/redminportal/img/Preloader_2.gif') }}" class="rounded-circle"/></div>
                 <div id="category-detail">
                     <div class="alert alert-info">
-                        <span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::messages.select_category_to_view_detail') }}
+                        <i class="fa-solid fa-chevron-left"></i> {{ Lang::get('redminportal::messages.select_category_to_view_detail') }}
                     </div>
                 </div>
             </div>

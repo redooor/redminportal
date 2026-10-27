@@ -9,7 +9,7 @@
     ])
     --------------------------------
 --}}
-<div class="form-group redmin-email-typeahead">
+<div class="mb-3 redmin-email-typeahead">
     <label for="email">{{ Lang::get('redminportal::forms.email') }}</label>
     <input class="form-control typeahead" name="email" id="email"
         @if (isset($required) and $required)

@@ -11,42 +11,34 @@
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/redmaterials.min.css') }}">
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/redminportal.min.css') }}">
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/datetimepicker/bootstrap-datetimepicker.min.css') }}">
-        <!--[if lt IE 9]>
-        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
         <link rel="shortcut icon" type="image/png" href="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}"/>
         @section('head')
         @show
     </head>
     <body>
         <header id="header">
-            <div class="navbar navbar-default navbar-fixed-top">
+            <nav class="navbar navbar-expand-md navbar-light bg-body fixed-top">
                 <div class="container-fluid">
-                    <div class="navbar-header">
-                        @if (Auth::guard('redminguard')->check())
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="glyphicon glyphicon-user"></span>
-                        </button>
-                        @endif
-                        <a href="{{ URL::to('admin') }}" class="navbar-brand">
-                            <img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal" class="redooor-nav-logo"> RedminPortal
-                        </a>
-                    </div>
-                    <div class="navbar-collapse collapse">
-                        @if (Auth::guard('redminguard')->check())
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
+                    <a href="{{ URL::to('admin') }}" class="navbar-brand">
+                        <img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal" class="redooor-nav-logo"> RedminPortal
+                    </a>
+                    @if (Auth::guard('redminguard')->check())
+                    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-user" aria-controls="navbar-user" aria-expanded="false" aria-label="Toggle menu">
+                        <i class="fa-solid fa-user"></i>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbar-user">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" href="{{ URL::to('logout') }}" title="{{ Lang::get('redminportal::menus.logout') }}"><i class="fa-solid fa-right-from-bracket"></i> {{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>
-                        @endif
-                    </div><!--/.nav-collapse -->
-
+                    </div>
+                    @endif
                 </div>
-            </div>
+            </nav>
         </header>
 
         <div id="main">
             <div class="container-fluid">
-                <div class="col-sm-12 main">
+                <div class="col-md-12 main">
                     @yield('content')
                 </div>
             </div>

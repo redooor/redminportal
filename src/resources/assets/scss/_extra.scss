@@ -2,8 +2,30 @@
 
 /* Overwrite Bootstrap style */
 body { padding-top: 70px; } /* Shift down to make space for navbar */
-body.modal-open, .modal-open .navbar-fixed-top{ margin-right:0px;} /* Fix strange right margin when opening modal dialog */
 .navbar-brand>img { display: inline-block; }
+
+/* Bootstrap 5 underlines links by default; the admin UI never did */
+a {
+    text-decoration: none;
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+}
+.btn,
+.nav-link,
+.dropdown-item,
+.page-link,
+.navbar-brand,
+.list-group-item {
+    text-decoration: none !important;
+}
+
+/* Table headers: regular weight like the previous admin theme */
+.table > thead > tr > th {
+    font-weight: normal;
+    color: #757575;
+}
 
 /* Redooor style */
 body {
@@ -56,8 +78,8 @@ footer,
     margin-top: 0;
 }
 
-/* Add size to media-object */
-.media .media-object.media-thumbnail {
+/* Thumbnail beside a list item */
+.media-thumbnail {
     width:100px;
     height:100px;
 }
@@ -195,6 +217,9 @@ i {
 
 /* tables */
 .table td.table-actions {
+    .dropdown-toggle::after {
+        display: none;
+    }
     padding: 2px;
     .btn-group {
         .btn {

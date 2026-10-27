@@ -1,22 +1,4 @@
 //-------------------------
-// Convert panel to card
-//-------------------------
-.panel.panel-card {
-    .panel-heading {
-        min-height: 80px;
-        position: relative;
-        margin-bottom: 27px;
-        .panel-title {
-            font-size: 24px;
-        }
-        .btn-action {
-            position: absolute;
-            bottom: -27px;
-            right: 1.5em;
-        }
-    }
-}
-//-------------------------
 // Buttons
 //-------------------------
 .btn.disabled.btn-text {
@@ -24,25 +6,47 @@
     color: #333;
 }
 //-------------------------
-// Panels
+// Cards (admin look: grey header, raised card)
 //-------------------------
-.panel .panel-progress {
+.card {
+    border: 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+}
+.card > .card-header {
+    background-color: #9e9e9e;
+    color: #fff;
+    border-bottom: 0;
+    .card-title {
+        font-size: 1rem;
+        color: inherit;
+    }
+}
+.card > .card-footer {
+    background-color: transparent;
+    border-top: 0;
+}
+/* Field labels above underlined inputs */
+.card-body label:not(.form-check-label) {
+    font-size: 13px;
+    color: #757575;
+}
+.card .card-progress {
     margin-top: -1px;
     height: 6px;
 }
-.panel .panel-progress .progress-bar:last-child {
+.card .card-progress .progress-bar:last-child {
     border-radius: 0;
 }
-/* Fixed padding and margin issue with Panels */
-.panel .progress, .panel .table,
-.panel .list-group, .panel .panel-collapse .list-group {
+/* Tables, progress bars and flush lists sit flush against the card edges */
+.card .progress, .card .table,
+.card .list-group {
     margin-bottom: 0;
 }
-.panel .list-group .list-group-item, .panel .panel-collapse .list-group .list-group-item {
+.card .list-group .list-group-item {
     border-width: 1px 0;
     border-radius: 0;
 }
-.panel .list-group .list-group-item:first-child {
+.card .list-group .list-group-item:first-child {
     border-top: 0;
 }
 //-------------------------

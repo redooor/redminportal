@@ -1,8 +1,8 @@
 @extends('redminportal::layouts.master')
 
 @section('navbar-breadcrumb')
-    <li><a href="{{ URL::to('admin/products') }}">{{ Lang::get('redminportal::menus.products') }}</a></li>
-    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::forms.edit') }}</span></li>
+    <li class="nav-item"><a class="nav-link" href="{{ URL::to('admin/products') }}">{{ Lang::get('redminportal::menus.products') }}</a></li>
+    <li class="nav-item"><span class="nav-link active">{{ Lang::get('redminportal::forms.edit') }}</span></li>
 @stop
 
 @section('content')
@@ -13,26 +13,26 @@
         {!! Form::hidden('id', $product->id) !!}
 
     	<div class='row'>
-            <div class="col-md-3 col-md-push-9">
-                <div class="well">
+            <div class="col-lg-3 order-lg-last">
+                <div class="card card-body bg-body-tertiary">
                     <div class='form-actions'>
                         {!! HTML::link('admin/products', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary btn-sm pull-right')) !!}
+                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary btn-sm float-end')) !!}
                     </div>
                 </div>
-                <div class='well well-small'>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label for="featured-checker">
-                                {!! Form::checkbox('featured', $product->featured, $product->featured, array('id' => 'featured-checker')) !!} {{ Lang::get('redminportal::forms.featured') }}
+                <div class='card card-body bg-body-tertiary p-2'>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <label class="form-check-label" for="featured-checker">
+                                {!! Form::checkbox('featured', $product->featured, $product->featured, array('class' => 'form-check-input', 'id' => 'featured-checker')) !!} {{ Lang::get('redminportal::forms.featured') }}
                             </label>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label for="active-checker">
-                                {!! Form::checkbox('active', $product->active, $product->active, array('id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <label class="form-check-label" for="active-checker">
+                                {!! Form::checkbox('active', $product->active, $product->active, array('class' => 'form-check-input', 'id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
                             </label>
                         </div>
                     </div>
@@ -48,45 +48,45 @@
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                       <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
                       <div>
-                        <span class="btn btn-default btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span><input name="image" type="file"></span>
+                        <span class="btn btn-secondary btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span><input name="image" type="file"></span>
                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
                       </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-9 col-md-pull-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.edit_product') }}</h4>
+            <div class="col-lg-9 order-lg-first">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">{{ Lang::get('redminportal::forms.edit_product') }}</h4>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <ul class="nav nav-tabs" id="lang-selector">
                            @foreach(\Config::get('redminportal::translation') as $translation)
-                           <li><a href="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
+                           <li class="nav-item"><a class="nav-link @if ($loop->first)active @endif" href="#lang-{{ $translation['lang'] }}" data-bs-toggle="tab" data-bs-target="#lang-{{ $translation['lang'] }}">{{ $translation['name'] }}</a></li>
                            @endforeach
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane active" id="lang-en">
-                                <div class="form-group">
+                            <div class="tab-pane fade show active" id="lang-en">
+                                <div class="mb-3">
                                     {!! Form::label('name', Lang::get('redminportal::forms.title')) !!}
                                     {!! Form::text('name', $product->name, array('class' => 'form-control')) !!}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {!! Form::label('short_description', Lang::get('redminportal::forms.summary')) !!}
                                     {!! Form::text('short_description', $product->short_description, array('class' => 'form-control')) !!}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="mb-3">
                                     {!! Form::label('long_description', Lang::get('redminportal::forms.description')) !!}
                                     {!! Form::textarea('long_description', $product->long_description, array('class' => 'form-control', 'style' => 'height:200px')) !!}
                                 </div>
                             </div>
                             @foreach(\Config::get('redminportal::translation') as $translation)
                                 @if($translation['lang'] != 'en')
-                                <div class="tab-pane" id="lang-{{ $translation['lang'] }}">
-                                    <div class="form-group">
+                                <div class="tab-pane fade" id="lang-{{ $translation['lang'] }}">
+                                    <div class="mb-3">
                                         {!! Form::label($translation['lang'] . '_name', Lang::get('redminportal::forms.title')) !!}
                                         @if ($translated)
                                         {!! Form::text($translation['lang'] . '_name', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->name : ''), array('class' => 'form-control')) !!}
@@ -95,7 +95,7 @@
                                         @endif
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         {!! Form::label($translation['lang'] . '_short_description', Lang::get('redminportal::forms.summary')) !!}
                                         @if ($translated)
                                         {!! Form::text($translation['lang'] . '_short_description', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->short_description : ''), array('class' => 'form-control')) !!}
@@ -104,7 +104,7 @@
                                         @endif
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         {!! Form::label($translation['lang'] . '_long_description', Lang::get('redminportal::forms.description')) !!}
                                         @if ($translated)
                                         {!! Form::textarea($translation['lang'] . '_long_description', (array_key_exists($translation['lang'], $translated) ? $translated[$translation['lang']]->long_description : ''), array('class' => 'form-control', 'style' => 'height:200px')) !!}
@@ -118,49 +118,49 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.product_properties') }}</h4>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">{{ Lang::get('redminportal::forms.product_properties') }}</h4>
                     </div>
-                    <div class="panel-body">
-                        <div class="form-group">
+                    <div class="card-body">
+                        <div class="mb-3">
                             {!! Form::label('sku', Lang::get('redminportal::forms.sku')) !!}
                             {!! Form::text('sku', $product->sku, array('class' => 'form-control')) !!}
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             {!! Form::label('price', Lang::get('redminportal::forms.price')) !!}
                             <div class="input-group">
-                                <span class="input-group-addon">$</span>
+                                <span class="input-group-text">$</span>
                                 {!! Form::text('price', $product->price, array('class' => 'form-control')) !!}
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             {!! Form::label('tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
                             {!! Form::text('tags', $tagString, array('class' => 'form-control')) !!}
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">
                             {{ Lang::get('redminportal::forms.product_shipping_properties') }}
                         </h4>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <!-- Weight information -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label>{{ Lang::get('redminportal::forms.weight') }}</label>
-                            <div class="form-inline">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                                 @include('redminportal::partials.form-input', [
                                     'label' => Lang::get('redminportal::forms.weight'),
-                                    'label_classes' => 'sr-only',
+                                    'label_classes' => 'visually-hidden',
                                     'input_name' => 'weight',
                                     'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
                                     'input_value' => $product->weight
                                 ])
                                 @include('redminportal::partials.form-select-option', [
                                     'label' => Lang::get('redminportal::forms.weight_unit'),
-                                    'label_classes' => 'sr-only',
+                                    'label_classes' => 'visually-hidden',
                                     'select_name' => 'weight_unit',
                                     'select_options' => $weight_units,
                                     'value_as_key' => true,
@@ -169,12 +169,12 @@
                             </div>
                         </div>
                         <!-- Volume information -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label>{{ Lang::get('redminportal::forms.volume') }}</label>
-                            <div class="form-inline">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                                 @include('redminportal::partials.form-input', [
                                     'label' => Lang::get('redminportal::forms.length'),
-                                    'label_classes' => 'sr-only',
+                                    'label_classes' => 'visually-hidden',
                                     'input_name' => 'length',
                                     'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
                                     'help_text' => Lang::get('redminportal::forms.length'),
@@ -182,7 +182,7 @@
                                 ])
                                 @include('redminportal::partials.form-input', [
                                     'label' => Lang::get('redminportal::forms.width'),
-                                    'label_classes' => 'sr-only',
+                                    'label_classes' => 'visually-hidden',
                                     'input_name' => 'width',
                                     'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
                                     'help_text' => Lang::get('redminportal::forms.width'),
@@ -190,7 +190,7 @@
                                 ])
                                 @include('redminportal::partials.form-input', [
                                     'label' => Lang::get('redminportal::forms.height'),
-                                    'label_classes' => 'sr-only',
+                                    'label_classes' => 'visually-hidden',
                                     'input_name' => 'height',
                                     'input_options' => ['type' => 'number', 'step' => '0.001', 'placeholder' => '0.00'],
                                     'help_text' => Lang::get('redminportal::forms.height'),
@@ -198,7 +198,7 @@
                                 ])
                                 @include('redminportal::partials.form-select-option', [
                                     'label' => Lang::get('redminportal::forms.volume_unit'),
-                                    'label_classes' => 'sr-only',
+                                    'label_classes' => 'visually-hidden',
                                     'select_name' => 'volume_unit',
                                     'select_options' => $volume_units,
                                     'value_as_key' => true,
@@ -209,42 +209,42 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.product_variations') }}</h4>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">{{ Lang::get('redminportal::forms.product_variations') }}</h4>
                     </div>
-                    <div class="panel-progress">
+                    <div class="card-progress">
                         <div class="progress">
-                            <div id="variant-loading-progress" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                <span class="sr-only">Loading</span>
+                            <div id="variant-loading-progress" class="progress-bar bg-info progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <span class="visually-hidden">Loading</span>
                             </div>
                         </div>
                     </div>
                     <div id="list-variants" data-url="{{ url('admin/products/list-variants/' . $product->id) }}"></div>
-                    <div class="panel-footer text-right">
+                    <div class="card-footer text-end">
                         <a id="add-product-variant" href="{{ url('admin/products/create-variant/' . $product->id) }}" class="btn btn-primary btn-sm">Add</a>
                     </div>
                 </div>
                 @if (count($product->images) > 0)
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class='row'>
                             @foreach ($product->images as $image)
-                            <div class='col-md-3'>
+                            <div class='col-lg-3'>
                                 {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
                                     <a href="{{ URL::to('admin/products/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
-                                        <span class="glyphicon glyphicon-remove"></span>
+                                        <i class="fa-solid fa-xmark"></i>
                                     </a>
                                     <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
-                                        <span class="glyphicon glyphicon-link"></span>
+                                        <i class="fa-solid fa-link"></i>
                                     </a>
                                     <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank">
-                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                        <i class="fa-solid fa-eye"></i>
                                     </a>
                                 </div>
                             </div>
@@ -272,7 +272,7 @@
         'modal_id' => 'variant-remove-modal',
         'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
         'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
-        'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="variant-remove-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
+        'modal_footer' => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="variant-remove-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
     ])
     <!-- End of modal window -->
 @stop
@@ -283,11 +283,6 @@
     <script>
         !function ($) {
             $(function(){
-                $('#lang-selector li').first().addClass('active');
-                $('#lang-selector a').click(function (e) {
-                    e.preventDefault();
-                    $(this).tab('show');
-                });
             })
         }(window.jQuery);
     </script>

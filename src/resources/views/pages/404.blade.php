@@ -2,7 +2,7 @@
 
 @section('content')
     <div class='row'>
-        <div class='col-md-12'>
+        <div class='col-lg-12'>
             <h1>Oops, 404!</h1>
             <h2>You seem to be lost!</h2>
             <p>

@@ -17,7 +17,7 @@
 
     @if ($model->revisions()->count() > 0)
     <div class="table-responsive">
-        <table class="table table-condensed table-striped">
+        <table class="table table-sm table-striped">
             <thead>
                 <tr>
                     <th>{{ trans('redminportal::forms.revision_edited_by') }}</th>

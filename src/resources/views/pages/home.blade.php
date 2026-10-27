@@ -2,9 +2,9 @@
 
 @section('content')
     <div class='row'>
-        <div class='col-md-8'>
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class='col-lg-8'>
+            <div class="card">
+                <div class="card-body">
                     <h1>RedminPortal <small>by Redooor</small></h1>
                     <h2><u>Change log</u></h2>
                     <p>The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.</p>
@@ -237,9 +237,9 @@
                 </div>
             </div>
         </div>
-        <div class='col-md-4'>
-            <div class="well well-sm shadow-depth-1">
-                <img src="{{ URL::to('vendor/redooor/redminportal/img/redminportal_logo.png') }}" title="ReminPortal" class="img-responsive pull-right">
+        <div class='col-lg-4'>
+            <div class="card card-body bg-body-tertiary p-2 shadow-depth-1">
+                <img src="{{ URL::to('vendor/redooor/redminportal/img/redminportal_logo.png') }}" title="ReminPortal" class="img-fluid float-end">
                 <h3>Contribution</h3>
                 <p>Source code at <a href="https://github.com/redooor/redminportal">Github</a></p>
                 <h3>Maintenance</h3>

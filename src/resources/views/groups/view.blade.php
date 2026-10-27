@@ -1,7 +1,7 @@
 @extends('redminportal::layouts.master')
 
 @section('navbar-breadcrumb')
-    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::menus.groups') }}</span></li>
+    <li class="nav-item"><span class="nav-link active">{{ Lang::get('redminportal::menus.groups') }}</span></li>
 @stop
 
 @section('content')
@@ -11,7 +11,7 @@
     @include('redminportal::partials.html-view-nav-controls', ['models' => $models, 'model_view' => 'groups'])
 
 	@if (count($models) > 0)
-		<table class='table table-striped table-bordered table-condensed'>
+		<table class='table table-striped table-sm'>
 			<thead>
 				<tr>
                     <th>
@@ -35,30 +35,30 @@
                         @if ($group->permissions)
                             @foreach ($group->permissions() as $key => $value)
                                 @if ($value == 1)
-                                    <span class="label label-success">{{ $key }}</span>
+                                    <span class="badge text-bg-success">{{ $key }}</span>
                                 @elseif ($value == -1)
-                                    <span class="label label-danger">{{ $key }}</span>
+                                    <span class="badge text-bg-danger">{{ $key }}</span>
                                 @else
-                                    <span class="label label-default">{{ $key }}</span>
+                                    <span class="badge text-bg-secondary">{{ $key }}</span>
                                 @endif
                             @endforeach
                         @endif
                     </td>
                     <td>{{ date("d/m/y h:i A", strtotime($group->created_at)) }}</td>
                     <td>{{ date("d/m/y h:i A", strtotime($group->updated_at)) }}</td>
-                    <td class="table-actions text-right">
+                    <td class="table-actions text-end">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-								<span class="glyphicon glyphicon-option-horizontal"></span>
+                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown">
+								<i class="fa-solid fa-ellipsis"></i>
 							</button>
-                            <ul class="dropdown-menu pull-right" role="menu">
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="{{ URL::to('admin/groups/edit/' . $group->id) }}">
-                                        <i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
+                                    <a class="dropdown-item" href="{{ URL::to('admin/groups/edit/' . $group->id) }}">
+                                        <i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                 </li>
                                 <li>
-                                    <a href="{{ URL::to('admin/groups/delete/' . $group->id) }}" class="btn-confirm">
-                                        <i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
+                                    <a class="dropdown-item btn-confirm" href="{{ URL::to('admin/groups/delete/' . $group->id) }}">
+                                        <i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -68,12 +68,12 @@
 			</tbody>
 	    </table>
         <div class="text-center">
-		{!! $models->render() !!}
+		{!! $models->render('pagination::bootstrap-5') !!}
         </div>
 	@else
         @if ($models->lastPage())
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
-        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-secondary"><i class="fa-solid fa-chevron-left"></i> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
         @else
         <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_group_found') }}</div>
         @endif

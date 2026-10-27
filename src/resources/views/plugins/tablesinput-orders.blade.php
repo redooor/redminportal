@@ -28,9 +28,9 @@
                     $product_cells = '<td>' + $select_id + '</td>' +
                         '<td>' + $select_name + '</td>' +
                         '<td>' + $select_quantity + '</td>' +
-                        '<td class="text-right">' +
+                        '<td class="text-end">' +
                         '<a data-id="' + $select_row_id +
-                        '" class="btn btn-flat btn-danger btn-xs btn-remove-order">x</a>' +
+                        '" class="btn btn-flat btn-danger btn-sm btn-remove-order">x</a>' +
                         $hidden_input
                         '</td>';
                     
@@ -42,8 +42,8 @@
                         $('#' + $select_row_id).empty().html($product_cells);
                     }
                     // Flash the newly added row
-                    $('#' + $select_row_id).addClass('warning', 500, 'easeInOutQuint', function() {
-                        $('#' + $select_row_id).delay(2000).removeClass('warning', 500, 'easeInOutQuint');
+                    $('#' + $select_row_id).addClass('table-warning', 500, 'easeInOutQuint', function() {
+                        $('#' + $select_row_id).delay(2000).removeClass('table-warning', 500, 'easeInOutQuint');
                     });
                 });
             });

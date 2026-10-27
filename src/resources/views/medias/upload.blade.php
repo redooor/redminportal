@@ -1,9 +1,9 @@
 @extends('redminportal::layouts.master')
 
 @section('navbar-breadcrumb')
-    <li><a href="{{ URL::to('admin/medias') }}">{{ Lang::get('redminportal::menus.medias') }}</a></li>
-    <li><a href="{{ URL::to('admin/medias/edit/' . $model->id) }}">{{ Lang::get('redminportal::forms.edit') }}</a></li>
-    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::forms.upload') }}</span></li>
+    <li class="nav-item"><a class="nav-link" href="{{ URL::to('admin/medias') }}">{{ Lang::get('redminportal::menus.medias') }}</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ URL::to('admin/medias/edit/' . $model->id) }}">{{ Lang::get('redminportal::forms.edit') }}</a></li>
+    <li class="nav-item"><span class="nav-link active">{{ Lang::get('redminportal::forms.upload') }}</span></li>
 @stop
 
 @section('content')
@@ -11,26 +11,26 @@
     <div id="console" class="alert alert-danger" style="display:none;"></div>
     
     <div class='row'>
-        <div class="col-md-3 col-md-push-9">
-            <div class="well">
+        <div class="col-lg-3 order-lg-last">
+            <div class="card card-body bg-body-tertiary">
                 <div class='form-actions'>
                     {!! HTML::link('admin/medias', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                    <a id="start-upload" class="btn btn-primary btn-sm pull-right" href="javascript:;" data-src="{{ URL::to('admin/medias/upload') . '/' . $model->id }}">{{ Lang::get('redminportal::buttons.upload') }}</a>
+                    <a id="start-upload" class="btn btn-primary btn-sm float-end" href="javascript:;" data-src="{{ URL::to('admin/medias/upload') . '/' . $model->id }}">{{ Lang::get('redminportal::buttons.upload') }}</a>
                 </div>
             </div>
             <input type="hidden" id="_token" name="_token" value="{{ \Crypt::encrypt(csrf_token()) }}">
         </div>
-        <div class="col-md-9 col-md-pull-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">{{ $model->name }}</h4>
+        <div class="col-lg-9 order-lg-first">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">{{ $model->name }}</h4>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <ul id="filelist"></ul>
                     <br>
                     <a id="browse" class="btn btn-primary btn-sm" href="javascript:;">{{ Lang::get('redminportal::forms.browse_file') }}</a>
                 </div>
-                <div class="panel-footer">
+                <div class="card-footer">
                     {{ Lang::get('redminportal::forms.existing_file') }}: <strong>{{ $model->path }}</strong> [{{ $model->mimetype }}]
                 </div>
             </div>
@@ -74,7 +74,7 @@
             uploader.bind('UploadProgress', function(up, file) {
                 var html = '';
                 if (file.percent == 100) {
-                    html = '<span>' + file.percent + '%</span> <span class="label label-success">Upload Completed</span>';
+                    html = '<span>' + file.percent + '%</span> <span class="badge text-bg-success">Upload Completed</span>';
                 } else {
                     html = '<span>' + file.percent + "%</span>";
                 }

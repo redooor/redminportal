@@ -17,17 +17,17 @@
         @if (isset($modal_progress))
         <div class="modal-progress">
             <div class="progress">
-                <div id="{{ $modal_progress }}" class="progress-bar progress-bar-info progress-bar-striped" 
+                <div id="{{ $modal_progress }}" class="progress-bar bg-info progress-bar-striped" 
                      role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                    <span class="sr-only">Loading</span>
+                    <span class="visually-hidden">Loading</span>
                 </div>
             </div>
         </div>
         @endif
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">{{ $modal_title }}</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ Lang::get('redminportal::buttons.close') }}"></button>
             </div>
             <div class="modal-body">
                 {!! $modal_body !!}
