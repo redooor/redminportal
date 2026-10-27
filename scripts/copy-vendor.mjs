@@ -97,6 +97,9 @@ const licenseFiles = [
     ['redmaterials/LICENSE.md', 'redmaterials.txt'],
 ];
 
+// Locally maintained sources keep their notice next to the code.
+await copyFileTo(path.resolve(modules, '..', 'src/resources/assets/js/bootstrap-tagsinput.LICENSE.txt'), path.join(publicDir, 'licenses', 'bootstrap-tagsinput.txt'));
+
 for (const [source, destination] of licenseFiles) {
     await copyFileTo(path.join(modules, source), path.join(publicDir, 'licenses', destination));
 }

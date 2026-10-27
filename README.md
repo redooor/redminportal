@@ -426,10 +426,12 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # External Libraries Used
 
-* [Bootstrap v3](http://getbootstrap.com)
-* [Font Awesome 4.4.0 by @davegandy](http://fontawesome.io)
-* jQuery v2
-* jQuery UI v1
+* [Bootstrap 5.3](https://getbootstrap.com) with the [Redmaterials](https://github.com/redooor/redmaterials) theme
+* [Font Awesome Free 7](https://fontawesome.com)
+* jQuery 3.7 and jQuery UI 1.14
+* [Jodit 4](https://xdsoft.net/jodit/) (rich text editor)
+* [Tempus Dominus 6](https://getdatepicker.com/) and Popper (coupon date picker)
+* typeahead.js and bootstrap-tagsinput (tags)
 * [illuminate/html](https://github.com/illuminate/html)
 * [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel)
 * [Imagine](https://github.com/avalanche123/Imagine)

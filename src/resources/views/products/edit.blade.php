@@ -318,12 +318,16 @@
                     $('#iframe-variant-form').css('height', Math.round(($window_height*0.7-80), 0));
                     // Load the source
                     $create_url = $(this).attr('href');
-                    $('#iframe-variant-form').removeAttr('src').empty().attr('src', $create_url).load(function() {
+                    // jQuery 3 removed the .load(handler) shorthand: bind the event before setting src
+                    $('#iframe-variant-form').removeAttr('src').empty().data('loaded', false).off('load').on('load', function() {
+                        $(this).data('loaded', true);
                         $('#modal-progress').parent().fadeOut();
-                    });
+                    }).attr('src', $create_url);
                     $('#product-variant-modal').modal('show');
                 });
                 $('#product-variant-modal').on('shown.bs.modal', function (e) {
+                    // The iframe may already have loaded while the modal was fading in
+                    if ($('#iframe-variant-form').data('loaded')) { return; }
                     $('#modal-progress').css('width', '0%').parent().fadeIn(function() {
                         for(ipercent = 0; ipercent<=50; ipercent++) {
                             $('#modal-progress').delay(4000).css('width', ipercent*2 + '%');

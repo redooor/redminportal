@@ -1,4 +1,5 @@
-/* https://github.com/bootstrap-tagsinput/bootstrap-tagsinput */
+/* https://github.com/bootstrap-tagsinput/bootstrap-tagsinput
+ * Copyright (c) 2013 Tim Schlechter, MIT licence (see bootstrap-tagsinput.LICENSE.txt). Locally modified. */
 (function ($) {
   "use strict";
 

@@ -1,5 +1,6 @@
 # Change log
 
+* [Version 2.0.0](#version-200)
 * [Version 0.58.0](#version-0580)
 * [Version 0.4.4, 0.3.4 and 0.2.4](#version-044-034-and-024)
 * [Version 0.3.3.1 and 0.2.3.1](#version-0331-and-0231)
@@ -23,6 +24,23 @@
 The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.
 
 Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.
+
+## Version 2.0.0
+
+Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
+
+**Admin UI**
+1. Bootstrap 3.3 replaced by Bootstrap 5.3 with the Redmaterials 0.2 theme. All admin views were converted (cards, badges, breakpoints, dropdowns, tabs, modals).
+2. Glyphicons and Font Awesome 4 replaced by Font Awesome Free 7.
+3. TinyMCE 4.3.8 (end of life) replaced by Jodit 4, with a button to insert the record's uploaded images. No CDN requests.
+4. Jasny fileupload replaced by a first-party file input; the posted `image` file field is unchanged.
+5. Coupon date picker (eonasdan + moment) replaced by Tempus Dominus 6; dates are still posted as `d/m/Y h:i A`.
+6. Lists render the paginator with the Bootstrap 5 pagination view.
+7. jQuery 3.7, jQuery UI 1.14, Moment removed.
+
+**Build tooling (contributors)**
+1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+).
+2. Third-party licence notices ship in `src/public/licenses/`.
 
 ## Version 0.58.0
 
