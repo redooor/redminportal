@@ -1,0 +1,1 @@
+{"version":3,"sourceRoot":"","sources":["../../resources/assets/scss/redmin-editor.scss"],"names":[],"mappings":"AAAA;AACA;EACI","file":"redmin-editor.css","sourcesContent":["/* Content CSS for the Jodit editor iframe (see config/tinymce.php) */\nbody {\n    padding: 1em;\n}\n"]}

@@ -268,6 +268,32 @@ i {
     font-size: 2em;
   }
 }
+/* Insert-uploaded-image popup of the rich text editor */
+.redmin-editor-media {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 320px;
+  padding: 4px;
+}
+
+.redmin-editor-media-item {
+  padding: 2px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+.redmin-editor-media-item:hover, .redmin-editor-media-item:focus {
+  border-color: #2196F3;
+}
+.redmin-editor-media-item img {
+  display: block;
+  width: 72px;
+  height: 54px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 /* Breadcrumb navbar (page trail in the top bar) */
 .navbar-breadcrumb .nav-item + .nav-item:before {
   font-family: "Font Awesome 7 Free";
@@ -514,17 +540,37 @@ ul.redmin-hierarchy.no-max-height {
   border-top-right-radius: 2px;
 }
 
-/* Customised CSS for Tinymce */
-.mce-content-body {
-  padding: 1em;
+.redmin-fileinput .redmin-fileinput-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 150px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
 }
-
-.mce-textbox:focus {
-  box-shadow: initial;
+.redmin-fileinput .redmin-fileinput-preview img {
+  max-width: 100%;
+  max-height: 100%;
 }
-
-.mce-btn.mce-primary .mce-txt {
-  color: #ffffff;
+.redmin-fileinput label.btn {
+  margin-bottom: 0;
+}
+.redmin-fileinput label.btn:focus-within {
+  outline: 2px solid #2196F3;
+  outline-offset: 2px;
+}
+.redmin-fileinput .redmin-fileinput-exists {
+  display: none;
+}
+.redmin-fileinput.is-set .redmin-fileinput-new {
+  display: none;
+}
+.redmin-fileinput.is-set .redmin-fileinput-exists {
+  display: inline;
+}
+.redmin-fileinput.is-set button.redmin-fileinput-exists {
+  display: inline-block;
 }
 
 .bootstrap-tagsinput {
