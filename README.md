@@ -433,7 +433,6 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 * [illuminate/html](https://github.com/illuminate/html)
 * [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel)
 * [Imagine](https://github.com/avalanche123/Imagine)
-* [Jasny Bootstrap](http://jasny.github.io/bootstrap/)
 * [Plupload](http://www.plupload.com/)
 * [getID3](http://www.getid3.org/)
 

@@ -30,12 +30,15 @@
                     </div>
                 </div>
                 <div>
-                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                      <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
-                      <div>
-                        <span class="btn btn-secondary btn-file"><span class="fileupload-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="fileupload-exists">{{ Lang::get('redminportal::forms.change_image') }}</span><input name="image" type="file"></span>
-                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">{{ Lang::get('redminportal::forms.remove_image') }}</a>
-                      </div>
+                    <div class="redmin-fileinput" data-redmin-fileinput>
+                        <div class="redmin-fileinput-preview img-thumbnail"></div>
+                        <div>
+                            <label class="btn btn-secondary">
+                                <span class="redmin-fileinput-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="redmin-fileinput-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>
+                                <input name="image" type="file" class="visually-hidden">
+                            </label>
+                            <button type="button" class="btn btn-danger redmin-fileinput-exists" data-redmin-fileinput-clear>{{ Lang::get('redminportal::forms.remove_image') }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -61,6 +64,6 @@
 @stop
 
 @section('footer')
-    <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap-fileupload.js') }}"></script>
-    @include('redminportal::plugins/tinymce')
+    <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-fileinput.min.js') }}"></script>
+    @include('redminportal::plugins/editor')
 @stop

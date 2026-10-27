@@ -285,3 +285,28 @@ i {
         font-size: 2em;
     }
 }
+
+/* Insert-uploaded-image popup of the rich text editor */
+.redmin-editor-media {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 320px;
+    padding: 4px;
+}
+.redmin-editor-media-item {
+    padding: 2px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+        border-color: #2196F3;
+    }
+    img {
+        display: block;
+        width: 72px;
+        height: 54px;
+        object-fit: cover;
+    }
+}

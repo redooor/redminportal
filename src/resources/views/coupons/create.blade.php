@@ -1,5 +1,9 @@
 @extends('redminportal::layouts.master')
 
+@section('head')
+    <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/tempus-dominus/tempus-dominus.min.css') }}">
+@stop
+
 @section('navbar-breadcrumb')
     <li class="nav-item"><a class="nav-link" href="{{ URL::to('admin/coupons') }}">{{ Lang::get('redminportal::menus.coupons') }}</a></li>
     <li class="nav-item"><span class="nav-link active">{{ Lang::get('redminportal::forms.create') }}</span></li>
@@ -50,18 +54,18 @@
                             <div class="row mb-3">
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.start_date') }}</label>
                                 <div class="col-lg-8">
-                                    <div class="input-group date datepicker" id='start-date'>
-                                        {!! Form::input('text', 'start_date', null, array('class' => 'form-control')) !!}
-                                        <span class="input-group-text"><i class="fa-solid fa-calendar"></i></span>
+                                    <div class="input-group" id="start-date" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                        {!! Form::input('text', 'start_date', null, array('class' => 'form-control', 'data-td-target' => '#start-date', 'autocomplete' => 'off')) !!}
+                                        <span class="input-group-text" data-td-target="#start-date" data-td-toggle="datetimepicker"><i class="fa-solid fa-calendar"></i></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.expiry_date') }}</label>
                                 <div class="col-lg-8">
-                                    <div class="input-group date datepicker" id='end-date'>
-                                        {!! Form::input('text', 'end_date', null, array('class' => 'form-control')) !!}
-                                        <span class="input-group-text"><i class="fa-solid fa-calendar"></i></span>
+                                    <div class="input-group" id="end-date" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                        {!! Form::input('text', 'end_date', null, array('class' => 'form-control', 'data-td-target' => '#end-date', 'autocomplete' => 'off')) !!}
+                                        <span class="input-group-text" data-td-target="#end-date" data-td-toggle="datetimepicker"><i class="fa-solid fa-calendar"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -189,14 +193,21 @@
 @stop
 
 @section('footer')
+    <script src="{{ URL::to('vendor/redooor/redminportal/js/popper/popper.min.js') }}"></script>
+    <script src="{{ URL::to('vendor/redooor/redminportal/js/tempus-dominus/tempus-dominus.min.js') }}"></script>
     <script>
-        !function ($) {
-            $(function(){
-                $( ".datepicker" ).datetimepicker({
-                    format: 'DD/MM/YYYY hh:mm A',
-                    showTodayButton: true
-                });
-            })
-        }(window.jQuery);
+        // Coupon dates are posted as d/m/Y h:i A (see CouponController).
+        document.querySelectorAll('#start-date, #end-date').forEach(function (el) {
+            new tempusDominus.TempusDominus(el, {
+                useCurrent: false,
+                // Fixed locale: the server parses d/m/Y h:i A, so AM/PM and digits must not follow the browser language.
+                localization: { locale: 'en-US', hourCycle: 'h12', format: 'dd/MM/yyyy hh:mm T' },
+                display: {
+                    theme: 'light',
+                    components: { seconds: false },
+                    buttons: { today: true }
+                }
+            });
+        });
     </script>
 @stop

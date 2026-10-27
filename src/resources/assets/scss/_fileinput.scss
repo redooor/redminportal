@@ -1,0 +1,37 @@
+// Redmin file input (replaces Jasny fileupload)
+.redmin-fileinput {
+    .redmin-fileinput-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 150px;
+        margin-bottom: 0.5rem;
+        overflow: hidden;
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+    label.btn {
+        margin-bottom: 0;
+        &:focus-within {
+            outline: 2px solid #2196F3;
+            outline-offset: 2px;
+        }
+    }
+    .redmin-fileinput-exists {
+        display: none;
+    }
+    &.is-set {
+        .redmin-fileinput-new {
+            display: none;
+        }
+        .redmin-fileinput-exists {
+            display: inline;
+        }
+        button.redmin-fileinput-exists {
+            display: inline-block;
+        }
+    }
+}
