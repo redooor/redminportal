@@ -8,11 +8,31 @@
 body {
   padding-top: 70px;
 } /* Shift down to make space for navbar */
-body.modal-open, .modal-open .navbar-fixed-top {
-  margin-right: 0px;
-} /* Fix strange right margin when opening modal dialog */
 .navbar-brand > img {
   display: inline-block;
+}
+
+/* Bootstrap 5 underlines links by default; the admin UI never did */
+a {
+  text-decoration: none;
+}
+a:hover, a:focus {
+  text-decoration: underline;
+}
+
+.btn,
+.nav-link,
+.dropdown-item,
+.page-link,
+.navbar-brand,
+.list-group-item {
+  text-decoration: none !important;
+}
+
+/* Table headers: regular weight like the previous admin theme */
+.table > thead > tr > th {
+  font-weight: normal;
+  color: #757575;
 }
 
 /* Redooor style */
@@ -66,8 +86,8 @@ footer,
   margin-top: 0;
 }
 
-/* Add size to media-object */
-.media .media-object.media-thumbnail {
+/* Thumbnail beside a list item */
+.media-thumbnail {
   width: 100px;
   height: 100px;
 }
@@ -184,6 +204,9 @@ i {
 }
 
 /* tables */
+.table td.table-actions .dropdown-toggle::after {
+  display: none;
+}
 .table td.table-actions {
   padding: 2px;
 }
@@ -245,57 +268,28 @@ i {
     font-size: 2em;
   }
 }
-/* Override Bootstrap navbar toggle */
-.navbar-toggle {
-  margin: 0px;
-  padding: 20.5px 1.5em;
-  font-size: 17px;
-  line-height: 23px;
-  height: 64px;
-  border: 0px;
-  border-radius: 0px;
+/* Breadcrumb navbar (page trail in the top bar) */
+.navbar-breadcrumb .nav-item + .nav-item:before {
+  font-family: "Font Awesome 7 Free";
+  font-weight: 900;
+  content: "\f054";
+  font-size: 0.7em;
+  color: #ccc;
+  padding: 0 2px;
+  line-height: 1;
 }
-
-/* For mobile screen navbar */
-.navbar-nav.navbar-xs {
-  overflow-y: scroll;
-  margin-bottom: 50px;
+.navbar-breadcrumb .nav-item {
+  display: flex;
+  align-items: center;
 }
-
-.navbar-nav.navbar-xs li span {
-  padding: 10px 1.5em;
-  line-height: 23px;
-  position: relative;
-  display: block;
-  font-weight: 200;
-  color: #FF5722;
+.navbar-breadcrumb .nav-link {
+  color: #428bca;
 }
-
-.navbar-nav.navbar-xs ul {
-  margin-left: -15px;
-  margin-right: -15px;
+.navbar-breadcrumb .nav-link:hover, .navbar-breadcrumb .nav-link:focus {
+  color: #428bca;
 }
-.navbar-nav.navbar-xs ul li {
-  list-style: none;
-  display: block;
-}
-.navbar-nav.navbar-xs ul li a {
-  color: #777;
-  padding: 10px 1.5em;
-  line-height: 23px;
-  position: relative;
-  display: block;
-  text-decoration: none;
-}
-.navbar-nav.navbar-xs ul li a:hover, .navbar-nav.navbar-xs ul li a:focus {
-  color: #333;
-  background-color: transparent;
-}
-.navbar-nav.navbar-xs ul li span {
-  padding: 10px 1.5em;
-  line-height: 23px;
-  position: relative;
-  display: block;
+.navbar-breadcrumb .nav-link.active {
+  color: #898989;
 }
 
 /*
@@ -369,6 +363,12 @@ i {
 }
 
 /* Sidebar navigation */
+.nav-sidebar {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  margin: 0;
+  list-style: none;
+}
 .nav-sidebar li.nav-sub-header:before {
   content: "";
   display: block;
@@ -413,20 +413,6 @@ i {
   background-color: #428bca;
 }
 
-/* Override Redmaterials navbar */
-.navbar-nav.navbar-breadcrumb > li > a,
-.navbar-nav.navbar-breadcrumb > li > a:hover,
-.navbar-nav.navbar-breadcrumb > li > a:focus {
-  color: #428bca;
-}
-
-.navbar-nav.navbar-breadcrumb > li.active > a,
-.navbar-nav.navbar-breadcrumb > li.active > a:hover,
-.navbar-nav.navbar-breadcrumb > li.active > a:focus,
-.navbar-nav.navbar-breadcrumb > li.active > .navbar-text {
-  color: #898989;
-}
-
 ul.redmin-hierarchy {
   padding: 0;
   margin: 0;
@@ -454,46 +440,58 @@ ul.redmin-hierarchy.no-max-height {
   max-height: none;
 }
 
-.panel.panel-card .panel-heading {
-  min-height: 80px;
-  position: relative;
-  margin-bottom: 27px;
-}
-.panel.panel-card .panel-heading .panel-title {
-  font-size: 24px;
-}
-.panel.panel-card .panel-heading .btn-action {
-  position: absolute;
-  bottom: -27px;
-  right: 1.5em;
-}
-
 .btn.disabled.btn-text {
   background-color: #eee;
   color: #333;
 }
 
-.panel .panel-progress {
+.card {
+  border: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.card > .card-header {
+  background-color: #9e9e9e;
+  color: #fff;
+  border-bottom: 0;
+}
+.card > .card-header .card-title {
+  font-size: 1rem;
+  color: inherit;
+}
+
+.card > .card-footer {
+  background-color: transparent;
+  border-top: 0;
+}
+
+/* Field labels above underlined inputs */
+.card-body label:not(.form-check-label) {
+  font-size: 13px;
+  color: #757575;
+}
+
+.card .card-progress {
   margin-top: -1px;
   height: 6px;
 }
 
-.panel .panel-progress .progress-bar:last-child {
+.card .card-progress .progress-bar:last-child {
   border-radius: 0;
 }
 
-/* Fixed padding and margin issue with Panels */
-.panel .progress, .panel .table,
-.panel .list-group, .panel .panel-collapse .list-group {
+/* Tables, progress bars and flush lists sit flush against the card edges */
+.card .progress, .card .table,
+.card .list-group {
   margin-bottom: 0;
 }
 
-.panel .list-group .list-group-item, .panel .panel-collapse .list-group .list-group-item {
+.card .list-group .list-group-item {
   border-width: 1px 0;
   border-radius: 0;
 }
 
-.panel .list-group .list-group-item:first-child {
+.card .list-group .list-group-item:first-child {
   border-top: 0;
 }
 
