@@ -295,15 +295,6 @@ i {
 }
 
 /* Breadcrumb navbar (page trail in the top bar) */
-.navbar-breadcrumb .nav-item + .nav-item:before {
-  font-family: "Font Awesome 7 Free";
-  font-weight: 900;
-  content: "\f054";
-  font-size: 0.7em;
-  color: #ccc;
-  padding: 0 2px;
-  line-height: 1;
-}
 .navbar-breadcrumb .nav-item {
   display: flex;
   align-items: center;

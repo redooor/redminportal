@@ -43,7 +43,7 @@
     "plupload": "2.3.9",
     "postcss": "8.5.31",
     "postcss-cli": "12.0.0",
-    "redmaterials": "git+https://github.com/redooor/redmaterials.git#a9efff630d2e78d604268d43467cab4151e7ea8e",
+    "redmaterials": "git+https://github.com/redooor/redmaterials.git#9c6f3d2afd6938dec31768a34ab5fc05d5d06f8f",
     "sass": "1.106.1",
     "typeahead.js": "0.11.1"
   }
