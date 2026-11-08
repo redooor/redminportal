@@ -199,6 +199,33 @@ class HomeControllerTest extends RedminBrowserTestCase
         $this->assertStringNotContainsString('id="dashboard-data"', $html);
     }
 
+    /**
+     * created_at and updated_at are nullable columns: a row without a timestamp must not break the dashboard.
+     */
+    public function testDashboardSurvivesNullTimestamps()
+    {
+        \Illuminate\Support\Facades\DB::table('orders')->insert(array(
+            'user_id' => 1,
+            'paid' => 5,
+            'payment_status' => 'Completed',
+            'created_at' => null,
+            'updated_at' => null,
+        ));
+        \Illuminate\Support\Facades\DB::table('pages')->insert(array(
+            'title' => 'Undated page',
+            'slug' => 'undated-page',
+            'content' => 'x',
+            'private' => 0,
+            'created_at' => null,
+            'updated_at' => null,
+        ));
+
+        $this->call('GET', 'admin/dashboard');
+
+        $this->assertResponseOk();
+        $this->assertStringContainsString('Undated page', $this->response->getContent());
+    }
+
     public function testDashboardOnEmptyDatabaseShowsEmptyStates()
     {
         $this->call('GET', '/admin/dashboard');

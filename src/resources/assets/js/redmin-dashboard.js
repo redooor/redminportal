@@ -283,6 +283,11 @@
         var orders = daily.orders || [];
         var revenue = daily.revenue || [];
 
+        if (!Array.isArray(daily.labels) || !Array.isArray(orders) || !Array.isArray(revenue)) {
+            orders = [];
+            revenue = [];
+        }
+
         if (!canvas || allZero(orders) && allZero(revenue)) {
             toggleEmptyState(canvas, true);
             return;
@@ -327,8 +332,15 @@
         };
         var animated = !prefersReducedMotion();
 
-        drawDaily(dailyCanvas, data, colours, animated);
-        drawStatus(statusCanvas, data, colours, animated);
+        // A bad payload for one chart must not stop the other from drawing.
+        [[dailyCanvas, drawDaily], [statusCanvas, drawStatus]].forEach(function (pair) {
+            try {
+                pair[1](pair[0], data, colours, animated);
+            } catch (e) {
+                destroyChart(pair[0] ? pair[0].id : '');
+                toggleEmptyState(pair[0], true);
+            }
+        });
     }
 
     function redraw() {

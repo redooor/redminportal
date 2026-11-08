@@ -138,7 +138,7 @@
                                     <a href="{{ url('admin/orders') }}" class="list-group-item list-group-item-action px-0">
                                         <div class="d-flex w-100 justify-content-between">
                                             <span>#{{ $order->id }}</span>
-                                            <small class="text-body-secondary">{{ $order->created_at->diffForHumans() }}</small>
+                                            <small class="text-body-secondary">{{ $order->created_at ? $order->created_at->diffForHumans() : '' }}</small>
                                         </div>
                                         <small>{{ $order->user ? $order->user->email : trans('redminportal::dashboard.unknown_user') }}</small>
                                         <div class="d-flex w-100 justify-content-between">
@@ -166,7 +166,7 @@
                                     <a href="{{ url('admin/pages/edit/' . $page->id) }}" class="list-group-item list-group-item-action px-0">
                                         <div class="d-flex w-100 justify-content-between">
                                             <span>{{ $page->title }}</span>
-                                            <small class="text-body-secondary">{{ $page->updated_at->diffForHumans() }}</small>
+                                            <small class="text-body-secondary">{{ $page->updated_at ? $page->updated_at->diffForHumans() : '' }}</small>
                                         </div>
                                     </a>
                                 @endforeach
