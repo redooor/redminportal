@@ -72,6 +72,7 @@ const vendorFiles = [
     ['@fortawesome/fontawesome-free/css/all.min.css', 'css/fontawesome.min.css'],
     ['typeahead.js/dist/typeahead.bundle.min.js', 'js/typeahead.bundle.min.js'],
     ['plupload/js/plupload.full.min.js', 'js/plupload.full.min.js'],
+    ['chart.js/dist/chart.umd.min.js', 'js/chart/chart.umd.min.js'],
 ];
 
 const vendorDirectories = [
@@ -95,6 +96,8 @@ const licenseFiles = [
     ['@eonasdan/tempus-dominus/LICENSE', 'tempus-dominus.txt'],
     ['jodit/LICENSE.txt', 'jodit.txt'],
     ['redmaterials/LICENSE.md', 'redmaterials.txt'],
+    ['chart.js/LICENSE.md', 'chart.js.txt'],
+    ['@kurkle/color/LICENSE.md', 'kurkle-color.txt'],
 ];
 
 // Locally maintained sources keep their notice next to the code.
