@@ -41,6 +41,6 @@
         </table>
     </div>
     @else
-    <div class="alert alert-info">{{ trans('redminportal::messages.no_revision_found') }}</div>
+    <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ trans('redminportal::messages.no_revision_found') }}</div>
     @endif
 @stop

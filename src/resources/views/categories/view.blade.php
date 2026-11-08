@@ -39,7 +39,7 @@
             </div>
         </div>
     @else
-        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_category_found') }}</div>
+        <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ Lang::get('redminportal::messages.no_category_found') }}</div>
     @endif
 @stop
 

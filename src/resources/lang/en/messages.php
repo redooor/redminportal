@@ -6,37 +6,37 @@ return array(
     'error'
         => 'We encountered the following errors:',
     'no_announcement_found'
-        => 'No Announcement Found',
+        => 'No announcements found.',
     'no_category_found'
-        => 'No Category Found',
+        => 'No categories found.',
     'no_coupon_found'
-        => ' No Coupon Found',
+        => 'No coupons found.',
     'no_group_found'
-        => 'No Group Found',
+        => 'No groups found.',
     'no_page_found'
-        => 'No Page Found',
+        => 'No pages found.',
     'no_post_found'
-        => 'No Post Found',
+        => 'No posts found.',
     'no_media_found'
-        => 'No Media Found',
+        => 'No media found.',
     'no_module_found'
-        => 'No Module Found',
+        => 'No modules found.',
     'no_product_found'
-        => 'No Product Found',
+        => 'No products found.',
     'no_order_found'
-        => 'No Order Found',
+        => 'No orders found.',
     'no_portfolio_found'
-        => 'No Portfolio Found',
+        => 'No portfolios found.',
     'no_membership_found'
-        => 'No Membership Found',
+        => 'No memberships found.',
     'no_promotion_found'
-        => 'No Promotion Found',
+        => 'No promotions found.',
     'no_purchase_found'
-        => 'No Purchase Found',
+        => 'No purchases found.',
     'no_user_found'
-        => 'No User Found',
+        => 'No users found.',
     'no_bundle_found'
-        => 'No Bundle Found',
+        => 'No bundles found.',
     'no_pricelist_found'
         => 'No Module/Membership Found',
     'no_variant_found'
@@ -50,7 +50,7 @@ return array(
     'are_you_sure_you_want_to_delete'
         => 'Are you sure you want to delete this?',
     'no_mailinglist_found'
-        => 'No Mailing List Found',
+        => 'No mailing lists found.',
     'leave_all_blank_to_download_all'
         => 'Leave the dates empty to download all.',
     'export_to_csv'

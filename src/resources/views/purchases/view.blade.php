@@ -83,11 +83,11 @@
         {!! $purchases->render('pagination::bootstrap-5') !!}
         </div>
     @else
-        @if ($purchases->lastPage())
-        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        @if ($purchases->total() > 0)
+        <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
         <a href="{{ $purchases->url($purchases->lastPage()) }}" class="btn btn-secondary"><i class="fa-solid fa-chevron-left"></i> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
         @else
-        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_purchase_found') }}</div>
+        <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ Lang::get('redminportal::messages.no_purchase_found') }}</div>
         @endif
     @endif
     <div id="export-csv" class="modal fade">

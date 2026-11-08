@@ -63,11 +63,11 @@
         {!! $models->render('pagination::bootstrap-5') !!}
         </div>
     @else
-        @if ($models->lastPage())
-        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        @if ($models->total() > 0)
+        <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
         <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-secondary"><i class="fa-solid fa-chevron-left"></i> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
         @else
-        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_page_found') }}</div>
+        <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ Lang::get('redminportal::messages.no_page_found') }}</div>
         @endif
     @endif
 @stop

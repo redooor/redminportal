@@ -40,6 +40,9 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 8. The admin page background is a very light grey so the white cards stand out, and the sidebar section headings use the deeper Redmaterials orange (4.5:1 or better on the sidebar).
 9. The sidebar is collapsible instead of a drawer. From 992px up it sits beside the content (two columns) and its state is remembered per browser; on smaller screens it opens over the content with a backdrop, a close button and keyboard focus kept inside. The navbar toggle shows a collapse-left icon to close the sidebar and a collapse-right icon to open it. A closed sidebar is hidden from keyboard and screen readers.
 
+**Lists**
+1. An empty list now shows a plain grey "No <records> found." box. Before, it showed a "This page is empty" notice with a "Previous Page" button that linked back to the same page. That button now only appears when you are on a page past the last one.
+
 **Dashboard**
 1. The dashboard now shows summary cards (orders, revenue, new users, active products for the last 30 days), a chart of orders and revenue per day, a doughnut of orders by status, the top 5 products, the 5 most recent orders and the 5 most recently updated posts and the 5 most recently updated pages. Revenue counts only `Completed` and `Delivered` orders.
 2. A short "What's new" panel replaces the old changelog text and links to this file.
