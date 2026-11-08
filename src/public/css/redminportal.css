@@ -694,4 +694,9 @@ ul.redmin-hierarchy.no-max-height {
   margin: 0;
 }
 
+.chart-wrapper {
+  position: relative;
+  height: 280px;
+}
+
 /*# sourceMappingURL=redminportal.css.map */
