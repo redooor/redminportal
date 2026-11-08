@@ -55,6 +55,8 @@ class HomeControllerTest extends RedminBrowserTestCase
         $this->assertStringContainsString('id="dashboard-data"', $this->response->getContent());
         $this->assertStringContainsString(e("What's new in 2.0.0"), $this->response->getContent());
         $this->assertStringNotContainsString('0.58', $this->response->getContent());
+        $this->assertStringContainsString('Revenue counts only Completed and Delivered orders.', $this->response->getContent());
+        $this->assertStringContainsString('href="https://github.com/redooor/redminportal/blob/master/CHANGELOG.md"', $this->response->getContent());
     }
 
     public function testDashboardJsonIsValidAndEscapesHostileStatus()

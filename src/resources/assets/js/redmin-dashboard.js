@@ -98,6 +98,14 @@
         return /^\d{4}-\d{2}-\d{2}$/.test(day) ? day.slice(5) : value;
     }
 
+    // Slice outlines take the card's own background so they vanish into it in every colour mode.
+    function cardBackground(canvas) {
+        var card = canvas && canvas.closest ? canvas.closest('.card') : null;
+        var styles = card ? getStyle(card) : null;
+
+        return styles && styles.backgroundColor ? styles.backgroundColor : '';
+    }
+
     function emptyStateFor(canvas) {
         var card = canvas.closest ? canvas.closest('.card') : null;
 
@@ -248,7 +256,8 @@
                 datasets: [
                     {
                         data: values,
-                        backgroundColor: background
+                        backgroundColor: background,
+                        borderColor: colours.surface || undefined
                     }
                 ]
             },
@@ -328,7 +337,8 @@
             primary: cssVar('--bs-primary'),
             success: cssVar('--bs-success'),
             text: cssVar('--bs-body-color'),
-            border: cssVar('--bs-border-color')
+            border: cssVar('--bs-border-color'),
+            surface: cardBackground(statusCanvas)
         };
         var animated = !prefersReducedMotion();
 

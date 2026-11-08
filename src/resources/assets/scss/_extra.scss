@@ -31,6 +31,7 @@ a {
 body {
     padding-bottom: 70px;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: var(--bs-tertiary-bg); // very light grey, so the white cards stand out
 }
 
 header,

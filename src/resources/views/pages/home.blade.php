@@ -52,6 +52,7 @@
                             <canvas id="chart-daily" role="img" aria-label="{{ trans('redminportal::dashboard.daily_chart_aria') }}"></canvas>
                         </div>
                         <p class="text-body-secondary d-none" data-empty-state>{{ trans('redminportal::dashboard.no_chart_data') }}</p>
+                        <p class="small text-body-secondary mt-2 mb-0" data-revenue-note>{{ trans('redminportal::dashboard.revenue_note', ['statuses' => implode(' and ', \Redooor\Redminportal\App\Classes\DashboardStats::REVENUE_STATUSES)]) }}</p>
                         <table class="visually-hidden">
                             <caption>{{ trans('redminportal::dashboard.daily_chart') }}</caption>
                             <thead>
@@ -190,7 +191,7 @@
                         <li>{{ trans('redminportal::dashboard.whats_new_item_2') }}</li>
                         <li>{{ trans('redminportal::dashboard.whats_new_item_3') }}</li>
                     </ul>
-                    <p class="mb-0">{{ trans('redminportal::dashboard.whats_new_changelog') }}</p>
+                    <p class="mb-0">{!! str_replace(':link', '<a href="https://github.com/redooor/redminportal/blob/master/CHANGELOG.md" target="_blank" rel="noopener">' . e(trans('redminportal::dashboard.whats_new_changelog_link')) . '</a>', e(trans('redminportal::dashboard.whats_new_changelog'))) !!}</p>
                 </div>
             </div>
         </div>

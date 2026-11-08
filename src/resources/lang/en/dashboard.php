@@ -24,5 +24,7 @@ return array(
     'whats_new_item_1' => 'Bootstrap 5.3 admin interface with the Redmaterials 0.2.0 theme',
     'whats_new_item_2' => 'Improved contrast and keyboard access across the admin',
     'whats_new_item_3' => 'A new dashboard with orders, revenue, top products and recent activity',
-    'whats_new_changelog' => 'See CHANGELOG.md for the full history.',
+    'whats_new_changelog' => 'See the :link for the full history.',
+    'whats_new_changelog_link' => 'changelog',
+    'revenue_note' => 'Revenue counts only :statuses orders.',
 );
