@@ -19,7 +19,7 @@ class HomeController extends Controller
 
         $can = array();
 
-        foreach (array('orders', 'products', 'users', 'pages') as $widget) {
+        foreach (array('orders', 'products', 'users', 'pages', 'posts') as $widget) {
             $can[$widget] = $user->hasAccess(Request::create('admin/' . $widget, 'GET'));
         }
 
@@ -33,6 +33,7 @@ class HomeController extends Controller
             'status' => $can['orders'] ? $stats->ordersByStatus() : null,
             'top_products' => $can['orders'] && $can['products'] ? $stats->topProducts() : null,
             'recent_orders' => $can['orders'] ? $stats->recentOrders() : null,
+            'recent_posts' => $can['posts'] ? $stats->recentPosts() : null,
             'recent_pages' => $can['pages'] ? $stats->recentPages() : null,
         );
 

@@ -245,6 +245,30 @@ class DashboardStatsTest extends RedminTestCase
     }
 
     /**
+     * Test (Pass): posts are returned with the most recently updated first.
+     */
+    public function testRecentPostsNewestUpdatedFirst()
+    {
+        $now = CarbonImmutable::now()->setTimezone('Asia/Singapore');
+
+        foreach (['Oldest Post' => 2, 'Newest Post' => 0, 'Middle Post' => 1] as $title => $days) {
+            DB::table('posts')->insert([
+                'title' => $title,
+                'slug' => 'slug' . uniqid(),
+                'content' => 'Post content',
+                'private' => 1,
+                'created_at' => $now->subDays($days)->format('Y-m-d H:i:s'),
+                'updated_at' => $now->subDays($days)->format('Y-m-d H:i:s'),
+            ]);
+        }
+
+        $stats = new DashboardStats($now);
+
+        $this->assertSame(['Newest Post', 'Middle Post', 'Oldest Post'], $stats->recentPosts()->pluck('title')->all());
+        $this->assertSame(['Newest Post'], $stats->recentPosts(1)->pluck('title')->all());
+    }
+
+    /**
      * Test (Pass): a database with no data returns zeroes and empty lists.
      */
     public function testEmptyDatabaseReturnsZeroesAndEmptyLists()
@@ -259,6 +283,7 @@ class DashboardStatsTest extends RedminTestCase
         $this->assertSame([], $stats->topProducts());
         $this->assertCount(0, $stats->recentOrders());
         $this->assertCount(0, $stats->recentPages());
+        $this->assertCount(0, $stats->recentPosts());
 
         $per_day = $stats->ordersPerDay();
 

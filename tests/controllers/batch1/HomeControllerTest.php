@@ -135,6 +135,10 @@ class HomeControllerTest extends RedminBrowserTestCase
                 'permissions' => array('admin.view' => 1, 'admin.pages.view' => -1),
                 'denied_methods' => array('recentPages'),
             ),
+            'posts' => array(
+                'permissions' => array('admin.view' => 1, 'admin.posts.view' => -1),
+                'denied_methods' => array('recentPosts'),
+            ),
         );
 
         foreach ($cases as $widget => $case) {
@@ -175,8 +179,14 @@ class HomeControllerTest extends RedminBrowserTestCase
                 $this->assertStringContainsString('Recent pages', $html);
             }
 
+            if ($widget === 'posts') {
+                $this->assertStringNotContainsString('Recent posts', $html);
+                $this->assertStringContainsString('Recent pages', $html);
+            }
+
             if ($widget === 'pages') {
                 $this->assertStringNotContainsString('Recent pages', $html);
+                $this->assertStringContainsString('Recent posts', $html);
                 $this->assertStringContainsString('New users', $html);
                 $this->assertStringContainsString('Active products', $html);
                 $this->assertStringContainsString('id="chart-daily"', $html);
@@ -191,6 +201,7 @@ class HomeControllerTest extends RedminBrowserTestCase
 
         $this->assertResponseOk();
         $this->assertSame(array('recentPages'), $spy->calls);
+        $this->assertStringNotContainsString('Recent posts', $this->response->getContent());
 
         $html = $this->response->getContent();
         $this->assertStringContainsString('Recent pages', $html);
@@ -313,6 +324,13 @@ class DashboardStatsSpy extends DashboardStats
     public function recentOrders(int $limit = 5): Collection
     {
         $this->calls[] = 'recentOrders';
+
+        return collect();
+    }
+
+    public function recentPosts(int $limit = 5): Collection
+    {
+        $this->calls[] = 'recentPosts';
 
         return collect();
     }

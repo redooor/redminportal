@@ -5,6 +5,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Page;
+use Redooor\Redminportal\App\Models\Post;
 
 class DashboardStats
 {
@@ -178,6 +179,17 @@ class DashboardStats
     {
         return Order::with('user')
             ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * Most recently updated posts.
+     */
+    public function recentPosts(int $limit = 5): Collection
+    {
+        return Post::orderByDesc('updated_at')
             ->orderByDesc('id')
             ->limit($limit)
             ->get();

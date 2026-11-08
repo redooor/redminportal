@@ -41,9 +41,9 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 9. The sidebar is collapsible instead of a drawer. From 992px up it sits beside the content (two columns) and its state is remembered per browser; on smaller screens it opens over the content with a backdrop, a close button and keyboard focus kept inside. The navbar toggle shows a collapse-left icon to close the sidebar and a collapse-right icon to open it. A closed sidebar is hidden from keyboard and screen readers.
 
 **Dashboard**
-1. The dashboard now shows summary cards (orders, revenue, new users, active products for the last 30 days), a chart of orders and revenue per day, a doughnut of orders by status, the top 5 products, the 5 most recent orders and the 5 most recently updated pages. Revenue counts only `Completed` and `Delivered` orders.
+1. The dashboard now shows summary cards (orders, revenue, new users, active products for the last 30 days), a chart of orders and revenue per day, a doughnut of orders by status, the top 5 products, the 5 most recent orders and the 5 most recently updated posts and the 5 most recently updated pages. Revenue counts only `Completed` and `Delivered` orders.
 2. A short "What's new" panel replaces the old changelog text and links to this file.
-3. Each widget, and the queries behind it, is only used when the signed-in user may view that area (`admin/orders`, `admin/products`, `admin/users`, `admin/pages`); the dashboard route itself still needs its own permission.
+3. Each widget, and the queries behind it, is only used when the signed-in user may view that area (`admin/orders`, `admin/products`, `admin/users`, `admin/pages`, `admin/posts`); the dashboard route itself still needs its own permission.
 4. Charts use Chart.js 4.6.1, bundled with the package (no CDN), and follow the Bootstrap colour variables, including `data-bs-theme`.
 
 **Build tooling (contributors)**

@@ -156,26 +156,51 @@
                 </div>
             </div>
         @endif
-        @if ($can['pages'])
+        @if ($can['posts'] || $can['pages'])
             <div class="col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="h5 card-title">{{ trans('redminportal::dashboard.recent_pages') }}</h2>
-                        @if (count($stats['recent_pages']) > 0)
-                            <div class="list-group list-group-flush">
-                                @foreach ($stats['recent_pages'] as $page)
-                                    <a href="{{ url('admin/pages/edit/' . $page->id) }}" class="list-group-item list-group-item-action px-0">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <span>{{ $page->title }}</span>
-                                            <small class="text-body-secondary">{{ $page->updated_at ? $page->updated_at->diffForHumans() : '' }}</small>
-                                        </div>
-                                    </a>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-body-secondary">{{ trans('redminportal::dashboard.no_recent_pages') }}</p>
-                        @endif
+                <div class="d-flex flex-column gap-3 h-100">
+                @if ($can['posts'])
+                    <div class="card flex-fill">
+                        <div class="card-body">
+                            <h2 class="h5 card-title">{{ trans('redminportal::dashboard.recent_posts') }}</h2>
+                            @if (count($stats['recent_posts']) > 0)
+                                <div class="list-group list-group-flush">
+                                    @foreach ($stats['recent_posts'] as $post)
+                                        <a href="{{ url('admin/posts/edit/' . $post->id) }}" class="list-group-item list-group-item-action px-0">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <span>{{ $post->title }}</span>
+                                                <small class="text-body-secondary">{{ $post->updated_at ? $post->updated_at->diffForHumans() : '' }}</small>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-body-secondary">{{ trans('redminportal::dashboard.no_recent_posts') }}</p>
+                            @endif
+                        </div>
                     </div>
+                @endif
+                @if ($can['pages'])
+                    <div class="card flex-fill">
+                        <div class="card-body">
+                            <h2 class="h5 card-title">{{ trans('redminportal::dashboard.recent_pages') }}</h2>
+                            @if (count($stats['recent_pages']) > 0)
+                                <div class="list-group list-group-flush">
+                                    @foreach ($stats['recent_pages'] as $page)
+                                        <a href="{{ url('admin/pages/edit/' . $page->id) }}" class="list-group-item list-group-item-action px-0">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <span>{{ $page->title }}</span>
+                                                <small class="text-body-secondary">{{ $page->updated_at ? $page->updated_at->diffForHumans() : '' }}</small>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-body-secondary">{{ trans('redminportal::dashboard.no_recent_pages') }}</p>
+                            @endif
+                        </div>
+                    </div>
+                @endif
                 </div>
             </div>
         @endif
