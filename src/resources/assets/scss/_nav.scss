@@ -90,6 +90,22 @@
 }
 
 /* Sidebar navigation */
+// Redmaterials uses .nav-sidebar for its own fixed drawer (240px wide, parked at left: -240px).  Here the menu list sits
+// inside the portal's #sidebar drawer, so undo the drawer positioning or the list is drawn off screen.
+#sidebar .nav-sidebar {
+    position: static;
+    left: auto;
+    top: auto;
+    bottom: auto;
+    width: auto;
+    z-index: auto;
+    overflow: visible;
+    padding-bottom: 0;
+    background-color: transparent;
+    transform: none;
+    transition: none;
+}
+
 .nav-sidebar {
     flex-direction: column;
     flex-wrap: nowrap;

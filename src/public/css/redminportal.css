@@ -380,6 +380,20 @@ i {
 }
 
 /* Sidebar navigation */
+#sidebar .nav-sidebar {
+  position: static;
+  left: auto;
+  top: auto;
+  bottom: auto;
+  width: auto;
+  z-index: auto;
+  overflow: visible;
+  padding-bottom: 0;
+  background-color: transparent;
+  transform: none;
+  transition: none;
+}
+
 .nav-sidebar {
   flex-direction: column;
   flex-wrap: nowrap;
