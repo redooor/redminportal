@@ -1,9 +1,5 @@
 @extends('redminportal::layouts.master')
 
-@section('navbar-breadcrumb')
-    <li class="nav-item"><span class="nav-link active">{{ trans('redminportal::dashboard.title') }}</span></li>
-@stop
-
 @section('content')
     <div class="row g-3 mb-3">
         @if ($can['orders'])

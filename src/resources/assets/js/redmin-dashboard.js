@@ -22,7 +22,17 @@
     var DAILY_ID = 'chart-daily';
     var STATUS_ID = 'chart-status';
     var THEME_ATTRIBUTE = 'data-bs-theme';
-    var STATUS_COLOURS = [
+    // Known payment statuses keep a meaningful colour; any other status takes the next colour from the fallback list.
+    var STATUS_COLOURS = {
+        'Completed': '--bs-success',
+        'Delivered': '--bs-primary',
+        'In Progress': '--bs-info',
+        'Pending': '--bs-warning',
+        'Canceled': '--bs-danger',
+        'Refunded': '--bs-secondary',
+        'Unknown': '--bs-secondary'
+    };
+    var FALLBACK_COLOURS = [
         '--bs-primary',
         '--bs-success',
         '--bs-warning',
@@ -222,8 +232,13 @@
         var values = labels.map(function (label) {
             return status[label];
         });
-        var background = labels.map(function (label, index) {
-            return colours.status[index % colours.status.length];
+        var fallback = 0;
+        var background = labels.map(function (label) {
+            if (Object.prototype.hasOwnProperty.call(STATUS_COLOURS, label)) {
+                return cssVar(STATUS_COLOURS[label]);
+            }
+
+            return cssVar(FALLBACK_COLOURS[fallback++ % FALLBACK_COLOURS.length]);
         });
 
         return {
@@ -308,8 +323,7 @@
             primary: cssVar('--bs-primary'),
             success: cssVar('--bs-success'),
             text: cssVar('--bs-body-color'),
-            border: cssVar('--bs-border-color'),
-            status: STATUS_COLOURS.map(cssVar)
+            border: cssVar('--bs-border-color')
         };
         var animated = !prefersReducedMotion();
 

@@ -1,7 +1,6 @@
 <?php
 
 return array(
-    'title' => 'Dashboard',
     'orders' => 'Orders',
     'revenue' => 'Revenue',
     'new_users' => 'New users',
