@@ -37,9 +37,16 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 5. Coupon date picker (eonasdan + moment) replaced by Tempus Dominus 6; dates are still posted as `d/m/Y h:i A`.
 6. Lists render the paginator with the Bootstrap 5 pagination view.
 7. jQuery 3.7, jQuery UI 1.14, Moment removed.
+8. The admin page background is a very light grey so the white cards stand out, and the sidebar section headings use the deeper Redmaterials orange (4.5:1 or better on the sidebar).
+
+**Dashboard**
+1. The dashboard now shows summary cards (orders, revenue, new users, active products for the last 30 days), a chart of orders and revenue per day, a doughnut of orders by status, the top 5 products, the 5 most recent orders and the 5 most recently updated pages. Revenue counts only `Completed` and `Delivered` orders.
+2. A short "What's new" panel replaces the old changelog text and links to this file.
+3. Each widget, and the queries behind it, is only used when the signed-in user may view that area (`admin/orders`, `admin/products`, `admin/users`, `admin/pages`); the dashboard route itself still needs its own permission.
+4. Charts use Chart.js 4.6.1, bundled with the package (no CDN), and follow the Bootstrap colour variables, including `data-bs-theme`.
 
 **Build tooling (contributors)**
-1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+).
+1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.
 
 ## Version 0.58.0
