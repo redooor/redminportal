@@ -26,6 +26,7 @@
     </div>
 
     @if (count($models) > 0)
+        <div class="table-responsive">
         <table class="table table-striped table-sm">
             <thead>
                 <tr>
@@ -71,7 +72,7 @@
                     <td class="table-actions text-center">
                         @if (count($order->getDiscounts()) > 0)
                         <div class="btn-group">
-                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($order->getTotaldiscount(), Lang::get('redminportal::currency.currency')) }}
 							</button>
 							<ul class="dropdown-menu">
@@ -87,7 +88,7 @@
                     <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($order->paid, Lang::get('redminportal::currency.currency')) }}</td>
                     <td class="table-actions text-center">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								{{ $order->payment_status }}
 							</button>
                             <ul class="dropdown-menu">
@@ -103,7 +104,7 @@
                     <td class="table-actions text-center">
                         @if ($order->coupons()->count() > 0)
                         <div class="btn-group">
-                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ticket"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
@@ -119,7 +120,7 @@
                     <td class="table-actions text-center">
                         @if ($order->products()->count() > 0 || $order->bundles()->count() > 0 || $order->pricelists()->count())
                         <div class="btn-group">
-                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-cart-shopping"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
@@ -150,7 +151,7 @@
 					</td>
                     <td class="table-actions text-end">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
@@ -169,6 +170,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
         <div class="text-center">
         {!! $models->render('pagination::bootstrap-5') !!}
         </div>

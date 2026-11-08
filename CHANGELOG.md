@@ -38,6 +38,7 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 6. Lists render the paginator with the Bootstrap 5 pagination view.
 7. jQuery 3.7, jQuery UI 1.14, Moment removed.
 8. The admin page background is a very light grey so the white cards stand out, and the sidebar section headings use the deeper Redmaterials orange (4.5:1 or better on the sidebar).
+9. The sidebar is collapsible instead of a drawer. From 992px up it sits beside the content (two columns) and its state is remembered per browser; on smaller screens it opens over the content with a backdrop, a close button and keyboard focus kept inside. The navbar toggle shows a collapse-left icon to close the sidebar and a collapse-right icon to open it. A closed sidebar is hidden from keyboard and screen readers.
 
 **Dashboard**
 1. The dashboard now shows summary cards (orders, revenue, new users, active products for the last 30 days), a chart of orders and revenue per day, a doughnut of orders by status, the top 5 products, the 5 most recent orders and the 5 most recently updated pages. Revenue counts only `Completed` and `Delivered` orders.

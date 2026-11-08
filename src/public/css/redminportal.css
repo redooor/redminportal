@@ -313,26 +313,28 @@ i {
 /*
  * Sidebar
  */
-/* Hide on load, show later when toggled */
-#sidebar,
-#sidebar-overlay {
-  display: none;
-}
-
 #sidebar {
   position: fixed;
-  width: 240px;
   top: 0;
   bottom: 0;
-  left: -240px;
+  left: 0;
   z-index: 1032;
   display: block;
+  width: 240px;
   overflow-x: hidden;
   overflow-y: auto;
   /* Scrollable contents if viewport is shorter than content. */
   background-color: #f5f5f5;
-  transition: 0.3s ease all;
   padding-bottom: 2em;
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition: transform 0.2s, visibility 0s 0.2s;
+}
+
+html.sidebar-open #sidebar {
+  transform: none;
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 #sidebar-title {
@@ -352,34 +354,89 @@ i {
   vertical-align: text-top;
 }
 
-#sidebar-overlay {
+/* Visible close control for the drawer below the desktop breakpoint (hidden from 992px by d-lg-none). */
+#sidebar-close {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+}
+
+/* Viewport backdrop, shown only while the drawer is open below the desktop breakpoint. */
+#sidebar-overlay {
+  position: fixed;
+  inset: 0;
   z-index: 1031;
+  display: none;
   background: #333333;
   background: rgba(0, 0, 0, 0.4);
-  transition: 0.3s ease all;
+  transition: 0.2s ease all;
 }
 
-#sidebar-wrapper.active #sidebar {
-  left: 0px;
+/* Navbar toggle: a borderless 44px hit area, with both icons swapped by CSS. */
+#sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
 }
-#sidebar-wrapper.active #sidebar-overlay {
-  display: block;
-}
-#sidebar-wrapper.active .main-content {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  position: fixed;
-  padding-right: 15px;
-  padding-left: 15px;
-  right: 0px;
+#sidebar-toggle:hover, #sidebar-toggle:focus {
+  background: none;
+  text-decoration: none;
 }
 
+.sidebar-toggle .fa-angles-left {
+  display: none;
+}
+
+.sidebar-toggle .fa-angles-right {
+  display: inline-block;
+}
+
+html.sidebar-open .sidebar-toggle .fa-angles-left {
+  display: inline-block;
+}
+
+html.sidebar-open .sidebar-toggle .fa-angles-right {
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  /* Opening the drawer locks the page behind it; removing the class unlocks it again. */
+  html.sidebar-open {
+    overflow: hidden;
+  }
+  html.sidebar-open #sidebar-overlay {
+    display: block;
+  }
+}
+@media (min-width: 992px) {
+  .main-content {
+    transition: margin-left 0.2s;
+  }
+  #header .navbar {
+    transition: left 0.2s;
+  }
+  html.sidebar-open .main-content {
+    margin-left: 240px;
+  }
+  html.sidebar-open #header .navbar {
+    left: 240px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #sidebar,
+  #sidebar-overlay,
+  .main-content,
+  #header .navbar {
+    transition: none;
+  }
+}
 /* Sidebar navigation */
 #sidebar .nav-sidebar {
   position: static;
@@ -617,6 +674,15 @@ ul.redmin-hierarchy.no-max-height {
 .bootstrap-tagsinput input:focus {
   border: none;
   box-shadow: none;
+}
+.bootstrap-tagsinput .twitter-typeahead {
+  width: 100%;
+  max-width: 100%;
+}
+.bootstrap-tagsinput .twitter-typeahead input {
+  width: 100% !important;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .bootstrap-tagsinput .tag {
   margin-right: 2px;

@@ -53,8 +53,10 @@
         @endforeach
         ];
 
+        var editors = [];
+
         document.querySelectorAll('textarea').forEach(function (textarea) {
-            Jodit.make(textarea, {
+            editors.push(Jodit.make(textarea, {
                 height: 360,
                 iframe: true,
                 iframeCSSLinks: cssLinks,
@@ -70,6 +72,23 @@
                 beautifyHTML: false,
                 // An emptied editor must submit '' (not '<p><br></p>') so `required` validation still triggers
                 cleanHTML: { collapseEmptyValueToEmptyString: true }
+            }));
+        });
+
+        // Jodit's sticky toolbar keeps the width it had when it stuck; follow the layout when the sidebar collapses.
+        window.addEventListener('resize', function () {
+            editors.forEach(function (editor) {
+                var container = editor.container;
+
+                if (!container || !container.classList.contains('jodit_sticky')) {
+                    return;
+                }
+
+                var toolbar = container.querySelector('.jodit-toolbar__box');
+
+                if (toolbar) {
+                    toolbar.style.width = (container.offsetWidth - 2) + 'px';
+                }
             });
         });
     }();

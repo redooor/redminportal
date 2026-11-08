@@ -4,6 +4,50 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>RedminPortal by Redooor</title>
+        <script>
+            // Set the sidebar state before the stylesheets paint so a collapsed sidebar never flashes open.
+            (function () {
+                var open = true;
+
+                try {
+                    var desktop = !window.matchMedia || window.matchMedia('(min-width: 992px)').matches;
+
+                    if (desktop) {
+                        try {
+                            if (window.localStorage.getItem('redmin.sidebar') === 'closed') {
+                                open = false;
+                            }
+                        } catch (e) {
+                            // Storage is unavailable (private mode): keep the desktop default.
+                        }
+                    } else {
+                        open = false;
+                    }
+                } catch (e) {
+                    // Assume a desktop viewport when matchMedia cannot be used.
+                }
+
+                if (open) {
+                    document.documentElement.classList.add('sidebar-open');
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    var sidebar = document.getElementById('sidebar');
+                    var isOpen = document.documentElement.classList.contains('sidebar-open');
+
+                    if (!sidebar) {
+                        return;
+                    }
+                    if (isOpen) {
+                        sidebar.removeAttribute('inert');
+                        sidebar.removeAttribute('aria-hidden');
+                    } else {
+                        sidebar.setAttribute('inert', '');
+                        sidebar.setAttribute('aria-hidden', 'true');
+                    }
+                });
+            })();
+        </script>
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jquery-ui/themes/blitzer/jquery-ui.min.css') }}">
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/fontawesome.min.css') }}">
@@ -17,9 +61,10 @@
         <header id="header">
             <nav class="navbar navbar-expand-md navbar-light bg-body fixed-top">
                 <div class="container-fluid">
-                    <a href="#" class="navbar-brand sidebar-toggle" aria-label="Toggle sidebar">
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </a>
+                    <button type="button" id="sidebar-toggle" class="btn btn-link navbar-brand sidebar-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="{{ Lang::get('redminportal::menus.sidebar_expand') }}" data-label-open="{{ Lang::get('redminportal::menus.sidebar_collapse') }}" data-label-closed="{{ Lang::get('redminportal::menus.sidebar_expand') }}">
+                        <i class="fa-solid fa-angles-left" aria-hidden="true"></i>
+                        <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
+                    </button>
                     <ul class="navbar-nav navbar-breadcrumb d-none d-md-flex me-auto">
                         <li class="nav-item"><a class="nav-link" href="{{ URL::to('admin/dashboard') }}">{{ Lang::get('redminportal::menus.dashboard') }}</a></li>
                         @section('navbar-breadcrumb')
@@ -51,9 +96,10 @@
         <div id="main">
             <div class="container-fluid">
                 <div id="sidebar-wrapper">
-                    <div id="sidebar" class="shadow-depth-1">
+                    <div id="sidebar" class="shadow-depth-1" inert>
                         <div id="sidebar-title">
                             <a href="{{ URL::to('admin') }}" class="redooor-nav-logo"><img src="{{ URL::to('vendor/redooor/redminportal/img/favicon.png') }}" title="RedminPortal"> RedminPortal</a>
+                            <button type="button" id="sidebar-close" class="btn-close btn-close-white sidebar-toggle d-lg-none" aria-label="{{ Lang::get('redminportal::menus.sidebar_collapse') }}"></button>
                         </div>
                         {!! Redminportal::html()->printMenu(config('redminportal::menu'), 'nav nav-sidebar') !!}
                     </div>
@@ -78,6 +124,7 @@
         <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery-ui/jquery-ui.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmaterials.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-sidebar.min.js') }}" defer></script>
         <script>
             !function ($) {
                 $(function(){
@@ -86,15 +133,6 @@
                         $delete_url = $(this).attr('href');
                         $('#confirm-modal-proceed').attr('href', $delete_url);
                         bootstrap.Modal.getOrCreateInstance(document.getElementById('confirm-modal')).show();
-                    });
-                    $(document).on('click touchstart', '.sidebar-toggle', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if ($('#sidebar-wrapper').hasClass('active')) {
-                            $('#sidebar-wrapper').removeClass('active');
-                        } else {
-                            $('#sidebar-wrapper').addClass('active');
-                        }
                     });
                 })
             }(window.jQuery);

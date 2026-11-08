@@ -40,6 +40,16 @@
             box-shadow: none;
         }
     }
+    // Typeahead keeps the size attribute's intrinsic width; make it follow the narrow sidebar column instead.
+    .twitter-typeahead {
+        width: 100%;
+        max-width: 100%;
+        input {
+            width: 100% !important;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+    }
     .tag {
         margin-right: 2px;
         color: white;
