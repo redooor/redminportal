@@ -1,10 +1,11 @@
-/* https://github.com/bootstrap-tagsinput/bootstrap-tagsinput */
+/* https://github.com/bootstrap-tagsinput/bootstrap-tagsinput
+ * Copyright (c) 2013 Tim Schlechter, MIT licence (see bootstrap-tagsinput.LICENSE.txt). Locally modified. */
 (function ($) {
   "use strict";
 
   var defaultOptions = {
     tagClass: function(item) {
-      return 'label label-info';
+      return 'badge text-bg-info';
     },
     itemValue: function(item) {
       return item ? item.toString() : item;

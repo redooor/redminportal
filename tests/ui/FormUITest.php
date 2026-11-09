@@ -32,7 +32,7 @@ class FormUITest extends RedminTestCase
         
         $input = str_replace(array("\r", "\n", " "), '', $input);
         
-        $output = '<div class="form-group biang">
+        $output = '<div class="mb-3 biang">
             <label class="label-class-lor" for="tags">label-leh</label>
             <input class="form-control" name="tags" id="bleh" placeholder="wah" value="test1,test2,test3">
         </div>';
@@ -52,16 +52,16 @@ class FormUITest extends RedminTestCase
         
         $input = str_replace(array("\r", "\n", " "), '', $input);
         
-        $output = '<div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">TagsTitle</div>
+        $output = '<div class="card">
+            <div class="card-header">
+                <div class="card-title mb-0">TagsTitle</div>
             </div>
-            <div class="panel-body">
-                <div class="form-group">
+            <div class="card-body">
+                <div class="mb-3">
                     <input class="form-control" name="tags" id="tags" value="test1,test2,test3">
                 </div>
             </div>
-            <div class="panel-footer"><i><small>This is a foot note.</small></i></div>
+            <div class="card-footer"><i><small>This is a foot note.</small></i></div>
         </div>';
         
         $output = str_replace(array("\r", "\n", " "), '', $output);
@@ -78,7 +78,7 @@ class FormUITest extends RedminTestCase
         
         $input = str_replace(array("\r", "\n", " "), '', $input);
         
-        $output = '<div class="form-group redmin-email-typeahead">
+        $output = '<div class="mb-3 redmin-email-typeahead">
             <label for="email">Email Address</label>
             <input class="form-control typeahead" name="email" id="email" required value="test">
         </div>';
@@ -103,25 +103,21 @@ class FormUITest extends RedminTestCase
         
         $input = str_replace(array("\r", "\n", " "), '', $input);
         
-        $output = '<form method="POST" action="route.action" accept-charset="UTF-8" role="form" class="form-inline">
+        $output = '<form method="POST" action="route.action" accept-charset="UTF-8" role="form" class="d-flex flex-wrap align-items-center gap-2">
             <input type="hidden" name="_token" value="">
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                <div class="input-group w-auto">
+                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                 </div>
-                <select class="form-control input-sm" name="field">
+                <select class="form-select form-select-sm w-auto" name="field">
                     <option value="field_1">Field 1</option>
                     <option value="field_2" selected>Field 2</option>
                 </select>
-                <div class="input-group">
-                    <input class="form-control input-sm" placeholder="Search" 
+                <div class="input-group w-auto">
+                    <input class="form-control form-control-sm" placeholder="Search" 
                         title="Search" name="search" type="text" value="test">
-                    <span class="input-group-btn">
-                        <a class="btn btn-default btn-sm" href="route/view">
-                            <span class="glyphicon glyphicon-remove"></span> Clear</a>
-                    </span>
+                    <a class="btn btn-secondary btn-sm" href="route/view">
+                        <i class="fa-solid fa-xmark"></i> Clear</a>
                 </div>
-            </div>
         </form>';
         
         $output = str_replace(array("\r", "\n", " "), '', $output);
@@ -146,14 +142,14 @@ class FormUITest extends RedminTestCase
         
         $input = str_replace(array("\r", "\n", " "), '', $input);
         
-        $output = '<div class="form-group ">
+        $output = '<div class="mb-3 ">
             <label class="testclass" for="test">testlabel</label>
-            <select class="form-control " name="test" id="test_id">
+            <select class="form-select " name="test" id="test_id">
                 <option value="test1">test1</option>
                 <option value="test2">test2</option>
                 <option value="test3">test3</option>
             </select>
-            <p class="help-block">This is a help block</p>
+            <p class="form-text">This is a help block</p>
         </div>';
         
         $output = str_replace(array("\r", "\n", " "), '', $output);

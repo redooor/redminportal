@@ -1,8 +1,8 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h4 class="panel-title">
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title mb-0">
             {{ $category->name }}
-            @if ($category->active)<span class="label label-success pull-right">active</span>@else <span class="label label-danger pull-right">inactive</span> @endif
+            @if ($category->active)<span class="badge text-bg-success float-end">active</span>@else <span class="badge text-bg-danger float-end">inactive</span> @endif
         </h4>
     </div>
     <ul class="list-group">
@@ -19,8 +19,8 @@
         </li>
         @endif
     </ul>
-    <div class="panel-footer text-right">
-        <a href="{{ URL::to('admin/categories/edit/' . $category->id) }}" class="btn btn-primary"><i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
-        <a href="{{ URL::to('admin/categories/delete/' . $category->id) }}" class="btn btn-danger btn-confirm"><i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
+    <div class="card-footer text-end">
+        <a href="{{ URL::to('admin/categories/edit/' . $category->id) }}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
+        <a href="{{ URL::to('admin/categories/delete/' . $category->id) }}" class="btn btn-danger btn-confirm"><i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
     </div>
 </div>

@@ -54,24 +54,24 @@ class HtmlUITest extends RedminTestCase
         
         $input = str_replace(array("\r", "\n", " "), '', $input);
         
-        $output = '<div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">Uploaded Photos</h4>
+        $output = '<div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Uploaded Photos</h5>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-lg-3">
                         <img src="http://localhost/./100x100_crop/dummy.jpg" class="img-thumbnail" alt="">
                         <br><br>
                         <div class="btn-group btn-group-sm">
                             <a href="http://localhost/admin/images/delete/1" class="btn btn-danger btn-confirm">
-                                <span class="glyphicon glyphicon-remove"></span>
+                                <i class="fa-solid fa-xmark"></i>
                             </a>
                             <a href="http://localhost/./800x600/dummy.jpg" class="btn btn-primary btn-copy">
-                                <span class="glyphicon glyphicon-link"></span>
+                                <i class="fa-solid fa-link"></i>
                             </a>
                             <a href="http://localhost/./800x600/dummy.jpg" class="btn btn-info" target="_blank">
-                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <i class="fa-solid fa-eye"></i>
                             </a>
                         </div>
                     </div>
@@ -105,16 +105,16 @@ class HtmlUITest extends RedminTestCase
                 <div class="modal-progress">
                     <div class="progress">
                         <div id="modal-progress-id" 
-                        class="progress-bar progress-bar-info progress-bar-striped" 
+                        class="progress-bar bg-info progress-bar-striped" 
                         role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                            <span class="sr-only">Loading</span>
+                            <span class="visually-hidden">Loading</span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">This is a title</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         This is

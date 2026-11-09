@@ -142,6 +142,119 @@ token automatically:
 
 ---
 
+### Step 8 — Admin UI moved from Bootstrap 3 to Bootstrap 5.3
+
+The admin interface now uses **Bootstrap 5.3**, the Redmaterials 0.2 theme, and Font Awesome Free 7.
+Applications that never published or customised the portal's views or assets only need to re-publish the assets (Step 9).
+If you published views, override Blade templates, or reuse the portal's CSS/JS classes, read the rest of this step.
+
+**What changed for end users of the admin:** the look is the same Material style, but the panels are now cards, icons are
+Font Awesome, the file chooser, date picker and rich text editor are new components (see Step 11), and the layout breakpoints moved
+(see below).
+
+#### Class and attribute mapping (for published or custom views)
+
+| Bootstrap 3 | Bootstrap 5.3 |
+|---|---|
+| `panel panel-default`, `panel-heading`, `panel-title`, `panel-body`, `panel-footer` | `card`, `card-header`, `card-title`, `card-body`, `card-footer` |
+| `form-group` | `mb-3` |
+| `control-label` | `form-label` (horizontal forms: `row mb-3` + `col-form-label col-*`) |
+| `btn-default`, `btn-xs`, `btn-block` | `btn-secondary`, `btn-sm`, `w-100` |
+| `label label-success` (…) | `badge text-bg-success` |
+| `help-block`, `input-group-addon` | `form-text`, `input-group-text` |
+| `pull-left`, `pull-right`, `text-right`, `text-left` | `float-start`, `float-end`, `text-end`, `text-start` |
+| `table-condensed`, `img-responsive`, `sr-only` | `table-sm`, `img-fluid`, `visually-hidden` |
+| `well` | `card card-body bg-body-tertiary` |
+| `hidden-xs`, `visible-xs` | `d-none d-md-block`, `d-md-none` |
+| `.checkbox` / `.radio` wrappers | `.form-check` with `form-check-input` / `form-check-label` |
+| `.dropdown-menu > li > a` | add `dropdown-item` to every link; `dropdown-menu-end` replaces `pull-right` |
+| `.nav-tabs > li.active` | `.nav-item` / `.nav-link`, and `.active` goes on the `<a class="nav-link">` |
+| `<select class="form-control">` | `<select class="form-select">` |
+| `close` button with `&times;` | `<button class="btn-close" data-bs-dismiss="modal" aria-label="Close">` |
+| `data-toggle`, `data-target`, `data-dismiss`, `data-placement`, `data-parent` | `data-bs-toggle`, `data-bs-target`, `data-bs-dismiss`, `data-bs-placement`, `data-bs-parent` |
+| `navbar navbar-default navbar-fixed-top` | `navbar navbar-expand-md navbar-light bg-body fixed-top` |
+| `media`, `media-left`, `media-body` | `d-flex`, `flex-shrink-0`, `flex-grow-1` |
+
+**Breakpoints shifted by one step.** Bootstrap 3's `sm/md/lg` (768/992/1200px) are Bootstrap 5's `md/lg/xl`.
+`col-sm-6 col-md-4` becomes `col-md-6 col-lg-4`; `col-md-push-9` / `col-md-pull-3` become `order-lg-last` / `order-lg-first`;
+`col-md-offset-3` becomes `offset-lg-3`.
+
+**Glyphicons are gone**, and so is Font Awesome 4. Use Font Awesome Free 7 with the `fa-solid` prefix:
+
+| Glyphicon | Font Awesome 7 |
+|---|---|
+| `glyphicon-remove` | `fa-solid fa-xmark` |
+| `glyphicon-ok` | `fa-solid fa-check` |
+| `glyphicon-edit` | `fa-solid fa-pen-to-square` |
+| `glyphicon-eye-open` / `eye-close` | `fa-solid fa-eye` / `fa-eye-slash` |
+| `glyphicon-menu-left` / `menu-right` | `fa-solid fa-chevron-left` / `fa-chevron-right` |
+| `glyphicon-option-horizontal` / `option-vertical` | `fa-solid fa-ellipsis` / `fa-ellipsis-vertical` |
+| `glyphicon-log-out`, `glyphicon-cog`, `glyphicon-user` | `fa-solid fa-right-from-bracket`, `fa-gear`, `fa-user` |
+| `glyphicon-calendar`, `glyphicon-link`, `glyphicon-time` | `fa-solid fa-calendar`, `fa-link`, `fa-clock` |
+| `fa fa-search` (FA 4) | `fa-solid fa-magnifying-glass` |
+
+`Category::printCategory()` now emits `<i class='fa-solid fa-chevron-right'>` instead of a glyphicon span.
+If you test its HTML output, update the expectation.
+
+**Pagination.** Lists render the paginator with Laravel's `pagination::bootstrap-5` view
+(`$models->render('pagination::bootstrap-5')`). Laravel 13's default paginator is Tailwind, which the admin never styled.
+
+**JavaScript.** Bootstrap 5 does not need jQuery, but the portal still loads jQuery 3.7 (jQuery UI, typeahead and tags input need it).
+jQuery must load before `bootstrap.bundle.min.js` for `$(el).modal('show')` to keep working. Event names (`shown.bs.tab`, …) are unchanged.
+
+---
+
+### Step 9 — Re-publish the assets and remove obsolete files
+
+```bash
+php artisan vendor:publish --tag=public --force
+```
+
+`--force` overwrites files but **never deletes** files that no longer exist. Delete these from
+`public/vendor/redooor/redminportal/` (any that exist):
+
+```
+css/jasny-bootstrap.css          css/jasny-responsive.css
+css/font-awesome.min.css         css/datetimepicker/
+css/redmin-tinymce.css           css/redmin-tinymce.css.map     css/redmin-tinymce.min.css
+fonts/                           (Glyphicons and Font Awesome 4; fonts now live in webfonts/)
+js/bootstrap.min.js              js/bootstrap-fileupload.js
+js/datetimepicker/               js/moment/                     js/tinymce/
+js/jquery/jquery.js              js/jquery/jquery.min.map       js/bootstrap-tagsinput.js.map
+```
+
+New files appear under `css/jodit/`, `css/tempus-dominus/`, `js/jodit/`, `js/popper/`, `js/tempus-dominus/`,
+`js/redmin-fileinput.min.js`, `webfonts/` and `licenses/` (third-party licence notices).
+
+Then clear compiled views: `php artisan view:clear`.
+
+If you published the views (`resources/views/vendor/redooor/redminportal`), they take precedence over the package and **still contain
+Bootstrap 3 markup**. Either delete your published copy to use the new views, or re-publish with `--force` and re-apply your changes
+using the mapping in Step 8. Compare with `git diff` before overwriting.
+
+---
+
+### Step 10 — Published config
+
+`config/vendor/redooor/redminportal/tinymce.php` keeps its name and now lists the **content stylesheets of the rich text editor**.
+Old values still work: an entry ending in `redmin-tinymce.min.css` is mapped to `redmin-editor.min.css` automatically. Update your copy
+to `vendor/redooor/redminportal/css/redmin-editor.min.css` when convenient.
+
+---
+
+### Step 11 — Replaced third-party components
+
+| Was | Now | What to check |
+|---|---|---|
+| TinyMCE 4.3.8 (end of life) | **Jodit 4** (MIT) via `plugins/editor` | `@include('redminportal::plugins/editor', ['editorImages' => $model->images])`. `plugins/tinymce` still works but is deprecated, and `tinyImages` is still accepted. TinyMCE plugins and `tinymce.init` options no longer apply. Images from the record are inserted with the new "insert uploaded image" toolbar button. |
+| Jasny `fileupload` | First-party `redmin-fileinput` | Markup `data-redmin-fileinput`; load `js/redmin-fileinput.min.js`. The form still posts a single file input named `image`. Jasny CSS/JS and its `data-provides` / `data-dismiss="fileupload"` attributes are gone. |
+| eonasdan datetimepicker + moment (Coupons) | **Tempus Dominus 6** + Popper | Dates still post as `d/m/Y h:i A`; the locale is fixed to `en-US` so AM/PM and digits are never localised. |
+| jQuery UI datepicker, bootstrap-tagsinput, typeahead.js | unchanged | Tags now render as `badge text-bg-info`. |
+
+The editor makes **no CDN requests** (source mode uses a plain textarea).
+
+---
+
 ### Upgrade checklist
 
 Database: **no table other than `password_reset_tokens` changed.** Your existing
@@ -155,6 +268,9 @@ will not run again.
 - [ ] Config re-published, so `auth.php` points to `password_reset_tokens` (Step 5)
 - [ ] Published migrations re-published, if you had published them (Step 6)
 - [ ] `Session::token()` removed from a published login view (Step 7)
+- [ ] Assets re-published with `--force`, obsolete files deleted, views cleared (Step 9)
+- [ ] Published views either deleted or migrated from Bootstrap 3 to 5.3 markup (Step 8)
+- [ ] Published `tinymce.php` config reviewed (Step 10); custom editor code moved to Jodit (Step 11)
 - [ ] Seeder command updated to `db:seed --class="Database\Seeders\RedminSeeder"`
 - [ ] If you subclass `Api` or the report controllers: they no longer use the
       `AuthorizesRequests`, `DispatchesJobs` or `ValidatesRequests` traits, and
@@ -178,6 +294,11 @@ Admin URLs, routes, models and table names are otherwise unchanged.
 | Password reset table | `password_resets` | `password_reset_tokens` |
 | Migrations | Named classes | Anonymous classes |
 | CSRF in login view | `Session::token()` | Handled by `Form::open()` |
+| Admin UI framework | Bootstrap 3.3 + Glyphicons | Bootstrap 5.3 + Redmaterials 0.2 + Font Awesome 7 |
+| Build tooling | Grunt, Bower, LESS | npm, Sass (contributors only) |
+| Rich text editor | TinyMCE 4.3.8 | Jodit 4 |
+| File chooser | Jasny fileupload | `redmin-fileinput` |
+| Coupon date picker | eonasdan datetimepicker + moment | Tempus Dominus 6 |
 
 ---
 

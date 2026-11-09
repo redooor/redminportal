@@ -14,11 +14,11 @@
     ])
     --------------------------------
 --}}
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <div class="panel-title">{{ $select_category_title ?? trans('redminportal::forms.category') }}</div>
+<div class="card">
+    <div class="card-header">
+        <div class="card-title mb-0">{{ $select_category_title ?? trans('redminportal::forms.category') }}</div>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <input type="hidden" 
                id="{{ $select_category_selected_name }}" 
                name="{{ $select_category_selected_name }}" 
@@ -26,7 +26,7 @@
         <ul class="redmin-hierarchy">
         @if (!isset($select_category_required_field) ?? !$select_category_required_field)
             <li>
-                <a href="0"><span class='glyphicon glyphicon-menu-right'></span> 
+                <a href="0"><i class='fa-solid fa-chevron-right'></i> 
                     {{ $select_category_default_text ?? trans('redminportal::forms.no_category') }}</a>
             </li>
         @endif
@@ -36,7 +36,7 @@
         </ul>
     </div>
     @if (isset($select_category_footnote))
-    <div class="panel-footer">
+    <div class="card-footer">
         <i><small>{{ $select_category_footnote }}</small></i>
     </div>
     @endif

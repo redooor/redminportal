@@ -1,5 +1,6 @@
 # Change log
 
+* [Version 2.0.0](#version-200)
 * [Version 0.58.0](#version-0580)
 * [Version 0.4.4, 0.3.4 and 0.2.4](#version-044-034-and-024)
 * [Version 0.3.3.1 and 0.2.3.1](#version-0331-and-0231)
@@ -23,6 +24,34 @@
 The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.
 
 Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.
+
+## Version 2.0.0
+
+Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
+
+**Admin UI**
+1. Bootstrap 3.3 replaced by Bootstrap 5.3 with the Redmaterials 0.2 theme. All admin views were converted (cards, badges, breakpoints, dropdowns, tabs, modals).
+2. Glyphicons and Font Awesome 4 replaced by Font Awesome Free 7.
+3. TinyMCE 4.3.8 (end of life) replaced by Jodit 4, with a button to insert the record's uploaded images. No CDN requests.
+4. Jasny fileupload replaced by a first-party file input; the posted `image` file field is unchanged.
+5. Coupon date picker (eonasdan + moment) replaced by Tempus Dominus 6; dates are still posted as `d/m/Y h:i A`.
+6. Lists render the paginator with the Bootstrap 5 pagination view.
+7. jQuery 3.7, jQuery UI 1.14, Moment removed.
+8. The admin page background is a very light grey so the white cards stand out, and the sidebar section headings use the deeper Redmaterials orange (4.5:1 or better on the sidebar).
+9. The sidebar is collapsible instead of a drawer. From 992px up it sits beside the content (two columns) and its state is remembered per browser; on smaller screens it opens over the content with a backdrop, a close button and keyboard focus kept inside. The navbar toggle shows a collapse-left icon to close the sidebar and a collapse-right icon to open it. A closed sidebar is hidden from keyboard and screen readers.
+
+**Lists**
+1. An empty list now shows a plain grey "No <records> found." box. Before, it showed a "This page is empty" notice with a "Previous Page" button that linked back to the same page. That button now only appears when you are on a page past the last one.
+
+**Dashboard**
+1. The dashboard now shows summary cards (orders, revenue, new users, active products for the last 30 days), a chart of orders and revenue per day, a doughnut of orders by status, the top 5 products, the 5 most recent orders and the 5 most recently updated posts and the 5 most recently updated pages. Revenue counts only `Completed` and `Delivered` orders.
+2. A short "What's new" panel replaces the old changelog text and links to this file.
+3. Each widget, and the queries behind it, is only used when the signed-in user may view that area (`admin/orders`, `admin/products`, `admin/users`, `admin/pages`, `admin/posts`); the dashboard route itself still needs its own permission.
+4. Charts use Chart.js 4.6.1, bundled with the package (no CDN), and follow the Bootstrap colour variables, including `data-bs-theme`.
+
+**Build tooling (contributors)**
+1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
+2. Third-party licence notices ship in `src/public/licenses/`.
 
 ## Version 0.58.0
 

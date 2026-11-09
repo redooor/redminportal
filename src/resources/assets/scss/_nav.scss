@@ -1,0 +1,248 @@
+// Navigations
+
+/* Breadcrumb navbar (page trail in the top bar) */
+.navbar-breadcrumb {
+    .nav-item {
+        display: flex;
+        align-items: center;
+    }
+    .nav-link {
+        color: #428bca;
+        &:hover,
+        &:focus {
+            color: #428bca;
+        }
+        &.active {
+            color: #898989;
+        }
+    }
+}
+
+/*
+ * Sidebar
+ */
+#sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1032;
+    display: block;
+    width: 240px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    padding-bottom: 2em;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform .2s, visibility 0s .2s;
+}
+
+html.sidebar-open #sidebar {
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+#sidebar-title {
+    position: relative;
+    padding: 15px;
+    background-color: #2196F3;
+    .redooor-nav-logo {
+        font-size: 24px;
+        color: #fff;
+        &:hover, &:focus {
+            text-decoration: none;
+        }
+        img {
+            height: 28px;
+            vertical-align: text-top;
+        }
+    }
+}
+
+/* Visible close control for the drawer below the desktop breakpoint (hidden from 992px by d-lg-none). */
+#sidebar-close {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+}
+
+/* Viewport backdrop, shown only while the drawer is open below the desktop breakpoint. */
+#sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1031;
+    display: none;
+    background: #333333;
+    background: rgba(0, 0, 0, 0.4);
+    transition: .2s ease all;
+}
+
+/* Navbar toggle: a borderless 44px hit area, with both icons swapped by CSS. */
+#sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    &:hover,
+    &:focus {
+        background: none;
+        text-decoration: none;
+    }
+}
+
+.sidebar-toggle .fa-angles-left {
+    display: none;
+}
+.sidebar-toggle .fa-angles-right {
+    display: inline-block;
+}
+html.sidebar-open .sidebar-toggle .fa-angles-left {
+    display: inline-block;
+}
+html.sidebar-open .sidebar-toggle .fa-angles-right {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    /* Opening the drawer locks the page behind it; removing the class unlocks it again. */
+    html.sidebar-open {
+        overflow: hidden;
+    }
+    html.sidebar-open #sidebar-overlay {
+        display: block;
+    }
+}
+
+@media (min-width: 992px) {
+    .main-content {
+        transition: margin-left .2s;
+    }
+    #header .navbar {
+        transition: left .2s;
+    }
+    html.sidebar-open .main-content {
+        margin-left: 240px;
+    }
+    html.sidebar-open #header .navbar {
+        left: 240px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #sidebar,
+    #sidebar-overlay,
+    .main-content,
+    #header .navbar {
+        transition: none;
+    }
+}
+
+/* Sidebar navigation */
+// Redmaterials uses .nav-sidebar for its own fixed drawer (240px wide, parked at left: -240px).  Here the menu list sits
+// inside the portal's #sidebar drawer, so undo the drawer positioning or the list is drawn off screen.
+#sidebar .nav-sidebar {
+    position: static;
+    left: auto;
+    top: auto;
+    bottom: auto;
+    width: auto;
+    z-index: auto;
+    overflow: visible;
+    padding-bottom: 0;
+    background-color: transparent;
+    transform: none;
+    transition: none;
+}
+
+.nav-sidebar {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin: 0;
+    list-style: none;
+    li.nav-sub-header {
+        &:before {
+            content: '';
+            display: block;
+            border-top: 1px solid #ddd;
+        }
+        span {
+            font-weight: 200;
+            color: var(--rdm-pal-deep-orange);
+        }
+    }
+}
+
+.nav-sidebar ul {
+    padding: 0;
+}
+
+.nav-sidebar ul li {
+    list-style: none;
+    display: block;
+    padding: 0;
+}
+
+.nav-sidebar li span {
+    display: block;
+    padding: 10px 20px;
+}
+
+.nav-sidebar li a {
+    display: block;
+    padding: 10px 20px;
+}
+
+.nav-sidebar li a:hover,
+.nav-sidebar li a:focus {
+    color: #23527c;
+    text-decoration: none;
+    background-color: #eee;
+}
+
+.nav-sidebar .active a,
+.nav-sidebar .active a:hover,
+.nav-sidebar .active a:focus {
+    color: #fff;
+    background-color: #428bca;
+}
+
+// Hierarchy tree
+ul.redmin-hierarchy {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    max-height: 200px;
+    overflow-y: scroll;
+
+    ul {
+        padding-left: 1.2em;
+        list-style: none;
+    }
+
+    li {
+        line-height: 1.8;
+        white-space: nowrap;
+    }
+
+    a {
+        padding: 0.3em 0.5em;
+    }
+
+    a.active {
+        color: #fff;
+        background: #428bca;
+    }
+}
+
+ul.redmin-hierarchy.no-max-height {
+    max-height: none;
+}

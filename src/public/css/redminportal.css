@@ -1,40 +1,62 @@
 /*!
- * redminportal v0.3.3
+ * redminportal v2.0.0
  * Homepage: https://github.com/redooor/redminportal
- * Copyright 2014-2016 Redooor LLP
+ * Copyright 2014-2026 Redooor LLP
  * Licensed under MIT
 */
-
 /* Overwrite Bootstrap style */
 body {
   padding-top: 70px;
-}
-/* Shift down to make space for navbar */
-body.modal-open,
-.modal-open .navbar-fixed-top {
-  margin-right: 0px;
-}
-/* Fix strange right margin when opening modal dialog */
+} /* Shift down to make space for navbar */
 .navbar-brand > img {
   display: inline-block;
 }
+
+/* Bootstrap 5 underlines links by default; the admin UI never did */
+a {
+  text-decoration: none;
+}
+a:hover, a:focus {
+  text-decoration: underline;
+}
+
+.btn,
+.nav-link,
+.dropdown-item,
+.page-link,
+.navbar-brand,
+.list-group-item {
+  text-decoration: none !important;
+}
+
+/* Table headers: regular weight like the previous admin theme */
+.table > thead > tr > th {
+  font-weight: normal;
+  color: #757575;
+}
+
 /* Redooor style */
 body {
   padding-bottom: 70px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: var(--bs-tertiary-bg);
 }
+
 header,
 #header {
   margin: 0.5em 0;
 }
+
 footer,
 #footer {
   padding: 2em 0;
   color: #999999;
 }
+
 .official-color {
   color: #ed1b33;
 }
+
 .redooor-nav-logo {
   color: #333333;
 }
@@ -48,64 +70,75 @@ footer,
 .redooor-nav-logo .slogan {
   font-size: 1.2em;
 }
+
 .redooor-nav-logo {
   height: 18px;
   vertical-align: text-top;
 }
+
 /*
  * Main content
  */
 .main-content {
   position: relative;
 }
+
 .main-content .page-header {
   margin-top: 0;
 }
-/* Add size to media-object */
-.media .media-object.media-thumbnail {
+
+/* Thumbnail beside a list item */
+.media-thumbnail {
   width: 100px;
   height: 100px;
 }
+
 /* Block componenets */
 .block-header {
   display: inline-block;
 }
+
 #nav-bottom-phone {
   margin: 0;
 }
+
 .contact-us {
   text-align: right;
 }
 .contact-us h4 {
   margin-right: 0.4em;
 }
+
 .nav-controls {
   padding-bottom: 0.5em;
 }
+
 .navbar-menu-current {
   color: #999 !important;
 }
+
 .hero-text {
   font-size: 3.5em;
   line-height: 1.4em;
 }
+
 .hero-strip {
   margin: 2em 0 4em 0;
   padding: 5em 2em;
   color: white;
   background-color: gray;
   background-color: rgba(0, 0, 0, 0.4);
-  -webkit-box-shadow: 0 0 40px rgba(0, 0, 0, 0.3) inset;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.3) inset;
 }
+
 /* Faded out hr */
 hr.soften {
   height: 1px;
   margin: 70px 0;
-  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
   background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
   border: 0;
 }
+
 .box {
   display: block;
   padding: 1em;
@@ -113,68 +146,68 @@ hr.soften {
   position: relative;
   border: 1px solid #efefef;
   background: #fff;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
 }
+
 .box:before,
 .box:after {
-  content: '';
+  content: "";
   z-index: -1;
   position: absolute;
   left: 10px;
   bottom: 1em;
   width: 70%;
-  max-width: 300px;
-  /* avoid rotation causing ugly appearance at large container widths */
+  max-width: 300px; /* avoid rotation causing ugly appearance at large container widths */
   max-height: 100px;
   height: 55%;
-  -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  -webkit-transform: skew(-15deg) rotate(-6deg);
-  -ms-transform: skew(-15deg) rotate(-6deg);
-  -o-transform: skew(-15deg) rotate(-6deg);
   transform: skew(-15deg) rotate(-6deg);
 }
+
 .box:after {
   left: auto;
   right: 10px;
-  -webkit-transform: skew(15deg) rotate(6deg);
-  -ms-transform: skew(15deg) rotate(6deg);
-  -o-transform: skew(15deg) rotate(6deg);
   transform: skew(15deg) rotate(6deg);
 }
+
 .box:hover {
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.09) inset;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.09) inset;
 }
+
 /* For sign in page */
 .form-signin {
   background-color: #eee;
   border: 1px solid #e5e5e5;
   padding-bottom: 15px;
 }
+
 i {
   margin-right: 8px;
   -webkit-print-color-adjust: exact;
 }
+
 .icon-phone {
   background-image: url("../img/glyphicons_169_phone.png");
   background-position: 2px 0;
-  -webkit-background-size: contain;
-          background-size: contain;
+  background-size: contain;
 }
+
 .icon-twitter {
   background-image: url("../img/glyphicons_411_twitter.png");
   background-position: 0 0;
-  -webkit-background-size: contain;
-          background-size: contain;
+  background-size: contain;
 }
+
 .rdpt-preloader {
   text-align: center;
   padding: 1em;
   display: none;
 }
+
 /* tables */
+.table td.table-actions .dropdown-toggle::after {
+  display: none;
+}
 .table td.table-actions {
   padding: 2px;
 }
@@ -184,12 +217,14 @@ i {
   line-height: 1;
   padding: 0px;
 }
+
 /* Style for iframe in modal window */
 .modal .modal-dialog .modal-content .modal-body iframe {
   width: 100%;
   height: 500px;
   border: 0;
 }
+
 /* Overwrite default padding on small screens */
 @media (max-width: 979px) {
   .hero-text {
@@ -214,11 +249,11 @@ i {
     padding-right: 0;
   }
   /*
-    #header, #main, #footer {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-*/
+      #header, #main, #footer {
+          padding-left: 20px;
+          padding-right: 20px;
+      }
+  */
   .hero-text {
     font-size: 2.5em;
   }
@@ -234,81 +269,74 @@ i {
     font-size: 2em;
   }
 }
-/* Override Bootstrap navbar toggle */
-.navbar-toggle {
-  margin: 0px;
-  padding: 20.5px 1.5em;
-  font-size: 17px;
-  line-height: 23px;
-  height: 64px;
-  border: 0px;
-  border-radius: 0px;
+/* Insert-uploaded-image popup of the rich text editor */
+.redmin-editor-media {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 320px;
+  padding: 4px;
 }
-/* For mobile screen navbar */
-.navbar-nav.navbar-xs {
-  overflow-y: scroll;
-  margin-bottom: 50px;
+
+.redmin-editor-media-item {
+  padding: 2px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
 }
-.navbar-nav.navbar-xs li span {
-  padding: 10px 1.5em;
-  line-height: 23px;
-  position: relative;
+.redmin-editor-media-item:hover, .redmin-editor-media-item:focus {
+  border-color: #2196F3;
+}
+.redmin-editor-media-item img {
   display: block;
-  font-weight: 200;
-  color: #FF5722;
+  width: 72px;
+  height: 54px;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
-.navbar-nav.navbar-xs ul {
-  margin-left: -15px;
-  margin-right: -15px;
+
+/* Breadcrumb navbar (page trail in the top bar) */
+.navbar-breadcrumb .nav-item {
+  display: flex;
+  align-items: center;
 }
-.navbar-nav.navbar-xs ul li {
-  list-style: none;
-  display: block;
+.navbar-breadcrumb .nav-link {
+  color: #428bca;
 }
-.navbar-nav.navbar-xs ul li a {
-  color: #777;
-  padding: 10px 1.5em;
-  line-height: 23px;
-  position: relative;
-  display: block;
-  text-decoration: none;
+.navbar-breadcrumb .nav-link:hover, .navbar-breadcrumb .nav-link:focus {
+  color: #428bca;
 }
-.navbar-nav.navbar-xs ul li a:hover,
-.navbar-nav.navbar-xs ul li a:focus {
-  color: #333;
-  background-color: transparent;
+.navbar-breadcrumb .nav-link.active {
+  color: #898989;
 }
-.navbar-nav.navbar-xs ul li span {
-  padding: 10px 1.5em;
-  line-height: 23px;
-  position: relative;
-  display: block;
-}
+
 /*
  * Sidebar
  */
-/* Hide on load, show later when toggled */
-#sidebar,
-#sidebar-overlay {
-  display: none;
-}
 #sidebar {
   position: fixed;
-  width: 240px;
   top: 0;
   bottom: 0;
-  left: -240px;
+  left: 0;
   z-index: 1032;
   display: block;
+  width: 240px;
   overflow-x: hidden;
   overflow-y: auto;
   /* Scrollable contents if viewport is shorter than content. */
   background-color: #f5f5f5;
-  -webkit-transition: .3s ease all;
-       -o-transition: .3s ease all;
-          transition: .3s ease all;
   padding-bottom: 2em;
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition: transform 0.2s, visibility 0s 0.2s;
 }
+
+html.sidebar-open #sidebar {
+  transform: none;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
 #sidebar-title {
   position: relative;
   padding: 15px;
@@ -318,92 +346,162 @@ i {
   font-size: 24px;
   color: #fff;
 }
-#sidebar-title .redooor-nav-logo:hover,
-#sidebar-title .redooor-nav-logo:focus {
+#sidebar-title .redooor-nav-logo:hover, #sidebar-title .redooor-nav-logo:focus {
   text-decoration: none;
 }
 #sidebar-title .redooor-nav-logo img {
   height: 28px;
   vertical-align: text-top;
 }
-#sidebar-overlay {
+
+/* Visible close control for the drawer below the desktop breakpoint (hidden from 992px by d-lg-none). */
+#sidebar-close {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+}
+
+/* Viewport backdrop, shown only while the drawer is open below the desktop breakpoint. */
+#sidebar-overlay {
+  position: fixed;
+  inset: 0;
   z-index: 1031;
+  display: none;
   background: #333333;
   background: rgba(0, 0, 0, 0.4);
-  -webkit-transition: .3s ease all;
-       -o-transition: .3s ease all;
-          transition: .3s ease all;
+  transition: 0.2s ease all;
 }
-#sidebar-wrapper.active #sidebar {
-  left: 0px;
+
+/* Navbar toggle: a borderless 44px hit area, with both icons swapped by CSS. */
+#sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
 }
-#sidebar-wrapper.active #sidebar-overlay {
-  display: block;
+#sidebar-toggle:hover, #sidebar-toggle:focus {
+  background: none;
+  text-decoration: none;
 }
-#sidebar-wrapper.active .main-content {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  position: fixed;
-  padding-right: 15px;
-  padding-left: 15px;
-  right: 0px;
+
+.sidebar-toggle .fa-angles-left {
+  display: none;
+}
+
+.sidebar-toggle .fa-angles-right {
+  display: inline-block;
+}
+
+html.sidebar-open .sidebar-toggle .fa-angles-left {
+  display: inline-block;
+}
+
+html.sidebar-open .sidebar-toggle .fa-angles-right {
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  /* Opening the drawer locks the page behind it; removing the class unlocks it again. */
+  html.sidebar-open {
+    overflow: hidden;
+  }
+  html.sidebar-open #sidebar-overlay {
+    display: block;
+  }
+}
+@media (min-width: 992px) {
+  .main-content {
+    transition: margin-left 0.2s;
+  }
+  #header .navbar {
+    transition: left 0.2s;
+  }
+  html.sidebar-open .main-content {
+    margin-left: 240px;
+  }
+  html.sidebar-open #header .navbar {
+    left: 240px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #sidebar,
+  #sidebar-overlay,
+  .main-content,
+  #header .navbar {
+    transition: none;
+  }
 }
 /* Sidebar navigation */
+#sidebar .nav-sidebar {
+  position: static;
+  left: auto;
+  top: auto;
+  bottom: auto;
+  width: auto;
+  z-index: auto;
+  overflow: visible;
+  padding-bottom: 0;
+  background-color: transparent;
+  transform: none;
+  transition: none;
+}
+
+.nav-sidebar {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  margin: 0;
+  list-style: none;
+}
 .nav-sidebar li.nav-sub-header:before {
-  content: '';
+  content: "";
   display: block;
   border-top: 1px solid #ddd;
 }
 .nav-sidebar li.nav-sub-header span {
   font-weight: 200;
-  color: #FF5722;
+  color: var(--rdm-pal-deep-orange);
 }
+
 .nav-sidebar ul {
   padding: 0;
 }
+
 .nav-sidebar ul li {
   list-style: none;
   display: block;
   padding: 0;
 }
+
 .nav-sidebar li span {
   display: block;
   padding: 10px 20px;
 }
+
 .nav-sidebar li a {
   display: block;
   padding: 10px 20px;
 }
+
 .nav-sidebar li a:hover,
 .nav-sidebar li a:focus {
   color: #23527c;
   text-decoration: none;
   background-color: #eee;
 }
+
 .nav-sidebar .active a,
 .nav-sidebar .active a:hover,
 .nav-sidebar .active a:focus {
   color: #fff;
   background-color: #428bca;
 }
-/* Override Redmaterials navbar */
-.navbar-nav.navbar-breadcrumb > li > a,
-.navbar-nav.navbar-breadcrumb > li > a:hover,
-.navbar-nav.navbar-breadcrumb > li > a:focus {
-  color: #428bca;
-}
-.navbar-nav.navbar-breadcrumb > li.active > a,
-.navbar-nav.navbar-breadcrumb > li.active > a:hover,
-.navbar-nav.navbar-breadcrumb > li.active > a:focus,
-.navbar-nav.navbar-breadcrumb > li.active > .navbar-text {
-  color: #898989;
-}
+
 ul.redmin-hierarchy {
   padding: 0;
   margin: 0;
@@ -426,80 +524,122 @@ ul.redmin-hierarchy a.active {
   color: #fff;
   background: #428bca;
 }
+
 ul.redmin-hierarchy.no-max-height {
   max-height: none;
 }
-.panel.panel-card .panel-heading {
-  min-height: 80px;
-  position: relative;
-  margin-bottom: 27px;
-}
-.panel.panel-card .panel-heading .panel-title {
-  font-size: 24px;
-}
-.panel.panel-card .panel-heading .btn-action {
-  position: absolute;
-  bottom: -27px;
-  right: 1.5em;
-}
+
 .btn.disabled.btn-text {
   background-color: #eee;
   color: #333;
 }
-.panel .panel-progress {
+
+.card {
+  border: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.card > .card-header {
+  background-color: #9e9e9e;
+  color: #fff;
+  border-bottom: 0;
+}
+.card > .card-header .card-title {
+  font-size: 1rem;
+  color: inherit;
+}
+
+.card > .card-footer {
+  background-color: transparent;
+  border-top: 0;
+}
+
+/* Field labels above underlined inputs */
+.card-body label:not(.form-check-label) {
+  font-size: 13px;
+  color: #757575;
+}
+
+.card .card-progress {
   margin-top: -1px;
   height: 6px;
 }
-.panel .panel-progress .progress-bar:last-child {
+
+.card .card-progress .progress-bar:last-child {
   border-radius: 0;
 }
-/* Fixed padding and margin issue with Panels */
-.panel .progress,
-.panel .table,
-.panel .list-group,
-.panel .panel-collapse .list-group {
+
+/* Tables, progress bars and flush lists sit flush against the card edges */
+.card .progress, .card .table,
+.card .list-group {
   margin-bottom: 0;
 }
-.panel .list-group .list-group-item,
-.panel .panel-collapse .list-group .list-group-item {
+
+.card .list-group .list-group-item {
   border-width: 1px 0;
   border-radius: 0;
 }
-.panel .list-group .list-group-item:first-child {
+
+.card .list-group .list-group-item:first-child {
   border-top: 0;
 }
+
 .modal .modal-progress {
   height: 6px;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
 }
+
 .modal .modal-progress .progress {
   margin-bottom: 0;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   background-color: #333;
 }
+
 .modal .modal-progress .progress-bar:last-child {
   border-radius: 0;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
 }
-/* Customised CSS for Tinymce */
-.mce-content-body {
-  padding: 1em;
+
+.redmin-fileinput .redmin-fileinput-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 150px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
 }
-.mce-textbox:focus {
-  -webkit-box-shadow: initial;
-  box-shadow: initial;
+.redmin-fileinput .redmin-fileinput-preview img {
+  max-width: 100%;
+  max-height: 100%;
 }
-.mce-btn.mce-primary .mce-txt {
-  color: #ffffff;
+.redmin-fileinput label.btn {
+  margin-bottom: 0;
 }
+.redmin-fileinput label.btn:focus-within {
+  outline: 2px solid #2196F3;
+  outline-offset: 2px;
+}
+.redmin-fileinput .redmin-fileinput-exists {
+  display: none;
+}
+.redmin-fileinput.is-set .redmin-fileinput-new {
+  display: none;
+}
+.redmin-fileinput.is-set .redmin-fileinput-exists {
+  display: inline;
+}
+.redmin-fileinput.is-set button.redmin-fileinput-exists {
+  display: inline-block;
+}
+
 .bootstrap-tagsinput {
   border: none;
   border-radius: 0;
   -webkit-appearance: none;
-  -webkit-box-shadow: inset 0 -1px 0 #dddddd;
   box-shadow: inset 0 -1px 0 #dddddd;
   font-size: 16px;
   background-color: transparent;
@@ -515,18 +655,14 @@ ul.redmin-hierarchy.no-max-height {
   color: #555;
   background-color: #fff;
   background-image: none;
-  -webkit-transition: border-color ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
-  -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 .bootstrap-tagsinput.tagsinput-focus {
-  -webkit-box-shadow: inset 0 -2px 0 #2196f3;
   box-shadow: inset 0 -2px 0 #2196f3;
 }
 .bootstrap-tagsinput input {
   border: none;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
   outline: none;
   background-color: transparent;
   padding: 0;
@@ -537,35 +673,41 @@ ul.redmin-hierarchy.no-max-height {
 }
 .bootstrap-tagsinput input:focus {
   border: none;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
+}
+.bootstrap-tagsinput .twitter-typeahead {
+  width: 100%;
+  max-width: 100%;
+}
+.bootstrap-tagsinput .twitter-typeahead input {
+  width: 100% !important;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .bootstrap-tagsinput .tag {
   margin-right: 2px;
   color: white;
   font-size: 0.8em;
 }
-.bootstrap-tagsinput .tag [data-role="remove"] {
+.bootstrap-tagsinput .tag [data-role=remove] {
   margin-left: 8px;
   cursor: pointer;
 }
-.bootstrap-tagsinput .tag [data-role="remove"]:after {
+.bootstrap-tagsinput .tag [data-role=remove]:after {
   content: "x";
   padding: 0px 2px;
 }
-.bootstrap-tagsinput .tag [data-role="remove"]:hover {
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+.bootstrap-tagsinput .tag [data-role=remove]:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-.bootstrap-tagsinput .tag [data-role="remove"]:hover:active {
-  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+.bootstrap-tagsinput .tag [data-role=remove]:hover:active {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
+
 /* For Typeahead.js plugin */
 /* For Bootstrap tagsinput plugin */
 .bootstrap-tagsinput .twitter-typeahead .tt-query {
   margin-bottom: 0;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 .bootstrap-tagsinput .twitter-typeahead .tt-hint {
@@ -580,7 +722,6 @@ ul.redmin-hierarchy.no-max-height {
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 .bootstrap-tagsinput .twitter-typeahead .tt-suggestion {
@@ -596,6 +737,7 @@ ul.redmin-hierarchy.no-max-height {
 .bootstrap-tagsinput .twitter-typeahead .tt-suggestion p {
   margin: 0;
 }
+
 /* For email suggestions */
 .redmin-email-typeahead .twitter-typeahead {
   width: 100%;
@@ -618,4 +760,10 @@ ul.redmin-hierarchy.no-max-height {
   padding: 0;
   margin: 0;
 }
+
+.chart-wrapper {
+  position: relative;
+  height: 280px;
+}
+
 /*# sourceMappingURL=redminportal.css.map */

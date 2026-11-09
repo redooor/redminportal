@@ -20,17 +20,17 @@
             $('#permission-inherit').tagsinput({
                 freeInput: true,
                 trimValue: true,
-                tagClass: 'label label-default'
+                tagClass: 'badge text-bg-secondary'
             });
             $('#permission-allow').tagsinput({
                 freeInput: true,
                 trimValue: true,
-                tagClass: 'label label-success'
+                tagClass: 'badge text-bg-success'
             });
             $('#permission-deny').tagsinput({
                 freeInput: true,
                 trimValue: true,
-                tagClass: 'label label-danger'
+                tagClass: 'badge text-bg-danger'
             });
             // -------------------
             // Permission Builder

@@ -16,7 +16,7 @@
     --------------------------------
     NOTE: if value_as_key is set, then matching value will be marked as selected instead.
 --}}
-<div class="form-group {{ $wrapper_classes ?? '' }}">
+<div class="mb-3 {{ $wrapper_classes ?? '' }}">
     @if (isset($label))
     <label class="{{ $label_classes ?? '' }}" for="{{ $input_name }}">{{ $label }}</label>
     @endif
@@ -31,6 +31,6 @@
         @endif
     >{{-- Input end --}}
     @if (isset($help_text))
-    <p class="help-block">{{ $help_text }}</p>
+    <p class="form-text">{{ $help_text }}</p>
     @endif
 </div>

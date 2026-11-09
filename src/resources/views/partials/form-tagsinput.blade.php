@@ -10,14 +10,14 @@
     ])
     --------------------------------
 --}}
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <div class="panel-title">{{ $title ?? trans('redminportal::forms.tags') }}</div>
+<div class="card">
+    <div class="card-header">
+        <div class="card-title mb-0">{{ $title ?? trans('redminportal::forms.tags') }}</div>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         {!! Redminportal::form()->inputer('tags', $value) !!}
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <i><small>{{ $footnote ?? trans('redminportal::forms.tags_footnote') }}</small></i>
     </div>
 </div>

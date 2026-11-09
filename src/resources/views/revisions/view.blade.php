@@ -17,7 +17,7 @@
 
     @if ($model->revisions()->count() > 0)
     <div class="table-responsive">
-        <table class="table table-condensed table-striped">
+        <table class="table table-sm table-striped">
             <thead>
                 <tr>
                     <th>{{ trans('redminportal::forms.revision_edited_by') }}</th>
@@ -41,6 +41,6 @@
         </table>
     </div>
     @else
-    <div class="alert alert-info">{{ trans('redminportal::messages.no_revision_found') }}</div>
+    <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ trans('redminportal::messages.no_revision_found') }}</div>
     @endif
 @stop

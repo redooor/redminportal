@@ -1,7 +1,7 @@
 @extends('redminportal::layouts.master')
 
 @section('navbar-breadcrumb')
-    <li class="active"><span class="navbar-text">{{ Lang::get('redminportal::menus.users') }}</span></li>
+    <li class="nav-item"><span class="nav-link active">{{ Lang::get('redminportal::menus.users') }}</span></li>
 @stop
 
 @section('content')
@@ -9,14 +9,14 @@
     @include('redminportal::partials.errors')
     
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4">
             {!! Redminportal::form()->searchForm(url('admin/users'), url('admin/users/search'), $searchable_fields, (isset($field) ? $field : null), (isset($search) ? $search : null)) !!}
         </div>
-        <div class="col-md-8">
-            <div class="nav-controls text-right">
+        <div class="col-lg-8">
+            <div class="nav-controls text-end">
                 <div class="btn-group" role="group">
                     @if (count($models) > 0)
-                    <a href="" class="btn btn-default btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
+                    <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                     @endif
                     <a href="{{ url('admin/users/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
                 </div>
@@ -25,7 +25,7 @@
     </div>
 
 	@if (count($models) > 0)
-		<table class='table table-striped table-bordered table-condensed'>
+		<table class='table table-striped table-sm'>
 			<thead>
 				<tr>
 					<th>
@@ -63,43 +63,43 @@
 			        <td>{{ $user->last_name }}</td>
 			        <td>
 						@foreach($user->groups as $group)
-						<span class="label label-info">{{ $group->name }}</span>
+						<span class="badge text-bg-info">{{ $group->name }}</span>
 						@endforeach
 					</td>
 			        <td>
 			            @if ($user->activated)
-			                 <span class="label label-success"><span class='glyphicon glyphicon-ok'></span></span>
+			                 <span class="badge text-bg-success"><span class='fa-solid fa-check'></span></span>
                         @else
-                            <span class="label label-danger"><span class='glyphicon glyphicon-remove'></span></span>
+                            <span class="badge text-bg-danger"><span class='fa-solid fa-xmark'></span></span>
                         @endif
 		            </td>
 			        <td>@if ($user->last_login){{ date('d/m/y h:i A', strtotime($user->last_login)) }}@endif</td>
                     <td>{{ date("d/m/y h:i A", strtotime($user->created_at)) }}</td>
                     <td>{{ date("d/m/y h:i A", strtotime($user->updated_at)) }}</td>
-					<td class="table-actions text-right">
+					<td class="table-actions text-end">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-								<span class="glyphicon glyphicon-option-horizontal"></span>
+                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown">
+								<i class="fa-solid fa-ellipsis"></i>
 							</button>
-							<ul class="dropdown-menu pull-right" role="menu">
+							<ul class="dropdown-menu dropdown-menu-end">
 								@if ($user->activated)
 									<li>
-										<a href="{{ URL::to('admin/users/deactivate/' . $user->id) }}">
-											<i class="glyphicon glyphicon-eye-close"></i>{{ Lang::get('redminportal::buttons.deactivate') }}</a>
+										<a class="dropdown-item" href="{{ URL::to('admin/users/deactivate/' . $user->id) }}">
+											<i class="fa-solid fa-eye-slash"></i>{{ Lang::get('redminportal::buttons.deactivate') }}</a>
 									</li>
 								@else
 									<li>
-										<a href="{{ URL::to('admin/users/activate/' . $user->id) }}">
-											<i class="glyphicon glyphicon-eye-open"></i>{{ Lang::get('redminportal::buttons.activate') }}</a>
+										<a class="dropdown-item" href="{{ URL::to('admin/users/activate/' . $user->id) }}">
+											<i class="fa-solid fa-eye"></i>{{ Lang::get('redminportal::buttons.activate') }}</a>
 									</li>
 								@endif
 								<li>
-									<a href="{{ URL::to('admin/users/edit/' . $user->id) }}">
-										<i class="glyphicon glyphicon-edit"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
+									<a class="dropdown-item" href="{{ URL::to('admin/users/edit/' . $user->id) }}">
+										<i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
 								</li>
                                 <li>
-									<a href="{{ URL::to('admin/users/delete/' . $user->id) }}" class="btn-confirm">
-										<i class="glyphicon glyphicon-remove"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
+									<a class="dropdown-item btn-confirm" href="{{ URL::to('admin/users/delete/' . $user->id) }}">
+										<i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
 								</li>
 							</ul>
 						</div>
@@ -109,14 +109,14 @@
 		    </tbody>
 	    </table>
         <div class="text-center">
-		{!! $models->render() !!}
+		{!! $models->render('pagination::bootstrap-5') !!}
         </div>
 	@else
-        @if ($models->lastPage())
-        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
-        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
+        @if ($models->total() > 0)
+        <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ Lang::get('redminportal::messages.no_record_page_empty') }}</div>
+        <a href="{{ $models->url($models->lastPage()) }}" class="btn btn-secondary"><i class="fa-solid fa-chevron-left"></i> {{ Lang::get('redminportal::buttons.previous_page') }}</a>
         @else
-        <div class="alert alert-info">{{ Lang::get('redminportal::messages.no_user_found') }}</div>
+        <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ Lang::get('redminportal::messages.no_user_found') }}</div>
         @endif
 	@endif
 @stop
@@ -125,7 +125,7 @@
 <script>
     !function ($) {
         $(function(){
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-bs-toggle="tooltip"]').tooltip();
         })
     }(window.jQuery);
 </script>

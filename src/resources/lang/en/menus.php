@@ -30,4 +30,6 @@ return array(
     'orders' => 'Orders',
     'bundles' => 'Bundles',
     'my_account' => 'My Account',
+    'sidebar_collapse' => 'Collapse sidebar',
+    'sidebar_expand' => 'Expand sidebar',
 );

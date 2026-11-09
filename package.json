@@ -1,6 +1,6 @@
 {
   "name": "redminportal",
-  "version": "0.58.0",
+  "version": "2.0.0",
   "description": "RedminPortal is a backend administrating tool for Content Management and Ecommerce sites.",
   "keywords": [
     "package",
@@ -13,27 +13,39 @@
   ],
   "repository": "https://github.com/redooor/redminportal",
   "homepage": "https://github.com/redooor/redminportal",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "private": true,
   "author": "Redooor LLP",
   "license": "MIT",
   "engines": {
-    "node": ">= 0.10.1"
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build:css": "sass src/resources/assets/scss/redminportal.scss src/public/css/redminportal.css --style=expanded --source-map --embed-sources --fatal-deprecation=import --fatal-deprecation=color-functions --fatal-deprecation=global-builtin && postcss src/public/css/redminportal.css -o src/public/css/redminportal.css --map && node scripts/banner.mjs src/public/css/redminportal.css",
+    "build:css:min": "cleancss -o src/public/css/redminportal.min.css src/public/css/redminportal.css -O1 'specialComments:all'",
+    "build:editor:css": "sass src/resources/assets/scss/redmin-editor.scss src/public/css/redmin-editor.css --style=expanded --source-map --embed-sources --fatal-deprecation=import --fatal-deprecation=color-functions --fatal-deprecation=global-builtin && cleancss -o src/public/css/redmin-editor.min.css src/public/css/redmin-editor.css -O1 'specialComments:all'",
+    "build:js": "esbuild src/resources/assets/js/bootstrap-tagsinput.js --minify --legal-comments=inline --banner:js=\"/*! bootstrap-tagsinput (c) 2013 Tim Schlechter, MIT. See licenses/bootstrap-tagsinput.txt */\" --sourcemap --outfile=src/public/js/bootstrap-tagsinput.min.js && esbuild src/resources/assets/js/redmin-fileinput.js --minify --sourcemap --outfile=src/public/js/redmin-fileinput.min.js && esbuild src/resources/assets/js/redmin-dashboard.js --minify --sourcemap --outfile=src/public/js/redmin-dashboard.min.js && esbuild src/resources/assets/js/redmin-sidebar.js --minify --sourcemap --outfile=src/public/js/redmin-sidebar.min.js",
+    "build:vendor": "node scripts/copy-vendor.mjs",
+    "build": "npm run clean && npm run build:css && npm run build:css:min && npm run build:editor:css && npm run build:js && npm run build:vendor",
+    "clean": "rm -f src/public/css/redminportal.css src/public/css/redminportal.css.map src/public/css/redminportal.min.css src/public/css/redmin-editor.css src/public/css/redmin-editor.css.map src/public/css/redmin-editor.min.css src/public/js/bootstrap-tagsinput.js.map src/public/js/bootstrap-tagsinput.min.js src/public/js/bootstrap-tagsinput.min.js.map src/public/js/redmin-fileinput.min.js src/public/js/redmin-fileinput.min.js.map src/public/js/redmin-dashboard.min.js src/public/js/redmin-dashboard.min.js.map src/public/js/redmin-sidebar.min.js src/public/js/redmin-sidebar.min.js.map",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "bower": "^1.3.12",
-    "grunt": "^0.4.5",
-    "grunt-autoprefixer": "^2.0.0",
-    "grunt-banner": "^0.2.3",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-concat": "^0.5.0",
-    "grunt-contrib-connect": "^0.9.0",
-    "grunt-contrib-copy": "^0.7.0",
-    "grunt-contrib-cssmin": "^0.10.0",
-    "grunt-contrib-less": "^0.12.0",
-    "grunt-contrib-uglify": "^0.6.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-exec": "^0.4.6"
+    "@eonasdan/tempus-dominus": "6.10.4",
+    "@fortawesome/fontawesome-free": "7.3.1",
+    "@popperjs/core": "2.11.8",
+    "autoprefixer": "10.6.1",
+    "bootstrap": "5.3.8",
+    "chart.js": "4.6.1",
+    "clean-css-cli": "5.6.3",
+    "esbuild": "0.28.2",
+    "jodit": "4.18.10",
+    "jquery": "3.7.1",
+    "jquery-ui": "1.14.2",
+    "plupload": "2.3.9",
+    "postcss": "8.5.31",
+    "postcss-cli": "12.0.0",
+    "redmaterials": "git+https://github.com/redooor/redmaterials.git#9c6f3d2afd6938dec31768a34ab5fc05d5d06f8f",
+    "sass": "1.106.1",
+    "typeahead.js": "0.11.1"
   }
 }

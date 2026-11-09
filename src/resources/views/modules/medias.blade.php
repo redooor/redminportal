@@ -1,5 +1,5 @@
 @if (count($medias) > 0)
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>{{ Lang::get('redminportal::forms.name') }}</th>
@@ -26,5 +26,5 @@
         </tbody>
     </table>
 @else
-    <div class="well">{{ Lang::get('redminportal::messages.no_media_in_this_category') }}</div>
+    <div class="card card-body bg-body-tertiary">{{ Lang::get('redminportal::messages.no_media_in_this_category') }}</div>
 @endif

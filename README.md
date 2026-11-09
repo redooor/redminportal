@@ -375,14 +375,15 @@ You can create a new Laravel 13 application using the command:
         
     **CAUTION: using --force will overwrite existing files**
         
-## Install Grunt and Bower dependencies
+## Build assets
 
-1. You need to have nodejs installed
-3. cd to packages/redooor/redminportal
-2. Run _npm install_
-3. Run _bower install_
-4. To build all assets, run _grunt_
-5. To compile just the less css, run _grunt less-compile_
+1. Install [Node.js](https://nodejs.org/) 22.12 or later.
+2. cd to packages/redooor/redminportal
+3. Run `npm ci` to install the build dependencies.
+4. Run `npm run build` to compile the Sass in `src/resources/assets/scss` and copy the vendored assets into `src/public`.
+5. From your Laravel application's root folder (where `artisan` lives), publish the assets with:
+
+        php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="public" --force
 
 # Testing
 
@@ -425,14 +426,15 @@ RedminPortal is open-sourced software licensed under the [MIT license](http://op
 
 # External Libraries Used
 
-* [Bootstrap v3](http://getbootstrap.com)
-* [Font Awesome 4.4.0 by @davegandy](http://fontawesome.io)
-* jQuery v2
-* jQuery UI v1
+* [Bootstrap 5.3](https://getbootstrap.com) with the [Redmaterials](https://github.com/redooor/redmaterials) theme
+* [Font Awesome Free 7](https://fontawesome.com)
+* jQuery 3.7 and jQuery UI 1.14
+* [Jodit 4](https://xdsoft.net/jodit/) (rich text editor)
+* [Tempus Dominus 6](https://getdatepicker.com/) and Popper (coupon date picker)
+* typeahead.js and bootstrap-tagsinput (tags)
 * [illuminate/html](https://github.com/illuminate/html)
 * [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel)
 * [Imagine](https://github.com/avalanche123/Imagine)
-* [Jasny Bootstrap](http://jasny.github.io/bootstrap/)
 * [Plupload](http://www.plupload.com/)
 * [getID3](http://www.getid3.org/)
 

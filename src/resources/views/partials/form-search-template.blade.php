@@ -12,13 +12,12 @@
     ])
     --------------------------------
 --}}
-<form method="POST" action="{{ $action }}" accept-charset="UTF-8" role="form" class="form-inline">
+<form method="POST" action="{{ $action }}" accept-charset="UTF-8" role="form" class="d-flex flex-wrap align-items-center gap-2">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <div class="form-group">
-        <div class="input-group">
-            <span class="input-group-addon"><span class="fa fa-search"></span></span>
+        <div class="input-group w-auto">
+            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
         </div>
-        <select class="form-control input-sm" name="field">
+        <select class="form-select form-select-sm w-auto" name="field">
             @if ($fields)
                 @foreach ($fields as $field => $field_name)
                 <option value="{{ $field }}"
@@ -30,14 +29,11 @@
             @endif
         </select>
         @if (isset($value))
-        <div class="input-group">
-            <input class="form-control input-sm" placeholder="Search" title="Search" name="search" type="text" value="{{ $value }}">
-            <span class="input-group-btn">
-                <a class="btn btn-default btn-sm" href="{{ $view }}"><span class="glyphicon glyphicon-remove"></span> {{ trans('redminportal::buttons.clear') }}</a>
-            </span>
+        <div class="input-group w-auto">
+            <input class="form-control form-control-sm" placeholder="Search" title="Search" name="search" type="text" value="{{ $value }}">
+            <a class="btn btn-secondary btn-sm" href="{{ $view }}"><i class="fa-solid fa-xmark"></i> {{ trans('redminportal::buttons.clear') }}</a>
         </div>
         @else
-        <input class="form-control input-sm" placeholder="Search" title="Search" name="search" type="text">
+        <input class="form-control form-control-sm w-auto" placeholder="Search" title="Search" name="search" type="text">
         @endif
-    </div>
 </form>
