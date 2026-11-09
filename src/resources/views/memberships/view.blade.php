@@ -11,6 +11,7 @@
     @include('redminportal::partials.html-view-nav-controls', ['models' => $models, 'model_view' => 'memberships'])
 
     @if (count($models) > 0)
+        <div class="table-responsive">
         <table class='table table-striped table-sm'>
             <thead>
                 <tr>
@@ -26,7 +27,7 @@
                     <td>{{ $membership->name }}</td>
                     <td class="table-actions text-end">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -45,6 +46,7 @@
             @endforeach
             </tbody>
         </table>
+        </div>
         <div class="text-center">
         {!! $models->render('pagination::bootstrap-5') !!}
         </div>
