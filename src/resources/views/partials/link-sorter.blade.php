@@ -13,9 +13,4 @@
     ])
     --------------------------------
 --}}
-<a class="block-header {{ $wrapper_classes ?? '' }}" href="{{ $url }}">
-    {{ $display_name }}
-    @if ($sortBy == $field_name)
-    {!! ($orderBy == 'asc' ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-up"></i>') !!}
-    @endif
-</a>
+<a class="block-header {{ $wrapper_classes ?? '' }}" href="{{ $url }}">{{ $display_name }}@if ($sortBy == $field_name)&nbsp;{!! ($orderBy == 'asc' ? '<i class="fa-solid fa-chevron-down"></i>' : '<i class="fa-solid fa-chevron-up"></i>') !!}@endif</a>

@@ -34,6 +34,16 @@ class HtmlUITest extends RedminTestCase
         $this->assertTrue($input == $output);
     }
     
+    /**
+     * The sort icon is joined to the last word of the label by a non-breaking space, so a narrow column cannot wrap it onto its own line.
+     */
+    public function testSorterKeepsIconOnTheSameLineAsTheLabel()
+    {
+        $input = (string) $this->model->sorter('test/url', 'created_at', 'created_at', 'asc', 'Created');
+
+        $this->assertStringContainsString('Created&nbsp;<i class="fa-solid fa-chevron-down"></i></a>', $input);
+    }
+
     public function testUploadedImagesPass()
     {
         // Set up test model
