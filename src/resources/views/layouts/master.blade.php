@@ -132,7 +132,7 @@
                     <div class="modal-body lightbox-body">
                         <button type="button" id="lightbox-previous" class="btn btn-dark lightbox-step lightbox-step-previous" aria-label="{{ Lang::get('redminportal::buttons.previous_image') }}"><i class="fa-solid fa-chevron-left"></i></button>
                         <img id="lightbox-image" class="img-fluid" alt="">
-                        <p id="lightbox-error" class="text-body-secondary d-none mb-0">{{ Lang::get('redminportal::buttons.image_not_available') }}</p>
+                        <div role="status"><p id="lightbox-error" class="text-body-secondary d-none mb-0">{{ Lang::get('redminportal::buttons.image_not_available') }}</p></div>
                         <button type="button" id="lightbox-next" class="btn btn-dark lightbox-step lightbox-step-next" aria-label="{{ Lang::get('redminportal::buttons.next_image') }}"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </div>
