@@ -119,12 +119,33 @@
             '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
         ) !!}
         <!-- End of modal window -->
+
+        <!-- Image lightbox -->
+        <div id="lightbox-modal" class="modal fade" tabindex="-1" aria-labelledby="lightbox-title" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 id="lightbox-title" class="modal-title fs-6 text-truncate"></h2>
+                        <span id="lightbox-counter" class="text-body-secondary small ms-3 me-auto" aria-live="polite"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ Lang::get('redminportal::buttons.close') }}"></button>
+                    </div>
+                    <div class="modal-body lightbox-body">
+                        <button type="button" id="lightbox-previous" class="btn btn-dark lightbox-step lightbox-step-previous" aria-label="{{ Lang::get('redminportal::buttons.previous_image') }}"><i class="fa-solid fa-chevron-left"></i></button>
+                        <img id="lightbox-image" class="img-fluid" alt="">
+                        <p id="lightbox-error" class="text-body-secondary d-none mb-0">{{ Lang::get('redminportal::buttons.image_not_available') }}</p>
+                        <button type="button" id="lightbox-next" class="btn btn-dark lightbox-step lightbox-step-next" aria-label="{{ Lang::get('redminportal::buttons.next_image') }}"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of image lightbox -->
         
         <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery/jquery.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/jquery-ui/jquery-ui.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmaterials.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-sidebar.min.js') }}" defer></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-lightbox.min.js') }}" defer></script>
         <script>
             !function ($) {
                 $(function(){

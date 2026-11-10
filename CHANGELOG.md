@@ -43,6 +43,7 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 **Lists**
 1. An empty list now shows a plain grey "No <records> found." box. Before, it showed a "This page is empty" notice with a "Previous Page" button that linked back to the same page. That button now only appears when you are on a page past the last one.
 2. On small screens every list table now scrolls sideways inside its own wrapper instead of making the whole page wider. The row menus use fixed positioning so the wrapper does not clip them.
+3. The "view" (eye) button on uploaded images opens the picture in a lightbox on the same page instead of a new browser tab. With several images you can step through them with the arrow buttons or the left and right arrow keys, and close it with Escape. Ctrl or Cmd click still opens the plain link.
 
 **Dashboard**
 1. The dashboard now shows summary cards (orders, revenue, new users, active products for the last 30 days), a chart of orders and revenue per day, a doughnut of orders by status, the top 5 products, the 5 most recent orders and the 5 most recently updated posts and the 5 most recently updated pages. Revenue counts only `Completed` and `Delivered` orders.
