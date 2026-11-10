@@ -295,6 +295,41 @@ i {
      object-fit: cover;
 }
 
+/* Image lightbox: an opaque panel, unlike the theme's translucent modals, so the page behind does not show through the image */
+#lightbox-modal {
+  --bs-modal-bg: var(--bs-body-bg);
+}
+#lightbox-modal .modal-content {
+  background-color: var(--bs-body-bg);
+}
+
+.lightbox-body {
+  position: relative;
+  text-align: center;
+}
+.lightbox-body img {
+  max-height: 75vh;
+}
+
+.lightbox-step {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  opacity: 0.75;
+}
+.lightbox-step:hover, .lightbox-step:focus-visible {
+  opacity: 1;
+}
+
+.lightbox-step-previous {
+  left: 0.5rem;
+}
+
+.lightbox-step-next {
+  right: 0.5rem;
+}
+
 /* Breadcrumb navbar (page trail in the top bar) */
 .navbar-breadcrumb .nav-item {
   display: flex;

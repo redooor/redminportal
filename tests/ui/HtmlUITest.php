@@ -80,7 +80,7 @@ class HtmlUITest extends RedminTestCase
                             <a href="http://localhost/./800x600/dummy.jpg" class="btn btn-primary btn-copy">
                                 <i class="fa-solid fa-link"></i>
                             </a>
-                            <a href="http://localhost/./800x600/dummy.jpg" class="btn btn-info" target="_blank">
+                            <a href="http://localhost/./800x600/dummy.jpg" class="btn btn-info" target="_blank" data-lightbox="uploaded-images" data-lightbox-title="dummy.jpg" aria-label="View image">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                         </div>

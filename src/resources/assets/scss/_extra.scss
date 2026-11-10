@@ -311,3 +311,42 @@ i {
         object-fit: cover;
     }
 }
+
+/* Image lightbox: an opaque panel, unlike the theme's translucent modals, so the page behind does not show through the image */
+#lightbox-modal {
+    --bs-modal-bg: var(--bs-body-bg);
+
+    .modal-content {
+        background-color: var(--bs-body-bg);
+    }
+}
+
+.lightbox-body {
+    position: relative;
+    text-align: center;
+
+    img {
+        max-height: 75vh;
+    }
+}
+
+.lightbox-step {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    opacity: 0.75;
+
+    &:hover,
+    &:focus-visible {
+        opacity: 1;
+    }
+}
+
+.lightbox-step-previous {
+    left: 0.5rem;
+}
+
+.lightbox-step-next {
+    right: 0.5rem;
+}

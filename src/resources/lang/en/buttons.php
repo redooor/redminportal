@@ -23,4 +23,8 @@ return array(
     'previous_page' => 'Previous Page',
     'insert' => 'Insert',
     'clear' => 'Clear',
+    'view_image' => 'View image',
+    'previous_image' => 'Previous image',
+    'next_image' => 'Next image',
+    'image_not_available' => 'This image could not be loaded.',
 );
