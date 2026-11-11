@@ -65,4 +65,22 @@ class ConfirmDeleteMarkupTest extends TestCase
             $this->assertStringNotContainsString('partials.confirm-delete', $source, basename(dirname($view)) . '/' . basename($view) . ' includes the modal without a delete link');
         }
     }
+
+    public function testLayoutsOfViewsWithTheModalRenderItsStacks()
+    {
+        $viewsDir = dirname(__DIR__) . '/src/resources/views/';
+
+        foreach ($this->views() as $view) {
+            $source = file_get_contents($view);
+
+            if (strpos($source, "partials.confirm-delete'") === false || ! preg_match("/@extends\\('redminportal::layouts\\.(\\w+)'\\)/", $source, $layout)) {
+                continue;
+            }
+
+            $layoutSource = file_get_contents($viewsDir . 'layouts/' . $layout[1] . '.blade.php');
+
+            $this->assertStringContainsString("@stack('modals')", $layoutSource, basename($view) . ' extends layouts.' . $layout[1] . ' which does not render the modal');
+            $this->assertStringContainsString("@stack('scripts')", $layoutSource, basename($view) . ' extends layouts.' . $layout[1] . ' which does not render the handler');
+        }
+    }
 }
