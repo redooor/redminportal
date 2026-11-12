@@ -13,6 +13,7 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
     private $mediaFolder;
     private $tmpFolder;
     private $tempFiles = array();
+    private $extraFolders = array();
 
     public function setUp(): void
     {
@@ -62,7 +63,12 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
             @rmdir(dirname($this->mediaFolder));
         }
 
+        foreach ($this->extraFolders as $folder) {
+            $this->deleteFolder($folder);
+        }
+
         $this->tempFiles = array();
+        $this->extraFolders = array();
         $this->media = null;
         $this->category = null;
         $this->tmpFolder = null;
@@ -150,6 +156,110 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
     }
 
     /**
+     * Test (Fail): a rejected chunk makes later chunks terminal
+     */
+    public function testChunkAfterSizeRejectionIsTerminal()
+    {
+        Config::set('redminportal::media.max_size', 5);
+
+        $result = $this->upload('terminal.mp3', 'terminal.mp3', 'abc', 0, 3);
+        $this->assertSame(1, $result['code'], $result['message']);
+
+        $result = $this->upload('terminal.mp3', 'terminal.mp3', 'def', 1, 3);
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('This file is too large.', $result['message']);
+        $this->assertFileDoesNotExist($this->tmpFolder . '/terminal.mp3.part');
+
+        $result = $this->upload('terminal.mp3', 'terminal.mp3', 'g', 2, 3);
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('Failed to upload an empty file.', $result['message']);
+
+        $this->assertFileDoesNotExist($this->tmpFolder . '/terminal.mp3.part');
+        $this->assertFileDoesNotExist($this->mediaFolder . '/terminal.mp3');
+        $this->assertSame('broken.pdf', Media::find($this->media->id)->path);
+    }
+
+    /**
+     * Test (Fail): a later chunk sent without its first chunk is rejected
+     */
+    public function testChunkWithoutFirstChunkIsRejected()
+    {
+        $result = $this->upload('orphan.mp3', 'orphan.mp3', 'abc', 1, 2);
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('Failed to upload an empty file.', $result['message']);
+        $this->assertFileDoesNotExist($this->tmpFolder . '/orphan.mp3.part');
+        $this->assertFileDoesNotExist($this->mediaFolder . '/orphan.mp3');
+    }
+
+    /**
+     * Test (Fail): a chunk is rejected while another chunk holds the file lock
+     */
+    public function testChunkIsRejectedWhenLockIsHeld()
+    {
+        $fileName = 'locked.mp3';
+        $partPath = $this->tmpFolder . '/' . $fileName . '.part';
+        $lockPath = sys_get_temp_dir() . '/redmin-upload-' . md5($partPath) . '.lock';
+        $lock = fopen($lockPath, 'c');
+
+        $this->assertNotFalse($lock);
+        $this->assertTrue(flock($lock, LOCK_EX | LOCK_NB));
+
+        try {
+            $result = $this->upload($fileName, $fileName, 'abc', 0, 1);
+
+            $this->assertSame(0, $result['code']);
+            $this->assertSame('Failed to open output stream.', $result['message']);
+            $this->assertFileDoesNotExist($partPath);
+        } finally {
+            flock($lock, LOCK_UN);
+            fclose($lock);
+            @unlink($lockPath);
+        }
+    }
+
+    /**
+     * Test (Pass): uploading one media id keeps a sibling folder with a longer id
+     */
+    public function testUploadDoesNotDeleteSiblingMediaFolder()
+    {
+        $category = new Category;
+        $category->id = 800000 + random_int(1, 99999);
+        $category->name = 'Upload Sibling ' . uniqid();
+        $category->short_description = 'Upload sibling category';
+        $category->active = true;
+        $category->save();
+
+        $categoryFolder = public_path() . '/assets/medias/' . $category->id;
+        $folder12 = $categoryFolder . '/12';
+        $folder120 = $categoryFolder . '/120';
+        $this->extraFolders[] = $categoryFolder;
+        $this->extraFolders[] = public_path() . '/assets/medias/tmp/' . $category->id;
+
+        mkdir($folder12, 0777, true);
+        mkdir($folder120, 0777, true);
+        file_put_contents($folder12 . '/old.mp3', 'old');
+        file_put_contents($folder120 . '/keep.mp3', 'keep');
+
+        foreach (array(12, 120) as $id) {
+            $media = new Media;
+            $media->id = $id;
+            $media->name = 'Sibling Media ' . $id;
+            $media->path = 'broken.pdf';
+            $media->short_description = 'Sibling media';
+            $media->category_id = $category->id;
+            $media->save();
+        }
+
+        $result = $this->upload('sibling.mp3', 'sibling.mp3', 'ID3' . str_repeat('A', 64), 0, 1, 12);
+
+        $this->assertSame(1, $result['code'], $result['message']);
+        $this->assertFileExists($folder12 . '/sibling.mp3');
+        $this->assertDirectoryExists($folder120);
+        $this->assertFileExists($folder120 . '/keep.mp3');
+    }
+
+    /**
      * Prepare the raw superglobals used by the controller trait
      */
     private function prepareUpload($requestName, $fileName, $content, $chunk, $chunks)
@@ -178,9 +288,13 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
     /**
      * Call the upload route and decode the JSON response
      */
-    private function callUpload($requestName, $chunk, $chunks)
+    private function callUpload($requestName, $chunk, $chunks, $mediaId = null)
     {
-        $response = $this->call('POST', '/admin/medias/upload/' . $this->media->id, array(
+        if ($mediaId === null) {
+            $mediaId = $this->media->id;
+        }
+
+        $response = $this->call('POST', '/admin/medias/upload/' . $mediaId, array(
             'name' => $requestName,
             'chunk' => $chunk,
             'chunks' => $chunks,
@@ -192,11 +306,11 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
     /**
      * Prepare and upload a single chunk
      */
-    private function upload($requestName, $fileName, $content, $chunk = 0, $chunks = 1)
+    private function upload($requestName, $fileName, $content, $chunk = 0, $chunks = 1, $mediaId = null)
     {
         $this->prepareUpload($requestName, $fileName, $content, $chunk, $chunks);
 
-        return $this->callUpload($requestName, $chunk, $chunks);
+        return $this->callUpload($requestName, $chunk, $chunks, $mediaId);
     }
 
     /**

@@ -136,6 +136,10 @@ class Imagine
                 return null;
             }
 
+            if ($dir !== null && (! is_string($dir) || ($dir !== '' && ! $this->isRelativeDirectory($dir)))) {
+                return null;
+            }
+
             // Generate random dir
             if (! $dir) {
                 $dir = Str::random(8);
@@ -171,6 +175,26 @@ class Imagine
                 return $path;
             }
         }
+    }
+    
+    /**
+     * Check that a directory is relative and has no parent path segments
+     * @param  string $dir
+     * @return bool
+     */
+    private function isRelativeDirectory($dir)
+    {
+        if (strpos($dir, "\0") !== false) {
+            return false;
+        }
+
+        if ($dir[0] === '/' || $dir[0] === '\\') {
+            return false;
+        }
+
+        $segments = preg_split('/[\\\\\/]+/', $dir);
+
+        return ! in_array('..', $segments, true);
     }
     
     /**

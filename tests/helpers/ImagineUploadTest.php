@@ -82,6 +82,32 @@ class ImagineUploadTest extends RedminTestCase
     }
 
     /**
+     * Test (Fail): unsafe directories are rejected and the file is not moved
+     */
+    public function testUnsafeDirectoriesReturnNull()
+    {
+        $directories = array(
+            '..',
+            '../escape',
+            'images/../../escape',
+            'images\\..\\escape',
+            '/absolute',
+            '\\absolute',
+            "images\0escape",
+        );
+
+        foreach ($directories as $dir) {
+            $source = $this->createImage('png');
+            $file = new UploadedFile($source, 'unsafe.png', 'image/png', null, true);
+
+            $path = (new Imagine)->upload($file, $dir, false, true);
+
+            $this->assertNull($path, 'Unsafe directory was accepted: ' . $dir);
+            $this->assertFileExists($source);
+        }
+    }
+
+    /**
      * Test (Pass): two uploads with the same name are autonumbered
      */
     public function testSameNamedUploadsAreAutonumbered()

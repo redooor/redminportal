@@ -125,11 +125,66 @@ trait MediaUploaderController
             $result["message"] = Lang::get('redminportal::messages.upload_error_failed_no_file_found');
             return json_encode($result);
         }
+
+        $partPath = "{$filePath}.part";
+        $lockPath = sys_get_temp_dir() . '/redmin-upload-' . md5($partPath) . '.lock';
+        $lock = @fopen($lockPath, 'c');
+
+        if (! $lock || ! @flock($lock, LOCK_EX | LOCK_NB)) {
+            if ($lock) {
+                @fclose($lock);
+            }
+
+            $result["message"] = Lang::get('redminportal::messages.upload_error_failed_to_open_output_stream');
+            return json_encode($result);
+        }
+
+        try {
+            return $this->processUploadChunk(
+                $model,
+                $fileName,
+                $filePath,
+                $partPath,
+                $model_tmp_folder,
+                $model_folder,
+                $chunk,
+                $chunks
+            );
+        } finally {
+            @flock($lock, LOCK_UN);
+            @fclose($lock);
+        }
+    }
+
+    /**
+     * Process a file chunk while its lock is held
+     *
+     * @param object Media
+     * @param string File name
+     * @param string Temporary file path
+     * @param string Partial file path
+     * @param string Temporary folder
+     * @param string Media folder
+     * @param integer Chunk index
+     * @param integer Number of chunks
+     *
+     * @return string JSON response
+     **/
+    protected function processUploadChunk($model, $fileName, $filePath, $partPath, $model_tmp_folder, $model_folder, $chunk, $chunks)
+    {
+        $result = [
+            "code" => 0,
+            "message" => "Unknown error."
+        ];
+
+        if ($chunk > 0 && ! file_exists($partPath)) {
+            $result["message"] = Lang::get('redminportal::messages.upload_error_failed_no_file_found');
+            return json_encode($result);
+        }
         
         // Create the directory
         $this->checkFolder($model_tmp_folder);
 
-        $partPath = "{$filePath}.part";
         $maxSize = (int) Config::get('redminportal::media.max_size', 1073741824);
         $incomingSize = @filesize($_FILES['file']['tmp_name']);
 
