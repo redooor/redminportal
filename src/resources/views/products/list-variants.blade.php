@@ -15,7 +15,7 @@
             <div class="flex-grow-1">
                 <div class="action-buttons float-end">
                     <a class="btn btn-secondary btn-sm edit-product-variant" href="{{ url('admin/products/edit-variant/' . $variantParent->id . '/' . $variant->id) }}">Edit</a>
-                    <a class="btn btn-danger btn-sm delete-product-variant" href="{{ url('admin/products/delete-variant-json/' . $variant->id) }}" data-method="post">Delete</a>
+                    <a class="btn btn-danger btn-sm delete-product-variant" href="{{ url('admin/products/delete-variant-json/' . $variant->id) }}" data-ajax-post>Delete</a>
                 </div>
                 <h4 class="mt-0"><a class="view-product-variant" href="{{ url('admin/products/view-variant/' . $variant->id) }}">{{ $variant->name }}</a></h4>
                 <p>Price: <strong>{{ $variant->price }}</strong></p>

@@ -89,6 +89,7 @@ class CsrfFormsMarkupTest extends TestCase
                 $links++;
 
                 $allowed = strpos($tag[0], 'btn-confirm') !== false
+                    || strpos($tag[0], 'data-ajax-post') !== false
                     || preg_match('/\bdata-method\s*=\s*["\']post["\']/i', $tag[0]);
 
                 if (! $allowed) {
@@ -101,7 +102,7 @@ class CsrfFormsMarkupTest extends TestCase
         $this->assertGreaterThanOrEqual(30, $links, 'No links to the POST-only routes were found');
         $this->assertEmpty(
             $offenders,
-            "These links point at POST-only routes without btn-confirm or data-method=\"post\":\n" . implode("\n", $offenders)
+            "These links point at POST-only routes without btn-confirm, data-method=\"post\" or data-ajax-post (a link a script posts with the token):\n" . implode("\n", $offenders)
         );
     }
 
