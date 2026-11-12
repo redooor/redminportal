@@ -255,6 +255,28 @@ The editor makes **no CDN requests** (source mode uses a plain textarea).
 
 ---
 
+### Step 12 — Actions that change data now use POST with a CSRF token
+
+The admin routes now verify the CSRF token. Actions that used to be plain links (`GET`) are now `POST`:
+logout, every `delete/{id}`, every `imgremove/{id}`, products `delete-variant-json/{id}` and `variant-imgremove/{product}/{id}`,
+users `activate/{id}` and `deactivate/{id}`, orders `update/{field}/{id}/{status}`, and medias `duration/{id}`.
+Requests that arrive from the admin pages themselves are accepted by the browser's `Sec-Fetch-Site: same-origin` header or by the token.
+
+If you published or wrote your own admin views, check them:
+
+| Your view has | Change it to |
+|---|---|
+| A `<form method="POST">` written by hand | Add `@csrf` as its first child. Forms made with `Form::open` already have the token. |
+| A link such as `<a href="admin/pages/delete/1">` | Keep the link and add `class="btn-confirm"` (needs `@include('redminportal::partials.confirm-delete')`), or add `data-method="post"`. |
+| `$.get` / `$.getJSON` to one of the routes above | `$.post(url, { _token: window.redminCsrfToken() }, ...)` |
+| Other Ajax calls that `POST` | Send the `X-CSRF-TOKEN` header or a `_token` field. |
+
+Layouts must contain `<meta name="csrf-token" content="{{ csrf_token() }}">` and load `js/redmin-post.min.js`
+(the three package layouts already do; re-publish assets with `php artisan vendor:publish --tag=public --force`).
+Links that still use `GET` for these routes now return `404`/`405`.
+
+---
+
 ### Upgrade checklist
 
 Database: **no table other than `password_reset_tokens` changed.** Your existing

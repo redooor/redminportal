@@ -18,7 +18,7 @@
                     <a id="start-upload" class="btn btn-primary btn-sm float-end" href="javascript:;" data-src="{{ URL::to('admin/medias/upload') . '/' . $model->id }}">{{ Lang::get('redminportal::buttons.upload') }}</a>
                 </div>
             </div>
-            <input type="hidden" id="_token" name="_token" value="{{ \Crypt::encrypt(csrf_token()) }}">
+            <input type="hidden" id="_token" name="_token" value="{{ csrf_token() }}">
         </div>
         <div class="col-lg-9 order-lg-first">
             <div class="card">
@@ -42,7 +42,7 @@
     <script type="text/javascript" src="{{ URL::to('vendor/redooor/redminportal/js/plupload.full.min.js') }}"></script>
     <script type="text/javascript">
         jQuery( document ).ready(function( $ ) {
-            var token = $('#_token').val();
+            var token = $('meta[name="csrf-token"]').attr('content') || $('#_token').val();
             
             var uploader = new plupload.Uploader({
                 browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
@@ -50,7 +50,7 @@
                 chunk_size: '200kb',
                 max_retries: 3,
                 multi_selection: false, // Disallow multiple files
-                headers: { 'X-XSRF-TOKEN': token },
+                headers: { 'X-CSRF-TOKEN': token },
                 filters: { prevent_duplicates: true }
             });
 

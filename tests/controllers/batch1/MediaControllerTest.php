@@ -135,7 +135,7 @@ class MediaControllerTest extends BaseControllerTest
         
         $this->runSubtestUpload($this->files[2]);
 
-        $this->call('GET', '/admin/medias/duration/1');
+        $this->call('POST', '/admin/medias/duration/1');
         $this->assertResponseOk();
     }
 
@@ -148,7 +148,7 @@ class MediaControllerTest extends BaseControllerTest
         
         $this->runSubtestUpload($this->files[2]);
 
-        $response = $this->call('GET', '/admin/medias/duration/1');
+        $response = $this->call('POST', '/admin/medias/duration/1');
         $this->assertResponseOk();
         $result = json_decode($response->content());
         $this->assertTrue($result->status == 'success');
@@ -159,7 +159,7 @@ class MediaControllerTest extends BaseControllerTest
      */
     public function testDurationFails()
     {
-        $response = $this->call('GET', '/admin/medias/duration/1');
+        $response = $this->call('POST', '/admin/medias/duration/1');
         $this->assertResponseOk();
         $result = json_decode($response->content());
         $this->assertTrue($result->status == 'error');

@@ -11,7 +11,7 @@
     @include('redminportal::partials.errors')
 
     <form method="POST" action="{{ url('admin/announcements/store') }}" accept-charset="UTF-8" role="form" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         <input name="id" type="hidden" value="{{ $announcement->id }}">
 
     	<div class='row'>

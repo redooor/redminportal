@@ -55,6 +55,10 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 3. Each widget, and the queries behind it, is only used when the signed-in user may view that area (`admin/orders`, `admin/products`, `admin/users`, `admin/pages`, `admin/posts`); the dashboard route itself still needs its own permission.
 4. Charts use Chart.js 4.6.1, bundled with the package (no CDN), and follow the Bootstrap colour variables, including `data-bs-theme`.
 
+**Admin actions**
+1. The admin routes verify the CSRF token. Actions that change data (delete, remove image, activate/deactivate user, change order status, update media duration, log out) now use `POST` instead of `GET` links. The package views are updated; custom views need the changes in [UPGRADE.md](UPGRADE.md) (Step 12).
+2. New `data-method="post"` links (`js/redmin-post.min.js`) post with the CSRF token; `window.redminCsrfToken()` returns the token for Ajax calls.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.

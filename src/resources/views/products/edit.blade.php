@@ -276,7 +276,7 @@
         'modal_id' => 'variant-remove-modal',
         'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
         'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
-        'modal_footer' => '<div class="d-flex justify-content-between w-100"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="variant-remove-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a></div>'
+        'modal_footer' => '<div class="d-flex justify-content-between w-100"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="variant-remove-modal-proceed" class="btn btn-danger" data-method="post">' . Lang::get('redminportal::buttons.delete_yes') . '</a></div>'
     ])
     <!-- End of modal window -->
 @stop
@@ -354,7 +354,7 @@
                     e.preventDefault();
                     $delete_url = $(this).attr('href');
                     $(this).addClass('disabled');
-                    $.getJSON( $delete_url )
+                    $.post( $delete_url, { _token: window.redminCsrfToken() }, null, 'json' )
                         .done(function( json ) {
                             if (json.status == true) {
                                 $('#variant-remove-modal').modal('hide');
