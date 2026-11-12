@@ -1,5 +1,8 @@
 <?php namespace Redooor\Redminportal\App\UI;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 class Html
 {
     /*
@@ -92,10 +95,47 @@ class Html
     public function printMenu($menus, $class = null)
     {
         $data = [
-            'menus' => $menus,
+            'menus' => $this->permittedMenus($menus),
             'class' => $class
         ];
         
         return view('redminportal::partials.html-print-menu', $data);
+    }
+
+    /*
+     * Drop the menus the signed-in user may not view, and the section headers left with nothing under them
+     *
+     * @param array $menus A list of menus
+     * @return array The menus the user may see
+     */
+    protected function permittedMenus($menus)
+    {
+        $user = Auth::guard('redminguard')->user();
+        $permitted = [];
+
+        foreach ($menus as $menu) {
+            if (! empty($menu['hide'])) {
+                continue;
+            }
+
+            if (array_key_exists('children', $menu)) {
+                $menu['children'] = $this->permittedMenus($menu['children']);
+            }
+
+            $path = $menu['path'] ?? '';
+
+            if ($path === '') {
+                // Section header: only worth showing when something under it is left
+                if (empty($menu['children'])) {
+                    continue;
+                }
+            } elseif ($user === null || ! $user->hasAccess(Request::create($path, 'GET'))) {
+                continue;
+            }
+
+            $permitted[] = $menu;
+        }
+
+        return $permitted;
     }
 }
