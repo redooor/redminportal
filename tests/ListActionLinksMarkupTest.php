@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 
 /**
- * Every Create, Edit and Delete link in the list views must sit inside @permitted so a user never sees a button that leads
+ * Every Create, Edit, Delete, Activate, Deactivate, Upload and Revision link in the list views must sit inside @permitted so a user never sees a button that leads
  * to a "not authorized" page.
  */
 class ListActionLinksMarkupTest extends TestCase
@@ -18,7 +18,7 @@ class ListActionLinksMarkupTest extends TestCase
             $lines = file($view);
 
             foreach ($lines as $number => $line) {
-                if (! preg_match("#(?:URL::to|url)\\('admin/(?:[a-z-]+/(?:create|edit/|delete/)|' \\. \\\$model_view \\. '/create')#", $line)) {
+                if (! preg_match("#(?:URL::to|url|HTML::link)\\('admin/(?:[a-z-]+/(?:create|edit/|delete/|activate/|deactivate/|uploadform/|revisions/)|' \\. \\\$model_view \\. '/create')#", $line)) {
                     continue;
                 }
 
@@ -34,5 +34,12 @@ class ListActionLinksMarkupTest extends TestCase
         }
 
         $this->assertGreaterThanOrEqual(35, $links);
+    }
+
+    public function testOrderStatusChangeIsOnlyAMenuWhenUpdateIsPermitted()
+    {
+        $source = file_get_contents(dirname(__DIR__) . '/src/resources/views/orders/view.blade.php');
+
+        $this->assertStringContainsString("@permitted('admin/orders/update/status/'", $source);
     }
 }

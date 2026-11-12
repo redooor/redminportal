@@ -90,6 +90,7 @@
 					</td>
                     <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($order->paid, Lang::get('redminportal::currency.currency')) }}</td>
                     <td class="table-actions text-center">
+                        @permitted('admin/orders/update/status/' . $order->id . '/' . array_key_first($payment_statuses))
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								{{ $order->payment_status }}
@@ -101,6 +102,9 @@
                                 @endforeach
                             </ul>
                         </div>
+                        @else
+                        {{ $order->payment_status }}
+                        @endpermitted
                     </td>
                     <td>{{ $order->transaction_id }}</td>
                     <td>{{ date("d/m/y h:i A", strtotime($order->created_at)) }}</td>
@@ -153,15 +157,18 @@
                         @endif
 					</td>
                     <td class="table-actions text-end">
+                        @permitted('admin/orders/revisions/' . $order->id, 'admin/orders/delete/' . $order->id)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
+                                @permitted('admin/orders/revisions/' . $order->id)
                                 <li>
 									<a class="dropdown-item btn-modal-revision" href="{{ URL::to('admin/orders/revisions/' . $order->id) }}">
 										<i class="fa-solid fa-clock"></i>Revision History</a>
 								</li>
+                                @endpermitted
 								@permitted('admin/orders/delete/' . $order->id)
 								<li>
 									<a class="dropdown-item btn-confirm" href="{{ URL::to('admin/orders/delete/' . $order->id) }}">
@@ -170,6 +177,7 @@
 								@endpermitted
 							</ul>
 						</div>
+                        @endpermitted
 					</td>
                 </tr>
                 @endforeach

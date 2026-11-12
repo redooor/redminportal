@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Redooor\Redminportal\App\Models\Group;
+use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Page;
 
@@ -33,13 +34,19 @@ class HideUnpermittedButtonsTest extends RedminBrowserTestCase
         $page->save();
     }
 
-    private function listAs(array $permissions)
+    private function group(array $permissions)
     {
         $group = new Group;
         $group->name = 'Limited';
         $group->permissions = json_encode($permissions);
         $group->save();
-        $this->user->groups()->save($group);
+
+        return $group;
+    }
+
+    private function listAs(array $permissions)
+    {
+        $this->user->groups()->save($this->group($permissions));
         Auth::guard('redminguard')->loginUsingId($this->user->id);
 
         $response = $this->call('GET', '/admin/pages');
@@ -93,5 +100,43 @@ class HideUnpermittedButtonsTest extends RedminBrowserTestCase
 
         $this->assertStringContainsString('admin/pages/edit/', $html);
         $this->assertStringNotContainsString('admin/pages/delete/', $html);
+    }
+
+    public function testPurchasesCreateButtonNeedsCreatePermission()
+    {
+        $this->user->groups()->save($this->group(['admin.purchases.view' => 1]));
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
+
+        $html = $this->call('GET', '/admin/purchases')->getContent();
+
+        $this->assertStringNotContainsString('admin/purchases/create', $html);
+    }
+
+    public function testOrderStatusIsPlainTextForAUserWhoMayNotUpdateOrders()
+    {
+        $order = new Order;
+        $order->user_id = $this->user->id;
+        $order->payment_status = 'Pending';
+        $order->save();
+
+        $this->user->groups()->save($this->group(['admin.orders.view' => 1]));
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
+
+        $html = $this->call('GET', '/admin/orders')->getContent();
+
+        $this->assertStringContainsString('Pending', $html);
+        $this->assertStringNotContainsString('admin/orders/update/status/', $html);
+    }
+
+    public function testDeniedUserActionIsHiddenFromAMenuThatStillHasOtherItems()
+    {
+        $this->user->groups()->save($this->group(['admin' => 1, 'admin.users.deactivate.view' => -1, 'admin.users.activate.view' => -1]));
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
+
+        $html = $this->call('GET', '/admin/users')->getContent();
+
+        $this->assertStringNotContainsString('admin/users/deactivate/', $html);
+        $this->assertStringNotContainsString('admin/users/activate/', $html);
+        $this->assertStringContainsString('admin/users/edit/', $html);
     }
 }

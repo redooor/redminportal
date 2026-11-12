@@ -78,15 +78,18 @@
                             data-url="{{ URL::to('admin/medias/duration/' . $media->id) }}">@if(isset(json_decode($media->options)->duration)){{ json_decode($media->options)->duration }}@endif</span>
                     </td>
                     <td class="table-actions text-end">
+                        @permitted('admin/medias/uploadform/' . $media->id, 'admin/medias/edit/' . $media->id, 'admin/medias/delete/' . $media->id)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                @permitted('admin/medias/uploadform/' . $media->id)
                                 <li>
                                     <a class="dropdown-item" href="{{ URL::to('admin/medias/uploadform/' . $media->id) }}">
                                         <i class="fa-solid fa-upload"></i>Upload Media</a>
                                 </li>
+                                @endpermitted
                                 @permitted('admin/medias/edit/' . $media->id)
                                 <li>
                                     <a class="dropdown-item" href="{{ URL::to('admin/medias/edit/' . $media->id) }}">
@@ -101,6 +104,7 @@
                                 @endpermitted
                             </ul>
                         </div>
+                        @endpermitted
                     </td>
                 </tr>
             @endforeach

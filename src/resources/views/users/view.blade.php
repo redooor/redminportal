@@ -81,21 +81,26 @@
                     <td>{{ date("d/m/y h:i A", strtotime($user->created_at)) }}</td>
                     <td>{{ date("d/m/y h:i A", strtotime($user->updated_at)) }}</td>
 					<td class="table-actions text-end">
+                        @permitted('admin/users/deactivate/' . $user->id, 'admin/users/activate/' . $user->id, 'admin/users/edit/' . $user->id, 'admin/users/delete/' . $user->id)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								@if ($user->activated)
+									@permitted('admin/users/deactivate/' . $user->id)
 									<li>
 										<a class="dropdown-item" href="{{ URL::to('admin/users/deactivate/' . $user->id) }}">
 											<i class="fa-solid fa-eye-slash"></i>{{ Lang::get('redminportal::buttons.deactivate') }}</a>
 									</li>
+									@endpermitted
 								@else
+									@permitted('admin/users/activate/' . $user->id)
 									<li>
 										<a class="dropdown-item" href="{{ URL::to('admin/users/activate/' . $user->id) }}">
 											<i class="fa-solid fa-eye"></i>{{ Lang::get('redminportal::buttons.activate') }}</a>
 									</li>
+									@endpermitted
 								@endif
 								@permitted('admin/users/edit/' . $user->id)
 								<li>
@@ -111,6 +116,7 @@
                                 @endpermitted
 							</ul>
 						</div>
+                        @endpermitted
 					</td>
 		        </tr>
 		    @endforeach
