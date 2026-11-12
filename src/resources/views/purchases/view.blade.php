@@ -99,7 +99,7 @@
         <div class="p-3 rounded bg-body-secondary text-body-secondary">{{ Lang::get('redminportal::messages.no_purchase_found') }}</div>
         @endif
     @endif
-    <div id="export-csv" class="modal fade">
+    <div id="export-csv" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\ReportController@postPurchases', 'report' => 'form')) !!}

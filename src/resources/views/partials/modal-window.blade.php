@@ -12,7 +12,7 @@
         'modal_progress' => 'modal-progress-unique-id'
     ])
 --}}
-<div id="{{ $modal_id }}" class="modal fade">
+<div id="{{ $modal_id }}" class="modal fade" tabindex="-1">
     <div class="modal-dialog {{ $modal_size ?? '' }}">
         @if (isset($modal_progress))
         <div class="modal-progress">
