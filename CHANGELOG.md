@@ -59,6 +59,10 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 1. The admin routes verify the CSRF token. Actions that change data (delete, remove image, activate/deactivate user, change order status, update media duration, log out) now use `POST` instead of `GET` links. The package views are updated; custom views need the changes in [UPGRADE.md](UPGRADE.md) (Step 12).
 2. New `data-method="post"` links (`js/redmin-post.min.js`) post with the CSRF token; `window.redminCsrfToken()` returns the token for Ajax calls.
 
+**Uploads**
+1. Media and image uploads validate file names and types. Media uploads accept only the extensions in the new `media.allowed_extensions` config and are limited by `media.max_size`; uploaded names are cleaned before they are stored.
+2. Uploaded images are stored with an extension that matches their real type (jpg, png or gif); other files are rejected.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.

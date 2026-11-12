@@ -130,6 +130,7 @@ class RedminportalServiceProvider extends ServiceProvider
         
         // Register all config files
         $this->registerResources('image', 'redminportal::image');
+        $this->registerResources('media', 'redminportal::media');
         $this->registerResources('menu', 'redminportal::menu');
         $this->registerResources('translation', 'redminportal::translation');
         $this->registerResources('tinymce', 'redminportal::tinymce');

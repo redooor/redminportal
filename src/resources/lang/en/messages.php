@@ -132,6 +132,10 @@ return array(
         => "Failed to open input stream.",
     'upload_error_failed_to_open_output_stream'
         => "Failed to open output stream.",
+    'upload_error_file_type_not_allowed'
+        => "This file type is not allowed.",
+    'upload_error_file_too_large'
+        => "This file is too large.",
     'group_error_edit_no_group_found'
         => "The group cannot be edited because it does not exist or may have been deleted.",
     'group_error_edit_cannot_save'

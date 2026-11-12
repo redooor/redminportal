@@ -277,6 +277,15 @@ Links that still use `GET` for these routes now return `404`/`405`.
 
 ---
 
+### Step 13 — Upload file names and types are validated
+
+Media uploads now accept only the file extensions listed in the new `media` config (`allowed_extensions`, `max_size`),
+and stored file names are cleaned (letters, digits, `.`, `_`, `-`). Image uploads are stored with an extension that
+matches the real image type (jpg, png, gif). If you need other media types, re-publish the config
+(`php artisan vendor:publish --tag=config`) and add them to `media.allowed_extensions`.
+
+---
+
 ### Upgrade checklist
 
 Database: **no table other than `password_reset_tokens` changed.** Your existing
