@@ -88,7 +88,7 @@ class PortfolioController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
 
         /*
          * Validate
@@ -186,7 +186,7 @@ class PortfolioController extends Controller
 
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Portfolio::class);
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;

@@ -102,7 +102,7 @@ class PageController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         
         $rules = array(
             'image'         => 'mimes:jpg,jpeg,png,gif|max:500',
@@ -206,7 +206,7 @@ class PageController extends Controller
 
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Page::class);
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;

@@ -16,7 +16,9 @@
                 @if (count($models) > 0)
                     <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ trans('redminportal::messages.list_from_to', ['firstItem' => $models->firstItem(), 'lastItem' => $models->lastItem(), 'totalItem' => $models->total()]) }}</a>
                 @endif
+                @permitted('admin/medias/duration/0')
                 <a id="rd-media-get-all-duration" class="btn btn-secondary btn-sm">{{ Lang::get('redminportal::buttons.get_durations') }}</a>
+                @endpermitted
                 @permitted('admin/medias/create')
                 <a href="{{ url('admin/medias/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
                 @endpermitted
@@ -75,7 +77,7 @@
                     </td>
                     <td>
                         <span class="rd-media-duration"
-                            data-url="{{ URL::to('admin/medias/duration/' . $media->id) }}">@if(isset(json_decode($media->options)->duration)){{ json_decode($media->options)->duration }}@endif</span>
+                            @permitted('admin/medias/duration/' . $media->id)data-url="{{ URL::to('admin/medias/duration/' . $media->id) }}"@endpermitted>@if(isset(json_decode($media->options)->duration)){{ json_decode($media->options)->duration }}@endif</span>
                     </td>
                     <td class="table-actions text-end">
                         @permitted('admin/medias/uploadform/' . $media->id, 'admin/medias/edit/' . $media->id, 'admin/medias/delete/' . $media->id)
@@ -138,6 +140,7 @@
                         var obj = $(this);
                         if (obj.text() == '') {
                             var url = obj.attr('data-url');
+                            if (! url) { return; }
                             obj.text('Fetching');
                             $.post(url, { _token: window.redminCsrfToken() }, function(data) {
                                 if (data.status == 'success') {

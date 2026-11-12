@@ -286,6 +286,16 @@ matches the real image type (jpg, png, gif). If you need other media types, re-p
 
 ---
 
+### Step 14 — Permission checks for actions that used to count as "view"
+
+These actions now need **update** instead of **view**: `activate`, `deactivate`, `imgremove`, `variant-imgremove`, media `uploadform`, `upload` and `duration`, product `edit-variant`; `create-variant` needs **create**; `delete-variant-json` needs **delete**.
+Groups or users that were allowed these actions only through the `view` permission must now also be given `update` (or `create`/`delete`).
+Explicit entries such as `admin.users.deactivate.view` no longer apply to these routes; use `admin.users.deactivate.update`.
+Deleting a purchase (`admin/purchases/delete`) also needs `admin.orders.delete`, because purchases are rows of the orders table.
+Custom controllers that read `Request::get('id')` should use `Request::input('id')`, so they see the same value as the permission check.
+
+---
+
 ### Upgrade checklist
 
 Database: **no table other than `password_reset_tokens` changed.** Your existing

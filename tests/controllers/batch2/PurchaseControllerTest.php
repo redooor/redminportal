@@ -1,8 +1,13 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Redooor\Redminportal\App\Models\Group;
+use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Models\Pricelist;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Membership;
+use Redooor\Redminportal\App\Models\User;
 
 class PurchaseControllerTest extends BaseControllerTest
 {
@@ -70,6 +75,45 @@ class PurchaseControllerTest extends BaseControllerTest
     }
 
     /**
+     * Create a user in a group with the supplied permissions and log in.
+     */
+    private function loginWithPermissions(array $permissions)
+    {
+        $group = new Group;
+        $group->name = 'Purchases ' . uniqid();
+        $group->permissions = json_encode($permissions);
+        $group->save();
+
+        $user = new User;
+        $user->email = uniqid('purchases') . '@example.com';
+        $user->password = Hash::make('secret');
+        $user->first_name = 'Purchases';
+        $user->last_name = 'Tester';
+        $user->activated = 1;
+        $user->save();
+        $user->groups()->save($group);
+
+        Auth::guard('redminguard')->loginUsingId($user->id);
+    }
+
+    /**
+     * Create a purchase order that can be shown and deleted.
+     */
+    private function createPurchaseOrder()
+    {
+        $order = new Order;
+        $order->user_id = 1;
+        $order->paid = 10.99;
+        $order->transaction_id = 'PURCHASE-ORDER-001';
+        $order->payment_status = 'Completed';
+        $order->save();
+
+        $order->pricelists()->attach(1);
+
+        return $order;
+    }
+
+    /**
      * Overwrite base functions, no edit for Purchase
      */
     public function testEditPass()
@@ -115,5 +159,72 @@ class PurchaseControllerTest extends BaseControllerTest
         $this->call('POST', '/admin/purchases/store', $input);
 
         $this->assertRedirectedTo('/admin/purchases/create');
+    }
+
+    /**
+     * Test (Fail): delete a purchase without permission to delete orders
+     */
+    public function testDeleteRefusedWithoutOrdersDeletePermission()
+    {
+        $order = $this->createPurchaseOrder();
+
+        $this->loginWithPermissions([
+            'admin.purchases.view' => 1,
+            'admin.purchases.delete' => 1,
+        ]);
+
+        $this->call('POST', '/admin/purchases/delete/' . $order->id);
+
+        $this->assertResponseStatus(302);
+        $this->assertSessionHasErrors('deleteError');
+        $this->assertNotNull(Order::find($order->id));
+    }
+
+    /**
+     * Test (Pass): delete a purchase with permission to delete orders
+     */
+    public function testDeleteAllowedWithOrdersDeletePermission()
+    {
+        $order = $this->createPurchaseOrder();
+
+        $this->loginWithPermissions([
+            'admin.purchases.view' => 1,
+            'admin.purchases.delete' => 1,
+            'admin.orders.delete' => 1,
+        ]);
+
+        $this->call('POST', '/admin/purchases/delete/' . $order->id);
+
+        $this->assertResponseStatus(302);
+        $this->assertNull(Order::find($order->id));
+    }
+
+    /**
+     * Test (Pass): the delete button is shown only when both delete permissions are held
+     */
+    public function testDeleteButtonNeedsPurchasesAndOrdersDeletePermissions()
+    {
+        $order = $this->createPurchaseOrder();
+
+        $this->loginWithPermissions([
+            'admin.purchases.view' => 1,
+            'admin.purchases.delete' => 1,
+        ]);
+
+        $this->call('GET', '/admin/purchases');
+
+        $this->assertResponseOk();
+        $this->assertStringNotContainsString('admin/purchases/delete/' . $order->id, $this->response->getContent());
+
+        $this->loginWithPermissions([
+            'admin.purchases.view' => 1,
+            'admin.purchases.delete' => 1,
+            'admin.orders.delete' => 1,
+        ]);
+
+        $this->call('GET', '/admin/purchases');
+
+        $this->assertResponseOk();
+        $this->assertStringContainsString('admin/purchases/delete/' . $order->id, $this->response->getContent());
     }
 }

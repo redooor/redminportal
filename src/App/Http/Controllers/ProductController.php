@@ -126,7 +126,7 @@ class ProductController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         $product_id = Request::get('product_id');
         
         /*
@@ -327,7 +327,7 @@ class ProductController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Product::class);
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;

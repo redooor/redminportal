@@ -62,7 +62,7 @@ class MailinglistController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
 
         /*
          * Validate

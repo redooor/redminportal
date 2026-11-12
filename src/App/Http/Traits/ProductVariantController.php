@@ -172,9 +172,14 @@ trait ProductVariantController
     
     public function getVariantImgremove($product_id, $sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Product::class);
+        $product = Product::find($product_id);
 
-        if ($image == null) {
+        $is_variant = $image != null
+            && $product != null
+            && $product->variants->contains('id', $image->imageable_id);
+
+        if (! $is_variant) {
             $errors = new MessageBag;
             $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
             return redirect($this->pageRoute . '/edit-variant/'. $product_id . '/' . $sid)->withErrors($errors);

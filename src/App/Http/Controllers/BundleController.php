@@ -156,7 +156,7 @@ class BundleController extends Controller
     
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         
         if (isset($sid)) {
             $url = 'admin/bundles/edit/' . $sid;

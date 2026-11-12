@@ -15,7 +15,9 @@
             <div class="card card-body bg-body-tertiary">
                 <div class='form-actions'>
                     {!! HTML::link('admin/medias', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
+                    @permitted('admin/medias/upload/' . $model->id)
                     <a id="start-upload" class="btn btn-primary btn-sm float-end" href="javascript:;" data-src="{{ URL::to('admin/medias/upload') . '/' . $model->id }}">{{ Lang::get('redminportal::buttons.upload') }}</a>
+                    @endpermitted
                 </div>
             </div>
             <input type="hidden" id="_token" name="_token" value="{{ csrf_token() }}">

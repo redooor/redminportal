@@ -80,7 +80,7 @@ class CategoryController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         
         $return_path = (isset($sid) ? 'admin/categories/edit/' . $sid : 'admin/categories/create');
 
@@ -233,7 +233,7 @@ class CategoryController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Category::class);
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;

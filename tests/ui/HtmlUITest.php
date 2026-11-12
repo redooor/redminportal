@@ -46,6 +46,10 @@ class HtmlUITest extends RedminTestCase
 
     public function testUploadedImagesPass()
     {
+        // The delete button is only shown to a user who may delete images
+        $this->seed(\Database\Seeders\RedminSeeder::class);
+        \Illuminate\Support\Facades\Auth::guard('redminguard')->loginUsingId(1);
+
         // Set up test model
         $model = new Announcement;
         $model->title = "This is title";

@@ -63,6 +63,12 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 1. Media and image uploads validate file names and types. Media uploads accept only the extensions in the new `media.allowed_extensions` config and are limited by `media.max_size`; uploaded names are cleaned before they are stored.
 2. Uploaded images are stored with an extension that matches their real type (jpg, png or gif); other files are rejected.
 
+**Permissions**
+1. The create/update decision for `store` requests and the controllers now read the `id` field the same way (`Request::input('id')`).
+2. Activate/deactivate user, remove image, media upload and duration, and product variant create/edit need the **update** permission (variant delete needs **delete**), instead of **view**. Their buttons are hidden for users without it.
+3. Removing an image only works through the module that owns it (a page image cannot be removed through the products route).
+4. Deleting a purchase also needs permission to delete orders, because purchases are orders.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.

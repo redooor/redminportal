@@ -114,7 +114,7 @@ class UserController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         $errors = new MessageBag;
         
         $rules = array(

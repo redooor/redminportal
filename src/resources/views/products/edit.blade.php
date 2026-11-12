@@ -226,7 +226,9 @@
                     </div>
                     <div id="list-variants" data-url="{{ url('admin/products/list-variants/' . $product->id) }}"></div>
                     <div class="card-footer text-end">
+                        @permitted('admin/products/create-variant/' . $product->id)
                         <a id="add-product-variant" href="{{ url('admin/products/create-variant/' . $product->id) }}" class="btn btn-primary btn-sm">Add</a>
+                        @endpermitted
                     </div>
                 </div>
                 @if (count($product->images) > 0)
@@ -241,9 +243,11 @@
                                 {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
+                                    @permitted('admin/products/imgremove/' . $image->id)
                                     <a href="{{ URL::to('admin/products/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
                                         <i class="fa-solid fa-xmark"></i>
                                     </a>
+                                    @endpermitted
                                     <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
                                         <i class="fa-solid fa-link"></i>
                                     </a>

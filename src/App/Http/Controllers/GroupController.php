@@ -81,7 +81,7 @@ class GroupController extends Controller
     
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         
         $rules = array(
             'name' => 'required',

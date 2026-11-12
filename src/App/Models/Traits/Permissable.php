@@ -60,14 +60,30 @@ trait Permissable
     private function checkType(Request $request)
     {
         $type = 'view';
-        if ($request->is('*/create')) {
+        if ($request->is('*/activate/*')
+            || $request->is('*/deactivate/*')
+            || $request->is('*/imgremove/*')
+            || $request->is('*/variant-imgremove/*')
+            || $request->is('*/uploadform/*')
+            || $request->is('*/upload/*')
+            || $request->is('*/duration/*')) {
+            $type = 'update';
+        } elseif ($request->is('*/delete-variant-json/*')) {
+            $type = 'delete';
+        } elseif ($request->is('*/create-variant/*')) {
+            $type = 'create';
+        } elseif ($request->is('*/edit-variant/*')) {
+            $type = 'update';
+        } elseif ($request->is('*/create')) {
             $type = 'create';
         } elseif ($request->is('*/edit/*') || $request->is('*/update/*')) {
             $type = 'update';
         } elseif ($request->is('*/delete/*')) {
             $type = 'delete';
         } elseif ($request->is('*/store') && $request->isMethod('post')) {
-            if ($request->filled('id')) {
+            // Use the same id for the permission check and the controller
+            $id = $request->input('id');
+            if (is_array($id) || (is_scalar($id) && trim((string) $id) !== '')) {
                 $type = 'update';
             } else {
                 $type = 'create';
