@@ -46,6 +46,8 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 3. The "view" (eye) button on uploaded images opens the picture in a lightbox on the same page instead of a new browser tab. With several images you can step through them with the arrow buttons or the left and right arrow keys, and close it with Escape. Ctrl or Cmd click still opens the plain link.
 4. The delete confirmation modal is no longer part of the layout, so it is no longer rendered on every page. Views with a delete link include `partials/confirm-delete` (the modal and its click handler), and custom views that use a `.btn-confirm` link must do the same.
 5. List pages only show the Create, Edit and Delete buttons the signed-in user may use (they follow the same permissions as the routes), and the row menu is hidden when it would be empty. The new `@permitted('admin/pages/edit/' . $page->id) ... @endpermitted` Blade directive does this check and can be used in custom views; it shows its content when the user may open any of the given paths.
+6. The sidebar only lists the menus the signed-in user may view, and hides a section such as Store when nothing under it is left. The Dashboard link in the top bar follows the same rule.
+7. Modals close with the Escape key (the shared modal templates now have `tabindex="-1"`). Custom modals need the same attribute.
 
 **Dashboard**
 1. The dashboard now shows summary cards (orders, revenue, new users, active products for the last 30 days), a chart of orders and revenue per day, a doughnut of orders by status, the top 5 products, the 5 most recent orders and the 5 most recently updated posts and the 5 most recently updated pages. Revenue counts only `Completed` and `Delivered` orders.
