@@ -17,7 +17,9 @@
                     <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ trans('redminportal::messages.list_from_to', ['firstItem' => $models->firstItem(), 'lastItem' => $models->lastItem(), 'totalItem' => $models->total()]) }}</a>
                 @endif
                 <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#export-csv">{{ Lang::get('redminportal::buttons.export_csv') }}</button>
+                @permitted('admin/mailinglists/create')
                 <a href="{{ url('admin/mailinglists/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+                @endpermitted
             </div>
             </div>
         </div>
@@ -65,21 +67,27 @@
                     <td>{{ date("d/m/y h:i A", strtotime($mailinglist->created_at)) }}</td>
                     <td>{{ date("d/m/y h:i A", strtotime($mailinglist->updated_at)) }}</td>
                     <td class="table-actions text-end">
+                        @permitted('admin/mailinglists/edit/' . $mailinglist->id, 'admin/mailinglists/delete/' . $mailinglist->id)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                @permitted('admin/mailinglists/edit/' . $mailinglist->id)
                                 <li>
                                     <a class="dropdown-item" href="{{ URL::to('admin/mailinglists/edit/' . $mailinglist->id) }}">
                                         <i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                 </li>
+                                @endpermitted
+                                @permitted('admin/mailinglists/delete/' . $mailinglist->id)
                                 <li>
                                     <a class="dropdown-item btn-confirm" href="{{ URL::to('admin/mailinglists/delete/' . $mailinglist->id) }}">
                                         <i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                 </li>
+                                @endpermitted
                             </ul>
                         </div>
+                        @endpermitted
                     </td>
                 </tr>
             @endforeach

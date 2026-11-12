@@ -55,21 +55,27 @@
                     </td>
                     <td>{{ date('d/m/y h:i A', strtotime($module->updated_at)) }}</td>
                     <td class="table-actions text-end">
+                        @permitted('admin/modules/edit/' . $module->id, 'admin/modules/delete/' . $module->id)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                @permitted('admin/modules/edit/' . $module->id)
                                 <li>
                                     <a class="dropdown-item" href="{{ URL::to('admin/modules/edit/' . $module->id) }}">
                                         <i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                 </li>
+                                @endpermitted
+                                @permitted('admin/modules/delete/' . $module->id)
                                 <li>
                                     <a class="dropdown-item btn-confirm" href="{{ URL::to('admin/modules/delete/' . $module->id) }}">
                                         <i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                 </li>
+                                @endpermitted
                             </ul>
                         </div>
+                        @endpermitted
                     </td>
                 </tr>
             @endforeach

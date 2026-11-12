@@ -24,7 +24,9 @@
                 <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ $purchases->firstItem() . ' to ' . $purchases->lastItem() . ' of ' . $purchases->total() }}</a>
                 @endif
                 <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#export-csv">{{ Lang::get('redminportal::buttons.export_csv') }}</button>
+                @permitted('admin/purchases/create')
                 {!! HTML::link('admin/purchases/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+                @endpermitted
             </div>
             </div>
         </div>
@@ -64,17 +66,21 @@
                         <td>{{ $purchase->transaction_id }}</td>
                         <td>{{ $purchase->created_at }}</td>
                         <td class="table-actions text-end">
+                            @permitted('admin/purchases/delete/' . $purchase->id)
                             <div class="btn-group">
                                 <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
+                                    @permitted('admin/purchases/delete/' . $purchase->id)
                                     <li>
                                         <a class="dropdown-item btn-confirm" href="{{ URL::to('admin/purchases/delete/' . $purchase->id) }}">
                                             <i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                     </li>
+                                    @endpermitted
                                 </ul>
                             </div>
+                            @endpermitted
                         </td>
                     </tr>
                     @endif

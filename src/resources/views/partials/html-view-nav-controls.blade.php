@@ -16,7 +16,9 @@
             @if (count($models) > 0)
                 <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ trans('redminportal::messages.list_from_to', ['firstItem' => $models->firstItem(), 'lastItem' => $models->lastItem(), 'totalItem' => $models->total()]) }}</a>
             @endif
+            @permitted('admin/' . $model_view . '/create')
             <a href="{{ url('admin/' . $model_view . '/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+            @endpermitted
         </div>
         </div>
     </div>

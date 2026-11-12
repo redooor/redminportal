@@ -19,7 +19,9 @@
                     @if (count($models) > 0)
                     <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                     @endif
+                    @permitted('admin/users/create')
                     <a href="{{ url('admin/users/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+                    @endpermitted
                 </div>
             </div>
         </div>
@@ -79,32 +81,42 @@
                     <td>{{ date("d/m/y h:i A", strtotime($user->created_at)) }}</td>
                     <td>{{ date("d/m/y h:i A", strtotime($user->updated_at)) }}</td>
 					<td class="table-actions text-end">
+                        @permitted('admin/users/deactivate/' . $user->id, 'admin/users/activate/' . $user->id, 'admin/users/edit/' . $user->id, 'admin/users/delete/' . $user->id)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end">
 								@if ($user->activated)
+									@permitted('admin/users/deactivate/' . $user->id)
 									<li>
 										<a class="dropdown-item" href="{{ URL::to('admin/users/deactivate/' . $user->id) }}">
 											<i class="fa-solid fa-eye-slash"></i>{{ Lang::get('redminportal::buttons.deactivate') }}</a>
 									</li>
+									@endpermitted
 								@else
+									@permitted('admin/users/activate/' . $user->id)
 									<li>
 										<a class="dropdown-item" href="{{ URL::to('admin/users/activate/' . $user->id) }}">
 											<i class="fa-solid fa-eye"></i>{{ Lang::get('redminportal::buttons.activate') }}</a>
 									</li>
+									@endpermitted
 								@endif
+								@permitted('admin/users/edit/' . $user->id)
 								<li>
 									<a class="dropdown-item" href="{{ URL::to('admin/users/edit/' . $user->id) }}">
 										<i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
 								</li>
+								@endpermitted
+                                @permitted('admin/users/delete/' . $user->id)
                                 <li>
 									<a class="dropdown-item btn-confirm" href="{{ URL::to('admin/users/delete/' . $user->id) }}">
 										<i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
 								</li>
+                                @endpermitted
 							</ul>
 						</div>
+                        @endpermitted
 					</td>
 		        </tr>
 		    @endforeach

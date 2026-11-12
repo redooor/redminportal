@@ -20,7 +20,11 @@
         @endif
     </ul>
     <div class="card-footer text-end">
+        @permitted('admin/categories/edit/' . $category->id)
         <a href="{{ URL::to('admin/categories/edit/' . $category->id) }}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
+        @endpermitted
+        @permitted('admin/categories/delete/' . $category->id)
         <a href="{{ URL::to('admin/categories/delete/' . $category->id) }}" class="btn btn-danger btn-confirm"><i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
+        @endpermitted
     </div>
 </div>

@@ -37,21 +37,27 @@
                         @endif
                     </td>
                     <td class="table-actions text-end">
+                        @permitted('admin/announcements/edit/' . $announcement->id, 'admin/announcements/delete/' . $announcement->id)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
 						  	<ul class="dropdown-menu dropdown-menu-end">
+						        @permitted('admin/announcements/edit/' . $announcement->id)
 						        <li>
 						            <a class="dropdown-item" href="{{ URL::to('admin/announcements/edit/' . $announcement->id) }}">
 						                <i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
 						        </li>
+						        @endpermitted
+						        @permitted('admin/announcements/delete/' . $announcement->id)
 						        <li>
 						            <a class="dropdown-item btn-confirm" href="{{ URL::to('admin/announcements/delete/' . $announcement->id) }}">
 						                <i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
 						        </li>
+						        @endpermitted
 						  	</ul>
 						</div>
+                        @endpermitted
                     </td>
                 </tr>
             @endforeach

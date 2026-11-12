@@ -17,7 +17,9 @@
                     <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ trans('redminportal::messages.list_from_to', ['firstItem' => $models->firstItem(), 'lastItem' => $models->lastItem(), 'totalItem' => $models->total()]) }}</a>
                 @endif
                 <a id="rd-media-get-all-duration" class="btn btn-secondary btn-sm">{{ Lang::get('redminportal::buttons.get_durations') }}</a>
+                @permitted('admin/medias/create')
                 <a href="{{ url('admin/medias/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+                @endpermitted
             </div>
             </div>
         </div>
@@ -76,25 +78,33 @@
                             data-url="{{ URL::to('admin/medias/duration/' . $media->id) }}">@if(isset(json_decode($media->options)->duration)){{ json_decode($media->options)->duration }}@endif</span>
                     </td>
                     <td class="table-actions text-end">
+                        @permitted('admin/medias/uploadform/' . $media->id, 'admin/medias/edit/' . $media->id, 'admin/medias/delete/' . $media->id)
                         <div class="btn-group">
                             <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
 								<i class="fa-solid fa-ellipsis"></i>
 							</button>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                @permitted('admin/medias/uploadform/' . $media->id)
                                 <li>
                                     <a class="dropdown-item" href="{{ URL::to('admin/medias/uploadform/' . $media->id) }}">
                                         <i class="fa-solid fa-upload"></i>Upload Media</a>
                                 </li>
+                                @endpermitted
+                                @permitted('admin/medias/edit/' . $media->id)
                                 <li>
                                     <a class="dropdown-item" href="{{ URL::to('admin/medias/edit/' . $media->id) }}">
                                         <i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                 </li>
+                                @endpermitted
+                                @permitted('admin/medias/delete/' . $media->id)
                                 <li>
                                     <a class="dropdown-item btn-confirm" href="{{ URL::to('admin/medias/delete/' . $media->id) }}">
                                         <i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                 </li>
+                                @endpermitted
                             </ul>
                         </div>
+                        @endpermitted
                     </td>
                 </tr>
             @endforeach
