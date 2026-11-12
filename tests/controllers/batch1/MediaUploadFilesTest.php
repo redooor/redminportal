@@ -13,6 +13,7 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
     private $mediaFolder;
     private $tmpFolder;
     private $tempFiles = array();
+    private $lastStatus;
     private $extraFolders = array();
 
     public function setUp(): void
@@ -199,7 +200,7 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
     {
         $fileName = 'locked.mp3';
         $partPath = $this->tmpFolder . '/' . $fileName . '.part';
-        $lockPath = sys_get_temp_dir() . '/redmin-upload-' . md5($partPath) . '.lock';
+        $lockPath = sys_get_temp_dir() . '/redmin-upload-' . md5($this->tmpFolder) . '.lock';
         $lock = fopen($lockPath, 'c');
 
         $this->assertNotFalse($lock);
@@ -210,12 +211,29 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
 
             $this->assertSame(0, $result['code']);
             $this->assertSame('Failed to open output stream.', $result['message']);
+            $this->assertSame(503, $this->lastStatus);
             $this->assertFileDoesNotExist($partPath);
         } finally {
             flock($lock, LOCK_UN);
             fclose($lock);
             @unlink($lockPath);
         }
+    }
+
+    /**
+     * Test (Pass): finishing one upload keeps the partial file of another upload of the same media
+     */
+    public function testFinishingUploadKeepsAnotherPartialFile()
+    {
+        $first = $this->upload('first.mp3', 'first.mp3', 'abc', 0, 2);
+        $this->assertSame(1, $first['code']);
+        $this->assertFileExists($this->tmpFolder . '/first.mp3.part');
+
+        $second = $this->upload('second.mp3', 'second.mp3', 'xyz', 0, 1);
+        $this->assertSame(1, $second['code']);
+
+        $this->assertFileExists($this->tmpFolder . '/first.mp3.part');
+        $this->assertFileExists($this->mediaFolder . '/second.mp3');
     }
 
     /**
@@ -299,6 +317,8 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
             'chunk' => $chunk,
             'chunks' => $chunks,
         ));
+
+        $this->lastStatus = $response->getStatusCode();
 
         return json_decode($response->getContent(), true);
     }

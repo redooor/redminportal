@@ -127,7 +127,7 @@ trait MediaUploaderController
         }
 
         $partPath = "{$filePath}.part";
-        $lockPath = sys_get_temp_dir() . '/redmin-upload-' . md5($partPath) . '.lock';
+        $lockPath = sys_get_temp_dir() . '/redmin-upload-' . md5($model_tmp_folder) . '.lock';
         $lock = @fopen($lockPath, 'c');
 
         if (! $lock || ! @flock($lock, LOCK_EX | LOCK_NB)) {
@@ -135,8 +135,9 @@ trait MediaUploaderController
                 @fclose($lock);
             }
 
+            // Another chunk of this media is being written; ask the uploader to send this one again
             $result["message"] = Lang::get('redminportal::messages.upload_error_failed_to_open_output_stream');
-            return json_encode($result);
+            return response(json_encode($result), 503);
         }
 
         try {
@@ -266,8 +267,8 @@ trait MediaUploaderController
 
             $file->move($model_folder, $fileName);
 
-            // Delete tmp media
-            $file->deleteFiles($model_tmp_folder);
+            // Remove the tmp folder when nothing else is waiting in it
+            @rmdir($model_tmp_folder);
         }
         
         $result["code"] = 1;
