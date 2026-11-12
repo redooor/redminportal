@@ -198,14 +198,7 @@
 	        </div>
         </div>
     {!! Form::close() !!}
-    <!-- Modal confirmation window -->
-    @include('redminportal::partials.modal-window', [
-        'modal_id' => 'confirm-modal',
-        'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
-        'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
-        'modal_footer' => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
-    ])
-    <!-- End of modal window -->
+    @include('redminportal::partials.confirm-delete')
     <!-- if product exists (END) -->
     @endif
 @stop
@@ -213,18 +206,6 @@
 @section('footer')
     @parent
     <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-fileinput.min.js') }}"></script>
-    <script>
-        !function ($) {
-            $(function(){
-                $(document).on('click', '.btn-confirm', function(e) {
-                    e.preventDefault();
-                    $delete_url = $(this).attr('href');
-                    $('#confirm-modal-proceed').attr('href', $delete_url);
-                    $('#confirm-modal').modal('show');
-                });
-            })
-        }(window.jQuery);
-    </script>
     @if (isset($product))
     @include('redminportal::plugins/editor', ['editorImages' => $product->images])
     @endif

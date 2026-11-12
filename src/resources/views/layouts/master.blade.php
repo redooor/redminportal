@@ -111,14 +111,7 @@
             </div>
         </div><!--End main-->
         
-        <!-- Modal confirmation window -->
-        {!! Redminportal::html()->modalWindow(
-            'confirm-modal',
-            Lang::get('redminportal::messages.confirm_delete'),
-            Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
-            '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
-        ) !!}
-        <!-- End of modal window -->
+        @stack('modals')
 
         <!-- Image lightbox -->
         <div id="lightbox-modal" class="modal fade" tabindex="-1" aria-labelledby="lightbox-title" aria-hidden="true">
@@ -146,18 +139,7 @@
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmaterials.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-sidebar.min.js') }}" defer></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-lightbox.min.js') }}" defer></script>
-        <script>
-            !function ($) {
-                $(function(){
-                    $(document).on('click', '.btn-confirm', function(e) {
-                        e.preventDefault();
-                        $delete_url = $(this).attr('href');
-                        $('#confirm-modal-proceed').attr('href', $delete_url);
-                        bootstrap.Modal.getOrCreateInstance(document.getElementById('confirm-modal')).show();
-                    });
-                })
-            }(window.jQuery);
-        </script>
+        @stack('scripts')
 
         @section('footer')
         @show

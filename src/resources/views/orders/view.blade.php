@@ -5,6 +5,7 @@
 @stop
 
 @section('content')
+    @include('redminportal::partials.confirm-delete')
 
     @include('redminportal::partials.errors')
     
