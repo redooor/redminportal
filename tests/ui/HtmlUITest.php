@@ -110,7 +110,7 @@ class HtmlUITest extends RedminTestCase
         
         $input = str_replace(array("\r", "\n", " "), '', $input);
         
-        $output = '<div id="modal_id" class="modal fade">
+        $output = '<div id="modal_id" class="modal fade" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-progress">
                     <div class="progress">

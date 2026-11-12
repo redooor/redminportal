@@ -9,7 +9,7 @@
         'export_url' => 'Export POST Url'
     ])
 --}}
-<div id="{{ $export_id }}" class="modal fade">
+<div id="{{ $export_id }}" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="POST" action="{{ $export_url }}" accept-charset="UTF-8" report="form">
