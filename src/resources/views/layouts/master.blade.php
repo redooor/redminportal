@@ -66,7 +66,9 @@
                         <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
                     </button>
                     <ul class="navbar-nav navbar-breadcrumb d-none d-md-flex me-auto">
+                        @permitted('admin/dashboard')
                         <li class="nav-item"><a class="nav-link" href="{{ URL::to('admin/dashboard') }}">{{ Lang::get('redminportal::menus.dashboard') }}</a></li>
+                        @endpermitted
                         @section('navbar-breadcrumb')
                         @show
                     </ul>
