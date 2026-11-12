@@ -25,13 +25,19 @@ class HideUnpermittedMenusTest extends RedminBrowserTestCase
         $this->user->save();
     }
 
-    private function dashboardAs(array $permissions)
+    private function group(array $permissions)
     {
         $group = new Group;
         $group->name = 'Limited';
         $group->permissions = json_encode($permissions);
         $group->save();
-        $this->user->groups()->save($group);
+
+        return $group;
+    }
+
+    private function dashboardAs(array $permissions)
+    {
+        $this->user->groups()->save($this->group($permissions));
         Auth::guard('redminguard')->loginUsingId($this->user->id);
 
         $response = $this->call('GET', '/admin/dashboard');
@@ -117,5 +123,33 @@ class HideUnpermittedMenusTest extends RedminBrowserTestCase
     {
         $html = $this->dashboardAs(['admin.dashboard.view' => 1]);
         $this->assertStringContainsString('class="nav-link" href="' . url('admin/dashboard') . '"', $html);
+    }
+
+    public function testBreadcrumbDashboardLinkIsHiddenWithoutDashboardPermission()
+    {
+        $this->user->groups()->save($this->group(['admin.pages.view' => 1]));
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
+
+        $response = $this->call('GET', '/admin/pages');
+        $response->assertStatus(200);
+
+        $this->assertStringNotContainsString('class="nav-link" href="' . url('admin/dashboard') . '"', $response->getContent());
+    }
+
+    public function testDeniedParentKeepsPermittedChildrenAsPlainHeader()
+    {
+        $this->user->groups()->save($this->group(['admin.pages.view' => -1, 'admin.pages.update' => 1]));
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
+
+        $menus = [[
+            'name' => 'pages',
+            'path' => 'admin/pages',
+            'hide' => false,
+            'children' => [['name' => 'posts', 'path' => 'admin/pages/edit/5', 'hide' => false]],
+        ]];
+        $html = (string) (new \Redooor\Redminportal\App\UI\Html)->printMenu($menus);
+
+        $this->assertStringNotContainsString('href="' . url('admin/pages') . '"', $html);
+        $this->assertStringContainsString('href="' . url('admin/pages/edit/5') . '"', $html);
     }
 }

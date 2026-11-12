@@ -123,13 +123,15 @@ class Html
             }
 
             $path = $menu['path'] ?? '';
+            $denied = $path !== '' && ($user === null || ! $user->hasAccess(Request::create($path, 'GET')));
 
-            if ($path === '') {
-                // Section header: only worth showing when something under it is left
-                if (empty($menu['children'])) {
-                    continue;
-                }
-            } elseif ($user === null || ! $user->hasAccess(Request::create($path, 'GET'))) {
+            if ($denied) {
+                // Keep the permitted children under a plain header instead of a link
+                $menu['path'] = '';
+            }
+
+            // A section header is only worth showing when something under it is left
+            if (($path === '' || $denied) && empty($menu['children'])) {
                 continue;
             }
 
