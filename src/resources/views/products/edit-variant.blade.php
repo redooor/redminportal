@@ -121,8 +121,8 @@
                                 {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
-                                    @permitted('admin/products/variant-imgremove/' . $product->id . '/' . $image->id)
-                                    <a href="{{ URL::to('admin/products/variant-imgremove/' . $product->id . '/' . $image->id) }}" class="btn btn-danger btn-confirm">
+                                    @permitted('admin/products/variant-imgremove/' . $product_id . '/' . $image->id)
+                                    <a href="{{ URL::to('admin/products/variant-imgremove/' . $product_id . '/' . $image->id) }}" class="btn btn-danger btn-confirm">
                                         <i class="fa-solid fa-xmark"></i>
                                     </a>
                                     @endpermitted

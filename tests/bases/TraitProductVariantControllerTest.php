@@ -528,6 +528,44 @@ trait TraitProductVariantControllerTest
     }
 
     /**
+     * Test (Pass): the variant edit page links image removal with the parent product id
+     */
+    public function testEditVariantPageLinksImageRemovalWithParentId()
+    {
+        $category = new \Redooor\Redminportal\App\Models\Category;
+        $category->name = 'Variant page category';
+        $category->short_description = 'Variant page category';
+        $category->save();
+
+        $parentProduct = $this->createNewModel(new Product, [
+            'name' => 'Parent product',
+            'short_description' => 'This is the body',
+            'category_id' => $category->id,
+            'sku' => 'PARENT-IMAGE-003'
+        ]);
+
+        $variant = $this->createNewModel(new Product, [
+            'name' => 'Variant product',
+            'short_description' => 'This is the body',
+            'category_id' => $category->id,
+            'sku' => 'VARIANT-IMAGE-003'
+        ]);
+
+        $parentProduct->variants()->attach($variant->id);
+
+        $image = new Image();
+        $image->path = 'dummy.jpg';
+        $variant->images()->save($image);
+
+        $response = $this->call('GET', $this->page . '/edit-variant/' . $parentProduct->id . '/' . $variant->id);
+
+        $this->assertStringContainsString(
+            'variant-imgremove/' . $parentProduct->id . '/' . $image->id,
+            $response->getContent()
+        );
+    }
+
+    /**
      * Test (Fail): remove an image that belongs to a different product variant
      */
     public function testRemoveVariantImageFailsForAnotherVariant()

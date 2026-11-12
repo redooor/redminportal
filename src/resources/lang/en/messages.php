@@ -91,6 +91,8 @@ return array(
         => 'The image cannot be deleted at this time.',
     'purchase_error_delete_no_orders_permission'
         => 'You also need permission to delete orders.',
+    'purchase_error_create_no_orders_permission'
+        => "You also need permission to add orders.",
     'success_delete_record'
         => 'The record has been deleted successfully.',
     'error_delete_variant_already_ordered'

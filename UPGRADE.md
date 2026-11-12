@@ -291,7 +291,7 @@ matches the real image type (jpg, png, gif). If you need other media types, re-p
 These actions now need **update** instead of **view**: `activate`, `deactivate`, `imgremove`, `variant-imgremove`, media `uploadform`, `upload` and `duration`, product `edit-variant`; `create-variant` needs **create**; `delete-variant-json` needs **delete**.
 Groups or users that were allowed these actions only through the `view` permission must now also be given `update` (or `create`/`delete`).
 Explicit entries such as `admin.users.deactivate.view` no longer apply to these routes; use `admin.users.deactivate.update`.
-Deleting a purchase (`admin/purchases/delete`) also needs `admin.orders.delete`, because purchases are rows of the orders table.
+Deleting a purchase (`admin/purchases/delete`) also needs `admin.orders.delete`, and adding one (`admin/purchases/store`) also needs `admin.orders.create`, because purchases are rows of the orders table. `store` on orders and purchases always needs the `create` permission, whatever `id` is sent.
 Custom controllers that read `Request::get('id')` should use `Request::input('id')`, so they see the same value as the permission check.
 
 ---

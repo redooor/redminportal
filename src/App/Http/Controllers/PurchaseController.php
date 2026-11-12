@@ -88,6 +88,15 @@ class PurchaseController extends Controller
 
     public function postStore()
     {
+        // Purchases are rows of the orders table, so adding one also needs permission to add an order
+        $user = Auth::guard('redminguard')->user();
+
+        if ($user == null || ! $user->hasAccess(Request::create('admin/orders/store', 'POST'))) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('createError', trans('redminportal::messages.purchase_error_create_no_orders_permission'));
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
         $sid = Request::input('id');
 
         $rules = array(

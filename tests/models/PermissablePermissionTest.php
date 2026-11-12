@@ -175,4 +175,37 @@ class PermissablePermissionTest extends RedminBrowserTestCase
             'id' => '1',
         ]);
     }
+
+    public function testEncodedPathDoesNotSkipAnExplicitDeny()
+    {
+        $user = $this->userWithPermissions(['admin.users.update' => 1, 'admin.users.deactivate.update' => -1]);
+
+        $this->assertAccess(false, $user, 'POST', '/admin/users/deactivate/1');
+        $this->assertAccess(false, $user, 'POST', '/admin/users/%64eactivate/1');
+        $this->assertAccess(true, $user, 'GET', '/admin/users/edit/1');
+    }
+
+    public function testOrdersAndPurchasesStoreAlwaysNeedCreate()
+    {
+        $updater = $this->userWithPermissions([
+            'admin.orders.update' => 1, 'admin.orders.create' => -1,
+            'admin.purchases.update' => 1, 'admin.purchases.create' => -1,
+        ]);
+
+        foreach (['orders', 'purchases'] as $module) {
+            $this->assertAccess(false, $updater, 'POST', '/admin/' . $module . '/store', ['id' => '999']);
+            $this->assertAccess(false, $updater, 'POST', '/admin/' . $module . '/store');
+        }
+    }
+
+    public function testPurchaseStoreAlsoNeedsOrdersCreate()
+    {
+        $user = $this->userWithPermissions(['admin.purchases.create' => 1, 'admin.orders.create' => -1]);
+
+        Auth::guard('redminguard')->loginUsingId($user->id);
+
+        $this->call('POST', '/admin/purchases/store', []);
+
+        $this->assertSessionHasErrors('createError');
+    }
 }
