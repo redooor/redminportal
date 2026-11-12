@@ -295,6 +295,16 @@ i {
      object-fit: cover;
 }
 
+/* Delete confirmations: an opaque panel, unlike the theme's translucent modals, so the page behind does not show through */
+#confirm-modal,
+#variant-remove-modal {
+  --bs-modal-bg: var(--bs-body-bg);
+}
+#confirm-modal .modal-content,
+#variant-remove-modal .modal-content {
+  background-color: var(--bs-body-bg);
+}
+
 /* Image lightbox: an opaque panel, unlike the theme's translucent modals, so the page behind does not show through the image */
 #lightbox-modal {
   --bs-modal-bg: var(--bs-body-bg);
