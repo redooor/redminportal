@@ -20,7 +20,9 @@
                         <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ trans('redminportal::messages.list_from_to', ['firstItem' => $models->firstItem(), 'lastItem' => $models->lastItem(), 'totalItem' => $models->total()]) }}</a>
                     @endif
                     <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#export-csv">{{ Lang::get('redminportal::buttons.export_excel') }}</button>
+                    @permitted('admin/orders/create')
                     <a href="{{ url('admin/orders/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+                    @endpermitted
                 </div>
             </div>
         </div>
@@ -160,10 +162,12 @@
 									<a class="dropdown-item btn-modal-revision" href="{{ URL::to('admin/orders/revisions/' . $order->id) }}">
 										<i class="fa-solid fa-clock"></i>Revision History</a>
 								</li>
+								@permitted('admin/orders/delete/' . $order->id)
 								<li>
 									<a class="dropdown-item btn-confirm" href="{{ URL::to('admin/orders/delete/' . $order->id) }}">
 										<i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
 								</li>
+								@endpermitted
 							</ul>
 						</div>
 					</td>

@@ -64,17 +64,21 @@
                         <td>{{ $purchase->transaction_id }}</td>
                         <td>{{ $purchase->created_at }}</td>
                         <td class="table-actions text-end">
+                            @permitted('admin/purchases/delete/' . $purchase->id)
                             <div class="btn-group">
                                 <button type="button" class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}'>
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
+                                    @permitted('admin/purchases/delete/' . $purchase->id)
                                     <li>
                                         <a class="dropdown-item btn-confirm" href="{{ URL::to('admin/purchases/delete/' . $purchase->id) }}">
                                             <i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                     </li>
+                                    @endpermitted
                                 </ul>
                             </div>
+                            @endpermitted
                         </td>
                     </tr>
                     @endif

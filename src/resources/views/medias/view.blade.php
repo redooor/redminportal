@@ -17,7 +17,9 @@
                     <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ trans('redminportal::messages.list_from_to', ['firstItem' => $models->firstItem(), 'lastItem' => $models->lastItem(), 'totalItem' => $models->total()]) }}</a>
                 @endif
                 <a id="rd-media-get-all-duration" class="btn btn-secondary btn-sm">{{ Lang::get('redminportal::buttons.get_durations') }}</a>
+                @permitted('admin/medias/create')
                 <a href="{{ url('admin/medias/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+                @endpermitted
             </div>
             </div>
         </div>
@@ -85,14 +87,18 @@
                                     <a class="dropdown-item" href="{{ URL::to('admin/medias/uploadform/' . $media->id) }}">
                                         <i class="fa-solid fa-upload"></i>Upload Media</a>
                                 </li>
+                                @permitted('admin/medias/edit/' . $media->id)
                                 <li>
                                     <a class="dropdown-item" href="{{ URL::to('admin/medias/edit/' . $media->id) }}">
                                         <i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
                                 </li>
+                                @endpermitted
+                                @permitted('admin/medias/delete/' . $media->id)
                                 <li>
                                     <a class="dropdown-item btn-confirm" href="{{ URL::to('admin/medias/delete/' . $media->id) }}">
                                         <i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
                                 </li>
+                                @endpermitted
                             </ul>
                         </div>
                     </td>

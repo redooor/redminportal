@@ -1,5 +1,8 @@
 <?php namespace Redooor\Redminportal;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Redooor\Redminportal\App\Classes\Redminportal;
@@ -17,6 +20,27 @@ class RedminportalServiceProvider extends ServiceProvider
         // Get routes
         $this->loadRoutesFrom(__DIR__.'/App/Http/routes.php');
         
+        /**
+         * @permitted('admin/pages/edit/5') ... @endpermitted
+         * Shows its content only if the signed-in admin may open any of the given paths. It runs the same check as the
+         * route middleware, so a button is shown exactly when its link would be allowed.
+         */
+        Blade::if('permitted', function (...$paths) {
+            $user = Auth::guard('redminguard')->user();
+
+            if ($user === null) {
+                return false;
+            }
+
+            foreach ($paths as $path) {
+                if ($user->hasAccess(Request::create($path, 'GET'))) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+
         // Get views
         if (file_exists(base_path('resources/views/vendor/redooor/redminportal'))) {
             $this->loadViewsFrom(base_path('resources/views/vendor/redooor/redminportal'), 'redminportal');

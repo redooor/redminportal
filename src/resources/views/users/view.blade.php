@@ -19,7 +19,9 @@
                     @if (count($models) > 0)
                     <a href="" class="btn btn-secondary btn-sm disabled btn-text">{{ $models->firstItem() . ' to ' . $models->lastItem() . ' of ' . $models->total() }}</a>
                     @endif
+                    @permitted('admin/users/create')
                     <a href="{{ url('admin/users/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+                    @endpermitted
                 </div>
             </div>
         </div>
@@ -95,14 +97,18 @@
 											<i class="fa-solid fa-eye"></i>{{ Lang::get('redminportal::buttons.activate') }}</a>
 									</li>
 								@endif
+								@permitted('admin/users/edit/' . $user->id)
 								<li>
 									<a class="dropdown-item" href="{{ URL::to('admin/users/edit/' . $user->id) }}">
 										<i class="fa-solid fa-pen-to-square"></i>{{ Lang::get('redminportal::buttons.edit') }}</a>
 								</li>
+								@endpermitted
+                                @permitted('admin/users/delete/' . $user->id)
                                 <li>
 									<a class="dropdown-item btn-confirm" href="{{ URL::to('admin/users/delete/' . $user->id) }}">
 										<i class="fa-solid fa-xmark"></i>{{ Lang::get('redminportal::buttons.delete') }}</a>
 								</li>
+                                @endpermitted
 							</ul>
 						</div>
 					</td>

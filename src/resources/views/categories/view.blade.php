@@ -12,7 +12,9 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="nav-controls text-end">
+                @permitted('admin/categories/create')
                 <a href="{{ url('admin/categories/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
+                @endpermitted
             </div>
         </div>
     </div>
