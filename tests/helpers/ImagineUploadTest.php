@@ -134,13 +134,101 @@ class ImagineUploadTest extends RedminTestCase
     }
 
     /**
+     * Test (Pass): EXIF metadata is removed from an uploaded JPEG
+     */
+    public function testJpegExifMetadataIsStripped()
+    {
+        $source = $this->createImage('jpg');
+        $this->insertApp1Segment($source, "Exif\x00\x00GPS" . str_repeat("\x00", 48));
+        $file = new UploadedFile($source, 'photo.jpg', 'image/jpeg', null, true);
+
+        $path = (new Imagine)->upload($file, 'exif', false, true);
+
+        $this->assertNotNull($path);
+        $this->assertFileExists($this->uploadPath . 'exif/photo.jpg');
+        $this->assertStringNotContainsString('Exif', file_get_contents($this->uploadPath . 'exif/photo.jpg'));
+    }
+
+    /**
+     * Test (Pass): a PNG stays a PNG with the same dimensions
+     */
+    public function testPngKeepsFormatAndDimensions()
+    {
+        $source = $this->createImage('png', 13, 7);
+        $file = new UploadedFile($source, 'shape.png', 'image/png', null, true);
+
+        $path = (new Imagine)->upload($file, 'shapes', false, true);
+
+        $this->assertNotNull($path);
+        $this->assertFileExists($this->uploadPath . 'shapes/shape.png');
+
+        $size = getimagesize($this->uploadPath . 'shapes/shape.png');
+
+        $this->assertSame(IMAGETYPE_PNG, $size[2]);
+        $this->assertSame(13, $size[0]);
+        $this->assertSame(7, $size[1]);
+    }
+
+    /**
+     * Test (Pass): an animated GIF is moved as-is so it is not flattened
+     */
+    public function testAnimatedGifIsKeptWithoutReencoding()
+    {
+        $source = $this->createAnimatedGif();
+        $bytes = file_get_contents($source);
+        $file = new UploadedFile($source, 'animation.gif', 'image/gif', null, true);
+
+        $path = (new Imagine)->upload($file, 'animated', false, true);
+
+        $this->assertNotNull($path);
+        $this->assertFileExists($this->uploadPath . 'animated/animation.gif');
+        $this->assertSame($bytes, file_get_contents($this->uploadPath . 'animated/animation.gif'));
+        $this->assertGreaterThan(1, substr_count($bytes, "\x00\x21\xF9\x04"));
+    }
+
+    /**
+     * Test (Fail): a PNG header with a corrupt body returns null and stores nothing
+     */
+    public function testCorruptPngReturnsNullAndLeavesNoFile()
+    {
+        $valid = $this->createImage('png', 10, 10);
+        $source = $this->tempFile('png');
+        file_put_contents($source, substr(file_get_contents($valid), 0, 33) . str_repeat("\x00", 32));
+
+        $file = new UploadedFile($source, 'broken.png', 'image/png', null, true);
+
+        $path = (new Imagine)->upload($file, 'broken', false, true);
+
+        $this->assertNull($path);
+        $this->assertFileDoesNotExist($this->uploadPath . 'broken/broken.png');
+    }
+
+    /**
+     * Test (Pass): a JPEG with EXIF orientation 6 is rotated
+     */
+    public function testJpegWithExifOrientationIsRotated()
+    {
+        $source = $this->createImage('jpg', 30, 10);
+        $this->insertApp1Segment($source, $this->exifPayload(6));
+        $file = new UploadedFile($source, 'rotated.jpg', 'image/jpeg', null, true);
+
+        $path = (new Imagine)->upload($file, 'rotate', false, true);
+
+        $this->assertNotNull($path);
+        $size = getimagesize($this->uploadPath . 'rotate/rotated.jpg');
+
+        $this->assertSame(10, $size[0]);
+        $this->assertSame(30, $size[1]);
+    }
+
+    /**
      * Create a real image file using GD
      */
-    private function createImage($type)
+    private function createImage($type, $width = 10, $height = 10)
     {
         $path = $this->tempFile($type);
 
-        $image = imagecreatetruecolor(10, 10);
+        $image = imagecreatetruecolor($width, $height);
 
         if ($type == 'png') {
             imagepng($image, $path);
@@ -151,6 +239,51 @@ class ImagineUploadTest extends RedminTestCase
         }
 
         imagedestroy($image);
+
+        return $path;
+    }
+
+    /**
+     * Insert an APP1 segment directly after the JPEG SOI marker
+     */
+    private function insertApp1Segment($source, $payload)
+    {
+        $jpeg = file_get_contents($source);
+        $segment = "\xFF\xE1" . pack('n', strlen($payload) + 2) . $payload;
+
+        file_put_contents($source, substr($jpeg, 0, 2) . $segment . substr($jpeg, 2));
+    }
+
+    /**
+     * Build a minimal EXIF payload carrying an orientation value
+     */
+    private function exifPayload($orientation)
+    {
+        $tiff = "II\x2A\x00" . pack('V', 8)
+            . pack('v', 1)
+            . pack('v', 0x0112) . pack('v', 3) . pack('V', 1)
+            . pack('v', $orientation) . "\x00\x00"
+            . pack('V', 0);
+
+        return "Exif\x00\x00" . $tiff;
+    }
+
+    /**
+     * Build a minimal two-frame animated GIF
+     */
+    private function createAnimatedGif()
+    {
+        $path = $this->tempFile('gif');
+        $control = "\x21\xF9\x04\x00\x0A\x00\x00\x00";
+        $descriptor = "\x2C\x00\x00\x00\x00\x01\x00\x01\x00\x00";
+        $data = "\x02\x02\x4C\x01\x00";
+        $bytes = "GIF89a" . pack('v', 1) . pack('v', 1) . "\x80\x00\x00"
+            . str_repeat("\x00", 6)
+            . $control . $descriptor . $data
+            . $control . $descriptor . $data
+            . "\x3B";
+
+        file_put_contents($path, $bytes);
 
         return $path;
     }

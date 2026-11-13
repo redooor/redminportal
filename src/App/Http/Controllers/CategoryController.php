@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Models\Category;
-use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Request;
@@ -179,18 +179,7 @@ class CategoryController extends Controller
         }
 
         if (Request::hasFile('image')) {
-            //Upload the file
-            $helper_image = new RImage;
-            $filename = $helper_image->upload($image, 'categories/' . $category->id, true);
-
-            if ($filename) {
-                // create photo
-                $newimage = new Image;
-                $newimage->path = $filename;
-
-                // save photo to the loaded model
-                $category->images()->save($newimage);
-            }
+            (new ImageService)->attach($category, Request::file('image'), 'categories');
         }
         
         return redirect('admin/categories');

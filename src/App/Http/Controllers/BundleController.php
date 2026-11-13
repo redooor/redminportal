@@ -11,7 +11,7 @@ use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Pricelist;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
-use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
@@ -291,18 +291,7 @@ class BundleController extends Controller
         }
 
         if (Request::hasFile('image')) {
-            //Upload the file
-            $helper_image = new RImage;
-            $filename = $helper_image->upload($image, 'bundles/' . $newBundle->id, true);
-
-            if ($filename) {
-                // create photo
-                $newimage = new Image;
-                $newimage->path = $filename;
-
-                // save photo to the loaded model
-                $newBundle->images()->save($newimage);
-            }
+            (new ImageService)->attach($newBundle, Request::file('image'), 'bundles');
         }
 
         return redirect('admin/bundles');

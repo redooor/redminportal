@@ -7,7 +7,7 @@ use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Portfolio;
 use Redooor\Redminportal\App\Models\Category;
-use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 
@@ -167,18 +167,7 @@ class PortfolioController extends Controller
         }
 
         if (Request::hasFile('image')) {
-            //Upload the file
-            $helper_image = new RImage;
-            $filename = $helper_image->upload($image, 'portfolios/' . $portfolio->id, true);
-
-            if ($filename) {
-                // create photo
-                $newimage = new Image;
-                $newimage->path = $filename;
-
-                // save photo to the loaded model
-                $portfolio->images()->save($newimage);
-            }
+            (new ImageService)->attach($portfolio, Request::file('image'), 'portfolios');
         }
 
         return redirect('admin/portfolios');

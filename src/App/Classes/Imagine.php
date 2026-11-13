@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File as Filesystem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Imagine\Filter\Basic\Autorotate;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Redooor\Redminportal\App\Helpers\RHelper;
@@ -164,19 +165,91 @@ class Imagine
                 $filename = $this->autoNumberFile($destination, $filename);
             }
             
-            $path        = RHelper::joinPaths(Config::get('redminportal::image.upload_dir'), $dir, $filename);
-            $uploaded    = $file->move($destination, $filename);
-     
-            if ($uploaded) {
-                if ($createDimensions) {
-                    $this->createDimensions($path);
+            $path = RHelper::joinPaths(Config::get('redminportal::image.upload_dir'), $dir, $filename);
+            $target = $destination . '/' . $filename;
+
+            try {
+                // Create destination dir if missing
+                if (! is_dir($destination)) {
+                    if (! @mkdir($destination, 0755, true) && ! is_dir($destination)) {
+                        throw new \RuntimeException('Unable to create the upload directory');
+                    }
                 }
-     
-                return $path;
+
+                if ($extension === 'gif' && $this->isAnimatedGif($file->getPathname())) {
+                    // Moving keeps every frame; re-encoding would flatten the animation
+                    $uploaded = $file->move($destination, $filename);
+                } else {
+                    $image = $this->imagine->open($file->getPathname());
+
+                    // Correct the pixels before the EXIF orientation is stripped
+                    if (in_array($extension, array('jpg', 'jpeg'), true)) {
+                        $image = (new Autorotate)->apply($image);
+                    }
+
+                    $image->strip();
+
+                    $options = array();
+
+                    if (in_array($extension, array('jpg', 'jpeg'), true)) {
+                        $options['quality'] = (int) Config::get('redminportal::image.upload_quality', 90);
+                    }
+
+                    $image->save($target, $options);
+                    $uploaded = is_file($target);
+                }
+            } catch (\Exception $e) {
+                $this->deletePartialUpload($target);
+
+                Log::warning('[IMAGE SERVICE] Failed to process uploaded image "' . $originalName . '"');
+
+                return null;
             }
+
+            if (! $uploaded || ! is_file($target)) {
+                $this->deletePartialUpload($target);
+
+                Log::warning('[IMAGE SERVICE] Uploaded image was not saved "' . $originalName . '"');
+
+                return null;
+            }
+
+            if ($createDimensions) {
+                $this->createDimensions($path);
+            }
+
+            return $path;
         }
     }
     
+    /**
+     * Check whether a GIF contains more than one graphic control extension
+     * @param  string $path
+     * @return bool
+     */
+    private function isAnimatedGif($path)
+    {
+        $bytes = @file_get_contents($path);
+
+        if ($bytes === false) {
+            return false;
+        }
+
+        return substr_count($bytes, "\x00\x21\xF9\x04") > 1;
+    }
+
+    /**
+     * Delete a partially written upload
+     * @param  string $path
+     * @return void
+     */
+    private function deletePartialUpload($path)
+    {
+        if (is_file($path)) {
+            @unlink($path);
+        }
+    }
+
     /**
      * Check that a directory is relative and has no parent path segments
      * @param  string $dir
