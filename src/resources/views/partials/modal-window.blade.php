@@ -30,6 +30,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ Lang::get('redminportal::buttons.close') }}"></button>
             </div>
             <div class="modal-body">
+                {{-- $modal_body and $modal_footer are raw markup: the caller must pass trusted HTML only. --}}
                 {!! $modal_body !!}
             </div>
             @if (isset($modal_footer))

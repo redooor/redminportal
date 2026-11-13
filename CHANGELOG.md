@@ -77,6 +77,12 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 4. New passwords need at least 10 characters (`password.min_length` config).
 5. Changing a password signs out that user's other sessions. Changing your own password in My Account keeps you signed in.
 
+**Output and exports**
+1. Category names, product names and order builder labels are escaped; descriptions are cleaned with HTML Purifier (scripts, event attributes, styles and `javascript:` links are removed).
+2. Export cells that start with `=`, `+`, `-` or `@` are prefixed with `'` so spreadsheets show them as text.
+3. `/api/tag` and `/api/tag/name` need a signed-in, active user.
+4. `ezyang/htmlpurifier` is a direct requirement.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.

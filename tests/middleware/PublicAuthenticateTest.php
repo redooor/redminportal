@@ -13,9 +13,7 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         
         $this->test_pages = [
             'login',
-            'login/unauthorized',
-            'api/tag',
-            'api/tag/name'
+            'login/unauthorized'
         ];
         
         $this->test_redirects = [];
@@ -117,5 +115,30 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         Auth::guard('redminguard')->loginUsingId($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
+    }
+
+    /**
+     * Test (fail): the tag API is no longer publicly accessible
+     **/
+    public function testTagApiWithoutAuthenticationIsRedirected()
+    {
+        foreach (['api/tag', 'api/tag/name'] as $page) {
+            $this->call('GET', $page);
+            $this->assertResponseStatus(302);
+            $this->assertRedirectedTo('login');
+        }
+    }
+
+    /**
+     * Test (pass): any authenticated account may use the tag API, even without admin permission
+     **/
+    public function testTagApiWithAuthenticationIsAllowed()
+    {
+        Auth::guard('redminguard')->loginUsingId($this->user->id);
+
+        foreach (['api/tag', 'api/tag/name'] as $page) {
+            $this->call('GET', $page);
+            $this->assertResponseStatus(200);
+        }
     }
 }

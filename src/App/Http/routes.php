@@ -346,6 +346,15 @@ Route::group(
         Route::get('/', function () {
             return redirect('/');
         });
+    }
+);
+
+Route::group(
+    [
+        'middleware' => ['redminsession', 'redminuser'],
+        'prefix' => 'api'
+    ],
+    function () {
         Route::get('tag', [TagApi::class, 'getIndex']);
         Route::get('tag/name', [TagApi::class, 'getName']);
     }

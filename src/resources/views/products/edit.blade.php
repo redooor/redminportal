@@ -363,20 +363,16 @@
                             if (json.status == true) {
                                 $('#variant-remove-modal').modal('hide');
                             } else {
-                                $errormsg = '<div class="alert alert-danger">';
-                                $errormsg += json.message;
-                                $errormsg += '</div>';
+                                var $errormsg = $('<div>').addClass('alert alert-danger').text(json.message);
                                 $('#variant-remove-modal .modal-footer').hide();
-                                $('#variant-remove-modal .modal-body').html($errormsg);
+                                $('#variant-remove-modal .modal-body').empty().append($errormsg);
                             }
                         })
                         .fail(function( jqxhr, textStatus, error ) {
                             var err = textStatus + ", " + error;
-                            $errormsg = '<div class="alert alert-danger">';
-                            $errormsg += err;
-                            $errormsg += '</div>';
+                            var $errormsg = $('<div>').addClass('alert alert-danger').text(err);
                             $('#variant-remove-modal .modal-footer').hide();
-                            $('#variant-remove-modal .modal-body').html($errormsg);
+                            $('#variant-remove-modal .modal-body').empty().append($errormsg);
                         });
                 });
                 // Clear content when modal hidden

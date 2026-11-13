@@ -16,8 +16,8 @@
         @foreach($data as $order)
             <tr>
                 @if ($order->user != null)
-                <td>{{ str_replace(',', '.', $order->user->first_name) }} {{ str_replace(',', '.', $order->user->last_name) }}</td>
-                <td>{{ str_replace(',', '.', $order->user->email) }}</td>
+                <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($order->user->first_name) }} {{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($order->user->last_name) }}</td>
+                <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($order->user->email) }}</td>
                 @else
                 <td>User deleted</td>
                 <td>User deleted</td>
@@ -29,23 +29,23 @@
                 <td></td>
                 @endif
                 <td>{{ Redooor\Redminportal\App\Helpers\RHelper::formatCurrency($order->paid, Lang::get('redminportal::currency.currency')) }}</td>
-                <td>{{ str_replace(',', '.', $order->payment_status) }}</td>
-                <td>{{ str_replace(',', '.', $order->transaction_id) }}</td>
-                <td>{{ str_replace(',', '.', $order->created_at) }}</td>
+                <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($order->payment_status) }}</td>
+                <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($order->transaction_id) }}</td>
+                <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($order->created_at) }}</td>
                 <td>
                     @foreach ($order->coupons as $coupon)
-                        {{ str_replace(',', '.', $coupon->code) }}:{{ $coupon->amount }}@if($coupon->is_percent){{ "%" }}@else{{ "(fixed)" }}@endif{{ ", " }}
+                        {{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($coupon->code) }}:{{ $coupon->amount }}@if($coupon->is_percent){{ "%" }}@else{{ "(fixed)" }}@endif{{ ", " }}
                     @endforeach
                 </td>
                 <td>
                     @foreach ($order->products()->get() as $product)
-                        {{ str_replace(',', '.', $product->name) }} ({{ str_replace(',', '.', $product->sku) }}) Qty: {{ $order->products()->where('name', $product->name)->count() }}, 
+                        {{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($product->name) }} ({{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($product->sku) }}) Qty: {{ $order->products()->where('name', $product->name)->count() }}, 
                     @endforeach
                     @foreach ($order->bundles()->get() as $bundle)
-                        {{ str_replace(',', '.', $bundle->name) }} ({{ str_replace(',', '.', $bundle->sku) }}) Qty: {{ $order->bundles()->where('name', $bundle->name)->count() }}, 
+                        {{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($bundle->name) }} ({{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($bundle->sku) }}) Qty: {{ $order->bundles()->where('name', $bundle->name)->count() }}, 
                     @endforeach
                     @foreach ($order->pricelists as $pricelist)
-                        {{ str_replace(',', '.', $pricelist->module->name) }}/{{ str_replace(',', '.', $pricelist->membership->name) }} ({{ str_replace(',', '.', $pricelist->module->sku) }}), 
+                        {{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($pricelist->module->name) }}/{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($pricelist->membership->name) }} ({{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($pricelist->module->sku) }}), 
                     @endforeach
                 </td>
             </tr>

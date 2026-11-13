@@ -54,6 +54,9 @@ Besides the move to Laravel 13 and PHP 8.3, these changes can affect an existing
 | Users and groups | You can only grant permissions you hold and assign groups you fully cover, and you cannot edit, activate, deactivate or delete an account (or group) that has more access than you. | Use an administrator with full access for these tasks. | 15 |
 | Default administrator | The seeder no longer creates `admin@admin.com` with the password `admin`. It creates the administrator from `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD`, or prints a generated password once. It also no longer deletes existing users and groups. | See [Seeding the first administrator](#seeding-the-first-administrator). Change the password of any account that still uses `admin`. | 15 |
 | Sign-in and passwords | Sign-in is limited to 5 failed attempts per minute for each email and IP address. New passwords need at least 10 characters (`password.min_length`). Changing a password signs out that user's other sessions; changing your own password in My Account no longer signs you out. | Update scripts or tests that use short passwords. | 15 |
+| Descriptions and names | Category, product and translation descriptions are cleaned before they are shown: scripts, event attributes, styles and `javascript:` links are removed. Names and order-line labels are always escaped. | If you stored HTML that relied on scripts, inline styles or iframes, it no longer shows them. Use the editor's plain formatting, images and links. | 16 |
+| Report exports | Text cells that start with `=`, `+`, `-` or `@` (or a tab or carriage return) are prefixed with `'` so spreadsheets do not run them as formulas. | Nothing, unless you post-process the exports and expect the raw value. | 16 |
+| Tag API | `/api/tag` and `/api/tag/name` need a signed-in, active user. They were public. | Sign in first, or serve your own public tag list if a front end called these URLs. | 16 |
 
 # Models and Features
 

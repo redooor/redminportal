@@ -324,6 +324,16 @@ Use an administrator with full access for those tasks. Custom code can use `Perm
 - New passwords (new users, user edits and My Account) need at least 10 characters. Change it with the new `password.min_length` config (publish the config with `--tag=config`). Existing passwords keep working.
 - Changing a user's password (by an administrator or by the user) signs out that user's other sessions on their next request. Changing your own password in My Account keeps you signed in; before, it signed you out.
 
+
+### Step 16 — Output escaping, export safety and the tag API
+
+**Descriptions.** The summary and description fields of categories and translations (and the product views that share the language selector) are passed through `RHelper::cleanHtml()` before they are shown. It uses HTML Purifier (`ezyang/htmlpurifier`, now a direct requirement; it was already installed through the spreadsheet package) and keeps basic formatting: paragraphs, headings, lists, tables, bold/italic, links (`http`, `https`, `mailto`) and images. Scripts, event attributes (`onclick`, `onerror`), inline styles, iframes, forms and `javascript:` or `data:` URLs are removed. Stored data is not changed, only what is displayed. Custom views that print these fields with `{!! !!}` should call `\Redooor\Redminportal\App\Helpers\RHelper::cleanHtml($value)` too, or use `{{ }}`.
+Category names, product names and the order builder labels are escaped. `Category::printCategory()` escapes the name and returns HTML, so keep printing it with `{!! !!}`.
+
+**Exports.** The purchases, orders and mailing list exports pass free-text cells through `RHelper::exportCell()`: commas become dots as before, and a value that starts with `=`, `+`, `-` or `@` (or a tab or carriage return) gets a leading `'` so Excel and similar programs show it as text. Custom exports can call the same helper.
+
+**Tag API.** `GET /api/tag` and `GET /api/tag/name` need a signed-in, active user (new `redminuser` middleware: no route permission is required, so anyone editing content can use the tag field). Guests are redirected to `login`. If a public front end reads these URLs, provide your own public endpoint with the tags you want to expose.
+
 ---
 
 ### Upgrade checklist
@@ -347,6 +357,7 @@ will not run again.
 - [ ] Media types you need are listed in `media.allowed_extensions` (Step 13)
 - [ ] Groups and users have the `update`, `create` or `delete` permissions the reclassified actions now need (Step 14)
 - [ ] The password of any `admin@admin.com` account that still uses `admin` is changed (Step 15)
+- [ ] Custom views that print descriptions with `{!! !!}` use `RHelper::cleanHtml()`; anything calling `/api/tag` anonymously is replaced (Step 16)
 - [ ] If you subclass `Api` or the report controllers: they no longer use the
       `AuthorizesRequests`, `DispatchesJobs` or `ValidatesRequests` traits, and
       reports now use `Excel::download(new ...Export)` instead of `Excel::create`
@@ -375,6 +386,9 @@ Admin URLs, routes, models and table names are otherwise unchanged.
 | Media uploads | Any file name and type | Cleaned names, allowed extensions, size limit |
 | Default administrator | `admin@admin.com` / `admin` from `RedminSeeder` | From `REDMIN_ADMIN_*` variables or generated; demo seeder for local use |
 | Minimum password length | 6 | 10 (`password.min_length`) |
+| Descriptions | Printed as stored | Cleaned with HTML Purifier; names escaped |
+| Report exports | Cells exported as typed | Formula-looking cells prefixed with `'` |
+| Tag API | Public | Signed-in users only |
 | Rich text editor | TinyMCE 4.3.8 | Jodit 4 |
 | File chooser | Jasny fileupload | `redmin-fileinput` |
 | Coupon date picker | eonasdan datetimepicker + moment | Tempus Dominus 6 |

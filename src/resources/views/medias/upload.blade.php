@@ -84,7 +84,7 @@
             });
 
             uploader.bind('Error', function(up, err) {
-                document.getElementById('console').innerHTML = "Error #" + err.code + ": " + err.message;
+                document.getElementById('console').textContent = "Error #" + err.code + ": " + err.message;
                 $('#console').removeClass('alert-success').addClass('alert-danger').show();
             });
             
@@ -92,10 +92,10 @@
             uploader.bind('FileUploaded', function(up, file, info) {
                 var response = jQuery.parseJSON(info.response);
                 if (response.code == 0) {
-                    document.getElementById('console').innerHTML = "Error #" + response.code + ": " + response.message;
+                    document.getElementById('console').textContent = "Error #" + response.code + ": " + response.message;
                     $('#console').removeClass('alert-success').addClass('alert-danger').show();
                 } else {
-                    document.getElementById('console').innerHTML = "Success #" + response.code + ": " + response.message;
+                    document.getElementById('console').textContent = "Success #" + response.code + ": " + response.message;
                     $('#console').removeClass('alert-danger').addClass('alert-success').show();
                 }
             });
