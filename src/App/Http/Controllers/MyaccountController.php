@@ -48,7 +48,7 @@ class MyaccountController extends Controller
             'first_name'    => 'required',
             'last_name'     => 'required',
             'old_password'  => 'required',
-            'password'      => 'confirmed|min:6'
+            'password'      => 'confirmed|min:' . config('redminportal::password.min_length', 10)
         );
         
         $messages = array(
@@ -83,12 +83,12 @@ class MyaccountController extends Controller
             }
             
             if ($password != '') {
-                Auth::guard('redminguard')->logout();
-                return redirect($this->pageRoute);
-            } else {
-                $message = trans('redminportal::messages.user_myaccount_save_success');
-                return redirect($this->pageRoute)->with('success_message', $message);
+                Request::session()->put('redmin_fingerprint_user', $user->id);
+                Request::session()->put('redmin_password_fingerprint', hash('sha256', $user->password));
             }
+
+            $message = trans('redminportal::messages.user_myaccount_save_success');
+            return redirect($this->pageRoute)->with('success_message', $message);
         }
         
         $errors->add(

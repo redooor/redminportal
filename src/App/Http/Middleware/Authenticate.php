@@ -26,6 +26,27 @@ class Authenticate
 
         // Check if user is activated
         if ($user != null) {
+            $fingerprint = hash('sha256', $user->password);
+            $storedFingerprint = $request->session()->get('redmin_password_fingerprint');
+
+            $storedUserId = $request->session()->get('redmin_fingerprint_user');
+
+            if ($storedFingerprint === null || $storedUserId != $user->id) {
+                // First request for this user in this session, remember the current password
+                $request->session()->put('redmin_fingerprint_user', $user->id);
+                $request->session()->put('redmin_password_fingerprint', $fingerprint);
+            } elseif ($storedFingerprint !== $fingerprint) {
+                // The password has changed since this session started
+                Auth::guard($guard)->logout();
+                $request->session()->invalidate();
+
+                if ($request->ajax()) {
+                    return view('redminportal::users.notauthorized');
+                } else {
+                    return redirect('login');
+                }
+            }
+
             if (! $user->activated) {
                 // User logged in but was deactivated after
                 // Log out this user and bring to login page

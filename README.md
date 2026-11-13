@@ -10,18 +10,19 @@ RedminPortal currently supports Laravel 13. See [Compatibility](#compatibility).
 
 # Table of Content
 1. [Compatibility](#compatibility)
-2. [Models and Features](#models-and-features)
-3. [Installation guide for Users](#installation-guide-for-users)
-4. [Showing pages on your own frontend](#showing-pages-on-your-own-frontend)
-5. [Installation guide for Contributors](#installation-guide-for-contributors)
-6. [Testing](#testing)
-7. [Versioning](#versioning)
-8. [Contributing](#contributing)
-9. [Creator](#creator)
-10. [License](#license)
-11. [External Libraries Used](#external-libraries-used)
-12. [Change log](#change-log)
-13. [Upgrade Guide](#upgrade-guide)
+2. [Breaking changes in v2](#breaking-changes-in-v2)
+3. [Models and Features](#models-and-features)
+4. [Installation guide for Users](#installation-guide-for-users)
+5. [Showing pages on your own frontend](#showing-pages-on-your-own-frontend)
+6. [Installation guide for Contributors](#installation-guide-for-contributors)
+7. [Testing](#testing)
+8. [Versioning](#versioning)
+9. [Contributing](#contributing)
+10. [Creator](#creator)
+11. [License](#license)
+12. [External Libraries Used](#external-libraries-used)
+13. [Change log](#change-log)
+14. [Upgrade Guide](#upgrade-guide)
 
 # Compatibility
 
@@ -40,6 +41,19 @@ Development for branch v0.1, v0.2, v0.3, and v0.58 has stopped. Please upgrade t
 # Upgrading
 
 Refer to [UPGRADE.md](UPGRADE.md) for upgrading instructions from any previous version.
+
+# Breaking changes in v2
+
+Besides the move to Laravel 13 and PHP 8.3, these changes can affect an existing installation. Each one has a migration step in [UPGRADE.md](UPGRADE.md).
+
+| Area | What changed | What you need to do | Step |
+|---|---|---|---|
+| Admin actions | The admin routes verify the CSRF token. Delete, remove image, activate/deactivate user, change order status, media duration and log out are now `POST`, not `GET` links. | Custom views: add `@csrf` to forms, use `data-method="post"` or the confirm modal on links, send the token with Ajax calls. Old `GET` links return 404/405. | 12 |
+| Uploads | Media uploads only accept the extensions in the new `media` config and are limited by `media.max_size`; file names are cleaned. Images are stored with an extension that matches their real type (jpg, png, gif). | Add any other media types you need to `media.allowed_extensions` (publish the config). | 13 |
+| Permissions | Activate/deactivate, remove image, media upload and duration, product variant edit need **update** (variant create needs **create**, variant delete needs **delete**) instead of **view**. Adding or deleting a purchase also needs the matching orders permission. Image removal only works through the owning module. | Give groups and users the `update`, `create` or `delete` permissions they now need. Explicit entries such as `admin.users.deactivate.view` become `admin.users.deactivate.update`. | 14 |
+| Users and groups | You can only grant permissions you hold and assign groups you fully cover, and you cannot edit, activate, deactivate or delete an account (or group) that has more access than you. | Use an administrator with full access for these tasks. | 15 |
+| Default administrator | The seeder no longer creates `admin@admin.com` with the password `admin`. It creates the administrator from `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD`, or prints a generated password once. It also no longer deletes existing users and groups. | See [Seeding the first administrator](#seeding-the-first-administrator). Change the password of any account that still uses `admin`. | 15 |
+| Sign-in and passwords | Sign-in is limited to 5 failed attempts per minute for each email and IP address. New passwords need at least 10 characters (`password.min_length`). Changing a password signs out that user's other sessions; changing your own password in My Account no longer signs you out. | Update scripts or tests that use short passwords. | 15 |
 
 # Models and Features
 
@@ -168,11 +182,11 @@ You can create a new Laravel 13 application using the command:
 
     **CAUTION: using --force will overwrite existing files**
     
-6. Run the following in a terminal to seed the database with initial admin username and password:
+6. Run the following in a terminal to seed the database with the first administrator (see [Seeding the first administrator](#seeding-the-first-administrator)):
 
-        php artisan db:seed --class="Database\Seeders\RedminSeeder"
-        
-        Username/password: admin@admin.com/admin
+        REDMIN_ADMIN_EMAIL=you@example.com REDMIN_ADMIN_PASSWORD='choose-a-long-password' php artisan db:seed --class="Database\Seeders\RedminSeeder"
+
+    If you leave out `REDMIN_ADMIN_PASSWORD`, a random password is generated and printed once. Copy it from the terminal output.
 
 7. Publish package assets by running this in a terminal:
 
@@ -238,6 +252,17 @@ You can create a new Laravel 13 application using the command:
         php artisan vendor:publish --provider="Redooor\Redminportal\RedminportalServiceProvider" --tag="views" [--force]
         
     **CAUTION: using --force will overwrite existing files**
+
+## Seeding the first administrator
+
+`Database\Seeders\RedminSeeder` creates the `Admin` and `User` groups and one active administrator. It does nothing when the `users` table already has records, and it never deletes users or groups.
+
+| Variable | Meaning |
+|---|---|
+| `REDMIN_ADMIN_EMAIL` | Email of the administrator. Defaults to `admin@example.com`. |
+| `REDMIN_ADMIN_PASSWORD` | Password of the administrator (at least 10 characters). When it is not set, a random 20-character password is generated and printed once in the terminal. It is not stored or logged anywhere else. |
+
+For local development and demos only, `Database\Seeders\RedminDemoSeeder` creates `admin@admin.com` with the password `admin`. It refuses to run when `APP_ENV=production`. If a site was seeded with the old seeder, change the password of `admin@admin.com` (or deactivate that account) after signing in.
 
 # Showing pages on your own frontend
 
@@ -349,10 +374,10 @@ You can create a new Laravel 13 application using the command:
         
     **CAUTION: using --force will overwrite existing files**
 
-9. Run the following in a terminal to seed the database with initial admin username and password:
+9. Run the following in a terminal to seed the database with a demo administrator for local development (never use this on a production site, it refuses to run when `APP_ENV=production`):
 
-        php artisan db:seed --class="Database\Seeders\RedminSeeder"
-        
+        php artisan db:seed --class="Database\Seeders\RedminDemoSeeder"
+
         Username/password: admin@admin.com/admin
 
 10. Publish package assets by running this in a terminal:

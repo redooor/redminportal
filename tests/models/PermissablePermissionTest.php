@@ -71,8 +71,8 @@ class PermissablePermissionTest extends RedminBrowserTestCase
             'first_name' => 'Changed',
             'last_name' => 'Name',
             'email' => 'changed@test.com',
-            'password' => '123456',
-            'password_confirmation' => '123456',
+            'password' => 'Passw0rd-1234',
+            'password_confirmation' => 'Passw0rd-1234',
             'role' => $role->id,
             'activated' => 1,
         ]);

@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Models\Traits;
 
 use Illuminate\Http\Request;
+use Redooor\Redminportal\App\Models\User;
 
 trait Permissable
 {
@@ -21,13 +22,23 @@ trait Permissable
     public function hasAccess(Request $request)
     {
         // Use the decoded path, the same one the router matches
-        $route = $request->decodedPath();
-        
-        // Check the type of request
-        $type = $this->checkType($request);
-        
+        return $this->hasPermission($request->decodedPath(), $this->checkType($request));
+    }
+
+    /**
+     * Check if user has permission for a path and action
+     * @param string Path e.g. admin/users
+     * @param string Action (view, create, update, delete)
+     * @return bool True if user has permission
+     *
+     * User level permission supersedes Group level permission.
+     * Any group deny will result in forceful deny.
+     * At least 1 group allow (if no deny) will result in allow.
+     **/
+    public function hasPermission(string $path, string $action): bool
+    {
         // Check user level permissions first
-        $user_permission = $this->checkPermission($route, $type, json_decode($this->permissions));
+        $user_permission = $this->checkPermission($path, $action, json_decode($this->permissions));
         if ($user_permission < 0) {
             // Force deny
             return false;
@@ -35,21 +46,94 @@ trait Permissable
             // Force allow
             return true;
         }
-        
+
         $permission_level = false;
-        
+
         // Next check all group permissions
         foreach ($this->groups as $group) {
-            $group_permission = $this->checkPermission($route, $type, json_decode($group->permissions));
-            
+            $group_permission = $this->checkPermission($path, $action, json_decode($group->permissions));
+
             if ($group_permission < 0) {
                 return false; // Forceful deny
             }
-            
+
             $permission_level = $permission_level || $group_permission;
         }
-        
+
         return $permission_level;
+    }
+
+    /**
+     * Check if every allowed permission entry can be granted by this user
+     * @param array Permissions (key => value)
+     * @return bool True if all allowed entries can be granted
+     **/
+    public function canGrant(array $permissions): bool
+    {
+        $actions = ['view', 'create', 'update', 'delete'];
+
+        foreach ($permissions as $key => $value) {
+            if ($value <= 0) {
+                continue;
+            }
+
+            $key = (string) $key;
+            $last_dot = strrpos($key, '.');
+
+            if ($last_dot === false) {
+                $path = $key;
+                $action = null;
+            } else {
+                $path = substr($key, 0, $last_dot);
+                $action = substr($key, $last_dot + 1);
+            }
+
+            $path = str_replace('.', '/', $path);
+
+            if ($action !== null && in_array($action, $actions, true)) {
+                if (! $this->hasPermission($path, $action)) {
+                    return false;
+                }
+            } else {
+                foreach ($actions as $required_action) {
+                    if (! $this->hasPermission($path, $required_action)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if this user can grant everything the target effectively holds
+     * @param User Target user
+     * @return bool True if the target is covered
+     **/
+    public function coversUser(User $target): bool
+    {
+        if ($this->id == $target->id) {
+            return true;
+        }
+
+        $permissions = [];
+
+        foreach ((array) $target->permissions() as $key => $value) {
+            if ($value > 0) {
+                $permissions[$key] = $value;
+            }
+        }
+
+        foreach ($target->groups as $group) {
+            foreach ((array) $group->permissions() as $key => $value) {
+                if ($value > 0) {
+                    $permissions[$key] = $value;
+                }
+            }
+        }
+
+        return $this->canGrant($permissions);
     }
     
     /**

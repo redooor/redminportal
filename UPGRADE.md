@@ -296,6 +296,36 @@ Custom controllers that read `Request::get('id')` should use `Request::input('id
 
 ---
 
+### Step 15 — Accounts: administrator seeding, privilege checks, sign-in limits
+
+**Seeder.** `RedminSeeder` no longer creates `admin@admin.com` / `admin` and no longer deletes existing users and groups (it does nothing when users exist).
+For a new site set `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD` when you seed, or read the generated password that is printed once:
+
+    REDMIN_ADMIN_EMAIL=you@example.com REDMIN_ADMIN_PASSWORD='choose-a-long-password' php artisan db:seed --class="Database\Seeders\RedminSeeder"
+
+For local development use the new demo seeder, which creates `admin@admin.com` / `admin` and refuses to run when `APP_ENV=production`:
+
+    php artisan db:seed --class="Database\Seeders\RedminDemoSeeder"
+
+If you already have a site that was seeded with the old seeder, sign in and change the password of `admin@admin.com` (or deactivate the account).
+Scripts, CI jobs and tests that expect `admin@admin.com` / `admin` from `RedminSeeder` should call `RedminDemoSeeder`, or set the two variables above.
+After updating the package run `composer dump-autoload` so the new seeder class is found.
+
+**Privilege checks.** On the users and groups pages:
+
+- you can only grant permissions you hold yourself, and only assign groups whose permissions you fully hold (values `0` and `-1` can always be set);
+- you cannot edit, activate, deactivate or delete a user, or edit or delete a group, that holds more access than you.
+
+Use an administrator with full access for those tasks. Custom code can use `Permissable::hasPermission($path, $action)`, `canGrant(array $permissions)` and `coversUser($user)`.
+
+**Sign-in.**
+
+- After 5 failed attempts within a minute for the same email and IP address, sign-in is refused until the minute has passed.
+- New passwords (new users, user edits and My Account) need at least 10 characters. Change it with the new `password.min_length` config (publish the config with `--tag=config`). Existing passwords keep working.
+- Changing a user's password (by an administrator or by the user) signs out that user's other sessions on their next request. Changing your own password in My Account keeps you signed in; before, it signed you out.
+
+---
+
 ### Upgrade checklist
 
 Database: **no table other than `password_reset_tokens` changed.** Your existing
@@ -312,7 +342,11 @@ will not run again.
 - [ ] Assets re-published with `--force`, obsolete files deleted, views cleared (Step 9)
 - [ ] Published views either deleted or migrated from Bootstrap 3 to 5.3 markup (Step 8)
 - [ ] Published `tinymce.php` config reviewed (Step 10); custom editor code moved to Jodit (Step 11)
-- [ ] Seeder command updated to `db:seed --class="Database\Seeders\RedminSeeder"`
+- [ ] Seeder command updated to `db:seed --class="Database\Seeders\RedminSeeder"` (Step 15: set `REDMIN_ADMIN_EMAIL` / `REDMIN_ADMIN_PASSWORD`; use `RedminDemoSeeder` for local development)
+- [ ] Custom views use `@csrf`, `data-method="post"` or `window.redminCsrfToken()` for the actions that now use `POST` (Step 12)
+- [ ] Media types you need are listed in `media.allowed_extensions` (Step 13)
+- [ ] Groups and users have the `update`, `create` or `delete` permissions the reclassified actions now need (Step 14)
+- [ ] The password of any `admin@admin.com` account that still uses `admin` is changed (Step 15)
 - [ ] If you subclass `Api` or the report controllers: they no longer use the
       `AuthorizesRequests`, `DispatchesJobs` or `ValidatesRequests` traits, and
       reports now use `Excel::download(new ...Export)` instead of `Excel::create`
@@ -337,6 +371,10 @@ Admin URLs, routes, models and table names are otherwise unchanged.
 | CSRF in login view | `Session::token()` | Handled by `Form::open()` |
 | Admin UI framework | Bootstrap 3.3 + Glyphicons | Bootstrap 5.3 + Redmaterials 0.2 + Font Awesome 7 |
 | Build tooling | Grunt, Bower, LESS | npm, Sass (contributors only) |
+| Data-changing admin actions | `GET` links, no CSRF check | `POST` with CSRF token |
+| Media uploads | Any file name and type | Cleaned names, allowed extensions, size limit |
+| Default administrator | `admin@admin.com` / `admin` from `RedminSeeder` | From `REDMIN_ADMIN_*` variables or generated; demo seeder for local use |
+| Minimum password length | 6 | 10 (`password.min_length`) |
 | Rich text editor | TinyMCE 4.3.8 | Jodit 4 |
 | File chooser | Jasny fileupload | `redmin-fileinput` |
 | Coupon date picker | eonasdan datetimepicker + moment | Tempus Dominus 6 |

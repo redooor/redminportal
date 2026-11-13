@@ -165,6 +165,8 @@ return array(
             . "If you don't see the category here, go back to the main product and save the changes first.",
     'user_authentication_error'
         => "We had a problem authenticating your access. Please try again.",
+    'login_error_too_many_attempts'
+        => 'Too many login attempts. Try again in :seconds seconds.',
     'user_error_old_password_required'
         => 'You need to provide your existing password to save any changes.',
     'warning_new_password_logout'
@@ -188,4 +190,10 @@ return array(
         => "The Module/Memberships field is required when none of products or bundles are present",
     'list_from_to'
         => ":firstItem to :lastItem of :totalItem",
+    'user_error_cannot_grant'
+        => "You cannot grant permissions that you do not have.",
+    'user_error_protected_account'
+        => "You cannot change an account that has more access than you.",
+    'group_error_cannot_grant'
+        => "You cannot grant permissions that you do not have.",
 );

@@ -1,5 +1,9 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
+use Redooor\Redminportal\App\Models\User;
+
 class UserControllerTest extends BaseControllerTest
 {
     use TraitSorterControllerTest, TraitSearcherControllerTest;
@@ -18,8 +22,8 @@ class UserControllerTest extends BaseControllerTest
                 'first_name' => 'Peter',
                 'last_name'  => 'Lim',
                 'email'      => 'peter.lim@test.com',
-                'password'   => '123456',
-                'password_confirmation' => '123456',
+                'password'   => 'Passw0rd-1234',
+                'password_confirmation' => 'Passw0rd-1234',
                 'role'       => 1,
                 'activated'  => true,
                 'permission-inherit' => 'admin.view,admin.users.view',
@@ -31,8 +35,8 @@ class UserControllerTest extends BaseControllerTest
                 'first_name' => 'Peter',
                 'last_name'  => 'Lim',
                 'email'      => 'peter.lim@test.com',
-                'password'   => '123456',
-                'password_confirmation' => '123456',
+                'password'   => 'Passw0rd-1234',
+                'password_confirmation' => 'Passw0rd-1234',
                 'role'       => 1,
                 'activated'  => true,
                 'permission-inherit' => 'admin.view,admin.groups.view',
@@ -169,5 +173,93 @@ class UserControllerTest extends BaseControllerTest
         
         $this->assertResponseStatus(302); // Redirected
         $this->assertRedirectedTo('/'); // Redirected to previous page, which is root
+    }
+
+    /**
+     * Test (Fail): access postStore create with a 9-character password
+     */
+    public function testStoreCreateFailPasswordTooShort()
+    {
+        $input = $this->input['create'];
+        $input['password'] = 'Passw0rd1';
+        $input['password_confirmation'] = 'Passw0rd1';
+
+        $this->call('POST', $this->page . '/store', $input);
+
+        $this->assertRedirectedTo($this->page . '/create');
+        $this->assertSessionHasErrors('password');
+    }
+
+    /**
+     * Test (Pass): access postStore create with a 10-character password
+     */
+    public function testStoreCreatePassTenCharacterPassword()
+    {
+        $input = $this->input['create'];
+        $input['password'] = 'Passw0rd12';
+        $input['password_confirmation'] = 'Passw0rd12';
+
+        $this->call('POST', $this->page . '/store', $input);
+
+        $this->assertRedirectedTo($this->page);
+        $this->assertNotNull(User::where('email', 'peter.lim@test.com')->first());
+    }
+
+    /**
+     * Test (Fail): access postStore edit with a 9-character password
+     */
+    public function testStoreEditFailPasswordTooShort()
+    {
+        $this->testStoreCreatePass();
+
+        $input = $this->input['edit'];
+        $input['password'] = 'Passw0rd1';
+        $input['password_confirmation'] = 'Passw0rd1';
+
+        $this->call('POST', $this->page . '/store', $input);
+
+        $this->assertRedirectedTo($this->page . '/edit/2');
+        $this->assertSessionHasErrors('password');
+    }
+
+    /**
+     * Test (Pass): access postStore edit with a 10-character password
+     */
+    public function testStoreEditPassTenCharacterPassword()
+    {
+        $this->testStoreCreatePass();
+
+        $input = $this->input['edit'];
+        $input['password'] = 'Passw0rd12';
+        $input['password_confirmation'] = 'Passw0rd12';
+
+        $this->call('POST', $this->page . '/store', $input);
+
+        $this->assertRedirectedTo($this->page);
+        $this->assertTrue(Hash::check('Passw0rd12', User::find(2)->password));
+    }
+
+    /**
+     * Test (Pass): minimum password length follows the config value
+     */
+    public function testPasswordMinLengthFollowsConfig()
+    {
+        Config::set('redminportal::password.min_length', 12);
+
+        $input = $this->input['create'];
+        $input['password'] = 'Passw0rd123';
+        $input['password_confirmation'] = 'Passw0rd123';
+
+        $this->call('POST', $this->page . '/store', $input);
+
+        $this->assertRedirectedTo($this->page . '/create');
+        $this->assertSessionHasErrors('password');
+
+        $input['password'] = 'Passw0rd1234';
+        $input['password_confirmation'] = 'Passw0rd1234';
+
+        $this->call('POST', $this->page . '/store', $input);
+
+        $this->assertRedirectedTo($this->page);
     }
 }

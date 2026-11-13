@@ -70,6 +70,13 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 4. Deleting or adding a purchase also needs permission to delete or add orders, because purchases are orders. Adding an order or purchase always needs the **create** permission.
 5. Permission checks use the decoded request path, the same one the router matches.
 
+**Accounts**
+1. `RedminSeeder` no longer creates `admin@admin.com` / `admin` or deletes existing users and groups. The administrator comes from `REDMIN_ADMIN_EMAIL` / `REDMIN_ADMIN_PASSWORD`, or a random password is printed once. New `RedminDemoSeeder` (local development only) creates `admin@admin.com` / `admin`.
+2. Users and groups: you can only grant permissions you hold, and cannot edit, activate, deactivate or delete an account or group that holds more access than you.
+3. Sign-in is limited to 5 failed attempts per minute per email and IP address.
+4. New passwords need at least 10 characters (`password.min_length` config).
+5. Changing a password signs out that user's other sessions. Changing your own password in My Account keeps you signed in.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.
