@@ -176,8 +176,10 @@ class PageController extends Controller
             $page->translations()->save($translated_model);
         }
 
-        if (Request::hasFile('image')) {
-            (new ImageService)->attach($page, Request::file('image'), 'pages');
+        $imageFiles = ImageService::filesFrom();
+
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($page, $imageFiles, 'pages');
         }
 
         if (! empty($tags)) {

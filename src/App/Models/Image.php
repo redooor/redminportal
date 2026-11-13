@@ -2,12 +2,15 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 /* Columns
  *
  * id           (increment)
  * path         (string, 320)
+ * sort_order   (unsigned integer, default 0)
+ * is_primary   (boolean, default false)
  * imageable_id (integer)
  * imageable_type (string, 255)
  * created_at   (dateTime)
@@ -26,21 +29,9 @@ class Image extends Model
     
     public function delete()
     {
-        // Remove original file
-        $filename = $this->path;
-        $this->deleteFiles($filename);
-        
-        $imagine = new RImage;
-        
-        // Remove all dimenions
-        $defaultDimensions = Config::get('redminportal::image.dimensions');
-        
-        foreach (array_keys($defaultDimensions) as $key) {
-            $filename_variant = $imagine->getUrl($filename, $key);
-            $this->deleteFiles($filename_variant);
-        }
-        
-        return parent::delete();
+        (new ImageService)->remove($this);
+
+        return true;
     }
     
     /*

@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Helpers\RHelper;
+use Redooor\Redminportal\App\Models\Traits\HasImages;
 
 /* Columns
  *
@@ -22,6 +23,8 @@ use Redooor\Redminportal\App\Helpers\RHelper;
 
 class Category extends Model
 {
+    use HasImages;
+
     protected $table = 'categories';
     
     public function parentCategory()
@@ -69,10 +72,6 @@ class Category extends Model
         return $this->hasMany('Redooor\Redminportal\App\Models\Bundle');
     }
 
-    public function images()
-    {
-        return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
-    }
     
     public function translations()
     {

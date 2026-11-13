@@ -178,8 +178,10 @@ class PostController extends Controller
             $post->translations()->save($translated_model);
         }
 
-        if (Request::hasFile('image')) {
-            (new ImageService)->attach($post, Request::file('image'), 'posts');
+        $imageFiles = ImageService::filesFrom();
+
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($post, $imageFiles, 'posts');
         }
 
         if (! empty($tags)) {

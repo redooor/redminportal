@@ -166,8 +166,10 @@ class PortfolioController extends Controller
             $portfolio->translations()->save($translated_model);
         }
 
-        if (Request::hasFile('image')) {
-            (new ImageService)->attach($portfolio, Request::file('image'), 'portfolios');
+        $imageFiles = ImageService::filesFrom();
+
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($portfolio, $imageFiles, 'portfolios');
         }
 
         return redirect('admin/portfolios');

@@ -215,8 +215,10 @@ class MediaController extends Controller
             }
         }
 
-        if (Request::hasFile('image')) {
-            (new ImageService)->attach($media, Request::file('image'), 'medias');
+        $imageFiles = ImageService::filesFrom();
+
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($media, $imageFiles, 'medias');
         }
 
         return redirect('admin/medias');

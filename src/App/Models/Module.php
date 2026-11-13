@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Helpers\RHelper;
+use Redooor\Redminportal\App\Models\Traits\HasImages;
 
 /* Columns
  *
@@ -22,6 +23,8 @@ use Redooor\Redminportal\App\Helpers\RHelper;
 
 class Module extends Model
 {
+    use HasImages;
+
     protected $table = 'modules';
     
     public function category()
@@ -32,11 +35,6 @@ class Module extends Model
     public function pricelists()
     {
         return $this->hasMany('Redooor\Redminportal\App\Models\Pricelist');
-    }
-
-    public function images()
-    {
-        return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
     }
 
     public function tags()

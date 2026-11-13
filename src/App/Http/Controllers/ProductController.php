@@ -259,8 +259,10 @@ class ProductController extends Controller
             }
         }
 
-        if (Request::hasFile('image')) {
-            (new ImageService)->attach($product, Request::file('image'), 'products');
+        $imageFiles = ImageService::filesFrom();
+
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($product, $imageFiles, 'products');
         }
         
         // Link variant to parent Product

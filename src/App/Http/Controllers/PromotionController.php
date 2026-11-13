@@ -151,8 +151,10 @@ class PromotionController extends Controller
             $promotion->translations()->save($translated_model);
         }
         
-        if (Request::hasFile('image')) {
-            (new ImageService)->attach($promotion, Request::file('image'), 'promotions');
+        $imageFiles = ImageService::filesFrom();
+
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($promotion, $imageFiles, 'promotions');
         }
         
         return redirect('admin/promotions');

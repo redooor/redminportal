@@ -290,8 +290,10 @@ class BundleController extends Controller
             }
         }
 
-        if (Request::hasFile('image')) {
-            (new ImageService)->attach($newBundle, Request::file('image'), 'bundles');
+        $imageFiles = ImageService::filesFrom();
+
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($newBundle, $imageFiles, 'bundles');
         }
 
         return redirect('admin/bundles');

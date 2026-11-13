@@ -178,8 +178,10 @@ class CategoryController extends Controller
             $category->translations()->save($translated_model);
         }
 
-        if (Request::hasFile('image')) {
-            (new ImageService)->attach($category, Request::file('image'), 'categories');
+        $imageFiles = ImageService::filesFrom();
+
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($category, $imageFiles, 'categories');
         }
         
         return redirect('admin/categories');

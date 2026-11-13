@@ -301,8 +301,10 @@ class ModuleController extends Controller
             }
         }
 
-        if (Request::hasFile('image')) {
-            (new ImageService)->attach($module, Request::file('image'), 'modules');
+        $imageFiles = ImageService::filesFrom();
+
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($module, $imageFiles, 'modules');
         }
 
         return redirect('admin/modules');

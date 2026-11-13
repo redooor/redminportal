@@ -100,8 +100,10 @@ class AnnouncementController extends Controller
             
             $announcement->save();
             
-            if (Request::hasFile('image')) {
-                (new ImageService)->attach($announcement, Request::file('image'), 'announcements');
+            $imageFiles = ImageService::filesFrom();
+
+            if (! empty($imageFiles)) {
+                (new ImageService)->attach($announcement, $imageFiles, 'announcements');
             }
         //if it validate
         } else {
