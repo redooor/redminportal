@@ -260,9 +260,9 @@ You can create a new Laravel 13 application using the command:
 | Variable | Meaning |
 |---|---|
 | `REDMIN_ADMIN_EMAIL` | Email of the administrator. Defaults to `admin@example.com`. |
-| `REDMIN_ADMIN_PASSWORD` | Password of the administrator (at least 10 characters). When it is not set, a random 20-character password is generated and printed once in the terminal. It is not stored or logged anywhere else. |
+| `REDMIN_ADMIN_PASSWORD` | Password of the administrator (at least 10 characters, otherwise the seeder stops without creating anything). When it is not set, a random 20-character password is generated and printed once in the terminal. It is not stored or logged anywhere else. |
 
-For local development and demos only, `Database\Seeders\RedminDemoSeeder` creates `admin@admin.com` with the password `admin`. It refuses to run when `APP_ENV=production`. If a site was seeded with the old seeder, change the password of `admin@admin.com` (or deactivate that account) after signing in.
+For local development and demos only, `Database\Seeders\RedminDemoSeeder` creates `admin@admin.com` with the password `admin`. It only runs when `APP_ENV` is `local`, `development` or `testing` (a missing `APP_ENV` counts as `production`). If a site was seeded with the old seeder, change the password of `admin@admin.com` (or deactivate that account) after signing in.
 
 # Showing pages on your own frontend
 
@@ -374,7 +374,7 @@ You can create a new Laravel 13 application using the command:
         
     **CAUTION: using --force will overwrite existing files**
 
-9. Run the following in a terminal to seed the database with a demo administrator for local development (never use this on a production site, it refuses to run when `APP_ENV=production`):
+9. Run the following in a terminal to seed the database with a demo administrator for local development (never use this on a shared or production site; it only runs when `APP_ENV` is `local`, `development` or `testing`):
 
         php artisan db:seed --class="Database\Seeders\RedminDemoSeeder"
 

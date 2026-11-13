@@ -196,8 +196,39 @@ class UserController extends Controller
             return redirect($path)->withErrors($errors)->withInput();
         }
 
+        $submitted_roles = (array) Request::input('role');
+
+        // Lifting a deny raises access, so check it like a new grant
+        if (isset($sid)) {
+            $lifted = $actor->liftedDenies((array) $user->permissions(), $permissions);
+
+            if (! $actor->canGrant($lifted)) {
+                $errors->add(
+                    'user_error_cannot_grant',
+                    Lang::get('redminportal::messages.user_error_cannot_grant')
+                );
+                return redirect($path)->withErrors($errors)->withInput();
+            }
+
+            foreach ($user->groups as $old_group) {
+                if (in_array($old_group->id, $submitted_roles)) {
+                    continue;
+                }
+
+                $lifted = $actor->liftedDenies((array) $old_group->permissions(), []);
+
+                if (! $actor->canGrant($lifted)) {
+                    $errors->add(
+                        'user_error_cannot_grant',
+                        Lang::get('redminportal::messages.user_error_cannot_grant')
+                    );
+                    return redirect($path)->withErrors($errors)->withInput();
+                }
+            }
+        }
+
         // Check that every submitted group can be granted by the actor
-        foreach ((array) Request::input('role') as $group_id) {
+        foreach ($submitted_roles as $group_id) {
             if ($group_id === null || $group_id === '') {
                 continue;
             }

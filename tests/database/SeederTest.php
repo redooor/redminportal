@@ -3,6 +3,7 @@
 use Database\Seeders\RedminDemoSeeder;
 use Database\Seeders\UserGroupSeeder;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Redooor\Redminportal\App\Models\Group;
 use Redooor\Redminportal\App\Models\User;
@@ -76,6 +77,37 @@ class SeederTest extends RedminTestCase
         $this->assertTrue(Hash::check('custom-password', $user->password));
         $this->assertCount(0, $command->infos);
         $this->assertCount(0, $command->warnings);
+    }
+
+    public function testShortEnvironmentPasswordIsRejectedBeforeCreatingAnything()
+    {
+        Config::set('redminportal::password.min_length', 10);
+        $this->setAdminEnvironment('short@example.com', 'short');
+
+        try {
+            (new UserGroupSeeder)->run();
+            $this->fail('The seeder accepted a password below the minimum length.');
+        } catch (\RuntimeException $exception) {
+            $this->assertSame(
+                'REDMIN_ADMIN_PASSWORD must be at least 10 characters.',
+                $exception->getMessage()
+            );
+        }
+
+        $this->assertSame(0, User::count());
+        $this->assertSame(0, Group::count());
+    }
+
+    public function testEnvironmentPasswordAtTheMinimumLengthIsAccepted()
+    {
+        Config::set('redminportal::password.min_length', 10);
+        $this->setAdminEnvironment('long@example.com', '0123456789');
+
+        (new UserGroupSeeder)->run();
+
+        $user = User::where('email', 'long@example.com')->first();
+        $this->assertNotNull($user);
+        $this->assertTrue(Hash::check('0123456789', $user->password));
     }
 
     public function testSecondRunDoesNotDeleteOrDuplicateUsers()
@@ -163,19 +195,24 @@ class SeederTest extends RedminTestCase
         $this->assertSame(1, Group::where('name', 'User')->count());
     }
 
-    public function testDemoSeederRefusesToRunInProduction()
+    public function testDemoSeederRefusesToRunOutsideAllowedEnvironments()
     {
-        $this->app['env'] = 'production';
+        foreach (['production', 'staging', 'qa'] as $environment) {
+            $this->app['env'] = $environment;
 
-        try {
-            (new RedminDemoSeeder)->run();
-            $this->fail('The demo seeder ran in production.');
-        } catch (\RuntimeException $exception) {
-            $this->assertStringContainsString('production', $exception->getMessage());
+            try {
+                (new RedminDemoSeeder)->run();
+                $this->fail("The demo seeder ran in {$environment}.");
+            } catch (\RuntimeException $exception) {
+                $this->assertSame(
+                    'The demo seeder only runs in the local, development or testing environment.',
+                    $exception->getMessage()
+                );
+            }
+
+            $this->assertSame(0, User::count());
+            $this->assertSame(0, Group::count());
         }
-
-        $this->assertSame(0, User::count());
-        $this->assertSame(0, Group::count());
     }
 
     private function fakeCommand()

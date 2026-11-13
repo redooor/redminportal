@@ -147,6 +147,18 @@ class GroupController extends Controller
             );
             return redirect($redirect_url)->withErrors($errors)->withInput();
         }
+
+        // Lifting a deny raises access, so check it like a new grant
+        if (isset($sid) && ! $actor->canGrant(
+            $actor->liftedDenies((array) $group->permissions(), $permissions)
+        )) {
+            $errors = new MessageBag;
+            $errors->add(
+                'group_error_cannot_grant',
+                trans('redminportal::messages.group_error_cannot_grant')
+            );
+            return redirect($redirect_url)->withErrors($errors)->withInput();
+        }
         
         try {
             // Save the group details

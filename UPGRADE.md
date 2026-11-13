@@ -299,11 +299,11 @@ Custom controllers that read `Request::get('id')` should use `Request::input('id
 ### Step 15 — Accounts: administrator seeding, privilege checks, sign-in limits
 
 **Seeder.** `RedminSeeder` no longer creates `admin@admin.com` / `admin` and no longer deletes existing users and groups (it does nothing when users exist).
-For a new site set `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD` when you seed, or read the generated password that is printed once:
+For a new site set `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD` (at least 10 characters, or the seeder stops without creating anything) when you seed, or read the generated password that is printed once:
 
     REDMIN_ADMIN_EMAIL=you@example.com REDMIN_ADMIN_PASSWORD='choose-a-long-password' php artisan db:seed --class="Database\Seeders\RedminSeeder"
 
-For local development use the new demo seeder, which creates `admin@admin.com` / `admin` and refuses to run when `APP_ENV=production`:
+For local development use the new demo seeder, which creates `admin@admin.com` / `admin` and only runs when `APP_ENV` is `local`, `development` or `testing` (set `APP_ENV=local` in your `.env`; Laravel treats a missing `APP_ENV` as `production`):
 
     php artisan db:seed --class="Database\Seeders\RedminDemoSeeder"
 

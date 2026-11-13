@@ -154,4 +154,70 @@ class PrivilegeGrantTest extends RedminBrowserTestCase
 
         $this->assertFalse($user->canGrant(['admin.users.create' => 1]));
     }
+
+    public function testCanGrantRejectsNarrowerDeniesInUserAndGroupPermissions()
+    {
+        $user = $this->userWithPermissions([
+            'admin.view' => 1,
+            'admin.create' => 1,
+            'admin.update' => 1,
+            'admin.delete' => 1,
+            'admin.pages.view' => -1,
+        ]);
+
+        $this->assertFalse($user->canGrant(['admin.view' => 1]));
+        $this->assertFalse($user->canGrant(['admin' => 1]));
+
+        $groupUser = $this->userWithPermissions([]);
+        $allowGroup = $this->groupWithPermissions('Allow', [
+            'admin.view' => 1,
+            'admin.create' => 1,
+            'admin.update' => 1,
+            'admin.delete' => 1,
+        ]);
+        $denyGroup = $this->groupWithPermissions('Deny', ['admin.pages.view' => -1]);
+        $groupUser->groups()->save($allowGroup);
+        $groupUser->groups()->save($denyGroup);
+
+        $this->assertFalse($groupUser->canGrant(['admin.view' => 1]));
+        $this->assertFalse($groupUser->canGrant(['admin' => 1]));
+    }
+
+    public function testCoversUserRejectsUnrestrictedAdministratorWhenActorHasNarrowerDeny()
+    {
+        $actor = $this->userWithPermissions([
+            'admin.view' => 1,
+            'admin.create' => 1,
+            'admin.update' => 1,
+            'admin.delete' => 1,
+            'admin.pages.view' => -1,
+        ]);
+        $target = $this->userWithPermissions(['admin' => 1]);
+
+        $this->assertFalse($actor->coversUser($target));
+    }
+
+    public function testLiftedDeniesReturnsOnlyEntriesNoLongerDenied()
+    {
+        $user = $this->userWithPermissions([]);
+        $old = [
+            'admin.users.create' => -1,
+            'admin.users.update' => -1,
+            'admin.users.view' => 1,
+            'admin.users.delete' => -1,
+            'admin.pages.view' => -1,
+        ];
+        $new = [
+            'admin.users.create' => 1,
+            'admin.users.update' => -1,
+            'admin.users.view' => 0,
+            'admin.users.delete' => 0,
+        ];
+
+        $this->assertSame([
+            'admin.users.create' => 1,
+            'admin.users.delete' => 1,
+            'admin.pages.view' => 1,
+        ], $user->liftedDenies($old, $new));
+    }
 }

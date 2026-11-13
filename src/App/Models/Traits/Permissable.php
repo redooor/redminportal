@@ -88,15 +88,18 @@ trait Permissable
                 $action = substr($key, $last_dot + 1);
             }
 
+            $permission_path = $path;
             $path = str_replace('.', '/', $path);
 
             if ($action !== null && in_array($action, $actions, true)) {
-                if (! $this->hasPermission($path, $action)) {
+                if (! $this->hasPermission($path, $action)
+                    || $this->hasDescendantDeny($permission_path, $action)) {
                     return false;
                 }
             } else {
                 foreach ($actions as $required_action) {
-                    if (! $this->hasPermission($path, $required_action)) {
+                    if (! $this->hasPermission($path, $required_action)
+                        || $this->hasDescendantDeny($permission_path, $required_action)) {
                         return false;
                     }
                 }
@@ -104,6 +107,70 @@ trait Permissable
         }
 
         return true;
+    }
+
+    /**
+     * Check if a deny exists below a path for an action
+     * @param string Path e.g. admin.pages
+     * @param string Action (view, create, update, delete)
+     * @return bool True if a narrower deny exists
+     **/
+    private function hasDescendantDeny(string $path, string $action): bool
+    {
+        $actions = ['view', 'create', 'update', 'delete'];
+        $prefix = $path . '.';
+
+        $permission_sets = [(array) json_decode($this->permissions)];
+
+        foreach ($this->groups as $group) {
+            $permission_sets[] = (array) json_decode($group->permissions);
+        }
+
+        foreach ($permission_sets as $permissions) {
+            foreach ($permissions as $key => $value) {
+                if ($value >= 0) {
+                    continue;
+                }
+
+                $key = (string) $key;
+
+                if (strpos($key, $prefix) !== 0) {
+                    continue;
+                }
+
+                $last_dot = strrpos($key, '.');
+                $last_segment = $last_dot === false ? $key : substr($key, $last_dot + 1);
+
+                if ($last_segment === $action || ! in_array($last_segment, $actions, true)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns denies that are no longer denied, as grantable entries
+     * @param array Old permissions
+     * @param array New permissions
+     * @return array Entries to grant
+     **/
+    public function liftedDenies(array $old, array $new): array
+    {
+        $lifted = [];
+
+        foreach ($old as $key => $value) {
+            if ($value >= 0) {
+                continue;
+            }
+
+            if (! array_key_exists($key, $new) || $new[$key] >= 0) {
+                $lifted[$key] = 1;
+            }
+        }
+
+        return $lifted;
     }
 
     /**

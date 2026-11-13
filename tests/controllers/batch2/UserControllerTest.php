@@ -180,6 +180,8 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testStoreCreateFailPasswordTooShort()
     {
+        Config::set('redminportal::password.min_length', 10);
+
         $input = $this->input['create'];
         $input['password'] = 'Passw0rd1';
         $input['password_confirmation'] = 'Passw0rd1';
@@ -210,6 +212,8 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testStoreEditFailPasswordTooShort()
     {
+        Config::set('redminportal::password.min_length', 10);
+
         $this->testStoreCreatePass();
 
         $input = $this->input['edit'];

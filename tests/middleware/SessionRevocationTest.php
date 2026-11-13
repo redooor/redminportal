@@ -65,6 +65,44 @@ class SessionRevocationTest extends RedminBrowserTestCase
     }
 
     /**
+     * Test (Fail): a database password change ends a session on the My Account page.
+     */
+    public function testPasswordHashChangeInDatabaseEndsMyAccountSession()
+    {
+        $user = $this->user;
+
+        $this->login();
+
+        $this->assertTrue(Auth::guard('redminguard')->check());
+        $this->assertSessionHas('redmin_password_fingerprint', hash('sha256', $user->password));
+
+        Auth::forgetGuards();
+
+        $user->password = Hash::make('changed-password');
+        $user->save();
+
+        $this->call('GET', '/myaccount');
+
+        $this->assertRedirectedTo('login');
+        $this->assertTrue(Auth::guard('redminguard')->guest());
+    }
+
+    /**
+     * Test (Pass): a live session can still open the My Account page.
+     */
+    public function testMyAccountRemainsAvailableForTheCurrentPassword()
+    {
+        $this->login();
+
+        Auth::forgetGuards();
+
+        $this->call('GET', '/myaccount');
+
+        $this->assertResponseOk();
+        $this->assertSessionHas('redmin_password_fingerprint', hash('sha256', $this->user->password));
+    }
+
+    /**
      * Test (Pass): changing your own password keeps the current session logged in.
      */
     public function testOwnPasswordChangeKeepsCurrentSession()

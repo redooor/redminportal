@@ -59,7 +59,7 @@ Route::group(
 // My Account controller
 Route::group(
     [
-        'middleware' => 'redminsession',
+        'middleware' => ['redminsession', 'redminfingerprint'],
         'prefix' => 'myaccount'
     ],
     function () {

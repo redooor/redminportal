@@ -215,6 +215,99 @@ class PrivilegeGrantUserControllerTest extends RedminBrowserTestCase
         $this->assertSame('Changed', $actor->fresh()->first_name);
     }
 
+    public function testActorCannotLiftUserLevelDenyTheyAreDenied()
+    {
+        $actor = $this->createUser('actor@test.com', ['admin.users.update' => 1]);
+        $allowGroup = $this->createGroup('Pages Allow', ['admin.pages.view' => 1]);
+        $denyGroup = $this->createGroup('Pages Deny', ['admin.pages.view' => -1]);
+        $actor->groups()->save($allowGroup);
+        $actor->groups()->save($denyGroup);
+
+        $target = $this->createUser('target@test.com', ['admin.pages.view' => -1]);
+        $replacement = $this->createGroup('Staff', []);
+        $this->login($actor);
+
+        $this->call('POST', '/admin/users/store', $this->userInput($replacement->id, [
+            'id' => $target->id,
+            'email' => $target->email,
+        ]));
+
+        $this->assertRedirectedTo('/admin/users/edit/' . $target->id);
+        $this->assertSessionHasErrors('user_error_cannot_grant');
+        $this->assertSame(-1, json_decode($target->fresh()->permissions)->{'admin.pages.view'});
+    }
+
+    public function testFullAdminCanLiftUserLevelDeny()
+    {
+        $actor = $this->createUser('full@test.com', [
+            'admin.view' => 1,
+            'admin.create' => 1,
+            'admin.update' => 1,
+            'admin.delete' => 1,
+        ]);
+        $target = $this->createUser('target@test.com', ['admin.pages.view' => -1]);
+        $replacement = $this->createGroup('Staff', []);
+        $this->login($actor);
+
+        $this->call('POST', '/admin/users/store', $this->userInput($replacement->id, [
+            'id' => $target->id,
+            'email' => $target->email,
+        ]));
+
+        $this->assertRedirectedTo('/admin/users');
+        $this->assertSame([], (array) json_decode($target->fresh()->permissions, true));
+    }
+
+    public function testActorCannotRemoveDenyGroupFromAnotherUser()
+    {
+        $actor = $this->createUser('actor@test.com', ['admin.users.update' => 1]);
+        $allowGroup = $this->createGroup('Pages Allow', ['admin.pages.view' => 1]);
+        $denyGroup = $this->createGroup('Pages Deny', ['admin.pages.view' => -1]);
+        $actor->groups()->save($allowGroup);
+        $actor->groups()->save($denyGroup);
+
+        $target = $this->createUser('target@test.com');
+        $targetDeny = $this->createGroup('Target Deny', ['admin.pages.view' => -1]);
+        $target->groups()->save($targetDeny);
+        $replacement = $this->createGroup('Staff', []);
+        $this->login($actor);
+
+        $this->call('POST', '/admin/users/store', $this->userInput($replacement->id, [
+            'id' => $target->id,
+            'email' => $target->email,
+            'role' => $replacement->id,
+        ]));
+
+        $this->assertRedirectedTo('/admin/users/edit/' . $target->id);
+        $this->assertSessionHasErrors('user_error_cannot_grant');
+        $this->assertTrue($target->fresh()->groups()->where('groups.id', $targetDeny->id)->exists());
+    }
+
+    public function testFullAdminCanRemoveDenyGroupFromAnotherUser()
+    {
+        $actor = $this->createUser('full@test.com', [
+            'admin.view' => 1,
+            'admin.create' => 1,
+            'admin.update' => 1,
+            'admin.delete' => 1,
+        ]);
+        $target = $this->createUser('target@test.com');
+        $targetDeny = $this->createGroup('Target Deny', ['admin.pages.view' => -1]);
+        $target->groups()->save($targetDeny);
+        $replacement = $this->createGroup('Staff', []);
+        $this->login($actor);
+
+        $this->call('POST', '/admin/users/store', $this->userInput($replacement->id, [
+            'id' => $target->id,
+            'email' => $target->email,
+            'role' => $replacement->id,
+        ]));
+
+        $this->assertRedirectedTo('/admin/users');
+        $this->assertFalse($target->fresh()->groups()->where('groups.id', $targetDeny->id)->exists());
+        $this->assertTrue($target->fresh()->groups()->where('groups.id', $replacement->id)->exists());
+    }
+
     public function testFullAdminCanCreateAndManageUsers()
     {
         $actor = $this->createUser('full@test.com', [

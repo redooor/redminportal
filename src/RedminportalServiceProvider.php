@@ -84,6 +84,7 @@ class RedminportalServiceProvider extends ServiceProvider
         ]);
 
         $router->aliasMiddleware('redminauth', \Redooor\Redminportal\App\Http\Middleware\Authenticate::class);
+        $router->aliasMiddleware('redminfingerprint', \Redooor\Redminportal\App\Http\Middleware\EnsureSessionFingerprint::class);
     }
 
     /**

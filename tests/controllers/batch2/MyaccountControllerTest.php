@@ -124,6 +124,8 @@ class MyaccountControllerTest extends RedminBrowserTestCase
      */
     public function testPostStoreFailPasswordTooShort()
     {
+        Config::set('redminportal::password.min_length', 10);
+
         $input = array(
             'first_name' => 'Peter',
             'last_name'  => 'Lim',

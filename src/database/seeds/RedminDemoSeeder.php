@@ -12,8 +12,8 @@ class RedminDemoSeeder extends Seeder
 {
     public function run()
     {
-        if (app()->environment('production')) {
-            throw new RuntimeException('The demo seeder cannot run in the production environment.');
+        if (! app()->environment('local', 'development', 'testing')) {
+            throw new RuntimeException('The demo seeder only runs in the local, development or testing environment.');
         }
 
         $admin_group = $this->findOrCreateGroup('Admin', [

@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Redooor\Redminportal\App\Models\User;
 
 class LoginThrottleTest extends RedminBrowserTestCase
@@ -27,7 +29,7 @@ class LoginThrottleTest extends RedminBrowserTestCase
 
     private function limiterKey($email)
     {
-        return strtolower($email) . '|' . self::CLIENT_IP;
+        return Str::transliterate(Str::lower(trim($email))) . '|' . self::CLIENT_IP;
     }
 
     private function login($email, $password)
@@ -146,6 +148,36 @@ class LoginThrottleTest extends RedminBrowserTestCase
     {
         for ($attempt = 0; $attempt < 5; $attempt++) {
             $this->login('ADMIN@ADMIN.COM', 'wrong');
+        }
+
+        $this->login('admin@admin.com', 'admin');
+
+        $this->assertTrue(Auth::guard('redminguard')->guest());
+        $this->assertTooManyAttemptsError();
+    }
+
+    /**
+     * Test (Fail): case, surrounding spaces and accented email variants share a counter.
+     */
+    public function testEmailVariantsShareTheLimiterCounter()
+    {
+        $accented = 'aḋmin@admin.com';
+
+        $validator = Validator::make(['email' => $accented], ['email' => 'required|email']);
+
+        if ($validator->fails()) {
+            $this->markTestSkipped('The email validator does not accept the accented variant.');
+        }
+
+        $variants = [
+            'admin@admin.com',
+            'ADMIN@ADMIN.COM',
+            'ADMIN@ADMIN.COM ',
+            $accented,
+        ];
+
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $this->login($variants[$attempt % count($variants)], 'wrong');
         }
 
         $this->login('admin@admin.com', 'admin');

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -51,7 +52,7 @@ class LoginController extends Controller
         
         $email      = Request::input('email');
         $password   = Request::input('password');
-        $throttleKey = strtolower($email) . '|' . Request::ip();
+        $throttleKey = Str::transliterate(Str::lower(trim($email))) . '|' . Request::ip();
 
         if (RateLimiter::tooManyAttempts($throttleKey, self::MAX_LOGIN_ATTEMPTS)) {
             $errors = new \Illuminate\Support\MessageBag;

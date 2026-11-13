@@ -8,11 +8,28 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\Group;
+use RuntimeException;
 
 class UserGroupSeeder extends Seeder
 {
     public function run()
     {
+        $password = $this->environment('REDMIN_ADMIN_PASSWORD');
+        $generated = false;
+
+        if ($password === null || $password === '') {
+            $password = Str::password(20, true, true, false);
+            $generated = true;
+        } else {
+            $minLength = config('redminportal::password.min_length', 10);
+
+            if (mb_strlen($password) < $minLength) {
+                throw new RuntimeException(
+                    "REDMIN_ADMIN_PASSWORD must be at least {$minLength} characters."
+                );
+            }
+        }
+
         if (DB::table('users')->exists()) {
             if (isset($this->command)) {
                 $this->command->warn('The users table already contains records. No users or groups were created.');
@@ -39,14 +56,6 @@ class UserGroupSeeder extends Seeder
 
         if ($email === null || $email === '') {
             $email = 'admin@example.com';
-        }
-
-        $password = $this->environment('REDMIN_ADMIN_PASSWORD');
-        $generated = false;
-
-        if ($password === null || $password === '') {
-            $password = Str::password(20, true, true, false);
-            $generated = true;
         }
 
         $user = new User;
