@@ -241,6 +241,52 @@ class ImageService
     }
 
     /**
+     * Move a non-primary image one place earlier or later among its siblings.
+     * The order is read and written under the owner lock, so concurrent moves do not overwrite each other.
+     * The primary image always sorts first, so moving it, or moving past either end, does nothing.
+     *
+     * @param  \Redooor\Redminportal\App\Models\Image $image
+     * @param  string $direction 'earlier' or 'later'
+     * @return void
+     */
+    public function move(Image $image, string $direction): void
+    {
+        DB::transaction(function () use ($image, $direction) {
+            $model = $image->imageable;
+
+            if (! $model) {
+                return;
+            }
+
+            $this->lockOwner($model);
+
+            $current = Image::find($image->getKey());
+
+            if (! $current || $current->is_primary) {
+                return;
+            }
+
+            $ids = array_map('intval', $model->images()->pluck('id')->all());
+            $index = array_search((int) $current->getKey(), $ids, true);
+
+            if ($index === false) {
+                return;
+            }
+
+            $neighbour = $direction === 'earlier' ? $index - 1 : $index + 1;
+
+            if (! isset($ids[$neighbour])) {
+                return;
+            }
+
+            $ids[$index] = $ids[$neighbour];
+            $ids[$neighbour] = (int) $current->getKey();
+
+            $this->reorder($model, $ids);
+        });
+    }
+
+    /**
      * Lock the owner row for the duration of the transaction
      *
      * @param  \Illuminate\Database\Eloquent\Model $model

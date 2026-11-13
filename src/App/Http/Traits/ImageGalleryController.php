@@ -53,24 +53,7 @@ trait ImageGalleryController
             return $this->imageGalleryError();
         }
 
-        // The relation is already primary-first and then in sort order
-        $ids = array_map('intval', $model->images()->pluck('id')->all());
-        $index = array_search((int) $image->getKey(), $ids, true);
-
-        // The primary image always sorts first, so moving it has no visible effect
-        if ($index === false || $image->is_primary) {
-            return redirect($this->galleryPath() . '/edit/' . $model->getKey());
-        }
-
-        $neighbour = $direction === 'earlier' ? $index - 1 : $index + 1;
-
-        // Moving at either end is a no-op
-        if (isset($ids[$neighbour])) {
-            $ids[$index] = $ids[$neighbour];
-            $ids[$neighbour] = (int) $image->getKey();
-
-            (new ImageService)->reorder($model, $ids);
-        }
+        (new ImageService)->move($image, $direction);
 
         return redirect($this->galleryPath() . '/edit/' . $model->getKey());
     }

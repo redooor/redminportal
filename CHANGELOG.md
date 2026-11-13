@@ -88,6 +88,7 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 2. Images have an order and a primary image (`images.sort_order`, `images.is_primary`; run `php artisan migrate`). The primary image comes first in `$model->images`.
 3. Create and update forms accept `images[]` as well as `image`, with the same validation.
 4. New `ImageService` for attaching, removing, ordering and promoting images; `Image::delete()` uses it and keeps firing model events.
+5. The create and edit forms use a multiple-file picker (`images[]`, with previews) and the edit pages show a gallery with a Primary badge and make-primary and move earlier/later buttons (new `imgprimary` and `imgmove` routes, update permission).
 
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
