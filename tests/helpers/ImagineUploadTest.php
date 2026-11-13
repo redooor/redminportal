@@ -222,6 +222,174 @@ class ImagineUploadTest extends RedminTestCase
     }
 
     /**
+     * Test (Fail): a corrupt upload must not delete an existing target file
+     */
+    public function testCorruptUploadLeavesExistingFileUntouched()
+    {
+        $dir = 'existing';
+        $valid = $this->createImage('png', 12, 9);
+
+        $first = (new Imagine)->upload(
+            new UploadedFile($valid, 'keep.png', 'image/png', null, true),
+            $dir,
+            false,
+            false
+        );
+
+        $this->assertNotNull($first);
+
+        $target = $this->uploadPath . $dir . '/keep.png';
+        $original = file_get_contents($target);
+
+        $corrupt = $this->tempFile('png');
+        $bytes = file_get_contents($this->createImage('png', 10, 10));
+        file_put_contents($corrupt, substr($bytes, 0, 33) . str_repeat("\x00", 32));
+
+        $path = (new Imagine)->upload(
+            new UploadedFile($corrupt, 'keep.png', 'image/png', null, true),
+            $dir,
+            false,
+            false
+        );
+
+        $this->assertNull($path);
+        $this->assertFileExists($target);
+        $this->assertSame($original, file_get_contents($target));
+    }
+
+    /**
+     * Test (Fail): an image above image.max_pixels is rejected and not stored
+     */
+    public function testImageAboveMaxPixelsIsRejected()
+    {
+        Config::set('redminportal::image.max_pixels', 100);
+
+        $source = $this->createImage('png', 20, 20);
+        $file = new UploadedFile($source, 'big.png', 'image/png', null, true);
+
+        $path = (new Imagine)->upload($file, 'limits', false, true);
+
+        $this->assertNull($path);
+        $this->assertFileDoesNotExist($this->uploadPath . 'limits/big.png');
+    }
+
+    /**
+     * Test (Pass): an image below image.max_pixels is stored
+     */
+    public function testImageBelowMaxPixelsIsAccepted()
+    {
+        Config::set('redminportal::image.max_pixels', 100);
+
+        $source = $this->createImage('png', 5, 5);
+        $file = new UploadedFile($source, 'small.png', 'image/png', null, true);
+
+        $path = (new Imagine)->upload($file, 'limits', false, true);
+
+        $this->assertNotNull($path);
+        $this->assertFileExists($this->uploadPath . 'limits/small.png');
+    }
+
+    /**
+     * Test (Pass): a two-frame GIF without graphic control extensions is kept
+     */
+    public function testTwoFrameGifWithoutControlExtensionsIsKept()
+    {
+        $source = $this->createTwoFrameGif(false);
+        $bytes = file_get_contents($source);
+        $file = new UploadedFile($source, 'plain.gif', 'image/gif', null, true);
+
+        $path = (new Imagine)->upload($file, 'plain', false, true);
+
+        $this->assertNotNull($path);
+        $this->assertFileExists($this->uploadPath . 'plain/plain.gif');
+        $this->assertSame($bytes, file_get_contents($this->uploadPath . 'plain/plain.gif'));
+    }
+
+    /**
+     * Test (Pass): a single-frame GIF is re-encoded instead of moved
+     */
+    public function testSingleFrameGifIsReencoded()
+    {
+        $source = $this->createImage('gif', 3, 2);
+        $bytes = file_get_contents($source);
+        $comment = "\x21\xFE\x05hello\x00";
+
+        file_put_contents($source, substr($bytes, 0, -1) . $comment . "\x3B");
+
+        $file = new UploadedFile($source, 'single.gif', 'image/gif', null, true);
+
+        $path = (new Imagine)->upload($file, 'single', false, true);
+
+        $this->assertNotNull($path);
+        $this->assertFileExists($this->uploadPath . 'single/single.gif');
+        $this->assertStringNotContainsString('hello', file_get_contents($this->uploadPath . 'single/single.gif'));
+    }
+
+    /**
+     * Test (Fail): a malformed GIF is rejected and stores nothing
+     */
+    public function testCorruptGifIsRejected()
+    {
+        $source = $this->tempFile('gif');
+        $bytes = "GIF89a" . pack('v', 1) . pack('v', 1) . "\x80\x00\x00"
+            . str_repeat("\x00", 6)
+            . "\x00\x21\xF9\x04"
+            . "\x00\x21\xF9\x04"
+            . str_repeat("\x00", 16);
+
+        file_put_contents($source, $bytes);
+
+        $file = new UploadedFile($source, 'corrupt.gif', 'image/gif', null, true);
+
+        $path = (new Imagine)->upload($file, 'corruptgif', false, true);
+
+        $this->assertNull($path);
+        $this->assertFileDoesNotExist($this->uploadPath . 'corruptgif/corrupt.gif');
+    }
+
+    /**
+     * Test (Pass): image.upload_quality controls the re-encoded JPEG size
+     */
+    public function testUploadQualityAffectsJpegSize()
+    {
+        $source = $this->tempFile('jpg');
+        $image = imagecreatetruecolor(120, 120);
+
+        for ($x = 0; $x < 120; $x++) {
+            for ($y = 0; $y < 120; $y++) {
+                $color = imagecolorallocate($image, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+                imagesetpixel($image, $x, $y, $color);
+            }
+        }
+
+        imagejpeg($image, $source, 100);
+        imagedestroy($image);
+
+        Config::set('redminportal::image.upload_quality', 30);
+        $low = (new Imagine)->upload(
+            new UploadedFile($source, 'noise.jpg', 'image/jpeg', null, true),
+            'quality',
+            false,
+            true
+        );
+
+        Config::set('redminportal::image.upload_quality', 95);
+        $high = (new Imagine)->upload(
+            new UploadedFile($source, 'noise.jpg', 'image/jpeg', null, true),
+            'quality',
+            false,
+            true
+        );
+
+        $this->assertNotNull($low);
+        $this->assertNotNull($high);
+        $this->assertLessThan(
+            filesize($this->uploadPath . 'quality/' . basename($high)),
+            filesize($this->uploadPath . 'quality/' . basename($low))
+        );
+    }
+
+    /**
      * Create a real image file using GD
      */
     private function createImage($type, $width = 10, $height = 10)
@@ -275,6 +443,26 @@ class ImagineUploadTest extends RedminTestCase
     {
         $path = $this->tempFile('gif');
         $control = "\x21\xF9\x04\x00\x0A\x00\x00\x00";
+        $descriptor = "\x2C\x00\x00\x00\x00\x01\x00\x01\x00\x00";
+        $data = "\x02\x02\x4C\x01\x00";
+        $bytes = "GIF89a" . pack('v', 1) . pack('v', 1) . "\x80\x00\x00"
+            . str_repeat("\x00", 6)
+            . $control . $descriptor . $data
+            . $control . $descriptor . $data
+            . "\x3B";
+
+        file_put_contents($path, $bytes);
+
+        return $path;
+    }
+
+    /**
+     * Build a minimal two-frame GIF, optionally with graphic control extensions
+     */
+    private function createTwoFrameGif($withControl = true)
+    {
+        $path = $this->tempFile('gif');
+        $control = $withControl ? "\x21\xF9\x04\x00\x0A\x00\x00\x00" : '';
         $descriptor = "\x2C\x00\x00\x00\x00\x01\x00\x01\x00\x00";
         $data = "\x02\x02\x4C\x01\x00";
         $bytes = "GIF89a" . pack('v', 1) . pack('v', 1) . "\x80\x00\x00"

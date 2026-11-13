@@ -141,6 +141,21 @@ class Imagine
                 return null;
             }
 
+            $size = @getimagesize($file->getPathname());
+            $maxPixels = (int) Config::get('redminportal::image.max_pixels', 40000000);
+
+            if (! is_array($size) || ! isset($size[0], $size[1])) {
+                Log::warning('[IMAGE SERVICE] Unable to read image dimensions "' . $file->getClientOriginalName() . '"');
+
+                return null;
+            }
+
+            if ($maxPixels > 0 && ($size[0] * $size[1]) > $maxPixels) {
+                Log::warning('[IMAGE SERVICE] Image exceeds the maximum pixel count "' . $file->getClientOriginalName() . '"');
+
+                return null;
+            }
+
             // Generate random dir
             if (! $dir) {
                 $dir = Str::random(8);
@@ -160,13 +175,15 @@ class Imagine
 
             // Get file info and try to move
             $destination = Config::get('redminportal::image.upload_path') . $dir;
-            
+
             if ($autonumber) {
                 $filename = $this->autoNumberFile($destination, $filename);
             }
-            
+
             $path = RHelper::joinPaths(Config::get('redminportal::image.upload_dir'), $dir, $filename);
             $target = $destination . '/' . $filename;
+            $temp = $target . '.tmp-' . Str::random(8);
+            $uploaded = false;
 
             try {
                 // Create destination dir if missing
@@ -176,9 +193,25 @@ class Imagine
                     }
                 }
 
-                if ($extension === 'gif' && $this->isAnimatedGif($file->getPathname())) {
-                    // Moving keeps every frame; re-encoding would flatten the animation
-                    $uploaded = $file->move($destination, $filename);
+                $frames = null;
+
+                if ($extension === 'gif') {
+                    $frames = $this->gifFrameCount($file->getPathname());
+
+                    if ($frames === null) {
+                        Log::warning('[IMAGE SERVICE] Malformed GIF upload "' . $originalName . '"');
+
+                        return null;
+                    }
+                }
+
+                if ($extension === 'gif' && $frames > 1) {
+                    // Confirm the first frame decodes before keeping the animation
+                    $image = $this->imagine->open($file->getPathname());
+
+                    if (! @copy($file->getPathname(), $temp)) {
+                        throw new \RuntimeException('Unable to copy the animated image');
+                    }
                 } else {
                     $image = $this->imagine->open($file->getPathname());
 
@@ -189,25 +222,32 @@ class Imagine
 
                     $image->strip();
 
-                    $options = array();
+                    $options = array('format' => $extension);
 
                     if (in_array($extension, array('jpg', 'jpeg'), true)) {
                         $options['quality'] = (int) Config::get('redminportal::image.upload_quality', 90);
                     }
 
-                    $image->save($target, $options);
-                    $uploaded = is_file($target);
+                    $image->save($temp, $options);
                 }
+
+                if (! is_file($temp) || ! @rename($temp, $target)) {
+                    throw new \RuntimeException('Unable to store the uploaded image');
+                }
+
+                $uploaded = true;
             } catch (\Exception $e) {
-                $this->deletePartialUpload($target);
+                $this->deletePartialUpload($temp);
 
                 Log::warning('[IMAGE SERVICE] Failed to process uploaded image "' . $originalName . '"');
 
                 return null;
             }
 
+            unset($image);
+
             if (! $uploaded || ! is_file($target)) {
-                $this->deletePartialUpload($target);
+                $this->deletePartialUpload($temp);
 
                 Log::warning('[IMAGE SERVICE] Uploaded image was not saved "' . $originalName . '"');
 
@@ -221,21 +261,121 @@ class Imagine
             return $path;
         }
     }
-    
+
     /**
-     * Check whether a GIF contains more than one graphic control extension
+     * Count the frames in a GIF by walking its block structure
      * @param  string $path
-     * @return bool
+     * @return integer|null Frame count, or null when malformed or truncated
      */
-    private function isAnimatedGif($path)
+    private function gifFrameCount($path)
     {
         $bytes = @file_get_contents($path);
 
         if ($bytes === false) {
-            return false;
+            return null;
         }
 
-        return substr_count($bytes, "\x00\x21\xF9\x04") > 1;
+        $length = strlen($bytes);
+        $header = substr($bytes, 0, 6);
+
+        if ($length < 13 || ($header !== 'GIF87a' && $header !== 'GIF89a')) {
+            return null;
+        }
+
+        $position = 13;
+        $packed = ord($bytes[10]);
+
+        if ($packed & 0x80) {
+            $position += 3 * (1 << (($packed & 0x07) + 1));
+        }
+
+        if ($position > $length) {
+            return null;
+        }
+
+        $frames = 0;
+
+        while ($position < $length) {
+            $block = ord($bytes[$position]);
+            $position++;
+
+            if ($block === 0x3B) {
+                return $frames;
+            }
+
+            if ($block === 0x21) {
+                if ($position >= $length) {
+                    return null;
+                }
+
+                $position++; // Extension label
+
+                if (! $this->skipGifSubBlocks($bytes, $position, $length)) {
+                    return null;
+                }
+
+                continue;
+            }
+
+            if ($block === 0x2C) {
+                if ($position + 9 > $length) {
+                    return null;
+                }
+
+                $packed = ord($bytes[$position + 8]);
+                $position += 9;
+
+                if ($packed & 0x80) {
+                    $position += 3 * (1 << (($packed & 0x07) + 1));
+                }
+
+                if ($position >= $length) {
+                    return null;
+                }
+
+                $position++; // LZW minimum code size
+
+                if (! $this->skipGifSubBlocks($bytes, $position, $length)) {
+                    return null;
+                }
+
+                $frames++;
+                continue;
+            }
+
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Advance past a GIF data sub-block chain
+     * @param  string  $bytes
+     * @param  integer $position
+     * @param  integer $length
+     * @return bool
+     */
+    private function skipGifSubBlocks($bytes, &$position, $length)
+    {
+        while (true) {
+            if ($position >= $length) {
+                return false;
+            }
+
+            $size = ord($bytes[$position]);
+            $position++;
+
+            if ($size === 0) {
+                return true;
+            }
+
+            $position += $size;
+
+            if ($position > $length) {
+                return false;
+            }
+        }
     }
 
     /**
