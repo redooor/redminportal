@@ -31,14 +31,14 @@ class TagApiTest extends RedminBrowserTestCase
     /**
      * Create a signed-in user without any administration permissions.
      */
-    private function loginWithoutPermissions()
+    private function loginWithoutPermissions($activated = 1)
     {
         $user = new User;
         $user->email = 'tagger@test.com';
         $user->password = Hash::make('test');
         $user->first_name = 'Tag';
         $user->last_name = 'User';
-        $user->activated = 1;
+        $user->activated = $activated;
         $user->save();
 
         Auth::guard('redminguard')->loginUsingId($user->id);
@@ -62,6 +62,20 @@ class TagApiTest extends RedminBrowserTestCase
 
         $this->assertResponseStatus(302);
         $this->assertRedirectedTo('login');
+    }
+
+    /**
+     * Test (Fail): a deactivated user cannot read the tags
+     */
+    public function testIndexWithDeactivatedUser()
+    {
+        $this->loginWithoutPermissions(0);
+
+        $this->call('GET', '/api/tag');
+
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedTo('login');
+        $this->assertTrue(Auth::guard('redminguard')->guest());
     }
 
     /**
