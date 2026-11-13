@@ -127,7 +127,7 @@ class ProductController extends Controller
     public function postStore()
     {
         $sid = Request::input('id');
-        $product_id = Request::get('product_id');
+        $product_id = Request::input('product_id');
         
         /*
          * Validate
@@ -175,22 +175,22 @@ class ProductController extends Controller
             }
         }
 
-        $name               = Request::get('name');
-        $sku                = Request::get('sku');
-        $price              = Request::get('price');
-        $short_description  = Request::get('short_description');
-        $long_description   = Request::get('long_description');
+        $name               = Request::input('name');
+        $sku                = Request::input('sku');
+        $price              = Request::input('price');
+        $short_description  = Request::input('short_description');
+        $long_description   = Request::input('long_description');
         $image              = Request::file('image');
-        $featured           = (Request::get('featured') == '' ? false : true);
-        $active             = (Request::get('active') == '' ? false : true);
-        $category_id        = Request::get('category_id');
-        $tags               = Request::get('tags');
-        $weight_unit        = Request::get('weight_unit');
-        $volume_unit        = Request::get('volume_unit');
-        $weight             = Request::get('weight');
-        $length             = Request::get('length');
-        $width              = Request::get('width');
-        $height             = Request::get('height');
+        $featured           = (Request::input('featured') == '' ? false : true);
+        $active             = (Request::input('active') == '' ? false : true);
+        $category_id        = Request::input('category_id');
+        $tags               = Request::input('tags');
+        $weight_unit        = Request::input('weight_unit');
+        $volume_unit        = Request::input('volume_unit');
+        $weight             = Request::input('weight');
+        $length             = Request::input('length');
+        $width              = Request::input('width');
+        $height             = Request::input('height');
         
         $product = (isset($sid) ? Product::find($sid) : new Product);
 
@@ -232,9 +232,9 @@ class ProductController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => Request::get($lang . '_name'),
-                'short_description'     => Request::get($lang . '_short_description'),
-                'long_description'      => Request::get($lang . '_long_description')
+                'name'                  => Request::input($lang . '_name'),
+                'short_description'     => Request::input($lang . '_short_description'),
+                'long_description'      => Request::input($lang . '_long_description')
             );
 
             // Check if lang exist

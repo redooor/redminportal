@@ -43,8 +43,8 @@ trait SearcherController
             return redirect($this->pageRoute)->withErrors($validation)->withInput();
         }
         
-        $search = trim(Request::get('search'));
-        $field  = trim(Request::get('field'));
+        $search = trim(Request::input('search'));
+        $field  = trim(Request::input('field'));
         
         if ($field and $field != 'all') {
             // Perform a field search

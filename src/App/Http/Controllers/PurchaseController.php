@@ -115,11 +115,11 @@ class PurchaseController extends Controller
             return redirect($redirect_url)->withErrors($validation)->withInput();
         }
         
-        $pricelist_id   = Request::get('pricelist_id');
-        $transaction_id = Request::get('transaction_id');
-        $payment_status = Request::get('payment_status');
-        $paid           = Request::get('paid');
-        $email          = Request::get('email');
+        $pricelist_id   = Request::input('pricelist_id');
+        $transaction_id = Request::input('transaction_id');
+        $payment_status = Request::input('payment_status');
+        $paid           = Request::input('paid');
+        $email          = Request::input('email');
 
         $pricelist = Pricelist::find($pricelist_id);
 

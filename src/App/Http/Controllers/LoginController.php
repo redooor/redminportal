@@ -49,8 +49,8 @@ class LoginController extends Controller
             return redirect('login')->withErrors($validation)->withInput();
         }
         
-        $email      = Request::get('email');
-        $password   = Request::get('password');
+        $email      = Request::input('email');
+        $password   = Request::input('password');
         $throttleKey = strtolower($email) . '|' . Request::ip();
 
         if (RateLimiter::tooManyAttempts($throttleKey, self::MAX_LOGIN_ATTEMPTS)) {

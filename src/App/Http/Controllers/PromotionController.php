@@ -96,14 +96,14 @@ class PromotionController extends Controller
             }
         }
 
-        $name               = Request::get('name');
-        $short_description  = Request::get('short_description');
-        $long_description   = Request::get('long_description');
+        $name               = Request::input('name');
+        $short_description  = Request::input('short_description');
+        $long_description   = Request::input('long_description');
         $image              = Request::file('image');
-        $active             = (Request::get('active') == '' ? false : true);
+        $active             = (Request::input('active') == '' ? false : true);
         
-        $start_date = DateTime::createFromFormat('d/m/Y', Request::get('start_date'));
-        $end_date   = DateTime::createFromFormat('d/m/Y', Request::get('end_date'));
+        $start_date = DateTime::createFromFormat('d/m/Y', Request::input('start_date'));
+        $end_date   = DateTime::createFromFormat('d/m/Y', Request::input('end_date'));
         
         $promotion = (isset($sid) ? Promotion::find($sid) : new Promotion);
         
@@ -134,9 +134,9 @@ class PromotionController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => Request::get($lang . '_name'),
-                'short_description'     => Request::get($lang . '_short_description'),
-                'long_description'      => Request::get($lang . '_long_description')
+                'name'                  => Request::input($lang . '_name'),
+                'short_description'     => Request::input($lang . '_short_description'),
+                'long_description'      => Request::input($lang . '_long_description')
             );
 
             // Check if lang exist

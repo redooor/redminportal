@@ -78,8 +78,8 @@ class MembershipController extends Controller
             }
         }
 
-        $name      = Request::get('name');
-        $rank      = Request::get('rank');
+        $name      = Request::input('name');
+        $rank      = Request::input('rank');
 
         $membership = (isset($sid) ? Membership::find($sid) : new Membership);
         

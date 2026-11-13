@@ -128,7 +128,7 @@ class UserController extends Controller
         );
         
         // Get activated input first, for checking if user is deactivating own account
-        $activated = (Request::get('activated') == '' ? false : true);
+        $activated = (Request::input('activated') == '' ? false : true);
         
         if (isset($sid)) {
             $rules['password'] = 'confirmed|min:' . config('redminportal::password.min_length', 10);
@@ -182,9 +182,9 @@ class UserController extends Controller
         }
         
         $permissions = $this->populatePermission(
-            Request::get('permission-inherit'),
-            Request::get('permission-allow'),
-            Request::get('permission-deny')
+            Request::input('permission-inherit'),
+            Request::input('permission-allow'),
+            Request::input('permission-deny')
         );
 
         // Check that the submitted permissions do not exceed the actor's own access
@@ -197,7 +197,7 @@ class UserController extends Controller
         }
 
         // Check that every submitted group can be granted by the actor
-        foreach ((array) Request::get('role') as $group_id) {
+        foreach ((array) Request::input('role') as $group_id) {
             if ($group_id === null || $group_id === '') {
                 continue;
             }
@@ -214,15 +214,15 @@ class UserController extends Controller
         }
         
         // Save or Update
-        $user->email = Request::get('email');
+        $user->email = Request::input('email');
         
-        $password = Request::get('password');
+        $password = Request::input('password');
         if ($password != '') {
             $user->password = Hash::make($password);
         }
         
-        $user->first_name = Request::get('first_name');
-        $user->last_name = Request::get('last_name');
+        $user->first_name = Request::input('first_name');
+        $user->last_name = Request::input('last_name');
         $user->activated = $activated;
         $user->permissions = json_encode($permissions);
         
@@ -236,7 +236,7 @@ class UserController extends Controller
         
         // Assign group(s) to user
         // Return error message if group has error
-        if (! $user->addGroup(Request::get('role'))) {
+        if (! $user->addGroup(Request::input('role'))) {
             $errors->add(
                 'groupError',
                 Lang::get('redminportal::messages.user_error_group_not_found')

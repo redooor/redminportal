@@ -114,12 +114,12 @@ class PortfolioController extends Controller
             }
         }
 
-        $name               = Request::get('name');
-        $short_description  = Request::get('short_description');
-        $long_description   = Request::get('long_description');
+        $name               = Request::input('name');
+        $short_description  = Request::input('short_description');
+        $long_description   = Request::input('long_description');
         $image              = Request::file('image');
-        $active             = (Request::get('active') == '' ? false : true);
-        $category_id        = Request::get('category_id');
+        $active             = (Request::input('active') == '' ? false : true);
+        $category_id        = Request::input('category_id');
 
         $portfolio = (isset($sid) ? Portfolio::find($sid) : new Portfolio);
         
@@ -149,9 +149,9 @@ class PortfolioController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => Request::get($lang . '_name'),
-                'short_description'     => Request::get($lang . '_short_description'),
-                'long_description'      => Request::get($lang . '_long_description')
+                'name'                  => Request::input($lang . '_name'),
+                'short_description'     => Request::input($lang . '_short_description'),
+                'long_description'      => Request::input($lang . '_long_description')
             );
 
             // Check if lang exist

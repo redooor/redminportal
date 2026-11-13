@@ -119,13 +119,13 @@ class PageController extends Controller
                 ->withInput();
         }
         
-        $title              = Request::get('title');
-        $slug               = Request::get('slug');
-        $content            = Request::get('content');
+        $title              = Request::input('title');
+        $slug               = Request::input('slug');
+        $content            = Request::input('content');
         $image              = Request::file('image');
-        $private            = (Request::get('private') == '' ? false : true);
-        $category_id        = Request::get('category_id');
-        $tags               = Request::get('tags');
+        $private            = (Request::input('private') == '' ? false : true);
+        $category_id        = Request::input('category_id');
+        $tags               = Request::input('tags');
 
         $page = (isset($sid) ? Page::find($sid) : new Page);
 
@@ -159,9 +159,9 @@ class PageController extends Controller
             }
 
             $translated_content = array(
-                'title'     => Request::get($lang . '_title'),
-                'slug'      => str_replace(' ', '_', Request::get($lang . '_slug')),
-                'content'   => Request::get($lang . '_content')
+                'title'     => Request::input($lang . '_title'),
+                'slug'      => str_replace(' ', '_', Request::input($lang . '_slug')),
+                'content'   => Request::input($lang . '_content')
             );
 
             // Check if lang exist

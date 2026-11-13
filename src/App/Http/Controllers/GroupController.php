@@ -112,9 +112,9 @@ class GroupController extends Controller
         }
         
         $permissions = $this->populatePermission(
-            Request::get('permission-inherit'),
-            Request::get('permission-allow'),
-            Request::get('permission-deny')
+            Request::input('permission-inherit'),
+            Request::input('permission-allow'),
+            Request::input('permission-deny')
         );
         
         if ($group == null) {
@@ -150,7 +150,7 @@ class GroupController extends Controller
         
         try {
             // Save the group details
-            $group->name = Request::get('name');
+            $group->name = Request::input('name');
             $group->permissions = json_encode($permissions);
             $group->save();
         } catch (\Exception $exp) {

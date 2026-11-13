@@ -204,19 +204,19 @@ class CouponController extends Controller
             }
         }
 
-        $code                   = Request::get('code');
-        $description            = Request::get('description');
-        $amount                 = Request::get('amount');
-        $is_percent             = (Request::get('is_percent') == '' ? false : true);
-        $start_date             = \DateTime::createFromFormat('d/m/Y h:i A', Request::get('start_date'));
-        $end_date               = \DateTime::createFromFormat('d/m/Y h:i A', Request::get('end_date'));
-        $max_spent              = Request::get('max_spent');
-        $min_spent              = Request::get('min_spent');
-        $limit_per_coupon       = Request::get('usage_limit_per_coupon');
-        $limit_per_user         = Request::get('usage_limit_per_user');
-        $multiple_coupons       = (Request::get('multiple_coupons') == '' ? false : true);
-        $exclude_sale_item      = (Request::get('exclude_sale_item') == '' ? false : true);
-        $automatically_apply    = (Request::get('automatically_apply') == '' ? false : true);
+        $code                   = Request::input('code');
+        $description            = Request::input('description');
+        $amount                 = Request::input('amount');
+        $is_percent             = (Request::input('is_percent') == '' ? false : true);
+        $start_date             = \DateTime::createFromFormat('d/m/Y h:i A', Request::input('start_date'));
+        $end_date               = \DateTime::createFromFormat('d/m/Y h:i A', Request::input('end_date'));
+        $max_spent              = Request::input('max_spent');
+        $min_spent              = Request::input('min_spent');
+        $limit_per_coupon       = Request::input('usage_limit_per_coupon');
+        $limit_per_user         = Request::input('usage_limit_per_user');
+        $multiple_coupons       = (Request::input('multiple_coupons') == '' ? false : true);
+        $exclude_sale_item      = (Request::input('exclude_sale_item') == '' ? false : true);
+        $automatically_apply    = (Request::input('automatically_apply') == '' ? false : true);
 
         // Check that end date is after start date
         if ($end_date <= $start_date) {
@@ -237,7 +237,7 @@ class CouponController extends Controller
         $apply_to_models = array();
 
         try {
-            $categories = Request::get('category_id');
+            $categories = Request::input('category_id');
             if ($categories) {
                 foreach ($categories as $item) {
                     $model = Category::find($item);
@@ -247,7 +247,7 @@ class CouponController extends Controller
                 }
             }
 
-            $products = Request::get('product_id');
+            $products = Request::input('product_id');
             if ($products) {
                 foreach ($products as $item) {
                     $model = Product::find($item);
@@ -257,7 +257,7 @@ class CouponController extends Controller
                 }
             }
 
-            $pricelists = Request::get('pricelist_id');
+            $pricelists = Request::input('pricelist_id');
             if ($pricelists) {
                 foreach ($pricelists as $item) {
                     $model = Pricelist::find($item);
@@ -267,7 +267,7 @@ class CouponController extends Controller
                 }
             }
             
-            $bundles = Request::get('bundle_id');
+            $bundles = Request::input('bundle_id');
             if ($bundles) {
                 foreach ($bundles as $item) {
                     $model = Bundle::find($item);

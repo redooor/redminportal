@@ -83,10 +83,10 @@ class MailinglistController extends Controller
             }
         }
 
-        $email       = Request::get('email');
-        $first_name  = Request::get('first_name');
-        $last_name   = Request::get('last_name');
-        $active      = (Request::get('active') == '' ? false : true);
+        $email       = Request::input('email');
+        $first_name  = Request::input('first_name');
+        $last_name   = Request::input('last_name');
+        $active      = (Request::input('active') == '' ? false : true);
 
         $mailinglist = (isset($sid) ? Mailinglist::find($sid) : new Mailinglist);
         

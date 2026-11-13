@@ -113,10 +113,10 @@ class OrderController extends Controller
             return redirect($redirect_url)->withErrors($validation)->withInput();
         }
         
-        $transaction_id = Request::get('transaction_id');
-        $payment_status = Request::get('payment_status');
-        $paid           = Request::get('paid');
-        $email          = Request::get('email');
+        $transaction_id = Request::input('transaction_id');
+        $payment_status = Request::input('payment_status');
+        $paid           = Request::input('paid');
+        $email          = Request::input('email');
         
         // Check user first
         $user = User::where('email', $email)->first();
@@ -131,15 +131,15 @@ class OrderController extends Controller
         $apply_to_models = array();
         
         // Save products to order
-        $selected_products = Request::get('selected_products');
+        $selected_products = Request::input('selected_products');
         $apply_to_models = array_merge($apply_to_models, $this->addModelToArray($selected_products, new Product));
         
         // Save bundles to order
-        $selected_bundles = Request::get('selected_bundles');
+        $selected_bundles = Request::input('selected_bundles');
         $apply_to_models = array_merge($apply_to_models, $this->addModelToArray($selected_bundles, new Bundle));
         
         // Save pricelists to order
-        $pricelists = Request::get('pricelist_id');
+        $pricelists = Request::input('pricelist_id');
         $apply_to_models = array_merge($apply_to_models, $this->addModelToArraySimpleMode($pricelists, new Pricelist));
 
         // No product/bundle to add
@@ -162,7 +162,7 @@ class OrderController extends Controller
         }
         
         // Save coupons to order
-        $coupons = Request::get('coupon_id');
+        $coupons = Request::input('coupon_id');
         $errors = $this->addCouponToOrder($coupons, $new_order);
         
         if ($errors) {
