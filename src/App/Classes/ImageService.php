@@ -132,7 +132,6 @@ class ImageService
     public function remove(Image $image): bool
     {
         return DB::transaction(function () use ($image) {
-            $wasPrimary = (bool) $image->is_primary;
             $model = null;
 
             try {
@@ -145,11 +144,18 @@ class ImageService
                 $this->lockOwner($model);
             }
 
+            // Read the primary flag again under the lock, another request may have changed it
+            $current = Image::find($image->getKey());
+            $wasPrimary = $current ? (bool) $current->is_primary : (bool) $image->is_primary;
+
             if (! $image->deleteRecord()) {
                 return false;
             }
 
-            $this->deleteImageFiles($image);
+            // Delete the files only once the whole transaction (including any outer one) has committed
+            DB::afterCommit(function () use ($image) {
+                $this->deleteImageFiles($image);
+            });
 
             if ($wasPrimary && $model) {
                 $next = $model->images()->first();
@@ -180,6 +186,11 @@ class ImageService
             }
 
             $this->lockOwner($model);
+
+            // The image may have been removed since it was loaded
+            if (! $model->images()->where('id', $image->getKey())->exists()) {
+                return;
+            }
 
             $model->images()
                 ->where('id', '!=', $image->getKey())

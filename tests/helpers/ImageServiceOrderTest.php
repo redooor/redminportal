@@ -337,6 +337,61 @@ class ImageServiceOrderTest extends RedminTestCase
     }
 
     /**
+     * Test (Pass): removing a stale copy of a promoted image still promotes the next image
+     */
+    public function testRemoveUsesCurrentPrimaryState()
+    {
+        $category = $this->createCategory();
+        $a = $this->storedImage($category, 'stale-a.png', 1, true);
+        $b = $this->storedImage($category, 'stale-b.png', 2, false);
+        $c = $this->storedImage($category, 'stale-c.png', 3, false);
+
+        $staleB = Image::find($b->id);          // loaded while B is not primary
+        (new ImageService)->makePrimary($b);    // another request promotes B
+        (new ImageService)->remove($staleB);    // then the stale copy is removed
+
+        $this->assertSame(1, Image::where('imageable_id', $category->id)->where('is_primary', true)->count());
+        $this->assertTrue((bool) Image::find($a->id)->is_primary);
+    }
+
+    /**
+     * Test (Pass): promoting an image that was already removed keeps the current primary
+     */
+    public function testMakePrimaryOfRemovedImageKeepsPrimary()
+    {
+        $category = $this->createCategory();
+        $a = $this->storedImage($category, 'gone-a.png', 1, true);
+        $b = $this->storedImage($category, 'gone-b.png', 2, false);
+
+        $staleB = Image::find($b->id);
+        (new ImageService)->remove($b);
+        (new ImageService)->makePrimary($staleB);
+
+        $this->assertTrue((bool) Image::find($a->id)->is_primary);
+    }
+
+    /**
+     * Test (Pass): files stay when the transaction around a removal rolls back
+     */
+    public function testRemoveKeepsFilesWhenOuterTransactionRollsBack()
+    {
+        $category = $this->createCategory();
+        $image = $this->storedImage($category, 'rollback.png', 1, true);
+        $original = getcwd() . '/' . $image->path;
+
+        try {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($image) {
+                (new ImageService)->remove($image);
+                throw new \RuntimeException('rollback');
+            });
+        } catch (\RuntimeException $e) {
+        }
+
+        $this->assertNotNull(Image::find($image->id));
+        $this->assertFileExists($original);
+    }
+
+    /**
      * Test (Pass): filesFrom() reads image and images[] uploads in that order
      */
     public function testFilesFromReadsSingleAndMultipleUploads()
