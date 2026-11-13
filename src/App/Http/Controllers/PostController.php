@@ -8,13 +8,14 @@ use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Post;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class PostController extends Controller
 {
-    use SorterController, DeleterController;
+    use SorterController, DeleterController, ImageGalleryController;
     
     public function __construct(Post $model)
     {
@@ -214,5 +215,15 @@ class PostController extends Controller
         $image->delete();
 
         return redirect('admin/posts/edit/' . $post_id);
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Post::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/posts';
     }
 }

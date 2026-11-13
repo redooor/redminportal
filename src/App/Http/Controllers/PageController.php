@@ -8,13 +8,14 @@ use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Page;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class PageController extends Controller
 {
-    use SorterController, DeleterController;
+    use SorterController, DeleterController, ImageGalleryController;
     
     public function __construct(Page $model)
     {
@@ -212,5 +213,15 @@ class PageController extends Controller
         $image->delete();
 
         return redirect('admin/pages/edit/' . $page_id);
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Page::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/pages';
     }
 }

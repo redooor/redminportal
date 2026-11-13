@@ -89,6 +89,8 @@ return array(
         => 'You cannot delete this product because it has been ordered. Please delete the order first.',
     'error_delete_image'
         => 'The image cannot be deleted at this time.',
+    'error_image_not_found'
+        => 'The image cannot be found because it does not exist or may belong to another record.',
     'purchase_error_delete_no_orders_permission'
         => 'You also need permission to delete orders.',
     'purchase_error_create_no_orders_permission'

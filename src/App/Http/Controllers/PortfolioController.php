@@ -8,12 +8,13 @@ use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Portfolio;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class PortfolioController extends Controller
 {
-    use SorterController, DeleterController;
+    use SorterController, DeleterController, ImageGalleryController;
     
     public function __construct(Portfolio $model)
     {
@@ -192,5 +193,15 @@ class PortfolioController extends Controller
         $image->delete();
 
         return redirect('admin/portfolios/edit/' . $portfolio_id);
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Portfolio::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/portfolios';
     }
 }

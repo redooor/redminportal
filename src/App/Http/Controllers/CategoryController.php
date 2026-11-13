@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Request;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
+    use ImageGalleryController;
+
     public function getIndex()
     {
         $categories = Category::where('category_id', 0)
@@ -239,5 +242,15 @@ class CategoryController extends Controller
         $image->delete();
 
         return redirect('admin/categories/edit/' . $model_id);
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Category::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/categories';
     }
 }

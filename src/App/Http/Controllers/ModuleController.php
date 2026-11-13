@@ -11,6 +11,7 @@ use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Models\Pricelist;
@@ -19,7 +20,7 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
 {
-    use SorterController;
+    use SorterController, ImageGalleryController;
     
     public function __construct(Module $model)
     {
@@ -358,5 +359,15 @@ class ModuleController extends Controller
         $image->delete();
 
         return redirect('admin/modules/edit/' . $model_id);
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Module::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/modules';
     }
 }

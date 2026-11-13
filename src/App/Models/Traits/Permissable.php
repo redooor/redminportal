@@ -222,6 +222,8 @@ trait Permissable
         if ($request->is('*/activate/*')
             || $request->is('*/deactivate/*')
             || $request->is('*/imgremove/*')
+            || $request->is('*/imgprimary/*')
+            || $request->is('*/imgmove/*')
             || $request->is('*/variant-imgremove/*')
             || $request->is('*/uploadform/*')
             || $request->is('*/upload/*')
