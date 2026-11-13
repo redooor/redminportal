@@ -39,7 +39,7 @@ class LoginControllerTest extends RedminBrowserTestCase
      */
     public function testLogout()
     {
-        $this->call('GET', '/logout');
+        $this->call('POST', '/logout');
         $this->assertRedirectedTo('/');
     }
     

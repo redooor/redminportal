@@ -149,9 +149,11 @@
                                 {!! HTML::image($imagine->getUrl($image->path), $module->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
+                                    @permitted('admin/modules/imgremove/' . $image->id)
                                     <a href="{{ URL::to('admin/modules/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
                                         <i class="fa-solid fa-xmark"></i>
                                     </a>
+                                    @endpermitted
                                     <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
                                         <i class="fa-solid fa-link"></i>
                                     </a>

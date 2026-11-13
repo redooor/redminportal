@@ -18,13 +18,13 @@ class ReportController extends Controller
 
     public function postMailinglist()
     {
-        $input_start_date = Request::get('start_date');
+        $input_start_date = Request::input('start_date');
         if ($input_start_date == "") {
             $input_start_date = "01/01/1900";
         }
         $start_date = \DateTime::createFromFormat('d/m/Y', $input_start_date);
 
-        $input_end_date = Request::get('end_date');
+        $input_end_date = Request::input('end_date');
 
         if ($input_end_date == "") {
             $end_date = new \DateTime("NOW");
@@ -48,13 +48,13 @@ class ReportController extends Controller
 
     public function postPurchases()
     {
-        $input_start_date = Request::get('start_date');
+        $input_start_date = Request::input('start_date');
         if ($input_start_date == "") {
             $input_start_date = "01/01/1900";
         }
         $start_date = \DateTime::createFromFormat('d/m/Y', $input_start_date);
 
-        $input_end_date = Request::get('end_date');
+        $input_end_date = Request::input('end_date');
 
         if ($input_end_date == "") {
             $end_date = new \DateTime("NOW");
@@ -78,13 +78,13 @@ class ReportController extends Controller
 
     public function postOrders()
     {
-        $input_start_date = Request::get('start_date');
+        $input_start_date = Request::input('start_date');
         if ($input_start_date == "") {
             $input_start_date = "01/01/1900";
         }
         $start_date = \DateTime::createFromFormat('d/m/Y', $input_start_date);
 
-        $input_end_date = Request::get('end_date');
+        $input_end_date = Request::input('end_date');
 
         if ($input_end_date == "") {
             $end_date = new \DateTime("NOW");

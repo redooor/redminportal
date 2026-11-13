@@ -55,6 +55,34 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 3. Each widget, and the queries behind it, is only used when the signed-in user may view that area (`admin/orders`, `admin/products`, `admin/users`, `admin/pages`, `admin/posts`); the dashboard route itself still needs its own permission.
 4. Charts use Chart.js 4.6.1, bundled with the package (no CDN), and follow the Bootstrap colour variables, including `data-bs-theme`.
 
+**Admin actions**
+1. The admin routes verify the CSRF token. Actions that change data (delete, remove image, activate/deactivate user, change order status, update media duration, log out) now use `POST` instead of `GET` links. The package views are updated; custom views need the changes in [UPGRADE.md](UPGRADE.md) (Step 12).
+2. New `data-method="post"` links (`js/redmin-post.min.js`) post with the CSRF token; `window.redminCsrfToken()` returns the token for Ajax calls.
+
+**Uploads**
+1. Media and image uploads validate file names and types. Media uploads accept only the extensions in the new `media.allowed_extensions` config and are limited by `media.max_size`; uploaded names are cleaned before they are stored.
+2. Uploaded images are stored with an extension that matches their real type (jpg, png or gif); other files are rejected.
+
+**Permissions**
+1. The create/update decision for `store` requests and the controllers now read the `id` field the same way (`Request::input('id')`).
+2. Activate/deactivate user, remove image, media upload and duration, and product variant create/edit need the **update** permission (variant delete needs **delete**), instead of **view**. Their buttons are hidden for users without it.
+3. Removing an image only works through the module that owns it (a page image cannot be removed through the products route).
+4. Deleting or adding a purchase also needs permission to delete or add orders, because purchases are orders. Adding an order or purchase always needs the **create** permission.
+5. Permission checks use the decoded request path, the same one the router matches.
+
+**Accounts**
+1. `RedminSeeder` no longer creates `admin@admin.com` / `admin` or deletes existing users and groups. The administrator comes from `REDMIN_ADMIN_EMAIL` / `REDMIN_ADMIN_PASSWORD`, or a random password is printed once. New `RedminDemoSeeder` (runs only when `APP_ENV` is local, development or testing) creates `admin@admin.com` / `admin`.
+2. Users and groups: you can only grant permissions you hold (a narrower deny of yours blocks a broader grant), cannot lift a deny you are under, and cannot edit, activate, deactivate or delete an account or group that holds more access than you.
+3. Sign-in is limited to 5 failed attempts per minute per email and IP address.
+4. New passwords need at least 10 characters (`password.min_length` config).
+5. Changing a password signs out that user's other sessions. Changing your own password in My Account keeps you signed in.
+
+**Output and exports**
+1. Category names, product names and order builder labels are escaped; descriptions are cleaned with HTML Purifier (scripts, event attributes, styles and `javascript:` links are removed).
+2. Export cells that start with `=`, `+`, `-` or `@` are prefixed with `'` so spreadsheets show them as text.
+3. `/api/tag` and `/api/tag/name` need a signed-in, active user.
+4. `ezyang/htmlpurifier` is a direct requirement.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.

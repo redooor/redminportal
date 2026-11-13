@@ -73,7 +73,8 @@ class File extends SymfonyFile
     public function deleteFiles($target)
     {
         if (is_dir($target)) {
-            $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
+            $directory = rtrim($target, DIRECTORY_SEPARATOR === '\\' ? '/\\' : '/') . DIRECTORY_SEPARATOR;
+            $files = glob($directory . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
 
             foreach ($files as $file) {
                 $this->deleteFiles($file);

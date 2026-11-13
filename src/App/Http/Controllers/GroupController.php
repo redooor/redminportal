@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\Auth;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\PermissibleController;
 use Redooor\Redminportal\App\Models\Group;
@@ -81,13 +82,13 @@ class GroupController extends Controller
     
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         
         $rules = array(
             'name' => 'required',
-            'permission-inherit' => 'regex:/^[a-z,0-9._\-?]+$/i',
-            'permission-allow' => 'regex:/^[a-z,0-9._\-?]+$/i',
-            'permission-deny' => 'regex:/^[a-z,0-9._\-?]+$/i'
+            'permission-inherit' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-allow' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-deny' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i'
         );
         
         $messages = array(
@@ -111,9 +112,9 @@ class GroupController extends Controller
         }
         
         $permissions = $this->populatePermission(
-            Request::get('permission-inherit'),
-            Request::get('permission-allow'),
-            Request::get('permission-deny')
+            Request::input('permission-inherit'),
+            Request::input('permission-allow'),
+            Request::input('permission-deny')
         );
         
         if ($group == null) {
@@ -124,10 +125,44 @@ class GroupController extends Controller
             );
             return redirect('admin/groups')->withErrors($errors);
         }
+
+        $actor = Auth::guard('redminguard')->user();
+
+        // Check that the existing group does not hold more access than the actor
+        if (isset($sid) && ! $actor->canGrant((array) $group->permissions())) {
+            $errors = new MessageBag;
+            $errors->add(
+                'group_error_cannot_grant',
+                trans('redminportal::messages.group_error_cannot_grant')
+            );
+            return redirect($redirect_url)->withErrors($errors)->withInput();
+        }
+
+        // Check that the submitted permissions do not exceed the actor's own access
+        if (! $actor->canGrant($permissions)) {
+            $errors = new MessageBag;
+            $errors->add(
+                'group_error_cannot_grant',
+                trans('redminportal::messages.group_error_cannot_grant')
+            );
+            return redirect($redirect_url)->withErrors($errors)->withInput();
+        }
+
+        // Lifting a deny raises access, so check it like a new grant
+        if (isset($sid) && ! $actor->canGrant(
+            $actor->liftedDenies((array) $group->permissions(), $permissions)
+        )) {
+            $errors = new MessageBag;
+            $errors->add(
+                'group_error_cannot_grant',
+                trans('redminportal::messages.group_error_cannot_grant')
+            );
+            return redirect($redirect_url)->withErrors($errors)->withInput();
+        }
         
         try {
             // Save the group details
-            $group->name = Request::get('name');
+            $group->name = Request::input('name');
             $group->permissions = json_encode($permissions);
             $group->save();
         } catch (\Exception $exp) {
@@ -150,6 +185,17 @@ class GroupController extends Controller
         if ($group == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The group cannot be deleted at this time. It may have already been deleted.");
+            return redirect()->back()->withErrors($errors);
+        }
+
+        $actor = Auth::guard('redminguard')->user();
+
+        if (! $actor->canGrant((array) $group->permissions())) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'group_error_cannot_grant',
+                trans('redminportal::messages.group_error_cannot_grant')
+            );
             return redirect()->back()->withErrors($errors);
         }
         

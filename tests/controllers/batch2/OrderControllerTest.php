@@ -185,14 +185,15 @@ class OrderControllerTest extends BaseControllerTest
         $this->call('POST', '/admin/orders/store', $this->input['create']);
         $this->assertRedirectedTo('/admin/orders');
 
-        $this->call('GET', '/admin/orders/update');
+        $this->call('POST', '/admin/orders/update');
         $this->assertResponseStatus(302);
 
-        $this->call('GET', '/admin/orders/update/status/1');
+        $this->call('POST', '/admin/orders/update/status/1');
         $this->assertResponseStatus(302);
         $this->assertRedirectedTo('/admin/orders');
 
-        $this->call('GET', '/admin/orders/update/status/1/completed');
+        $this->from('/admin/orders/update/status/1');
+        $this->call('POST', '/admin/orders/update/status/1/completed');
         $this->assertResponseStatus(302);
         $this->assertRedirectedTo('/admin/orders/update/status/1');
     }

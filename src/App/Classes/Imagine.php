@@ -130,18 +130,38 @@ class Imagine
     public function upload($file, $dir = null, $createDimensions = false, $autonumber = true)
     {
         if ($file) {
+            $extension = UploadGuard::imageExtension($file->getPathname());
+
+            if ($extension === null) {
+                return null;
+            }
+
+            if ($dir !== null && (! is_string($dir) || ($dir !== '' && ! $this->isRelativeDirectory($dir)))) {
+                return null;
+            }
+
             // Generate random dir
             if (! $dir) {
                 $dir = Str::random(8);
             }
-     
+
+            $originalName = $file->getClientOriginalName();
+            $stem = pathinfo($originalName, PATHINFO_FILENAME);
+            $safeName = UploadGuard::safeFileName($stem . '.' . $extension);
+
+            if ($safeName === null) {
+                $stem = 'image';
+            } else {
+                $stem = pathinfo($safeName, PATHINFO_FILENAME);
+            }
+
+            $filename = $stem . '.' . $extension;
+
             // Get file info and try to move
             $destination = Config::get('redminportal::image.upload_path') . $dir;
             
             if ($autonumber) {
-                $filename = $this->autoNumberFile($destination, $file);
-            } else {
-                $filename = $file->getClientOriginalName();
+                $filename = $this->autoNumberFile($destination, $filename);
             }
             
             $path        = RHelper::joinPaths(Config::get('redminportal::image.upload_dir'), $dir, $filename);
@@ -158,21 +178,39 @@ class Imagine
     }
     
     /**
+     * Check that a directory is relative and has no parent path segments
+     * @param  string $dir
+     * @return bool
+     */
+    private function isRelativeDirectory($dir)
+    {
+        if (strpos($dir, "\0") !== false) {
+            return false;
+        }
+
+        if ($dir[0] === '/' || $dir[0] === '\\') {
+            return false;
+        }
+
+        $segments = preg_split('/[\\\\\/]+/', $dir);
+
+        return ! in_array('..', $segments, true);
+    }
+    
+    /**
      * Automatically appends number if file already exists
      * @param  string $path
-     * @param  string  $filename
+     * @param  string $filename
      * @return string New Filename
      */
-    private function autoNumberFile($path, $file)
+    private function autoNumberFile($path, $filename)
     {
-        $extension = $file->getClientOriginalExtension();
-        $original_name = $file->getClientOriginalName();
-        
-        $filename = $original_name; // Set to original name
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $stem = pathinfo($filename, PATHINFO_FILENAME);
         
         $counter = 1;
         while (file_exists($path . '/' . $filename)) {
-            $filename = str_replace("." . $extension, '_' . $counter . "." . $extension, $original_name);
+            $filename = $stem . '_' . $counter . '.' . $extension;
             $counter++;
         }
         

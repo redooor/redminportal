@@ -156,7 +156,7 @@ class BundleController extends Controller
     
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         
         if (isset($sid)) {
             $url = 'admin/bundles/edit/' . $sid;
@@ -190,20 +190,20 @@ class BundleController extends Controller
             }
         }
         
-        $name               = Request::get('name');
-        $sku                = Request::get('sku');
-        $price              = Request::get('price');
-        $short_description  = Request::get('short_description');
-        $long_description   = Request::get('long_description');
+        $name               = Request::input('name');
+        $sku                = Request::input('sku');
+        $price              = Request::input('price');
+        $short_description  = Request::input('short_description');
+        $long_description   = Request::input('long_description');
         $image              = Request::file('image');
-        $featured           = (Request::get('featured') == '' ? false : true);
-        $active             = (Request::get('active') == '' ? false : true);
-        $category_id        = Request::get('category_id');
-        $tags               = Request::get('tags');
+        $featured           = (Request::input('featured') == '' ? false : true);
+        $active             = (Request::input('active') == '' ? false : true);
+        $category_id        = Request::input('category_id');
+        $tags               = Request::input('tags');
 
         $apply_to_models = array();
 
-        $products = Request::get('product_id');
+        $products = Request::input('product_id');
         if (count($products) > 0) {
             foreach ($products as $item) {
                 $model = Product::find($item);
@@ -213,7 +213,7 @@ class BundleController extends Controller
             }
         }
 
-        $pricelists = Request::get('pricelist_id');
+        $pricelists = Request::input('pricelist_id');
         if (count($pricelists) > 0) {
             foreach ($pricelists as $item) {
                 $model = Pricelist::find($item);
@@ -263,9 +263,9 @@ class BundleController extends Controller
             }
 
             $translated_content = array(
-                'name'                  => Request::get($lang . '_name'),
-                'short_description'     => Request::get($lang . '_short_description'),
-                'long_description'      => Request::get($lang . '_long_description')
+                'name'                  => Request::input($lang . '_name'),
+                'short_description'     => Request::input($lang . '_short_description'),
+                'long_description'      => Request::input($lang . '_long_description')
             );
 
             // Check if lang exist

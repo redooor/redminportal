@@ -130,7 +130,7 @@ class HideUnpermittedButtonsTest extends RedminBrowserTestCase
 
     public function testDeniedUserActionIsHiddenFromAMenuThatStillHasOtherItems()
     {
-        $this->user->groups()->save($this->group(['admin' => 1, 'admin.users.deactivate.view' => -1, 'admin.users.activate.view' => -1]));
+        $this->user->groups()->save($this->group(['admin' => 1, 'admin.users.deactivate.update' => -1, 'admin.users.activate.update' => -1]));
         Auth::guard('redminguard')->loginUsingId($this->user->id);
 
         $html = $this->call('GET', '/admin/users')->getContent();

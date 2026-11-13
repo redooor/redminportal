@@ -61,7 +61,7 @@ class MembershipController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         
         $rules = array(
             'name'   => 'required|unique:memberships,name' . (isset($sid) ? ',' . $sid : ''),
@@ -78,8 +78,8 @@ class MembershipController extends Controller
             }
         }
 
-        $name      = Request::get('name');
-        $rank      = Request::get('rank');
+        $name      = Request::input('name');
+        $rank      = Request::input('rank');
 
         $membership = (isset($sid) ? Membership::find($sid) : new Membership);
         

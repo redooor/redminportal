@@ -48,7 +48,7 @@ class MyaccountController extends Controller
             'first_name'    => 'required',
             'last_name'     => 'required',
             'old_password'  => 'required',
-            'password'      => 'confirmed|min:6'
+            'password'      => 'confirmed|min:' . config('redminportal::password.min_length', 10)
         );
         
         $messages = array(
@@ -61,18 +61,18 @@ class MyaccountController extends Controller
             return redirect($this->pageRoute)->withErrors($validation)->withInput();
         }
         
-        $old_password = Request::get('old_password');
+        $old_password = Request::input('old_password');
         
         // Check that the existing password mataches
         if (Hash::check($old_password, $user->password)) {
             // Update password if not empty
-            $password = Request::get('password');
+            $password = Request::input('password');
             if ($password != '') {
                 $user->password = Hash::make($password);
             }
             // Update First and Last name
-            $user->first_name = Request::get('first_name');
-            $user->last_name = Request::get('last_name');
+            $user->first_name = Request::input('first_name');
+            $user->last_name = Request::input('last_name');
             
             if (! $user->save()) {
                 $errors->add(
@@ -83,12 +83,12 @@ class MyaccountController extends Controller
             }
             
             if ($password != '') {
-                Auth::guard('redminguard')->logout();
-                return redirect($this->pageRoute);
-            } else {
-                $message = trans('redminportal::messages.user_myaccount_save_success');
-                return redirect($this->pageRoute)->with('success_message', $message);
+                Request::session()->put('redmin_fingerprint_user', $user->id);
+                Request::session()->put('redmin_password_fingerprint', hash('sha256', $user->password));
             }
+
+            $message = trans('redminportal::messages.user_myaccount_save_success');
+            return redirect($this->pageRoute)->with('success_message', $message);
         }
         
         $errors->add(

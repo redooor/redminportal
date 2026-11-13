@@ -90,14 +90,14 @@
 								@if ($user->activated)
 									@permitted('admin/users/deactivate/' . $user->id)
 									<li>
-										<a class="dropdown-item" href="{{ URL::to('admin/users/deactivate/' . $user->id) }}">
+										<a class="dropdown-item" href="{{ URL::to('admin/users/deactivate/' . $user->id) }}" data-method="post">
 											<i class="fa-solid fa-eye-slash"></i>{{ Lang::get('redminportal::buttons.deactivate') }}</a>
 									</li>
 									@endpermitted
 								@else
 									@permitted('admin/users/activate/' . $user->id)
 									<li>
-										<a class="dropdown-item" href="{{ URL::to('admin/users/activate/' . $user->id) }}">
+										<a class="dropdown-item" href="{{ URL::to('admin/users/activate/' . $user->id) }}" data-method="post">
 											<i class="fa-solid fa-eye"></i>{{ Lang::get('redminportal::buttons.activate') }}</a>
 									</li>
 									@endpermitted

@@ -73,15 +73,15 @@ class AnnouncementController extends Controller
     
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
             
         $validation = Announcement::validate(Request::all());
         
         if ($validation->passes()) {
-            $title              = Request::get('title');
-            $content            = Request::get('content');
+            $title              = Request::input('title');
+            $content            = Request::input('content');
             $image              = Request::file('image');
-            $private            = (Request::get('private') == '' ? false : true);
+            $private            = (Request::input('private') == '' ? false : true);
             
             $announcement = (isset($sid) ? Announcement::find($sid) : new Announcement);
             
@@ -128,7 +128,7 @@ class AnnouncementController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Announcement::class);
         
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;

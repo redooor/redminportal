@@ -255,6 +255,87 @@ The editor makes **no CDN requests** (source mode uses a plain textarea).
 
 ---
 
+### Step 12 — Actions that change data now use POST with a CSRF token
+
+The admin routes now verify the CSRF token. Actions that used to be plain links (`GET`) are now `POST`:
+logout, every `delete/{id}`, every `imgremove/{id}`, products `delete-variant-json/{id}` and `variant-imgremove/{product}/{id}`,
+users `activate/{id}` and `deactivate/{id}`, orders `update/{field}/{id}/{status}`, and medias `duration/{id}`.
+Requests that arrive from the admin pages themselves are accepted by the browser's `Sec-Fetch-Site: same-origin` header or by the token.
+
+If you published or wrote your own admin views, check them:
+
+| Your view has | Change it to |
+|---|---|
+| A `<form method="POST">` written by hand | Add `@csrf` as its first child. Forms made with `Form::open` already have the token. |
+| A link such as `<a href="admin/pages/delete/1">` | Keep the link and add `class="btn-confirm"` (needs `@include('redminportal::partials.confirm-delete')`), or add `data-method="post"`. |
+| `$.get` / `$.getJSON` to one of the routes above | `$.post(url, { _token: window.redminCsrfToken() }, ...)` |
+| Other Ajax calls that `POST` | Send the `X-CSRF-TOKEN` header or a `_token` field. |
+
+Layouts must contain `<meta name="csrf-token" content="{{ csrf_token() }}">` and load `js/redmin-post.min.js`
+(the three package layouts already do; re-publish assets with `php artisan vendor:publish --tag=public --force`).
+Links that still use `GET` for these routes now return `404`/`405`.
+
+---
+
+### Step 13 — Upload file names and types are validated
+
+Media uploads now accept only the file extensions listed in the new `media` config (`allowed_extensions`, `max_size`),
+and stored file names are cleaned (letters, digits, `.`, `_`, `-`). Image uploads are stored with an extension that
+matches the real image type (jpg, png, gif). If you need other media types, re-publish the config
+(`php artisan vendor:publish --tag=config`) and add them to `media.allowed_extensions`.
+
+---
+
+### Step 14 — Permission checks for actions that used to count as "view"
+
+These actions now need **update** instead of **view**: `activate`, `deactivate`, `imgremove`, `variant-imgremove`, media `uploadform`, `upload` and `duration`, product `edit-variant`; `create-variant` needs **create**; `delete-variant-json` needs **delete**.
+Groups or users that were allowed these actions only through the `view` permission must now also be given `update` (or `create`/`delete`).
+Explicit entries such as `admin.users.deactivate.view` no longer apply to these routes; use `admin.users.deactivate.update`.
+Deleting a purchase (`admin/purchases/delete`) also needs `admin.orders.delete`, and adding one (`admin/purchases/store`) also needs `admin.orders.create`, because purchases are rows of the orders table. `store` on orders and purchases always needs the `create` permission, whatever `id` is sent.
+Custom controllers that read `Request::get('id')` should use `Request::input('id')`, so they see the same value as the permission check.
+
+---
+
+### Step 15 — Accounts: administrator seeding, privilege checks, sign-in limits
+
+**Seeder.** `RedminSeeder` no longer creates `admin@admin.com` / `admin` and no longer deletes existing users and groups (it does nothing when users exist).
+For a new site set `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD` (at least 10 characters, or the seeder stops without creating anything) when you seed, or read the generated password that is printed once:
+
+    REDMIN_ADMIN_EMAIL=you@example.com REDMIN_ADMIN_PASSWORD='choose-a-long-password' php artisan db:seed --class="Database\Seeders\RedminSeeder"
+
+For local development use the new demo seeder, which creates `admin@admin.com` / `admin` and only runs when `APP_ENV` is `local`, `development` or `testing` (set `APP_ENV=local` in your `.env`; Laravel treats a missing `APP_ENV` as `production`):
+
+    php artisan db:seed --class="Database\Seeders\RedminDemoSeeder"
+
+If you already have a site that was seeded with the old seeder, sign in and change the password of `admin@admin.com` (or deactivate the account).
+Scripts, CI jobs and tests that expect `admin@admin.com` / `admin` from `RedminSeeder` should call `RedminDemoSeeder`, or set the two variables above.
+After updating the package run `composer dump-autoload` so the new seeder class is found.
+
+**Privilege checks.** On the users and groups pages:
+
+- you can only grant permissions you hold yourself, and only assign groups whose permissions you fully hold (values `0` and `-1` can always be set);
+- you cannot edit, activate, deactivate or delete a user, or edit or delete a group, that holds more access than you.
+
+Use an administrator with full access for those tasks. Custom code can use `Permissable::hasPermission($path, $action)`, `canGrant(array $permissions)` and `coversUser($user)`.
+
+**Sign-in.**
+
+- After 5 failed attempts within a minute for the same email and IP address, sign-in is refused until the minute has passed.
+- New passwords (new users, user edits and My Account) need at least 10 characters. Change it with the new `password.min_length` config (publish the config with `--tag=config`). Existing passwords keep working.
+- Changing a user's password (by an administrator or by the user) signs out that user's other sessions on their next request. Changing your own password in My Account keeps you signed in; before, it signed you out.
+
+
+### Step 16 — Output escaping, export safety and the tag API
+
+**Descriptions.** The summary and description fields of categories and translations (and the product views that share the language selector) are passed through `RHelper::cleanHtml()` before they are shown. It uses HTML Purifier (`ezyang/htmlpurifier`, now a direct requirement; it was already installed through the spreadsheet package) and keeps basic formatting: paragraphs, headings, lists, tables, bold/italic, links (`http`, `https`, `mailto`) and images. Scripts, event attributes (`onclick`, `onerror`), inline styles, iframes, forms and `javascript:` or `data:` URLs are removed. Stored data is not changed, only what is displayed. Custom views that print these fields with `{!! !!}` should call `\Redooor\Redminportal\App\Helpers\RHelper::cleanHtml($value)` too, or use `{{ }}`.
+Category names, product names and the order builder labels are escaped. `Category::printCategory()` escapes the name and returns HTML, so keep printing it with `{!! !!}`.
+
+**Exports.** The purchases, orders and mailing list exports pass free-text cells through `RHelper::exportCell()`: commas become dots as before, and a value that starts with `=`, `+`, `-` or `@` (or a tab or carriage return) gets a leading `'` so Excel and similar programs show it as text. Custom exports can call the same helper.
+
+**Tag API.** `GET /api/tag` and `GET /api/tag/name` need a signed-in, active user (new `redminuser` middleware: no route permission is required, so anyone editing content can use the tag field). Guests are redirected to `login`. If a public front end reads these URLs, provide your own public endpoint with the tags you want to expose.
+
+---
+
 ### Upgrade checklist
 
 Database: **no table other than `password_reset_tokens` changed.** Your existing
@@ -271,7 +352,12 @@ will not run again.
 - [ ] Assets re-published with `--force`, obsolete files deleted, views cleared (Step 9)
 - [ ] Published views either deleted or migrated from Bootstrap 3 to 5.3 markup (Step 8)
 - [ ] Published `tinymce.php` config reviewed (Step 10); custom editor code moved to Jodit (Step 11)
-- [ ] Seeder command updated to `db:seed --class="Database\Seeders\RedminSeeder"`
+- [ ] Seeder command updated to `db:seed --class="Database\Seeders\RedminSeeder"` (Step 15: set `REDMIN_ADMIN_EMAIL` / `REDMIN_ADMIN_PASSWORD`; use `RedminDemoSeeder` for local development)
+- [ ] Custom views use `@csrf`, `data-method="post"` or `window.redminCsrfToken()` for the actions that now use `POST` (Step 12)
+- [ ] Media types you need are listed in `media.allowed_extensions` (Step 13)
+- [ ] Groups and users have the `update`, `create` or `delete` permissions the reclassified actions now need (Step 14)
+- [ ] The password of any `admin@admin.com` account that still uses `admin` is changed (Step 15)
+- [ ] Custom views that print descriptions with `{!! !!}` use `RHelper::cleanHtml()`; anything calling `/api/tag` anonymously is replaced (Step 16)
 - [ ] If you subclass `Api` or the report controllers: they no longer use the
       `AuthorizesRequests`, `DispatchesJobs` or `ValidatesRequests` traits, and
       reports now use `Excel::download(new ...Export)` instead of `Excel::create`
@@ -296,6 +382,13 @@ Admin URLs, routes, models and table names are otherwise unchanged.
 | CSRF in login view | `Session::token()` | Handled by `Form::open()` |
 | Admin UI framework | Bootstrap 3.3 + Glyphicons | Bootstrap 5.3 + Redmaterials 0.2 + Font Awesome 7 |
 | Build tooling | Grunt, Bower, LESS | npm, Sass (contributors only) |
+| Data-changing admin actions | `GET` links, no CSRF check | `POST` with CSRF token |
+| Media uploads | Any file name and type | Cleaned names, allowed extensions, size limit |
+| Default administrator | `admin@admin.com` / `admin` from `RedminSeeder` | From `REDMIN_ADMIN_*` variables or generated; demo seeder for local use |
+| Minimum password length | 6 | 10 (`password.min_length`) |
+| Descriptions | Printed as stored | Cleaned with HTML Purifier; names escaped |
+| Report exports | Cells exported as typed | Formula-looking cells prefixed with `'` |
+| Tag API | Public | Signed-in users only |
 | Rich text editor | TinyMCE 4.3.8 | Jodit 4 |
 | File chooser | Jasny fileupload | `redmin-fileinput` |
 | Coupon date picker | eonasdan datetimepicker + moment | Tempus Dominus 6 |

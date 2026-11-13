@@ -114,7 +114,7 @@ class UserController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         $errors = new MessageBag;
         
         $rules = array(
@@ -122,16 +122,16 @@ class UserController extends Controller
             'last_name'     => 'required',
             'role'          => 'required',
             'email'         => 'required|unique:users,email,' . $sid,
-            'permission-inherit' => 'regex:/^[a-z,0-9._\-?]+$/i',
-            'permission-allow'   => 'regex:/^[a-z,0-9._\-?]+$/i',
-            'permission-deny'    => 'regex:/^[a-z,0-9._\-?]+$/i'
+            'permission-inherit' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-allow'   => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
+            'permission-deny'    => 'nullable|regex:/^[a-z,0-9._\-?]+$/i'
         );
         
         // Get activated input first, for checking if user is deactivating own account
-        $activated = (Request::get('activated') == '' ? false : true);
+        $activated = (Request::input('activated') == '' ? false : true);
         
         if (isset($sid)) {
-            $rules['password'] = 'confirmed|min:6';
+            $rules['password'] = 'confirmed|min:' . config('redminportal::password.min_length', 10);
             $path ='admin/users/edit/' . $sid;
             $user = User::find($sid);
             
@@ -144,7 +144,7 @@ class UserController extends Controller
                 return redirect($path)->withErrors($errors)->withInput();
             }
         } else {
-            $rules['password'] = 'required|confirmed|min:6';
+            $rules['password'] = 'required|confirmed|min:' . config('redminportal::password.min_length', 10);
             $path = 'admin/users/create';
             $user = new User;
         }
@@ -169,23 +169,91 @@ class UserController extends Controller
             );
             return redirect('/admin/users')->withErrors($errors);
         }
+
+        $actor = Auth::guard('redminguard')->user();
+
+        // Check that the account being changed does not hold more access than the actor
+        if (isset($sid) && ! $actor->coversUser($user)) {
+            $errors->add(
+                'user_error_protected_account',
+                Lang::get('redminportal::messages.user_error_protected_account')
+            );
+            return redirect($path)->withErrors($errors)->withInput();
+        }
         
         $permissions = $this->populatePermission(
-            Request::get('permission-inherit'),
-            Request::get('permission-allow'),
-            Request::get('permission-deny')
+            Request::input('permission-inherit'),
+            Request::input('permission-allow'),
+            Request::input('permission-deny')
         );
+
+        // Check that the submitted permissions do not exceed the actor's own access
+        if (! $actor->canGrant($permissions)) {
+            $errors->add(
+                'user_error_cannot_grant',
+                Lang::get('redminportal::messages.user_error_cannot_grant')
+            );
+            return redirect($path)->withErrors($errors)->withInput();
+        }
+
+        $submitted_roles = (array) Request::input('role');
+
+        // Lifting a deny raises access, so check it like a new grant
+        if (isset($sid)) {
+            $lifted = $actor->liftedDenies((array) $user->permissions(), $permissions);
+
+            if (! $actor->canGrant($lifted)) {
+                $errors->add(
+                    'user_error_cannot_grant',
+                    Lang::get('redminportal::messages.user_error_cannot_grant')
+                );
+                return redirect($path)->withErrors($errors)->withInput();
+            }
+
+            foreach ($user->groups as $old_group) {
+                if (in_array($old_group->id, $submitted_roles)) {
+                    continue;
+                }
+
+                $lifted = $actor->liftedDenies((array) $old_group->permissions(), []);
+
+                if (! $actor->canGrant($lifted)) {
+                    $errors->add(
+                        'user_error_cannot_grant',
+                        Lang::get('redminportal::messages.user_error_cannot_grant')
+                    );
+                    return redirect($path)->withErrors($errors)->withInput();
+                }
+            }
+        }
+
+        // Check that every submitted group can be granted by the actor
+        foreach ($submitted_roles as $group_id) {
+            if ($group_id === null || $group_id === '') {
+                continue;
+            }
+
+            $group = Group::find($group_id);
+
+            if ($group != null && ! $actor->canGrant((array) $group->permissions())) {
+                $errors->add(
+                    'user_error_cannot_grant',
+                    Lang::get('redminportal::messages.user_error_cannot_grant')
+                );
+                return redirect($path)->withErrors($errors)->withInput();
+            }
+        }
         
         // Save or Update
-        $user->email = Request::get('email');
+        $user->email = Request::input('email');
         
-        $password = Request::get('password');
+        $password = Request::input('password');
         if ($password != '') {
             $user->password = Hash::make($password);
         }
         
-        $user->first_name = Request::get('first_name');
-        $user->last_name = Request::get('last_name');
+        $user->first_name = Request::input('first_name');
+        $user->last_name = Request::input('last_name');
         $user->activated = $activated;
         $user->permissions = json_encode($permissions);
         
@@ -199,7 +267,7 @@ class UserController extends Controller
         
         // Assign group(s) to user
         // Return error message if group has error
-        if (! $user->addGroup(Request::get('role'))) {
+        if (! $user->addGroup(Request::input('role'))) {
             $errors->add(
                 'groupError',
                 Lang::get('redminportal::messages.user_error_group_not_found')
@@ -232,6 +300,15 @@ class UserController extends Controller
             );
             return redirect()->back()->withErrors($errors);
         }
+
+        if (! $this_user->coversUser($user)) {
+            $errors = new MessageBag;
+            $errors->add(
+                'user_error_protected_account',
+                Lang::get('redminportal::messages.user_error_protected_account')
+            );
+            return redirect()->back()->withErrors($errors);
+        }
         
         // Delete the user
         $user->delete();
@@ -241,6 +318,7 @@ class UserController extends Controller
 
     public function getActivate($sid)
     {
+        $this_user = Auth::guard('redminguard')->user();
         $user = User::find($sid);
         
         if ($user == null) {
@@ -248,6 +326,15 @@ class UserController extends Controller
             $errors->add(
                 'editError',
                 Lang::get('redminportal::messages.user_error_user_not_found')
+            );
+            return redirect('/admin/users')->withErrors($errors);
+        }
+
+        if (! $this_user->coversUser($user)) {
+            $errors = new MessageBag;
+            $errors->add(
+                'user_error_protected_account',
+                Lang::get('redminportal::messages.user_error_protected_account')
             );
             return redirect('/admin/users')->withErrors($errors);
         }
@@ -278,6 +365,15 @@ class UserController extends Controller
             $errors->add(
                 'editError',
                 Lang::get('redminportal::messages.user_error_user_not_found')
+            );
+            return redirect('/admin/users')->withErrors($errors);
+        }
+
+        if (! $this_user->coversUser($user)) {
+            $errors = new MessageBag;
+            $errors->add(
+                'user_error_protected_account',
+                Lang::get('redminportal::messages.user_error_protected_account')
             );
             return redirect('/admin/users')->withErrors($errors);
         }

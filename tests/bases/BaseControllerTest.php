@@ -132,7 +132,7 @@ class BaseControllerTest extends RedminBrowserTestCase
      */
     public function testDeleteFail()
     {
-        $this->call('GET', $this->page . '/delete/1');
+        $this->call('POST', $this->page . '/delete/1');
 
         $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
@@ -145,7 +145,7 @@ class BaseControllerTest extends RedminBrowserTestCase
     {
         $this->testStoreCreatePass();
         
-        $this->call('GET', $this->page . '/delete/1');
+        $this->call('POST', $this->page . '/delete/1');
 
         $this->assertResponseStatus(302); // Redirected
     }

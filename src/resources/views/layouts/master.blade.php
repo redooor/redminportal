@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>RedminPortal by Redooor</title>
         <script>
             // Set the sidebar state before the stylesheets paint so a collapsed sidebar never flashes open.
@@ -79,14 +80,14 @@
                         <ul class="navbar-nav d-md-none">
                             <li class="nav-item"><span class="nav-link disabled">Signed in as {{ Auth::guard('redminguard')->user()->first_name }} {{ Auth::guard('redminguard')->user()->last_name }}</span></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url('myaccount') }}"><i class="fa-solid fa-gear"></i> {{ Lang::get('redminportal::menus.my_account') }}</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ URL::to('logout') }}" title="{{ Lang::get('redminportal::menus.logout') }}"><i class="fa-solid fa-right-from-bracket"></i> {{ Lang::get('redminportal::menus.logout') }}</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ URL::to('logout') }}" data-method="post" title="{{ Lang::get('redminportal::menus.logout') }}"><i class="fa-solid fa-right-from-bracket"></i> {{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>
                         <ul class="navbar-nav d-none d-md-flex">
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="fa-solid fa-user"></i>&nbsp;&nbsp; {{ Auth::guard('redminguard')->user()->first_name }} {{ Auth::guard('redminguard')->user()->last_name }}</a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="{{ url('myaccount') }}"><i class="fa-solid fa-gear"></i> {{ Lang::get('redminportal::menus.my_account') }}</a></li>
-                                    <li><a class="dropdown-item" href="{{ URL::to('logout') }}" title="{{ Lang::get('redminportal::menus.logout') }}"><i class="fa-solid fa-right-from-bracket"></i> {{ Lang::get('redminportal::menus.logout') }}</a></li>
+                                    <li><a class="dropdown-item" href="{{ URL::to('logout') }}" data-method="post" title="{{ Lang::get('redminportal::menus.logout') }}"><i class="fa-solid fa-right-from-bracket"></i> {{ Lang::get('redminportal::menus.logout') }}</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -141,6 +142,7 @@
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmaterials.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-sidebar.min.js') }}" defer></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-lightbox.min.js') }}" defer></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-post.min.js') }}" defer></script>
         @stack('scripts')
 
         @section('footer')

@@ -22,27 +22,29 @@ class Authenticate
             }
         }
 
-        $user = Auth::guard($guard)->user();
+        return (new EnsureSessionFingerprint)->handle($request, function ($request) use ($next, $guard) {
+            $user = Auth::guard($guard)->user();
 
-        // Check if user is activated
-        if ($user != null) {
-            if (! $user->activated) {
-                // User logged in but was deactivated after
-                // Log out this user and bring to login page
-                Auth::guard($guard)->logout();
-                return redirect('login');
+            // Check if user is activated
+            if ($user != null) {
+                if (! $user->activated) {
+                    // User logged in but was deactivated after
+                    // Log out this user and bring to login page
+                    Auth::guard($guard)->logout();
+                    return redirect('login');
+                }
+
+                // Proceed to check user permission
+                if ($user->hasAccess($request)) {
+                    // Save login time
+                    $user->last_login = date('Y-m-d H:i:s');
+                    $user->save();
+
+                    return $next($request);
+                }
             }
 
-            // Proceed to check user permission
-            if ($user->hasAccess($request)) {
-                // Save login time
-                $user->last_login = date('Y-m-d H:i:s');
-                $user->save();
-                
-                return $next($request);
-            }
-        }
-        
-        return redirect('login/unauthorized');
+            return redirect('login/unauthorized');
+        }, $guard);
     }
 }

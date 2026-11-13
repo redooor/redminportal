@@ -80,7 +80,7 @@ class CategoryController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         
         $return_path = (isset($sid) ? 'admin/categories/edit/' . $sid : 'admin/categories/create');
 
@@ -100,13 +100,13 @@ class CategoryController extends Controller
             return redirect($return_path)->withErrors($validation)->withInput();
         }
         
-        $name               = Request::get('name');
-        $short_description  = Request::get('short_description');
-        $long_description   = Request::get('long_description');
+        $name               = Request::input('name');
+        $short_description  = Request::input('short_description');
+        $long_description   = Request::input('long_description');
         $image              = Request::file('image');
-        $active             = (Request::get('active') == '' ? false : true);
-        $order              = Request::get('order');
-        $parent_id          = Request::get('parent_id');
+        $active             = (Request::input('active') == '' ? false : true);
+        $order              = Request::input('order');
+        $parent_id          = Request::input('parent_id');
 
         $category = (isset($sid) ? Category::find($sid) : new Category);
 
@@ -161,9 +161,9 @@ class CategoryController extends Controller
             }
             
             $translated_content = array(
-                'name'                  => Request::get($lang . '_name'),
-                'short_description'     => Request::get($lang . '_short_description'),
-                'long_description'      => Request::get($lang . '_long_description')
+                'name'                  => Request::input($lang . '_name'),
+                'short_description'     => Request::input($lang . '_short_description'),
+                'long_description'      => Request::input($lang . '_long_description')
             );
             
             // Check if lang exist
@@ -233,7 +233,7 @@ class CategoryController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Category::class);
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;

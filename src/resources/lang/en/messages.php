@@ -89,6 +89,10 @@ return array(
         => 'You cannot delete this product because it has been ordered. Please delete the order first.',
     'error_delete_image'
         => 'The image cannot be deleted at this time.',
+    'purchase_error_delete_no_orders_permission'
+        => 'You also need permission to delete orders.',
+    'purchase_error_create_no_orders_permission'
+        => "You also need permission to add orders.",
     'success_delete_record'
         => 'The record has been deleted successfully.',
     'error_delete_variant_already_ordered'
@@ -132,6 +136,10 @@ return array(
         => "Failed to open input stream.",
     'upload_error_failed_to_open_output_stream'
         => "Failed to open output stream.",
+    'upload_error_file_type_not_allowed'
+        => "This file type is not allowed.",
+    'upload_error_file_too_large'
+        => "This file is too large.",
     'group_error_edit_no_group_found'
         => "The group cannot be edited because it does not exist or may have been deleted.",
     'group_error_edit_cannot_save'
@@ -157,6 +165,8 @@ return array(
             . "If you don't see the category here, go back to the main product and save the changes first.",
     'user_authentication_error'
         => "We had a problem authenticating your access. Please try again.",
+    'login_error_too_many_attempts'
+        => 'Too many login attempts. Try again in :seconds seconds.',
     'user_error_old_password_required'
         => 'You need to provide your existing password to save any changes.',
     'warning_new_password_logout'
@@ -180,4 +190,10 @@ return array(
         => "The Module/Memberships field is required when none of products or bundles are present",
     'list_from_to'
         => ":firstItem to :lastItem of :totalItem",
+    'user_error_cannot_grant'
+        => "You cannot grant permissions that you do not have.",
+    'user_error_protected_account'
+        => "You cannot change an account that has more access than you.",
+    'group_error_cannot_grant'
+        => "You cannot grant permissions that you do not have.",
 );

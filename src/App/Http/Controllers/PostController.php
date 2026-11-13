@@ -102,7 +102,7 @@ class PostController extends Controller
 
     public function postStore()
     {
-        $sid = Request::get('id');
+        $sid = Request::input('id');
         
         $rules = array(
             'image'         => 'mimes:jpg,jpeg,png,gif|max:500',
@@ -119,14 +119,14 @@ class PostController extends Controller
                 ->withInput();
         }
         
-        $title              = Request::get('title');
-        $slug               = Request::get('slug');
-        $content            = Request::get('content');
+        $title              = Request::input('title');
+        $slug               = Request::input('slug');
+        $content            = Request::input('content');
         $image              = Request::file('image');
-        $private            = (Request::get('private') == '' ? false : true);
-        $featured           = (Request::get('featured') == '' ? false : true);
-        $category_id        = Request::get('category_id');
-        $tags               = Request::get('tags');
+        $private            = (Request::input('private') == '' ? false : true);
+        $featured           = (Request::input('featured') == '' ? false : true);
+        $category_id        = Request::input('category_id');
+        $tags               = Request::input('tags');
 
         $post = (isset($sid) ? Post::find($sid) : new Post);
 
@@ -161,9 +161,9 @@ class PostController extends Controller
             }
 
             $translated_content = array(
-                'title'     => Request::get($lang . '_title'),
-                'slug'      => str_replace(' ', '_', Request::get($lang . '_slug')),
-                'content'   => Request::get($lang . '_content')
+                'title'     => Request::input($lang . '_title'),
+                'slug'      => str_replace(' ', '_', Request::input($lang . '_slug')),
+                'content'   => Request::input($lang . '_content')
             );
 
             // Check if lang exist
@@ -208,7 +208,7 @@ class PostController extends Controller
 
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Post::class);
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;

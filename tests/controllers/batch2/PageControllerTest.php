@@ -1,6 +1,8 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Page;
+use Redooor\Redminportal\App\Models\Product;
 
 class PageControllerTest extends BaseControllerTest
 {
@@ -85,5 +87,28 @@ class PageControllerTest extends BaseControllerTest
 
         $this->assertRedirectedTo($this->page . '/create');
         $this->assertSessionHasErrors();
+    }
+
+    /**
+     * Test (Fail): remove an image that belongs to a product through the pages route
+     */
+    public function testRemoveProductImageThroughPagesFails()
+    {
+        $product = $this->createNewModel(new Product, [
+            'name' => 'Product with image',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'sku' => 'PRODUCT-OWNER-001'
+        ]);
+
+        $newimage = new Image();
+        $newimage->path = "dummy.jpg";
+        $product->images()->save($newimage);
+
+        $this->call('POST', $this->page . '/imgremove/' . $newimage->id);
+
+        $this->assertRedirectedTo($this->page);
+        $this->assertSessionHasErrors('deleteError');
+        $this->assertNotNull(Image::find($newimage->id));
     }
 }

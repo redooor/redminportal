@@ -15,10 +15,12 @@
             <div class="card card-body bg-body-tertiary">
                 <div class='form-actions'>
                     {!! HTML::link('admin/medias', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
+                    @permitted('admin/medias/upload/' . $model->id)
                     <a id="start-upload" class="btn btn-primary btn-sm float-end" href="javascript:;" data-src="{{ URL::to('admin/medias/upload') . '/' . $model->id }}">{{ Lang::get('redminportal::buttons.upload') }}</a>
+                    @endpermitted
                 </div>
             </div>
-            <input type="hidden" id="_token" name="_token" value="{{ \Crypt::encrypt(csrf_token()) }}">
+            <input type="hidden" id="_token" name="_token" value="{{ csrf_token() }}">
         </div>
         <div class="col-lg-9 order-lg-first">
             <div class="card">
@@ -42,7 +44,7 @@
     <script type="text/javascript" src="{{ URL::to('vendor/redooor/redminportal/js/plupload.full.min.js') }}"></script>
     <script type="text/javascript">
         jQuery( document ).ready(function( $ ) {
-            var token = $('#_token').val();
+            var token = $('meta[name="csrf-token"]').attr('content') || $('#_token').val();
             
             var uploader = new plupload.Uploader({
                 browse_button: 'browse', // this can be an id of a DOM element or the DOM element itself
@@ -50,7 +52,7 @@
                 chunk_size: '200kb',
                 max_retries: 3,
                 multi_selection: false, // Disallow multiple files
-                headers: { 'X-XSRF-TOKEN': token },
+                headers: { 'X-CSRF-TOKEN': token },
                 filters: { prevent_duplicates: true }
             });
 
@@ -66,7 +68,7 @@
                 }
                 
                 plupload.each(up.files, function(file) {
-                    html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b><a href="#" class="link-del">delete</a></b></li>';
+                    html += '<li id="' + file.id + '">' + $('<span>').text(file.name).html() + ' (' + plupload.formatSize(file.size) + ') <b><a href="#" class="link-del">delete</a></b></li>';
                 });
                 document.getElementById('filelist').innerHTML = html;
             });
@@ -82,7 +84,7 @@
             });
 
             uploader.bind('Error', function(up, err) {
-                document.getElementById('console').innerHTML = "Error #" + err.code + ": " + err.message;
+                document.getElementById('console').textContent = "Error #" + err.code + ": " + err.message;
                 $('#console').removeClass('alert-success').addClass('alert-danger').show();
             });
             
@@ -90,10 +92,10 @@
             uploader.bind('FileUploaded', function(up, file, info) {
                 var response = jQuery.parseJSON(info.response);
                 if (response.code == 0) {
-                    document.getElementById('console').innerHTML = "Error #" + response.code + ": " + response.message;
+                    document.getElementById('console').textContent = "Error #" + response.code + ": " + response.message;
                     $('#console').removeClass('alert-success').addClass('alert-danger').show();
                 } else {
-                    document.getElementById('console').innerHTML = "Success #" + response.code + ": " + response.message;
+                    document.getElementById('console').textContent = "Success #" + response.code + ": " + response.message;
                     $('#console').removeClass('alert-danger').addClass('alert-success').show();
                 }
             });

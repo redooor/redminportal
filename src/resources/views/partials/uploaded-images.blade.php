@@ -20,9 +20,11 @@
                 <img src="{{ url(Redminportal::imagine()->getUrl($image->path)) }}" class="img-thumbnail" alt="{{ $model->name }}">
                 <br><br>
                 <div class="btn-group btn-group-sm">
+                    @permitted('admin/images/delete/' . $image->id)
                     <a href="{{ URL::to('admin/images/delete/' . $image->id) }}" class="btn btn-danger btn-confirm">
                         <i class="fa-solid fa-xmark"></i>
                     </a>
+                    @endpermitted
                     <a href="{{ URL::to(Redminportal::imagine()->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
                         <i class="fa-solid fa-link"></i>
                     </a>

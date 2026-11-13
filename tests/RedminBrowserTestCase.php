@@ -1,12 +1,9 @@
 <?php namespace Redooor\Redminportal\Test;
 
-use Orchestra\Testbench\TestCase;
 use Illuminate\Testing\TestResponse;
 
-class RedminBrowserTestCase extends TestCase
+class RedminBrowserTestCase extends RedminTestCase
 {
-    use RedminTestTrait;
-
     protected TestResponse $response;
 
     public function call($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null): TestResponse

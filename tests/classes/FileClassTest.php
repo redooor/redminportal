@@ -79,6 +79,39 @@ class FileClassTest extends RedminTestCase
     }
     
     /**
+     * Test (Pass): deleting a folder only removes its own contents
+     */
+    public function testDeleteFilesOnlyRemovesTargetFolder()
+    {
+        $base = sys_get_temp_dir() . '/redmin_file_delete_' . uniqid();
+        $target = $base . '/12';
+        $sibling = $base . '/120';
+
+        mkdir($target . '/nested', 0777, true);
+        mkdir($sibling, 0777, true);
+        file_put_contents($target . '/old.mp3', 'old');
+        file_put_contents($target . '/nested/nested.mp3', 'nested');
+        file_put_contents($sibling . '/keep.mp3', 'keep');
+
+        try {
+            $file = new File($this->path . $this->files[0]['name']);
+            $file->deleteFiles($target);
+
+            $this->assertDirectoryDoesNotExist($target);
+            $this->assertDirectoryExists($sibling);
+            $this->assertFileExists($sibling . '/keep.mp3');
+        } finally {
+            @unlink($sibling . '/keep.mp3');
+            @rmdir($sibling);
+            @unlink($target . '/nested/nested.mp3');
+            @unlink($target . '/old.mp3');
+            @rmdir($target . '/nested');
+            @rmdir($target);
+            @rmdir($base);
+        }
+    }
+
+    /**
      * Get Mime Type
      **/
     private function runSubtestGetMimeType($test)

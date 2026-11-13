@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Lang;
 use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Order;
 
@@ -205,7 +206,7 @@ trait TraitProductVariantControllerTest
      */
     public function testDeleteVariantFailNoSuchProduct()
     {
-        $response = $this->call('GET', $this->page . '/delete-variant-json/1');
+        $response = $this->call('POST', $this->page . '/delete-variant-json/1');
         
         $array = json_decode($response->getContent());
         $this->assertTrue($array->status == false);
@@ -236,7 +237,7 @@ trait TraitProductVariantControllerTest
         $order = $this->createNewModel(new Order, $testcase_2);
         $order->products()->attach($product->id);
         
-        $response = $this->call('GET', $this->page . '/delete-variant-json/1');
+        $response = $this->call('POST', $this->page . '/delete-variant-json/1');
         
         $array = json_decode($response->getContent());
         $this->assertTrue($array->status == false);
@@ -258,7 +259,7 @@ trait TraitProductVariantControllerTest
         );
         $this->createNewModel(new Product, $testcase_1);
         
-        $response = $this->call('GET', $this->page . '/delete-variant-json/1');
+        $response = $this->call('POST', $this->page . '/delete-variant-json/1');
         
         $array = json_decode($response->getContent());
         $this->assertTrue($array->status == true);
@@ -302,7 +303,7 @@ trait TraitProductVariantControllerTest
         $order = $this->createNewModel(new Order, $testcase_3);
         $order->products()->attach($variant->id);
         
-        $this->call('GET', $this->page . '/delete/1');
+        $this->call('POST', $this->page . '/delete/1');
         
         $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
@@ -492,5 +493,124 @@ trait TraitProductVariantControllerTest
             // Check that there's exactly 1 parent
             $this->assertTrue($variant->variantParents->count() == 1);
         }
+    }
+
+    /**
+     * Test (Pass): remove an image that belongs to the product variant
+     */
+    public function testRemoveVariantImagePass()
+    {
+        $parentProduct = $this->createNewModel(new Product, [
+            'name' => 'Parent product',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'sku' => 'PARENT-IMAGE-001'
+        ]);
+
+        $variant = $this->createNewModel(new Product, [
+            'name' => 'Variant product',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'sku' => 'VARIANT-IMAGE-001'
+        ]);
+
+        $parentProduct->variants()->attach($variant->id);
+
+        $image = new Image();
+        $image->path = 'dummy.jpg';
+        $variant->images()->save($image);
+
+        $this->call('POST', $this->page . '/variant-imgremove/' . $parentProduct->id . '/' . $image->id);
+
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedTo($this->page . '/edit-variant/' . $parentProduct->id . '/' . $variant->id);
+        $this->assertNull(Image::find($image->id));
+    }
+
+    /**
+     * Test (Pass): the variant edit page links image removal with the parent product id
+     */
+    public function testEditVariantPageLinksImageRemovalWithParentId()
+    {
+        $category = new \Redooor\Redminportal\App\Models\Category;
+        $category->name = 'Variant page category';
+        $category->short_description = 'Variant page category';
+        $category->save();
+
+        $parentProduct = $this->createNewModel(new Product, [
+            'name' => 'Parent product',
+            'short_description' => 'This is the body',
+            'category_id' => $category->id,
+            'sku' => 'PARENT-IMAGE-003'
+        ]);
+
+        $variant = $this->createNewModel(new Product, [
+            'name' => 'Variant product',
+            'short_description' => 'This is the body',
+            'category_id' => $category->id,
+            'sku' => 'VARIANT-IMAGE-003'
+        ]);
+
+        $parentProduct->variants()->attach($variant->id);
+
+        $image = new Image();
+        $image->path = 'dummy.jpg';
+        $variant->images()->save($image);
+
+        $response = $this->call('GET', $this->page . '/edit-variant/' . $parentProduct->id . '/' . $variant->id);
+
+        $this->assertStringContainsString(
+            'variant-imgremove/' . $parentProduct->id . '/' . $image->id,
+            $response->getContent()
+        );
+    }
+
+    /**
+     * Test (Fail): remove an image that belongs to a different product variant
+     */
+    public function testRemoveVariantImageFailsForAnotherVariant()
+    {
+        $parentProduct = $this->createNewModel(new Product, [
+            'name' => 'Parent product',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'sku' => 'PARENT-IMAGE-002'
+        ]);
+
+        $variant = $this->createNewModel(new Product, [
+            'name' => 'Variant product',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'sku' => 'VARIANT-IMAGE-002'
+        ]);
+
+        $parentProduct->variants()->attach($variant->id);
+
+        $otherParent = $this->createNewModel(new Product, [
+            'name' => 'Other parent product',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'sku' => 'PARENT-IMAGE-003'
+        ]);
+
+        $otherVariant = $this->createNewModel(new Product, [
+            'name' => 'Other variant product',
+            'short_description' => 'This is the body',
+            'category_id' => 1,
+            'sku' => 'VARIANT-IMAGE-003'
+        ]);
+
+        $otherParent->variants()->attach($otherVariant->id);
+
+        $image = new Image();
+        $image->path = 'dummy.jpg';
+        $otherVariant->images()->save($image);
+
+        $this->call('POST', $this->page . '/variant-imgremove/' . $parentProduct->id . '/' . $image->id);
+
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedTo($this->page . '/edit-variant/' . $parentProduct->id . '/' . $image->id);
+        $this->assertSessionHasErrors('errorDeleteImage');
+        $this->assertNotNull(Image::find($image->id));
     }
 }

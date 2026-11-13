@@ -79,10 +79,13 @@ class RedminportalServiceProvider extends ServiceProvider
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
         $router->aliasMiddleware('redminauth', \Redooor\Redminportal\App\Http\Middleware\Authenticate::class);
+        $router->aliasMiddleware('redminuser', \Redooor\Redminportal\App\Http\Middleware\AuthenticateUser::class);
+        $router->aliasMiddleware('redminfingerprint', \Redooor\Redminportal\App\Http\Middleware\EnsureSessionFingerprint::class);
     }
 
     /**
@@ -129,12 +132,14 @@ class RedminportalServiceProvider extends ServiceProvider
         
         // Register all config files
         $this->registerResources('image', 'redminportal::image');
+        $this->registerResources('media', 'redminportal::media');
         $this->registerResources('menu', 'redminportal::menu');
         $this->registerResources('translation', 'redminportal::translation');
         $this->registerResources('tinymce', 'redminportal::tinymce');
         $this->registerResources('pagination', 'redminportal::pagination');
         $this->registerResources('permissions', 'redminportal::permissions');
         $this->registerResources('payment_statuses', 'redminportal::payment_statuses');
+        $this->registerResources('password', 'redminportal::password');
         
         // Change Authentication model
         $this->mergeAuthConfig();
