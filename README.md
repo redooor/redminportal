@@ -57,6 +57,7 @@ Besides the move to Laravel 13 and PHP 8.3, these changes can affect an existing
 | Descriptions and names | Category, product and translation descriptions are cleaned before they are shown: scripts, event attributes, styles and `javascript:` links are removed. Names and order-line labels are always escaped. | If you stored HTML that relied on scripts, inline styles or iframes, it no longer shows them. Use the editor's plain formatting, images and links. | 16 |
 | Report exports | Text cells that start with `=`, `+`, `-` or `@` (or a tab or carriage return) are prefixed with `'` so spreadsheets do not run them as formulas. | Nothing, unless you post-process the exports and expect the raw value. | 16 |
 | Tag API | `/api/tag` and `/api/tag/name` need a signed-in, active user. They were public. | Sign in first, or serve your own public tag list if a front end called these URLs. | 16 |
+| Images | Uploaded images are re-encoded (metadata such as GPS is removed, JPEG photos are auto-rotated, animated GIFs are kept as they are) and limited to `image.max_pixels` pixels. Images can have an order and a primary image (new `images.sort_order` and `images.is_primary` columns). Upload forms also accept `images[]`. | Run `php artisan migrate`. Check `image.upload_quality` and `image.max_pixels` (publish the config with `--tag=config`). Files stay public in `assets/img` and `Image::path` is unchanged. | 17 |
 
 # Models and Features
 

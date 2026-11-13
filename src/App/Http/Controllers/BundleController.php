@@ -11,7 +11,7 @@ use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Pricelist;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
-use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
@@ -166,6 +166,8 @@ class BundleController extends Controller
         
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
+            'images'            => 'array',
+            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
             'name'              => 'required|unique:products,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description' => 'required',
             'price'             => 'numeric',
@@ -290,19 +292,10 @@ class BundleController extends Controller
             }
         }
 
-        if (Request::hasFile('image')) {
-            //Upload the file
-            $helper_image = new RImage;
-            $filename = $helper_image->upload($image, 'bundles/' . $newBundle->id, true);
+        $imageFiles = ImageService::filesFrom();
 
-            if ($filename) {
-                // create photo
-                $newimage = new Image;
-                $newimage->path = $filename;
-
-                // save photo to the loaded model
-                $newBundle->images()->save($newimage);
-            }
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($newBundle, $imageFiles, 'bundles');
         }
 
         return redirect('admin/bundles');

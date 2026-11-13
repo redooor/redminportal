@@ -83,6 +83,12 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 3. `/api/tag` and `/api/tag/name` need a signed-in, active user.
 4. `ezyang/htmlpurifier` is a direct requirement.
 
+**Images**
+1. Uploaded images are re-encoded: metadata is removed, JPEG photos are auto-rotated, animated GIFs are kept, corrupt files are rejected and a failed upload never replaces an existing file. New config keys `image.upload_quality` and `image.max_pixels`.
+2. Images have an order and a primary image (`images.sort_order`, `images.is_primary`; run `php artisan migrate`). The primary image comes first in `$model->images`.
+3. Create and update forms accept `images[]` as well as `image`, with the same validation.
+4. New `ImageService` for attaching, removing, ordering and promoting images; `Image::delete()` uses it and keeps firing model events.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.

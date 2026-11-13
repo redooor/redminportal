@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Models\Category;
-use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Request;
@@ -89,6 +89,8 @@ class CategoryController extends Controller
          */
         $rules = array(
             'image'                 => 'mimes:jpg,jpeg,png,gif|max:500',
+            'images'                => 'array',
+            'images.*'              => 'mimes:jpg,jpeg,png,gif|max:500',
             'name'                  => 'required',
             'short_description'     => 'required',
             'order'                 => 'required|min:0',
@@ -178,19 +180,10 @@ class CategoryController extends Controller
             $category->translations()->save($translated_model);
         }
 
-        if (Request::hasFile('image')) {
-            //Upload the file
-            $helper_image = new RImage;
-            $filename = $helper_image->upload($image, 'categories/' . $category->id, true);
+        $imageFiles = ImageService::filesFrom();
 
-            if ($filename) {
-                // create photo
-                $newimage = new Image;
-                $newimage->path = $filename;
-
-                // save photo to the loaded model
-                $category->images()->save($newimage);
-            }
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($category, $imageFiles, 'categories');
         }
         
         return redirect('admin/categories');

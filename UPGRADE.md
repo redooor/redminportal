@@ -334,6 +334,15 @@ Category names, product names and the order builder labels are escaped. `Categor
 
 **Tag API.** `GET /api/tag` and `GET /api/tag/name` need a signed-in, active user (new `redminuser` middleware: no route permission is required, so anyone editing content can use the tag field). Guests are redirected to `login`. If a public front end reads these URLs, provide your own public endpoint with the tags you want to expose.
 
+
+### Step 17 — Images: re-encoding, order and primary image
+
+**Migration (required).** Run `php artisan migrate`. It adds `sort_order` (default 0) and `is_primary` (default false) to the `images` table, and marks the first image of each record as its primary image. Image queries read these columns, so run the migration before using the new version. Existing image files and `Image::path` values do not change; images stay public in `assets/img`.
+
+**Re-encoding.** Every uploaded image is decoded and saved again by the image library: metadata (for example GPS position) is removed, JPEG photos are rotated to match their EXIF orientation, and the file type always matches the real image. Animated GIFs are kept as uploaded. Corrupt images are rejected, and an existing file is never overwritten by a failed upload. New config keys in `image.php`: `upload_quality` (JPEG quality of the saved original, default 90) and `max_pixels` (largest accepted width x height, default 40000000). Publish the config again with `--tag=config` to get them, or rely on the defaults.
+
+**Several images.** `$model->images` is ordered with the primary image first, then by `sort_order`, then by id, so `$model->images()->first()` is the primary image (for existing data that is still the first uploaded image). Create and update forms accept `image` (one file) and `images[]` (several files) with the same validation rules. Custom code can use `Redooor\Redminportal\App\Classes\ImageService`: `attach()`, `remove()`, `makePrimary()` and `reorder()`. `Image::delete()` now goes through the service and still fires the model events.
+
 ---
 
 ### Upgrade checklist
@@ -357,6 +366,7 @@ will not run again.
 - [ ] Media types you need are listed in `media.allowed_extensions` (Step 13)
 - [ ] Groups and users have the `update`, `create` or `delete` permissions the reclassified actions now need (Step 14)
 - [ ] The password of any `admin@admin.com` account that still uses `admin` is changed (Step 15)
+- [ ] `php artisan migrate` has run (adds `images.sort_order` and `images.is_primary`) (Step 17)
 - [ ] Custom views that print descriptions with `{!! !!}` use `RHelper::cleanHtml()`; anything calling `/api/tag` anonymously is replaced (Step 16)
 - [ ] If you subclass `Api` or the report controllers: they no longer use the
       `AuthorizesRequests`, `DispatchesJobs` or `ValidatesRequests` traits, and
@@ -389,6 +399,7 @@ Admin URLs, routes, models and table names are otherwise unchanged.
 | Descriptions | Printed as stored | Cleaned with HTML Purifier; names escaped |
 | Report exports | Cells exported as typed | Formula-looking cells prefixed with `'` |
 | Tag API | Public | Signed-in users only |
+| Uploaded images | Stored as uploaded | Re-encoded, size-limited, with order and primary image |
 | Rich text editor | TinyMCE 4.3.8 | Jodit 4 |
 | File chooser | Jasny fileupload | `redmin-fileinput` |
 | Coupon date picker | eonasdan datetimepicker + moment | Tempus Dominus 6 |

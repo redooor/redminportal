@@ -7,7 +7,6 @@
 use Exception;
 use Illuminate\Support\Facades\Lang;
 use Redooor\Redminportal\App\Models\Product;
-use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\MessageBag;
 

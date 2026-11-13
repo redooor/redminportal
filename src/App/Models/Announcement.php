@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Helpers\RHelper;
+use Redooor\Redminportal\App\Models\Traits\HasImages;
 
 /* Columns
  *
@@ -18,18 +19,18 @@ use Redooor\Redminportal\App\Helpers\RHelper;
 
 class Announcement extends Model
 {
+    use HasImages;
+
     protected $table = 'announcements';
     
-    public function images()
-    {
-        return $this->morphMany('Redooor\Redminportal\App\Models\Image', 'imageable');
-    }
     
     public static function validate($input)
     {
         $rules = array(
             'title' => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
+            'images'            => 'array',
+            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
             'content'           => 'required'
         );
 

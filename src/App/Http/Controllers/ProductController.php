@@ -6,7 +6,7 @@ use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\ProductVariantController;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Category;
-use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
@@ -134,6 +134,8 @@ class ProductController extends Controller
          */
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
+            'images'            => 'array',
+            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
             'name'              => 'required|unique:products,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description' => 'required',
             'price'             => 'numeric',
@@ -259,19 +261,10 @@ class ProductController extends Controller
             }
         }
 
-        if (Request::hasFile('image')) {
-            //Upload the file
-            $helper_image = new RImage;
-            $filename = $helper_image->upload($image, 'products/' . $product->id, true);
+        $imageFiles = ImageService::filesFrom();
 
-            if ($filename) {
-                // create photo
-                $newimage = new Image;
-                $newimage->path = $filename;
-
-                // save photo to the loaded model
-                $product->images()->save($newimage);
-            }
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($product, $imageFiles, 'products');
         }
         
         // Link variant to parent Product

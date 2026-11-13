@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Request;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Announcement;
-use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class AnnouncementController extends Controller
@@ -100,19 +100,10 @@ class AnnouncementController extends Controller
             
             $announcement->save();
             
-            if (Request::hasFile('image')) {
-                //Upload the file
-                $helper_image = new RImage;
-                $filename = $helper_image->upload($image, 'announcements/' . $announcement->id, true);
-                
-                if ($filename) {
-                    // create photo
-                    $newimage = new Image;
-                    $newimage->path = $filename;
-                    
-                    // save photo to the loaded model
-                    $announcement->images()->save($newimage);
-                }
+            $imageFiles = ImageService::filesFrom();
+
+            if (! empty($imageFiles)) {
+                (new ImageService)->attach($announcement, $imageFiles, 'announcements');
             }
         //if it validate
         } else {

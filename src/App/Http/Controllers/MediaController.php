@@ -10,7 +10,7 @@ use Redooor\Redminportal\App\Http\Traits\MediaUploaderController;
 use Redooor\Redminportal\App\Models\Media;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 use Redooor\Redminportal\App\Models\Category;
-use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
@@ -109,6 +109,8 @@ class MediaController extends Controller
         
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
+            'images'            => 'array',
+            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
             'name'              => 'required|unique:medias,name' . (isset($sid) ? ',' . $sid : ''),
             'short_description' => 'required',
             'sku'               => 'required|alpha_dash|unique:medias,sku' . (isset($sid) ? ',' . $sid : ''),
@@ -215,19 +217,10 @@ class MediaController extends Controller
             }
         }
 
-        if (Request::hasFile('image')) {
-            //Upload the file
-            $helper_image = new RImage;
-            $filename = $helper_image->upload($image, 'medias/' . $media->id, true);
+        $imageFiles = ImageService::filesFrom();
 
-            if ($filename) {
-                // create photo
-                $newimage = new Image;
-                $newimage->path = $filename;
-
-                // save photo to the loaded model
-                $media->images()->save($newimage);
-            }
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($media, $imageFiles, 'medias');
         }
 
         return redirect('admin/medias');

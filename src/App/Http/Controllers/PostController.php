@@ -7,7 +7,7 @@ use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Post;
 use Redooor\Redminportal\App\Models\Category;
-use Redooor\Redminportal\App\Models\Image;
+use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
@@ -106,6 +106,8 @@ class PostController extends Controller
         
         $rules = array(
             'image'         => 'mimes:jpg,jpeg,png,gif|max:500',
+            'images'        => 'array',
+            'images.*'      => 'mimes:jpg,jpeg,png,gif|max:500',
             'title'         => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
             'slug'          => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
             'content'       => 'required',
@@ -178,19 +180,10 @@ class PostController extends Controller
             $post->translations()->save($translated_model);
         }
 
-        if (Request::hasFile('image')) {
-            //Upload the file
-            $helper_image = new RImage;
-            $filename = $helper_image->upload($image, 'posts/' . $post->id, true);
+        $imageFiles = ImageService::filesFrom();
 
-            if ($filename) {
-                // create photo
-                $newimage = new Image;
-                $newimage->path = $filename;
-
-                // save photo to the loaded model
-                $post->images()->save($newimage);
-            }
+        if (! empty($imageFiles)) {
+            (new ImageService)->attach($post, $imageFiles, 'posts');
         }
 
         if (! empty($tags)) {
