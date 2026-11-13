@@ -333,9 +333,14 @@ class Imagine
                     return null;
                 }
 
+                $codeSize = ord($bytes[$position]);
                 $position++; // LZW minimum code size
 
-                if (! $this->skipGifSubBlocks($bytes, $position, $length)) {
+                if ($codeSize < 2 || $codeSize > 8) {
+                    return null;
+                }
+
+                if (! $this->skipGifSubBlocks($bytes, $position, $length, true)) {
                     return null;
                 }
 
@@ -354,10 +359,13 @@ class Imagine
      * @param  string  $bytes
      * @param  integer $position
      * @param  integer $length
+     * @param  bool    $requireData
      * @return bool
      */
-    private function skipGifSubBlocks($bytes, &$position, $length)
+    private function skipGifSubBlocks($bytes, &$position, $length, $requireData = false)
     {
+        $hasData = false;
+
         while (true) {
             if ($position >= $length) {
                 return false;
@@ -367,9 +375,10 @@ class Imagine
             $position++;
 
             if ($size === 0) {
-                return true;
+                return ! $requireData || $hasData;
             }
 
+            $hasData = true;
             $position += $size;
 
             if ($position > $length) {

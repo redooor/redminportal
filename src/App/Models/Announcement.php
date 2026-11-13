@@ -29,6 +29,8 @@ class Announcement extends Model
         $rules = array(
             'title' => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
+            'images'            => 'array',
+            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
             'content'           => 'required'
         );
 

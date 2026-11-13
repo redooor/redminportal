@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request as RequestFacade;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Redooor\Redminportal\App\Models\Image;
@@ -34,33 +35,59 @@ class ImageService
             $files = array($files);
         }
 
-        $hadImages = $model->images()->exists();
-        $sortOrder = ((int) $model->images()->max('sort_order')) + 1;
-        $primarySet = false;
+        $uploaded = array();
+        $imagine = new Imagine;
 
+        // Files are written before the transaction so the lock is held only for the rows
         foreach ($files as $file) {
             if (! ($file instanceof UploadedFile)) {
                 continue;
             }
 
-            $path = (new Imagine)->upload($file, $folder . '/' . $model->getKey(), $createDimensions);
+            $path = $imagine->upload($file, $folder . '/' . $model->getKey(), $createDimensions);
 
             if (! $path) {
                 continue;
             }
 
-            $image = new Image;
-            $image->path = $path;
-            $image->sort_order = $sortOrder++;
-            $image->is_primary = (! $hadImages && ! $primarySet);
+            $uploaded[] = $path;
+        }
 
-            if ($image->is_primary) {
-                $primarySet = true;
+        if (empty($uploaded)) {
+            return $images;
+        }
+
+        try {
+            DB::transaction(function () use ($model, $uploaded, &$images) {
+                $this->lockOwner($model);
+
+                $hadImages = $model->images()->exists();
+                $sortOrder = ((int) $model->images()->max('sort_order')) + 1;
+                $primarySet = false;
+
+                foreach ($uploaded as $path) {
+                    $image = new Image;
+                    $image->path = $path;
+                    $image->sort_order = $sortOrder++;
+                    $image->is_primary = (! $hadImages && ! $primarySet);
+
+                    if ($image->is_primary) {
+                        $primarySet = true;
+                    }
+
+                    if (! $model->images()->save($image)) {
+                        throw new \RuntimeException('Unable to save the image');
+                    }
+
+                    $images->push($image);
+                }
+            });
+        } catch (\Throwable $e) {
+            foreach ($uploaded as $path) {
+                $this->deleteUploadedFiles($path);
             }
 
-            $model->images()->save($image);
-
-            $images->push($image);
+            throw $e;
         }
 
         return $images;
@@ -100,34 +127,41 @@ class ImageService
      * Remove an image, its files and promote the next image when it was primary
      *
      * @param  \Redooor\Redminportal\App\Models\Image $image
-     * @return void
+     * @return bool
      */
-    public function remove(Image $image): void
+    public function remove(Image $image): bool
     {
-        $wasPrimary = (bool) $image->is_primary;
-        $model = null;
+        return DB::transaction(function () use ($image) {
+            $wasPrimary = (bool) $image->is_primary;
+            $model = null;
 
-        if ($wasPrimary) {
             try {
                 $model = $image->imageable;
             } catch (\Throwable $e) {
                 $model = null;
             }
-        }
 
-        $this->deleteImageFiles($image);
-
-        Image::whereKey($image->getKey())->delete();
-        $image->exists = false;
-
-        if ($wasPrimary && $model) {
-            $next = $model->images()->first();
-
-            if ($next) {
-                $next->is_primary = true;
-                $next->save();
+            if ($model) {
+                $this->lockOwner($model);
             }
-        }
+
+            if (! $image->deleteRecord()) {
+                return false;
+            }
+
+            $this->deleteImageFiles($image);
+
+            if ($wasPrimary && $model) {
+                $next = $model->images()->first();
+
+                if ($next) {
+                    $next->is_primary = true;
+                    $next->save();
+                }
+            }
+
+            return true;
+        });
     }
 
     /**
@@ -138,18 +172,24 @@ class ImageService
      */
     public function makePrimary(Image $image): void
     {
-        $model = $image->imageable;
+        DB::transaction(function () use ($image) {
+            $model = $image->imageable;
 
-        if (! $model) {
-            return;
-        }
+            if (! $model) {
+                return;
+            }
 
-        $model->images()
-            ->where('id', '!=', $image->getKey())
-            ->update(['is_primary' => false]);
+            $this->lockOwner($model);
 
-        $image->is_primary = true;
-        $image->save();
+            $model->images()
+                ->where('id', '!=', $image->getKey())
+                ->update(['is_primary' => false]);
+
+            Image::whereKey($image->getKey())->update(['is_primary' => true]);
+
+            $image->setAttribute('is_primary', true);
+            $image->syncOriginalAttribute('is_primary');
+        });
     }
 
     /**
@@ -161,18 +201,57 @@ class ImageService
      */
     public function reorder(Model $model, array $imageIds): void
     {
-        $images = $model->images()->whereIn('id', $imageIds)->get()->keyBy('id');
-        $sortOrder = 1;
+        DB::transaction(function () use ($model, $imageIds) {
+            $this->lockOwner($model);
 
-        foreach ($imageIds as $imageId) {
-            if (! isset($images[$imageId])) {
-                continue;
+            $images = $model->images()->get()->keyBy('id');
+            $orderedIds = array();
+
+            foreach (array_unique(array_map('intval', $imageIds)) as $imageId) {
+                if (isset($images[$imageId])) {
+                    $orderedIds[] = $imageId;
+                }
             }
 
-            $image = $images[$imageId];
-            $image->sort_order = $sortOrder++;
-            $image->save();
-        }
+            $sortOrder = 1;
+            $remaining = $images->except($orderedIds);
+
+            foreach ($orderedIds as $imageId) {
+                $image = $images[$imageId];
+                $image->sort_order = $sortOrder++;
+                $image->save();
+            }
+
+            foreach ($remaining as $image) {
+                $image->sort_order = $sortOrder++;
+                $image->save();
+            }
+        });
+    }
+
+    /**
+     * Lock the owner row for the duration of the transaction
+     *
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    private function lockOwner(Model $model)
+    {
+        return $model->newQuery()->whereKey($model->getKey())->lockForUpdate()->first();
+    }
+
+    /**
+     * Delete the original and dimension files of an uploaded image that was not saved
+     *
+     * @param  string $path
+     * @return void
+     */
+    private function deleteUploadedFiles(string $path): void
+    {
+        $image = new Image;
+        $image->path = $path;
+
+        $this->deleteImageFiles($image);
     }
 
     /**

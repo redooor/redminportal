@@ -348,6 +348,52 @@ class ImagineUploadTest extends RedminTestCase
     }
 
     /**
+     * Test (Fail): a GIF with a second frame code size of zero is rejected
+     */
+    public function testGifWithInvalidFrameCodeSizeIsRejected()
+    {
+        $source = $this->tempFile('gif');
+        $descriptor = "\x2C\x00\x00\x00\x00\x01\x00\x01\x00\x00";
+        $firstData = "\x02\x02\x4C\x01\x00";
+        $bytes = "GIF89a" . pack('v', 1) . pack('v', 1) . "\x80\x00\x00"
+            . str_repeat("\x00", 6)
+            . $descriptor . $firstData
+            . $descriptor . "\x00\x00"
+            . "\x3B";
+
+        file_put_contents($source, $bytes);
+        $file = new UploadedFile($source, 'badframe.gif', 'image/gif', null, true);
+
+        $path = (new Imagine)->upload($file, 'badframe', false, true);
+
+        $this->assertNull($path);
+        $this->assertFileDoesNotExist($this->uploadPath . 'badframe/badframe.gif');
+    }
+
+    /**
+     * Test (Fail): a GIF frame without any data sub-block is rejected
+     */
+    public function testGifFrameWithoutDataIsRejected()
+    {
+        $source = $this->tempFile('gif');
+        $descriptor = "\x2C\x00\x00\x00\x00\x01\x00\x01\x00\x00";
+        $firstData = "\x02\x02\x4C\x01\x00";
+        $bytes = "GIF89a" . pack('v', 1) . pack('v', 1) . "\x80\x00\x00"
+            . str_repeat("\x00", 6)
+            . $descriptor . $firstData
+            . $descriptor . "\x02\x00"
+            . "\x3B";
+
+        file_put_contents($source, $bytes);
+        $file = new UploadedFile($source, 'nodata.gif', 'image/gif', null, true);
+
+        $path = (new Imagine)->upload($file, 'nodata', false, true);
+
+        $this->assertNull($path);
+        $this->assertFileDoesNotExist($this->uploadPath . 'nodata/nodata.gif');
+    }
+
+    /**
      * Test (Pass): image.upload_quality controls the re-encoded JPEG size
      */
     public function testUploadQualityAffectsJpegSize()

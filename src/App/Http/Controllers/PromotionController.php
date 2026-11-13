@@ -79,6 +79,8 @@ class PromotionController extends Controller
         
         $rules = array(
             'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
+            'images'            => 'array',
+            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
             'name'              => 'required',
             'short_description' => 'required',
             'long_description'  => 'required',

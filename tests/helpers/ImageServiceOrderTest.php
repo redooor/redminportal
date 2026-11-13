@@ -27,6 +27,8 @@ class ImageServiceOrderTest extends RedminTestCase
 
     public function tearDown(): void
     {
+        Image::flushEventListeners();
+
         foreach ($this->tempFiles as $file) {
             if (is_file($file)) {
                 @unlink($file);
@@ -140,6 +142,78 @@ class ImageServiceOrderTest extends RedminTestCase
     }
 
     /**
+     * Test (Pass): the same loaded objects can switch the primary image repeatedly
+     */
+    public function testMakePrimaryDoesNotRelyOnDirtyTracking()
+    {
+        $category = $this->createCategory();
+        $images = (new ImageService)->attach($category, array(
+            $this->uploadedFile('png', 'a.png'),
+            $this->uploadedFile('jpg', 'b.jpg'),
+        ), 'categories');
+
+        $a = $images[0];
+        $b = $images[1];
+        $service = new ImageService;
+
+        $service->makePrimary($b);
+        $service->makePrimary($a);
+        $service->makePrimary($b);
+
+        $this->assertSame(1, $category->images()->where('is_primary', 1)->count());
+        $this->assertSame(1, (int) Image::find($b->id)->is_primary);
+        $this->assertSame(0, (int) Image::find($a->id)->is_primary);
+    }
+
+    /**
+     * Test (Pass): two sequential attach() calls still leave exactly one primary
+     */
+    public function testSequentialAttachKeepsSinglePrimary()
+    {
+        $category = $this->createCategory();
+        $service = new ImageService;
+
+        $service->attach($category, $this->uploadedFile('png', 'one.png'), 'categories');
+        $service->attach($category, $this->uploadedFile('jpg', 'two.jpg'), 'categories');
+
+        $this->assertSame(2, $category->images()->count());
+        $this->assertSame(1, $category->images()->where('is_primary', 1)->count());
+        $this->assertSame(1, (int) $category->images()->first()->is_primary);
+    }
+
+    /**
+     * Test (Pass): a partial reorder puts the listed images first and dedupes ids
+     */
+    public function testReorderPartialListPutsListedImagesFirst()
+    {
+        $category = $this->createCategory();
+        $first = $this->storedImage($category, 'one.png', 0);
+        $second = $this->storedImage($category, 'two.png', 0);
+        $third = $this->storedImage($category, 'three.png', 0);
+        $fourth = $this->storedImage($category, 'four.png', 0);
+
+        $foreignCategory = $this->createCategory('Foreign reorder category');
+        $foreign = $this->storedImage($foreignCategory, 'foreign.png', 9);
+
+        $service = new ImageService;
+        $service->reorder($category, array($fourth->id, $third->id));
+
+        $expected = array($fourth->id, $third->id, $first->id, $second->id);
+        $this->assertSame(
+            $expected,
+            array_map('intval', $category->images()->pluck('id')->all())
+        );
+
+        $service->reorder($category, array($fourth->id, $third->id, $fourth->id, $foreign->id));
+
+        $this->assertSame(
+            $expected,
+            array_map('intval', $category->images()->pluck('id')->all())
+        );
+        $this->assertSame(9, (int) Image::find($foreign->id)->sort_order);
+    }
+
+    /**
      * Test (Pass): reorder numbers only images that belong to the model
      */
     public function testReorderIgnoresForeignImages()
@@ -224,6 +298,42 @@ class ImageServiceOrderTest extends RedminTestCase
         $this->assertNull(Image::find($image->id));
         $this->assertFileDoesNotExist($original);
         $this->assertFileDoesNotExist($thumbnail);
+    }
+
+    /**
+     * Test (Pass): Image::delete() honours a deleting listener veto
+     */
+    public function testImageDeleteHonoursDeletingVeto()
+    {
+        $category = $this->createCategory();
+        $image = $this->storedImage($category, 'veto.png', 1, true);
+        $original = getcwd() . '/' . $image->path;
+
+        Image::deleting(function () {
+            return false;
+        });
+
+        $this->assertFalse($image->delete());
+        $this->assertNotNull(Image::find($image->id));
+        $this->assertFileExists($original);
+    }
+
+    /**
+     * Test (Pass): Image::delete() fires the deleted event on a normal delete
+     */
+    public function testImageDeleteFiresDeletedEvent()
+    {
+        $category = $this->createCategory();
+        $image = $this->storedImage($category, 'event.png', 1, true);
+        $fired = false;
+
+        Image::deleted(function () use (&$fired) {
+            $fired = true;
+        });
+
+        $this->assertTrue($image->delete());
+        $this->assertTrue($fired);
+        $this->assertNull(Image::find($image->id));
     }
 
     /**

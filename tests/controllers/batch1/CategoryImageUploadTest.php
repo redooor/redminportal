@@ -1,10 +1,11 @@
 <?php namespace Redooor\Redminportal\Test;
 
 use Database\Seeders\RedminSeeder;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Models\Category;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Redooor\Redminportal\App\Models\Image;
 
 class CategoryImageUploadTest extends RedminBrowserTestCase
 {
@@ -74,6 +75,34 @@ class CategoryImageUploadTest extends RedminBrowserTestCase
         $this->assertFileExists(
             $this->uploadPath . 'categories/' . $category->id . '/second.jpg'
         );
+    }
+
+    /**
+     * Test (Fail): an invalid images[] file is rejected by the image rules
+     */
+    public function testStoreRejectsInvalidImageInImagesArray()
+    {
+        $name = 'Invalid image category ' . uniqid();
+        $source = $this->tempFile('png');
+        file_put_contents($source, 'this is not an image');
+        $imagesBefore = Image::count();
+
+        $this->call('POST', '/admin/categories/store', array(
+            'name' => $name,
+            'short_description' => 'Invalid image category',
+            'long_description' => 'Invalid image category',
+            'active' => true,
+            'order' => 1,
+        ), array(), array(
+            'images' => array(
+                new UploadedFile($source, 'invalid.png', 'image/png', null, true),
+            ),
+        ));
+
+        $this->assertRedirectedTo('/admin/categories/create');
+        $this->assertSessionHasErrors('images.0');
+        $this->assertNull(Category::where('name', $name)->first());
+        $this->assertSame($imagesBefore, Image::count());
     }
 
     /**

@@ -106,6 +106,8 @@ class PageController extends Controller
         
         $rules = array(
             'image'         => 'mimes:jpg,jpeg,png,gif|max:500',
+            'images'        => 'array',
+            'images.*'      => 'mimes:jpg,jpeg,png,gif|max:500',
             'title'         => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
             'slug'          => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
             'content'       => 'required',

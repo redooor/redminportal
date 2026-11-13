@@ -29,9 +29,17 @@ class Image extends Model
     
     public function delete()
     {
-        (new ImageService)->remove($this);
+        return (new ImageService)->remove($this);
+    }
 
-        return true;
+    /**
+     * Delete the database record while keeping the Eloquent model events
+     *
+     * @return bool|null
+     */
+    public function deleteRecord()
+    {
+        return parent::delete();
     }
     
     /*
