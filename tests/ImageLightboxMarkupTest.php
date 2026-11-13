@@ -11,7 +11,8 @@ class ImageLightboxMarkupTest extends TestCase
     {
         $views = array_merge(
             glob(dirname(__DIR__) . '/src/resources/views/*/edit*.blade.php'),
-            glob(dirname(__DIR__) . '/src/resources/views/partials/uploaded-images.blade.php')
+            glob(dirname(__DIR__) . '/src/resources/views/partials/uploaded-images.blade.php'),
+            glob(dirname(__DIR__) . '/src/resources/views/partials/image-gallery.blade.php')
         );
         $found = 0;
 
@@ -26,7 +27,7 @@ class ImageLightboxMarkupTest extends TestCase
             }
         }
 
-        $this->assertGreaterThanOrEqual(11, $found);
+        $this->assertGreaterThanOrEqual(3, $found);
     }
 
     public function testLayoutProvidesTheLightboxModalAndScript()

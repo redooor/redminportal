@@ -46,16 +46,7 @@
                     'select_category_required_field' => true
                 ])
                 <div>
-                    <div class="redmin-fileinput" data-redmin-fileinput>
-                        <div class="redmin-fileinput-preview img-thumbnail"></div>
-                        <div>
-                            <label class="btn btn-secondary">
-                                <span class="redmin-fileinput-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="redmin-fileinput-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>
-                                <input name="image" type="file" class="visually-hidden">
-                            </label>
-                            <button type="button" class="btn btn-danger redmin-fileinput-exists" data-redmin-fileinput-clear>{{ Lang::get('redminportal::forms.remove_image') }}</button>
-                        </div>
-                    </div>
+                    @include('redminportal::partials.image-input')
                 </div>
             </div>
 
@@ -137,36 +128,12 @@
                         </div>
                     </div>
                 </div>
-                @if(count($media->images) > 0)
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title mb-0">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class='row'>
-                            @foreach( $media->images as $image )
-                            <div class='col-lg-3'>
-                                {!! HTML::image($imagine->getUrl($image->path), $media->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
-                                <br><br>
-                                <div class="btn-group btn-group-sm">
-                                    @permitted('admin/medias/imgremove/' . $image->id)
-                                    <a href="{{ URL::to('admin/medias/imgremove/' . $image->id) }}" class="btn btn-danger btn-confirm">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </a>
-                                    @endpermitted
-                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
-                                        <i class="fa-solid fa-link"></i>
-                                    </a>
-                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank" data-lightbox="uploaded-images" data-lightbox-title="{{ $image->path }}" aria-label="{{ Lang::get('redminportal::buttons.view_image') }}">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                @endif
+                @include('redminportal::partials.image-gallery', [
+                    'images' => $media->images,
+                    'imagine' => $imagine,
+                    'base' => 'admin/medias',
+                    'alt' => $media->name,
+                ])
             </div>
         </div>
     {!! Form::close() !!}

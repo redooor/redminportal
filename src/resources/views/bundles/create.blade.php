@@ -43,16 +43,7 @@
                     'select_category_categories' => $categories
                 ])
 		        <div>
-                    <div class="redmin-fileinput" data-redmin-fileinput>
-                        <div class="redmin-fileinput-preview img-thumbnail"></div>
-                        <div>
-                            <label class="btn btn-secondary">
-                                <span class="redmin-fileinput-new">{{ Lang::get('redminportal::forms.select_image') }}</span><span class="redmin-fileinput-exists">{{ Lang::get('redminportal::forms.change_image') }}</span>
-                                <input name="image" type="file" class="visually-hidden">
-                            </label>
-                            <button type="button" class="btn btn-danger redmin-fileinput-exists" data-redmin-fileinput-clear>{{ Lang::get('redminportal::forms.remove_image') }}</button>
-                        </div>
-                    </div>
+                    @include('redminportal::partials.image-input')
                 </div>
 	        </div>
 

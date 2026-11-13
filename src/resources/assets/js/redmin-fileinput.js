@@ -1,13 +1,13 @@
 /*
  * Redmin file input: image/file chooser with a preview and a remove button.
- * Replaces Jasny's fileupload plugin. The submitted payload is the plain file input (name="image"), nothing else.
+ * Replaces Jasny's fileupload plugin. The submitted payload is the plain file input (name="images[]"), nothing else.
  *
  * Markup:
  *   <div class="redmin-fileinput" data-redmin-fileinput>
  *     <div class="redmin-fileinput-preview img-thumbnail"></div>
  *     <label class="btn btn-secondary">
- *       <span class="redmin-fileinput-new">Select</span><span class="redmin-fileinput-exists">Change</span>
- *       <input name="image" type="file" class="visually-hidden">
+ *       <span class="redmin-fileinput-new">Select Images</span><span class="redmin-fileinput-exists">Change</span>
+ *       <input name="images[]" type="file" multiple accept="image/*" class="visually-hidden">
  *     </label>
  *     <button type="button" class="btn btn-danger redmin-fileinput-exists" data-redmin-fileinput-clear>Remove</button>
  *   </div>
@@ -17,15 +17,17 @@
 
     var ROOT = '[data-redmin-fileinput]';
 
-    function releaseUrl(root) {
-        if (root._redminUrl) {
-            URL.revokeObjectURL(root._redminUrl);
-            root._redminUrl = null;
-        }
+    function releaseUrls(root) {
+        var urls = root._redminUrls || [];
+
+        urls.forEach(function (url) {
+            URL.revokeObjectURL(url);
+        });
+        root._redminUrls = [];
     }
 
     function reset(root) {
-        releaseUrl(root);
+        releaseUrls(root);
         root.querySelector('input[type=file]').value = '';
         root.querySelector('.redmin-fileinput-preview').textContent = '';
         root.classList.remove('is-set');
@@ -34,26 +36,29 @@
     function render(root) {
         var input = root.querySelector('input[type=file]');
         var preview = root.querySelector('.redmin-fileinput-preview');
-        var file = input.files && input.files[0];
+        var files = input && input.files ? Array.prototype.slice.call(input.files) : [];
 
-        releaseUrl(root);
+        releaseUrls(root);
         preview.textContent = '';
-        if (!file) {
+        if (!files.length) {
             root.classList.remove('is-set');
             return;
         }
-        if (/^image\//.test(file.type)) {
-            var img = document.createElement('img');
-            root._redminUrl = URL.createObjectURL(file);
-            img.src = root._redminUrl;
-            img.alt = file.name;
-            preview.appendChild(img);
-        } else {
-            var name = document.createElement('span');
-            name.className = 'redmin-fileinput-filename';
-            name.textContent = file.name;
-            preview.appendChild(name);
-        }
+        files.forEach(function (file) {
+            if (/^image\//.test(file.type)) {
+                var img = document.createElement('img');
+                var url = URL.createObjectURL(file);
+                root._redminUrls.push(url);
+                img.src = url;
+                img.alt = file.name;
+                preview.appendChild(img);
+            } else {
+                var name = document.createElement('span');
+                name.className = 'redmin-fileinput-filename';
+                name.textContent = file.name;
+                preview.appendChild(name);
+            }
+        });
         root.classList.add('is-set');
     }
 
@@ -72,12 +77,12 @@
         }
     });
 
-    // A form reset clears the chosen file, so drop the preview with it.
+    // A form reset clears the chosen files, so drop the preview with them.
     document.addEventListener('reset', function (e) {
         Array.prototype.forEach.call(e.target.querySelectorAll(ROOT), reset);
     }, true);
 
-    // Back/forward navigation can restore a chosen file without its preview.
+    // Back/forward navigation can restore chosen files without their preview.
     window.addEventListener('pageshow', function () {
         Array.prototype.forEach.call(document.querySelectorAll(ROOT), render);
     });
