@@ -142,7 +142,14 @@ trait Permissable
                 $last_segment = $last_dot === false ? $key : substr($key, $last_dot + 1);
 
                 if ($last_segment === $action || ! in_array($last_segment, $actions, true)) {
-                    return true;
+                    // Only a deny that is still in force counts, a user-level allow can override a group deny
+                    $deny_path = $last_segment === $action || in_array($last_segment, $actions, true)
+                        ? substr($key, 0, strrpos($key, '.'))
+                        : $key;
+
+                    if (! $this->hasPermission(str_replace('.', '/', $deny_path), $action)) {
+                        return true;
+                    }
                 }
             }
         }

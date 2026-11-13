@@ -220,4 +220,14 @@ class PrivilegeGrantTest extends RedminBrowserTestCase
             'admin.pages.view' => 1,
         ], $user->liftedDenies($old, $new));
     }
+
+    public function testUserAllowThatOverridesGroupDenyDoesNotBlockGrant()
+    {
+        $user = $this->userWithPermissions(['admin' => 1]);
+        $user->groups()->save($this->groupWithPermissions('Pages denied', ['admin.pages.view' => -1]));
+
+        $this->assertTrue($user->hasPermission('admin/pages', 'view'));
+        $this->assertTrue($user->canGrant(['admin' => 1]));
+        $this->assertTrue($user->canGrant(['admin.view' => 1]));
+    }
 }
