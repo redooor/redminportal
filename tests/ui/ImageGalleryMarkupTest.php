@@ -176,6 +176,20 @@ class ImageGalleryMarkupTest extends RedminBrowserTestCase
         }
     }
 
+    public function testPickerTellsUserToReselectImagesAfterValidationErrors()
+    {
+        Auth::guard('redminguard')->loginUsingId(1);
+
+        $clean = $this->call('GET', '/admin/pages/create')->getContent();
+        $this->assertStringNotContainsString('were not kept', $clean);
+
+        // Browsers cannot refill a file input, so a failed save must say the images need choosing again.
+        $response = $this->from('/admin/pages/create')->call('POST', '/admin/pages/store', array('title' => 'No content', 'slug' => 'no-content'));
+        $response->assertRedirect('/admin/pages/create');
+        $html = $this->call('GET', '/admin/pages/create')->getContent();
+        $this->assertStringContainsString('were not kept', $html);
+    }
+
     public function testGalleryShowsPrimaryBadgeAndHidesInvalidActions()
     {
         Auth::guard('redminguard')->loginUsingId(1);

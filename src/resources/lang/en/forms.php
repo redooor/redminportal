@@ -75,6 +75,7 @@ return array(
     'change_image' => 'Change',
     'remove_image' => 'Remove',
     'select_images' => 'Select Images',
+    'reselect_images' => 'The form had errors, so your selected images were not kept. Please select them again.',
     'change_images' => 'Change',
     'remove_images' => 'Remove',
     'primary_image' => 'Primary',

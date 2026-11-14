@@ -5,6 +5,7 @@ return array(
     'email' => '电邮',
     'password' => '密码',
     'select_images' => '选择图片',
+    'reselect_images' => '表单有错误，所选图片未保留，请重新选择。',
     'change_images' => '更改',
     'remove_images' => '移除',
     'primary_image' => '主图',

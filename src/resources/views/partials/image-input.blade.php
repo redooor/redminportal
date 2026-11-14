@@ -15,4 +15,7 @@
         </label>
         <button type="button" class="btn btn-danger redmin-fileinput-exists" data-redmin-fileinput-clear>{{ Lang::get('redminportal::forms.remove_images') }}</button>
     </div>
+    @if ($errors->any())
+        <div class="form-text text-warning">{{ Lang::get('redminportal::forms.reselect_images') }}</div>
+    @endif
 </div>
