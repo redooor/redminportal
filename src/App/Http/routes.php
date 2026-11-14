@@ -90,6 +90,8 @@ Route::group(
             Route::get('sort/{sortBy?}/{orderBy?}', [AnnouncementController::class, 'getSort']);
             //
             Route::post('imgremove/{sid}', [AnnouncementController::class, 'getImgremove']);
+            Route::post('imgprimary/{sid}', [AnnouncementController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [AnnouncementController::class, 'getImgmove']);
         });
 
         // Bundles
@@ -101,6 +103,9 @@ Route::group(
             Route::post('store', [BundleController::class, 'postStore']);
             Route::post('delete/{sid}', [BundleController::class, 'getDelete']);
             Route::get('sort/{sortBy?}/{orderBy?}', [BundleController::class, 'getSort']);
+            //
+            Route::post('imgprimary/{sid}', [BundleController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [BundleController::class, 'getImgmove']);
         });
 
         // Categories
@@ -113,6 +118,8 @@ Route::group(
             Route::post('delete/{sid}', [CategoryController::class, 'getDelete']);
             //
             Route::post('imgremove/{sid}', [CategoryController::class, 'getImgremove']);
+            Route::post('imgprimary/{sid}', [CategoryController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [CategoryController::class, 'getImgmove']);
             Route::get('detail/{sid}', [CategoryController::class, 'getDetail']);
         });
 
@@ -169,6 +176,8 @@ Route::group(
             Route::get('sort/{sortBy?}/{orderBy?}', [MediaController::class, 'getSort']);
             //
             Route::post('imgremove/{sid}', [MediaController::class, 'getImgremove']);
+            Route::post('imgprimary/{sid}', [MediaController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [MediaController::class, 'getImgmove']);
             Route::post('duration/{sid}', [MediaController::class, 'getDuration']);
             Route::get('uploadform/{sid}', [MediaController::class, 'getUploadform']);
             Route::post('upload/{sid}', [MediaController::class, 'postUpload']);
@@ -195,6 +204,8 @@ Route::group(
             Route::get('sort/{sortBy?}/{orderBy?}', [ModuleController::class, 'getSort']);
             //
             Route::post('imgremove/{sid}', [ModuleController::class, 'getImgremove']);
+            Route::post('imgprimary/{sid}', [ModuleController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [ModuleController::class, 'getImgmove']);
             Route::get('medias/{sid}', [ModuleController::class, 'getMedias']);
             Route::get('editmedias/{sid}/{module_id}', [ModuleController::class, 'getEditmedias']);
         });
@@ -226,6 +237,8 @@ Route::group(
             Route::get('sort/{sortBy?}/{orderBy?}', [PageController::class, 'getSort']);
             //
             Route::post('imgremove/{sid}', [PageController::class, 'getImgremove']);
+            Route::post('imgprimary/{sid}', [PageController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [PageController::class, 'getImgmove']);
         });
 
         // Portfolio
@@ -239,6 +252,8 @@ Route::group(
             Route::get('sort/{sortBy?}/{orderBy?}', [PortfolioController::class, 'getSort']);
             //
             Route::post('imgremove/{sid}', [PortfolioController::class, 'getImgremove']);
+            Route::post('imgprimary/{sid}', [PortfolioController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [PortfolioController::class, 'getImgmove']);
         });
 
         // Posts
@@ -252,6 +267,8 @@ Route::group(
             Route::get('sort/{sortBy?}/{orderBy?}', [PostController::class, 'getSort']);
             //
             Route::post('imgremove/{sid}', [PostController::class, 'getImgremove']);
+            Route::post('imgprimary/{sid}', [PostController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [PostController::class, 'getImgmove']);
         });
 
         // Products
@@ -264,6 +281,8 @@ Route::group(
             Route::post('delete/{sid}', [ProductController::class, 'getDelete']);
             Route::get('sort/{sortBy?}/{orderBy?}', [ProductController::class, 'getSort']);
             Route::post('imgremove/{sid}', [ProductController::class, 'getImgremove']);
+            Route::post('imgprimary/{sid}', [ProductController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [ProductController::class, 'getImgmove']);
             // ---------------
             // Product variant
             // ---------------
@@ -286,6 +305,8 @@ Route::group(
             Route::get('sort/{sortBy?}/{orderBy?}', [PromotionController::class, 'getSort']);
             //
             Route::post('imgremove/{sid}', [PromotionController::class, 'getImgremove']);
+            Route::post('imgprimary/{sid}', [PromotionController::class, 'getImgprimary']);
+            Route::post('imgmove/{sid}/{direction}', [PromotionController::class, 'getImgmove']);
         });
 
         // Purchases

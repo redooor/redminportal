@@ -5,6 +5,7 @@ use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Promotion;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Config;
 
 class PromotionController extends Controller
 {
-    use SorterController, DeleterController;
+    use SorterController, DeleterController, ImageGalleryController;
     
     public function __construct(Promotion $model)
     {
@@ -177,5 +178,15 @@ class PromotionController extends Controller
         $image->delete();
 
         return redirect('admin/promotions/edit/' . $model_id);
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Promotion::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/promotions';
     }
 }

@@ -46,7 +46,7 @@ class ConfirmDeleteMarkupTest extends TestCase
             $this->assertStringContainsString("@include('redminportal::partials.confirm-delete')", $source, basename(dirname($view)) . '/' . basename($view) . ' has a delete link but no confirmation modal');
         }
 
-        $this->assertGreaterThanOrEqual(25, $found);
+        $this->assertGreaterThanOrEqual(18, $found);
     }
 
     public function testViewsWithoutADeleteLinkDoNotIncludeTheModal()
@@ -54,8 +54,11 @@ class ConfirmDeleteMarkupTest extends TestCase
         foreach ($this->views() as $view) {
             $source = file_get_contents($view);
 
-            // uploaded-images has its own delete links; categories/view hosts the Ajax categories/detail with one
-            $hasDeleteLink = strpos($source, 'btn-confirm') !== false || in_array(basename($view), ['uploaded-images.blade.php'])
+            // The gallery partial has its own delete links; uploaded-images has its own delete links;
+            // categories/view hosts the Ajax categories/detail with one
+            $hasDeleteLink = strpos($source, 'btn-confirm') !== false
+                || strpos($source, "partials.image-gallery") !== false
+                || in_array(basename($view), ['uploaded-images.blade.php'])
                 || substr($view, -strlen('categories/view.blade.php')) === 'categories/view.blade.php';
 
             if ($hasDeleteLink) {

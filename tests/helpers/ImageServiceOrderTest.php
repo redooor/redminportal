@@ -392,6 +392,39 @@ class ImageServiceOrderTest extends RedminTestCase
     }
 
     /**
+     * Test (Pass): move() swaps with the neighbour, and consecutive moves from stale copies both apply
+     */
+    public function testMoveSwapsAndAppliesConsecutiveMoves()
+    {
+        $category = $this->createCategory();
+        $p = $this->storedImage($category, 'move-p.png', 1, true);
+        $a = $this->storedImage($category, 'move-a.png', 2, false);
+        $b = $this->storedImage($category, 'move-b.png', 3, false);
+        $c = $this->storedImage($category, 'move-c.png', 4, false);
+        $d = $this->storedImage($category, 'move-d.png', 5, false);
+        $service = new ImageService;
+
+        $staleA = Image::find($a->id);
+        $staleC = Image::find($c->id);
+
+        $service->move($staleA, 'later');   // P, B, A, C, D
+        $service->move($staleC, 'later');   // P, B, A, D, C
+
+        $this->assertSame(
+            array($p->id, $b->id, $a->id, $d->id, $c->id),
+            $this->integers($category->images()->pluck('id')->all())
+        );
+
+        $service->move($staleC, 'later');   // already last: no change
+        $service->move($p, 'later');        // primary: no change
+
+        $this->assertSame(
+            array($p->id, $b->id, $a->id, $d->id, $c->id),
+            $this->integers($category->images()->pluck('id')->all())
+        );
+    }
+
+    /**
      * Test (Pass): filesFrom() reads image and images[] uploads in that order
      */
     public function testFilesFromReadsSingleAndMultipleUploads()

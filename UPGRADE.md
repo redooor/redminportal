@@ -343,6 +343,8 @@ Category names, product names and the order builder labels are escaped. `Categor
 
 **Several images.** `$model->images` is ordered with the primary image first, then by `sort_order`, then by id, so `$model->images()->first()` is the primary image (for existing data that is still the first uploaded image). Create and update forms accept `image` (one file) and `images[]` (several files) with the same validation rules. Custom code can use `Redooor\Redminportal\App\Classes\ImageService`: `attach()`, `remove()`, `makePrimary()` and `reorder()`. `Image::delete()` now goes through the service and still fires the model events.
 
+
+**Picker and gallery.** The file picker on the create and edit forms is now the partial `partials/image-input` (a multiple-file input named `images[]`, with a thumbnail per chosen file), and the "uploaded photos" card on the edit pages is the partial `partials/image-gallery` with a Primary badge and buttons to make an image primary or move it earlier or later. The controllers still accept the old single `image` field, so custom forms keep working; custom edit views can include the two partials. New routes on each content module (`announcements`, `bundles`, `categories`, `medias`, `modules`, `pages`, `portfolios`, `posts`, `products`, `promotions`): `POST admin/<module>/imgprimary/{id}` and `POST admin/<module>/imgmove/{id}/{earlier|later}`. Both need the **update** permission, like removing an image, and only work on images owned by that module. Rebuilt assets: publish them again (`vendor:publish --tag=public --force`). Product variant forms use the multiple-file picker, but their gallery has no primary or order controls yet.
 ---
 
 ### Upgrade checklist

@@ -12,11 +12,12 @@ use Redooor\Redminportal\App\Models\Pricelist;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
 {
-    use SorterController, DeleterController;
+    use SorterController, DeleterController, ImageGalleryController;
     
     public function __construct(Bundle $model)
     {
@@ -299,5 +300,15 @@ class BundleController extends Controller
         }
 
         return redirect('admin/bundles');
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Bundle::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/bundles';
     }
 }

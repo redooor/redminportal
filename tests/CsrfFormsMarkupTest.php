@@ -31,7 +31,7 @@ class CsrfFormsMarkupTest extends TestCase
 
     private function postRoutes()
     {
-        return ['/delete/', 'imgremove', 'variant-imgremove', 'delete-variant-json', 'activate/', 'deactivate/', 'orders/update', 'logout', 'medias/duration'];
+        return ['/delete/', 'imgremove', 'imgprimary', 'imgmove', 'variant-imgremove', 'delete-variant-json', 'activate/', 'deactivate/', 'orders/update', 'logout', 'medias/duration'];
     }
 
     public function testEveryPlainPostFormHasACsrfToken()
@@ -99,7 +99,7 @@ class CsrfFormsMarkupTest extends TestCase
             }
         }
 
-        $this->assertGreaterThanOrEqual(30, $links, 'No links to the POST-only routes were found');
+        $this->assertGreaterThanOrEqual(25, $links, 'No links to the POST-only routes were found');
         $this->assertEmpty(
             $offenders,
             "These links point at POST-only routes without btn-confirm, data-method=\"post\" or data-ajax-post (a link a script posts with the token):\n" . implode("\n", $offenders)

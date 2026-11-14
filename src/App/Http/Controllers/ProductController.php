@@ -7,6 +7,7 @@ use Redooor\Redminportal\App\Http\Traits\ProductVariantController;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
@@ -21,7 +22,7 @@ class ProductController extends Controller
     private $weight_units;
     private $volume_units;
     
-    use SorterController, ProductVariantController;
+    use SorterController, ProductVariantController, ImageGalleryController;
 
     public function __construct(Product $model)
     {
@@ -333,5 +334,15 @@ class ProductController extends Controller
         $image->delete();
         
         return redirect($this->pageRoute . '/edit/' . $model_id);
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Product::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/products';
     }
 }

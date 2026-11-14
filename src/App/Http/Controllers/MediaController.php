@@ -11,6 +11,7 @@ use Redooor\Redminportal\App\Models\Media;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
@@ -18,7 +19,7 @@ use Redooor\Redminportal\App\Classes\File as FileInfo;
 
 class MediaController extends Controller
 {
-    use SorterController, MediaUploaderController;
+    use SorterController, MediaUploaderController, ImageGalleryController;
     
     public function __construct(Media $model)
     {
@@ -315,5 +316,15 @@ class MediaController extends Controller
         $image->delete();
 
         return redirect('admin/medias/edit/' . $model_id);
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Media::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/medias';
     }
 }

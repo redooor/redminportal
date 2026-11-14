@@ -92,6 +92,8 @@ class PermissablePermissionTest extends RedminBrowserTestCase
         $this->assertAccess(false, $user, 'POST', '/admin/users/activate/1');
         $this->assertAccess(false, $user, 'POST', '/admin/users/deactivate/1');
         $this->assertAccess(false, $user, 'POST', '/admin/products/imgremove/1');
+        $this->assertAccess(false, $user, 'POST', '/admin/products/imgprimary/1');
+        $this->assertAccess(false, $user, 'POST', '/admin/products/imgmove/1/later');
         $this->assertAccess(false, $user, 'POST', '/admin/products/variant-imgremove/1/1');
         $this->assertAccess(false, $user, 'GET', '/admin/medias/uploadform/1');
         $this->assertAccess(false, $user, 'POST', '/admin/medias/upload/1');
@@ -114,6 +116,8 @@ class PermissablePermissionTest extends RedminBrowserTestCase
         $this->assertAccess(true, $user, 'POST', '/admin/users/activate/1');
         $this->assertAccess(true, $user, 'POST', '/admin/users/deactivate/1');
         $this->assertAccess(true, $user, 'POST', '/admin/products/imgremove/1');
+        $this->assertAccess(true, $user, 'POST', '/admin/products/imgprimary/1');
+        $this->assertAccess(true, $user, 'POST', '/admin/products/imgmove/1/later');
         $this->assertAccess(true, $user, 'POST', '/admin/products/variant-imgremove/1/1');
         $this->assertAccess(true, $user, 'GET', '/admin/medias/uploadform/1');
         $this->assertAccess(true, $user, 'POST', '/admin/medias/upload/1');

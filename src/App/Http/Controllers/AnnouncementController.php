@@ -5,11 +5,12 @@ use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Announcement;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class AnnouncementController extends Controller
 {
-    use SorterController, DeleterController;
+    use SorterController, DeleterController, ImageGalleryController;
     
     public function __construct(Announcement $model)
     {
@@ -132,5 +133,15 @@ class AnnouncementController extends Controller
         $image->delete();
         
         return redirect('admin/announcements/edit/' . $announcement_id);
+    }
+
+    protected function galleryModelClass(): string
+    {
+        return Announcement::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/announcements';
     }
 }
