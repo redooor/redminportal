@@ -340,6 +340,45 @@ i {
   right: 0.5rem;
 }
 
+/* Uploaded image gallery: three columns, actions wrap under each image */
+.redmin-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+@media (max-width: 767.98px) {
+  .redmin-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.redmin-gallery .redmin-gallery-item {
+  min-width: 0;
+}
+.redmin-gallery .redmin-gallery-item img {
+  display: block;
+  width: 100%;
+}
+.redmin-gallery .redmin-gallery-badge {
+  min-height: 1.75rem;
+  padding-top: 0.5rem;
+}
+.redmin-gallery .redmin-gallery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.redmin-gallery .redmin-gallery-actions .btn {
+  width: 2.25rem;
+  height: 2rem;
+  padding: 0;
+  font-size: 14px;
+  line-height: 2rem;
+  text-align: center;
+}
+.redmin-gallery .redmin-gallery-actions i {
+  margin-right: 0;
+}
+
 /* Breadcrumb navbar (page trail in the top bar) */
 .navbar-breadcrumb .nav-item {
   display: flex;

@@ -25,15 +25,16 @@
         <h4 class="card-title mb-0">{{ Lang::get('redminportal::forms.uploaded_photos') }}</h4>
     </div>
     <div class="card-body">
-        <div class="row">
+        <div class="redmin-gallery">
             @foreach ($images as $image)
-            <div class="col-lg-3 redmin-gallery-item" data-image-id="{{ $image->id }}">
+            <div class="redmin-gallery-item" data-image-id="{{ $image->id }}">
                 <img src="{{ url($imagine->getUrl($image->path)) }}" class="img-thumbnail" alt="{{ $alt }}">
-                @if ($image->is_primary)
-                <div><span class="badge bg-primary redmin-gallery-primary">{{ Lang::get('redminportal::forms.primary_image') }}</span></div>
-                @endif
-                <br><br>
-                <div class="btn-group btn-group-sm">
+                <div class="redmin-gallery-badge">
+                    @if ($image->is_primary)
+                    <span class="badge bg-primary redmin-gallery-primary">{{ Lang::get('redminportal::forms.primary_image') }}</span>
+                    @endif
+                </div>
+                <div class="redmin-gallery-actions">
                     @if (! $image->is_primary)
                     @permitted($base . '/imgprimary/' . $image->id)
                     <a href="{{ URL::to($base . '/imgprimary/' . $image->id) }}" class="btn btn-warning" data-method="post" title="{{ Lang::get('redminportal::forms.make_primary') }}" aria-label="{{ Lang::get('redminportal::forms.make_primary') }}">
