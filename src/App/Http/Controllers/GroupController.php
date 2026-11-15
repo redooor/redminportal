@@ -2,15 +2,16 @@
 
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Auth;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\GroupRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\PermissibleController;
 use Redooor\Redminportal\App\Models\Group;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
 
 class GroupController extends Controller
 {
-    use SorterController, PermissibleController;
+    use SorterController, PermissibleController, ValidatesInput;
     
     public function __construct(Group $model)
     {
@@ -83,22 +84,7 @@ class GroupController extends Controller
     public function postStore()
     {
         $sid = Request::input('id');
-        
-        $rules = array(
-            'name' => 'required',
-            'permission-inherit' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
-            'permission-allow' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
-            'permission-deny' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i'
-        );
-        
-        $messages = array(
-            'permission-inherit.regex' => 'The permission inherit format is invalid. Try using the Permission Builder.',
-            'permission-allow.regex' => 'The permission allow format is invalid. Try using the Permission Builder.',
-            'permission-deny.regex' => 'The permission deny format is invalid. Try using the Permission Builder.'
-        );
 
-        $validation = Validator::make(Request::all(), $rules, $messages);
-        
         if (isset($sid)) {
             $redirect_url = 'admin/groups/edit/' . $sid;
             $group = Group::find($sid);
@@ -106,9 +92,11 @@ class GroupController extends Controller
             $redirect_url = 'admin/groups/create';
             $group = new Group;
         }
-        
-        if ($validation->fails()) {
-            return redirect($redirect_url)->withErrors($validation)->withInput();
+
+        $rules = new GroupRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $redirect_url);
+        if ($failure) {
+            return $failure;
         }
         
         $permissions = $this->populatePermission(
