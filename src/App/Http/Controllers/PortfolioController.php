@@ -1,11 +1,12 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
 use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
 use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
 use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\PortfolioRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Portfolio;
@@ -16,7 +17,7 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PortfolioController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations;
+    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, ValidatesInput;
     
     public function __construct(Portfolio $model)
     {
@@ -88,30 +89,10 @@ class PortfolioController extends Controller
     {
         $sid = Request::input('id');
 
-        /*
-         * Validate
-         */
-        $rules = array(
-            'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'            => 'array',
-            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required',
-            'short_description' => 'required',
-            'category_id'       => 'required|numeric|min:1',
-        );
-        
-        $messages = [
-            'category_id.min' => 'The category field is required.'
-        ];
-
-        $validation = Validator::make(Request::all(), $rules, $messages);
-
-        if ($validation->fails()) {
-            if (isset($sid)) {
-                return redirect('admin/portfolios/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return redirect('admin/portfolios/create')->withErrors($validation)->withInput();
-            }
+        $rules = new PortfolioRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), isset($sid) ? 'admin/portfolios/edit/' . $sid : 'admin/portfolios/create');
+        if ($failure) {
+            return $failure;
         }
 
         $name               = Request::input('name');
