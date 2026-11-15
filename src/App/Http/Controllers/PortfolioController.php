@@ -1,20 +1,22 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
+use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
+use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
+use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Portfolio;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
-use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class PortfolioController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController;
+    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations;
     
     public function __construct(Portfolio $model)
     {
@@ -61,12 +63,10 @@ class PortfolioController extends Controller
         $portfolio = Portfolio::find($sid);
 
         if ($portfolio == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                'admin/portfolios',
                 "The portfolio cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('admin/portfolios')->withErrors($errors);
         }
 
         $categories = Category::where('active', true)
@@ -75,10 +75,7 @@ class PortfolioController extends Controller
             ->orderBy('name')
             ->get();
 
-        $translated = array();
-        foreach ($portfolio->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
+        $translated = $this->translatedContentFor($portfolio);
 
         return view('redminportal::portfolios/edit')
             ->with('portfolio', $portfolio)
@@ -127,12 +124,10 @@ class PortfolioController extends Controller
         $portfolio = (isset($sid) ? Portfolio::find($sid) : new Portfolio);
         
         if ($portfolio == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/portfolios',
                 "The portfolio cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/portfolios')->withErrors($errors);
         }
 
         $portfolio->name = $name;
@@ -144,30 +139,7 @@ class PortfolioController extends Controller
         $portfolio->save();
         
         // Save translations
-        $translations = Config::get('redminportal::translation');
-        foreach ($translations as $translation) {
-            $lang = $translation['lang'];
-            if ($lang == 'en') {
-                continue;
-            }
-
-            $translated_content = array(
-                'name'                  => Request::input($lang . '_name'),
-                'short_description'     => Request::input($lang . '_short_description'),
-                'long_description'      => Request::input($lang . '_long_description')
-            );
-
-            // Check if lang exist
-            $translated_model = $portfolio->translations->where('lang', $lang)->first();
-            if ($translated_model == null) {
-                $translated_model = new Translation;
-            }
-
-            $translated_model->lang = $lang;
-            $translated_model->content = json_encode($translated_content);
-
-            $portfolio->translations()->save($translated_model);
-        }
+        $this->saveTranslationsFromInput($portfolio, array('name', 'short_description', 'long_description'));
 
         $imageFiles = ImageService::filesFrom();
 
@@ -176,23 +148,6 @@ class PortfolioController extends Controller
         }
 
         return redirect('admin/portfolios');
-    }
-
-    public function getImgremove($sid)
-    {
-        $image = $this->findOwnedImage($sid, Portfolio::class);
-
-        if ($image == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return redirect('/admin/portfolios')->withErrors($errors);
-        }
-
-        $portfolio_id = $image->imageable_id;
-
-        $image->delete();
-
-        return redirect('admin/portfolios/edit/' . $portfolio_id);
     }
 
     protected function galleryModelClass(): string
