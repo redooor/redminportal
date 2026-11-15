@@ -6,15 +6,16 @@ use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
 use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
 use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
 use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\CategoryRules;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    use ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations;
+    use ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, ValidatesInput;
 
     public function getIndex()
     {
@@ -87,19 +88,10 @@ class CategoryController extends Controller
         /*
          * Validate
          */
-        $rules = array(
-            'image'                 => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'                => 'array',
-            'images.*'              => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'                  => 'required',
-            'short_description'     => 'required',
-            'order'                 => 'required|min:0',
-        );
-
-        $validation = Validator::make(Request::all(), $rules);
-        
-        if ($validation->fails()) {
-            return redirect($return_path)->withErrors($validation)->withInput();
+        $rules = new CategoryRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $return_path);
+        if ($failure) {
+            return $failure;
         }
         
         $name               = Request::input('name');
