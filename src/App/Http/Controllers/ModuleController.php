@@ -263,7 +263,7 @@ class ModuleController extends Controller
             return redirect()->back()->withErrors($errors);
         }
 
-        $purchases = Order::join('order_pricelist', 'orders.id', '=', 'order_pricelist.id')
+        $purchases = Order::join('order_pricelist', 'orders.id', '=', 'order_pricelist.order_id')
             ->join('pricelists', 'pricelists.id', '=', 'order_pricelist.pricelist_id')
             ->where('pricelists.module_id', $sid)
             ->get();
