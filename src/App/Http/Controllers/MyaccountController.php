@@ -4,12 +4,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\MyaccountRules;
 use Redooor\Redminportal\App\Models\User;
 
 class MyaccountController extends Controller
 {
+    use ValidatesInput;
     
     public function __construct(User $model)
     {
@@ -44,21 +46,10 @@ class MyaccountController extends Controller
         $sid = $authUser->id;
         $user = User::find($sid);
         
-        $rules = array(
-            'first_name'    => 'required',
-            'last_name'     => 'required',
-            'old_password'  => 'required',
-            'password'      => 'confirmed|min:' . config('redminportal::password.min_length', 10)
-        );
-        
-        $messages = array(
-            'old_password.required' => trans('redminportal::messages.user_error_old_password_required')
-        );
-
-        $validation = Validator::make(Request::all(), $rules, $messages);
-        
-        if ($validation->fails()) {
-            return redirect($this->pageRoute)->withErrors($validation)->withInput();
+        $rules = new MyaccountRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $this->pageRoute);
+        if ($failure) {
+            return $failure;
         }
         
         $old_password = Request::input('old_password');

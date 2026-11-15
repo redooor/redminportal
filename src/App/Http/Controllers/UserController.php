@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\UserRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\SearcherController;
 use Redooor\Redminportal\App\Http\Traits\PermissibleController;
@@ -14,7 +15,7 @@ use Redooor\Redminportal\App\Models\Group;
 
 class UserController extends Controller
 {
-    use SorterController, PermissibleController, SearcherController;
+    use SorterController, PermissibleController, SearcherController, ValidatesInput;
     
     public function __construct(User $model)
     {
@@ -117,21 +118,10 @@ class UserController extends Controller
         $sid = Request::input('id');
         $errors = new MessageBag;
         
-        $rules = array(
-            'first_name'    => 'required',
-            'last_name'     => 'required',
-            'role'          => 'required',
-            'email'         => 'required|unique:users,email,' . $sid,
-            'permission-inherit' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
-            'permission-allow'   => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
-            'permission-deny'    => 'nullable|regex:/^[a-z,0-9._\-?]+$/i'
-        );
-        
         // Get activated input first, for checking if user is deactivating own account
         $activated = (Request::input('activated') == '' ? false : true);
         
         if (isset($sid)) {
-            $rules['password'] = 'confirmed|min:' . config('redminportal::password.min_length', 10);
             $path ='admin/users/edit/' . $sid;
             $user = User::find($sid);
             
@@ -144,21 +134,14 @@ class UserController extends Controller
                 return redirect($path)->withErrors($errors)->withInput();
             }
         } else {
-            $rules['password'] = 'required|confirmed|min:' . config('redminportal::password.min_length', 10);
             $path = 'admin/users/create';
             $user = new User;
         }
         
-        $messages = array(
-            'permission-inherit.regex' => 'The permission inherit format is invalid. Try using the Permission Builder.',
-            'permission-allow.regex' => 'The permission allow format is invalid. Try using the Permission Builder.',
-            'permission-deny.regex' => 'The permission deny format is invalid. Try using the Permission Builder.'
-        );
-
-        $validation = Validator::make(Request::all(), $rules, $messages);
-        
-        if ($validation->fails()) {
-            return redirect($path)->withErrors($validation)->withInput();
+        $rules = new UserRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $path);
+        if ($failure) {
+            return $failure;
         }
         
         // If user can't be created or found

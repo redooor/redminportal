@@ -2,7 +2,8 @@
 
 use Exception;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\CouponRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
@@ -13,7 +14,7 @@ use Redooor\Redminportal\App\Models\Bundle;
 
 class CouponController extends Controller
 {
-    use SorterController, DeleterController;
+    use SorterController, DeleterController, ValidatesInput;
     
     public function __construct(Coupon $model)
     {
@@ -178,20 +179,10 @@ class CouponController extends Controller
             $url = 'admin/coupons/create';
         }
 
-        $rules = array(
-            'code'          => 'required',
-            'amount'        => 'required',
-            'start_date'    => 'required',
-            'end_date'      => 'required',
-            'amount'        => 'numeric',
-            'min_spent'     => 'numeric',
-            'max_spent'     => 'numeric'
-        );
-        
-        $validation = Validator::make(Request::all(), $rules);
-
-        if ($validation->fails()) {
-            return redirect($url)->withErrors($validation)->withInput();
+        $rules = new CouponRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $url);
+        if ($failure) {
+            return $failure;
         }
         
         // If id is set, check that it exists

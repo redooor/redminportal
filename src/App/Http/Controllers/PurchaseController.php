@@ -1,12 +1,13 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\PurchaseRules;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\UserPricelist;
 use Redooor\Redminportal\App\Models\Pricelist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
 
 class PurchaseController extends Controller
 {
@@ -16,6 +17,7 @@ class PurchaseController extends Controller
     use DeleterController {
         getDelete as protected deletePurchase;
     }
+    use ValidatesInput;
     
     public function __construct(UserPricelist $model)
     {
@@ -99,20 +101,12 @@ class PurchaseController extends Controller
 
         $sid = Request::input('id');
 
-        $rules = array(
-            'pricelist_id'      => 'required|integer',
-            'transaction_id'    => 'required',
-            'payment_status'    => 'required',
-            'paid'              => 'numeric',
-            'email'             => 'required|email'
-        );
-
-        $validation = Validator::make(Request::all(), $rules);
-
         $redirect_url = (isset($sid)) ? 'admin/purchases/edit/' . $sid : 'admin/purchases/create';
-        
-        if ($validation->fails()) {
-            return redirect($redirect_url)->withErrors($validation)->withInput();
+
+        $rules = new PurchaseRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $redirect_url);
+        if ($failure) {
+            return $failure;
         }
         
         $pricelist_id   = Request::input('pricelist_id');

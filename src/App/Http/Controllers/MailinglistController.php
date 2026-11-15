@@ -1,14 +1,15 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\MailinglistRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Mailinglist;
 
 class MailinglistController extends Controller
 {
-    use SorterController, DeleterController;
+    use SorterController, DeleterController, ValidatesInput;
     
     public function __construct(Mailinglist $model)
     {
@@ -64,23 +65,15 @@ class MailinglistController extends Controller
     {
         $sid = Request::input('id');
 
+        $return_path = (isset($sid) ? 'admin/mailinglists/edit/' . $sid : 'admin/mailinglists/create');
+
         /*
          * Validate
          */
-        $rules = array(
-            'email'          => 'required|unique:mailinglists,email' . (isset($sid) ? ',' . $sid : ''),
-            'first_name'     => 'required',
-            'last_name'      => 'required'
-        );
-
-        $validation = Validator::make(Request::all(), $rules);
-
-        if ($validation->fails()) {
-            if (isset($sid)) {
-                return redirect('admin/mailinglists/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return redirect('admin/mailinglists/create')->withErrors($validation)->withInput();
-            }
+        $rules = new MailinglistRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $return_path);
+        if ($failure) {
+            return $failure;
         }
 
         $email       = Request::input('email');

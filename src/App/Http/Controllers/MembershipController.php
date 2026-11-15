@@ -1,14 +1,15 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\MembershipRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 
 class MembershipController extends Controller
 {
-    use SorterController;
+    use SorterController, ValidatesInput;
     
     public function __construct(Membership $model)
     {
@@ -63,19 +64,11 @@ class MembershipController extends Controller
     {
         $sid = Request::input('id');
         
-        $rules = array(
-            'name'   => 'required|unique:memberships,name' . (isset($sid) ? ',' . $sid : ''),
-            'rank'   => 'required|min:0',
-        );
-
-        $validation = Validator::make(Request::all(), $rules);
-
-        if ($validation->fails()) {
-            if (isset($sid)) {
-                return redirect('admin/memberships/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return redirect('admin/memberships/create')->withErrors($validation)->withInput();
-            }
+        $rules = new MembershipRules;
+        $failureUrl = isset($sid) ? 'admin/memberships/edit/' . $sid : 'admin/memberships/create';
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $failureUrl);
+        if ($failure) {
+            return $failure;
         }
 
         $name      = Request::input('name');
