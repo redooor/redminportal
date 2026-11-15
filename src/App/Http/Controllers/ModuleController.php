@@ -2,12 +2,13 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
 use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
 use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
 use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
 use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\ModuleRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Media;
@@ -22,7 +23,7 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
 {
-    use SorterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags;
+    use SorterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags, ValidatesInput;
     
     public function __construct(Module $model)
     {
@@ -149,29 +150,10 @@ class ModuleController extends Controller
     {
         $sid = Request::input('id');
         
-        $rules = array(
-            'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'            => 'array',
-            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:modules,name' . (isset($sid) ? ',' . $sid : ''),
-            'short_description' => 'required',
-            'sku'               => 'required|alpha_dash|unique:modules,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
-        );
-        
-        $messages = [
-            'category_id.min' => 'The category field is required.'
-        ];
-
-        $validation = Validator::make(Request::all(), $rules, $messages);
-
-        if ($validation->fails()) {
-            if (isset($sid)) {
-                return redirect('admin/modules/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return redirect('admin/modules/create')->withErrors($validation)->withInput();
-            }
+        $rules = new ModuleRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), isset($sid) ? 'admin/modules/edit/' . $sid : 'admin/modules/create');
+        if ($failure) {
+            return $failure;
         }
         
         $name               = Request::input('name');
