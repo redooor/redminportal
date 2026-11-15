@@ -3,12 +3,13 @@
 use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
 use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
 use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
 use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
 use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\MediaRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\MediaUploaderController;
 use Redooor\Redminportal\App\Models\Media;
@@ -21,7 +22,7 @@ use Redooor\Redminportal\App\Classes\File as FileInfo;
 
 class MediaController extends Controller
 {
-    use SorterController, MediaUploaderController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags;
+    use SorterController, MediaUploaderController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags, ValidatesInput;
     
     public function __construct(Media $model)
     {
@@ -98,27 +99,10 @@ class MediaController extends Controller
     {
         $sid = Request::input('id');
         
-        $rules = array(
-            'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'            => 'array',
-            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:medias,name' . (isset($sid) ? ',' . $sid : ''),
-            'short_description' => 'required',
-            'sku'               => 'required|alpha_dash|unique:medias,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
-        );
-        
-        $messages = [
-            'category_id.min' => 'The category field is required.'
-        ];
-
-        $validation = Validator::make(Request::all(), $rules, $messages);
-        
-        if ($validation->fails()) {
-            return redirect('admin/medias/' . (isset($sid) ? 'edit/' . $sid : 'create'))
-                ->withErrors($validation)
-                ->withInput();
+        $rules = new MediaRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), 'admin/medias/' . (isset($sid) ? 'edit/' . $sid : 'create'));
+        if ($failure) {
+            return $failure;
         }
         
         $name               = Request::input('name');
