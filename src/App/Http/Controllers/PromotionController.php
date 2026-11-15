@@ -6,15 +6,17 @@ use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Promotion;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
-use Redooor\Redminportal\App\Models\Translation;
+use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
+use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
+use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Config;
 
 class PromotionController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController;
+    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations;
     
     public function __construct(Promotion $model)
     {
@@ -53,18 +55,13 @@ class PromotionController extends Controller
         $promotion = Promotion::find($sid);
         
         if ($promotion == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/promotions',
                 "The promotion cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/promotions')->withErrors($errors);
         }
         
-        $translated = array();
-        foreach ($promotion->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
+        $translated = $this->translatedContentFor($promotion);
         
         return view('redminportal::promotions/edit')
             ->with('promotion', $promotion)
@@ -111,12 +108,10 @@ class PromotionController extends Controller
         $promotion = (isset($sid) ? Promotion::find($sid) : new Promotion);
         
         if ($promotion == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/promotions',
                 "The promotion cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/promotions')->withErrors($errors);
         }
         
         $promotion->name = $name;
@@ -129,30 +124,7 @@ class PromotionController extends Controller
         $promotion->save();
         
         // Save translations
-        $translations = Config::get('redminportal::translation');
-        foreach ($translations as $translation) {
-            $lang = $translation['lang'];
-            if ($lang == 'en') {
-                continue;
-            }
-
-            $translated_content = array(
-                'name'                  => Request::input($lang . '_name'),
-                'short_description'     => Request::input($lang . '_short_description'),
-                'long_description'      => Request::input($lang . '_long_description')
-            );
-
-            // Check if lang exist
-            $translated_model = $promotion->translations->where('lang', $lang)->first();
-            if ($translated_model == null) {
-                $translated_model = new Translation;
-            }
-
-            $translated_model->lang = $lang;
-            $translated_model->content = json_encode($translated_content);
-
-            $promotion->translations()->save($translated_model);
-        }
+        $this->saveTranslationsFromInput($promotion, array('name', 'short_description', 'long_description'));
         
         $imageFiles = ImageService::filesFrom();
 
@@ -163,23 +135,6 @@ class PromotionController extends Controller
         return redirect('admin/promotions');
     }
     
-    public function getImgremove($sid)
-    {
-        $image = $this->findOwnedImage($sid, Promotion::class);
-
-        if ($image == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return redirect('/admin/promotions')->withErrors($errors);
-        }
-
-        $model_id = $image->imageable_id;
-
-        $image->delete();
-
-        return redirect('admin/promotions/edit/' . $model_id);
-    }
-
     protected function galleryModelClass(): string
     {
         return Promotion::class;
