@@ -5,6 +5,8 @@ use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
 use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
 use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
 use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\ProductRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\ProductVariantController;
 use Redooor\Redminportal\App\Models\Product;
@@ -14,7 +16,6 @@ use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Redooor\Redminportal\App\Classes\Weight;
 use Redooor\Redminportal\App\Classes\Volume;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
 
@@ -23,7 +24,7 @@ class ProductController extends Controller
     private $weight_units;
     private $volume_units;
     
-    use SorterController, ProductVariantController, ImageGalleryController, PreparesEditData, RedirectsNotFound, SavesTranslations, SyncsTags;
+    use SorterController, ProductVariantController, ImageGalleryController, PreparesEditData, RedirectsNotFound, SavesTranslations, SyncsTags, ValidatesInput;
 
     public function __construct(Product $model)
     {
@@ -126,40 +127,20 @@ class ProductController extends Controller
         /*
          * Validate
          */
-        $rules = array(
-            'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'            => 'array',
-            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:products,name' . (isset($sid) ? ',' . $sid : ''),
-            'short_description' => 'required',
-            'price'             => 'numeric',
-            'sku'               => 'required|alpha_dash|unique:products,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
-            'weight'            => 'numeric',
-            'length'            => 'numeric',
-            'width'             => 'numeric',
-            'height'            => 'numeric'
-        );
-        
-        $messages = [
-            'category_id.min' => 'The category field is required.'
-        ];
+        $redirect_url = $this->pageRoute . '/create';
 
-        $validation = Validator::make(Request::all(), $rules, $messages);
-        
-        if ($validation->fails()) {
-            $redirect_url = $this->pageRoute . '/create';
-            
-            if ($product_id and $sid) {
-                $redirect_url = $this->pageRoute . '/edit-variant/' . $product_id . '/' . $sid;
-            } elseif ($product_id and !$sid) {
-                $redirect_url = $this->pageRoute . '/create-variant/' . $product_id;
-            } elseif ($sid) {
-                $redirect_url = $this->pageRoute . '/edit/' . $sid;
-            }
-            
-            return redirect($redirect_url)->withErrors($validation)->withInput();
+        if ($product_id and $sid) {
+            $redirect_url = $this->pageRoute . '/edit-variant/' . $product_id . '/' . $sid;
+        } elseif ($product_id and !$sid) {
+            $redirect_url = $this->pageRoute . '/create-variant/' . $product_id;
+        } elseif ($sid) {
+            $redirect_url = $this->pageRoute . '/edit/' . $sid;
+        }
+
+        $rules = new ProductRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $redirect_url);
+        if ($failure) {
+            return $failure;
         }
         
         if ($product_id) {
