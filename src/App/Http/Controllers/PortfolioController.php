@@ -131,6 +131,11 @@ class PortfolioController extends Controller
         return redirect('admin/portfolios');
     }
 
+    public function getImgremove($sid)
+    {
+        return $this->removeOwnedGalleryImage($sid, Portfolio::class, 'admin/portfolios');
+    }
+
     protected function galleryModelClass(): string
     {
         return Portfolio::class;

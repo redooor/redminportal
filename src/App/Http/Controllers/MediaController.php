@@ -242,6 +242,11 @@ class MediaController extends Controller
         return $status;
     }
     
+    public function getImgremove($sid)
+    {
+        return $this->removeOwnedGalleryImage($sid, Media::class, 'admin/medias');
+    }
+
     protected function galleryModelClass(): string
     {
         return Media::class;

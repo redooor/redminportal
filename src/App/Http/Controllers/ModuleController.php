@@ -283,6 +283,11 @@ class ModuleController extends Controller
         return redirect()->back();
     }
     
+    public function getImgremove($sid)
+    {
+        return $this->removeOwnedGalleryImage($sid, Module::class, 'admin/modules');
+    }
+
     protected function galleryModelClass(): string
     {
         return Module::class;

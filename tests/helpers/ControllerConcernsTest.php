@@ -519,6 +519,11 @@ class ControllerConcernsGalleryDouble extends Controller
 {
     use RemovesGalleryImages;
 
+    public function getImgremove($sid)
+    {
+        return $this->removeOwnedGalleryImage($sid, Page::class, 'admin/pages');
+    }
+
     protected function galleryModelClass(): string
     {
         return Page::class;

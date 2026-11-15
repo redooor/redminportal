@@ -71,6 +71,30 @@ class HostSubclassCompatibilityTest extends BaseControllerTest
     }
 
     /**
+     * Test (Pass): a host subclass overriding the gallery methods does not change image removal
+     */
+    public function testHostGalleryOverridesDoNotChangeImageRemoval()
+    {
+        $page = $this->createNewModel(new Page, array(
+            'title' => 'Gallery host page',
+            'slug' => 'gallery_host_page',
+            'content' => 'Body'
+        ));
+        $image = new \Redooor\Redminportal\App\Models\Image();
+        $image->path = 'dummy.jpg';
+        $page->images()->save($image);
+
+        $controller = new CharacterizationGalleryOverridePageController(new Page);
+        $response = $controller->getImgremove($image->id);
+
+        $this->assertSame(url('admin/pages/edit/' . $page->id), $response->getTargetUrl());
+        $this->assertNull(\Redooor\Redminportal\App\Models\Image::find($image->id));
+
+        $missing = $controller->getImgremove(999999);
+        $this->assertSame(url('/admin/pages'), $missing->getTargetUrl());
+    }
+
+    /**
      * Test (Pass): a host subclass overriding postStore and adding helpers still creates a product
      */
     public function testHostProductSubclassCreatesProductLikeStockController()
@@ -144,5 +168,21 @@ class CharacterizationHostProductController extends ProductController
     public function validate()
     {
         return 'host-product-validate';
+    }
+}
+
+/**
+ * Host-like Page controller that overrides the gallery methods used by the primary and order actions.
+ */
+class CharacterizationGalleryOverridePageController extends PageController
+{
+    protected function galleryModelClass(): string
+    {
+        return \Redooor\Redminportal\App\Models\Category::class;
+    }
+
+    protected function galleryPath(): string
+    {
+        return 'admin/elsewhere';
     }
 }

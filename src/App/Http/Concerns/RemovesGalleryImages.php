@@ -3,30 +3,33 @@
 /*
  * Internal helper for removing gallery images. Not an extension API.
  *
- * Requires ImageGalleryController or equivalent: galleryModelClass() and galleryPath().
+ * The controller keeps its own public getImgremove() action and passes its fixed model class and path, so a host
+ * subclass that overrides the gallery model class or path methods does not change image removal.
  */
 trait RemovesGalleryImages
 {
     /**
-     * Remove an image owned by this controller's gallery model
+     * Remove an image owned by the given model class
      *
      * @param integer $sid Image id
+     * @param string $modelClass Model class that owns the image
+     * @param string $path Admin path of the module, e.g. admin/pages
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function getImgremove($sid)
+    private function removeOwnedGalleryImage($sid, string $modelClass, string $path)
     {
-        $image = $this->findOwnedImage($sid, $this->galleryModelClass());
+        $image = $this->findOwnedImage($sid, $modelClass);
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;
             $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return redirect('/' . $this->galleryPath())->withErrors($errors);
+            return redirect('/' . $path)->withErrors($errors);
         }
 
         $image_owner_id = $image->imageable_id;
 
         $image->delete();
 
-        return redirect($this->galleryPath() . '/edit/' . $image_owner_id);
+        return redirect($path . '/edit/' . $image_owner_id);
     }
 }

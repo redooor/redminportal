@@ -149,6 +149,11 @@ class PostController extends Controller
         return redirect('admin/posts');
     }
 
+    public function getImgremove($sid)
+    {
+        return $this->removeOwnedGalleryImage($sid, Post::class, 'admin/posts');
+    }
+
     protected function galleryModelClass(): string
     {
         return Post::class;

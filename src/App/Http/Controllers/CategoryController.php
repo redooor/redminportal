@@ -191,6 +191,11 @@ class CategoryController extends Controller
         return redirect()->back();
     }
     
+    public function getImgremove($sid)
+    {
+        return $this->removeOwnedGalleryImage($sid, Category::class, 'admin/categories');
+    }
+
     protected function galleryModelClass(): string
     {
         return Category::class;

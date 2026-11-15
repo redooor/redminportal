@@ -116,6 +116,11 @@ class AnnouncementController extends Controller
         return redirect('admin/announcements');
     }
     
+    public function getImgremove($sid)
+    {
+        return $this->removeOwnedGalleryImage($sid, Announcement::class, 'admin/announcements');
+    }
+
     protected function galleryModelClass(): string
     {
         return Announcement::class;

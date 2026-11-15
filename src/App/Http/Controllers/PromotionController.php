@@ -121,6 +121,11 @@ class PromotionController extends Controller
         return redirect('admin/promotions');
     }
     
+    public function getImgremove($sid)
+    {
+        return $this->removeOwnedGalleryImage($sid, Promotion::class, 'admin/promotions');
+    }
+
     protected function galleryModelClass(): string
     {
         return Promotion::class;
