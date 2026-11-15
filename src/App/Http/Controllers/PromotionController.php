@@ -10,13 +10,14 @@ use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
 use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
 use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
 use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\PromotionRules;
 use Redooor\Redminportal\App\Helpers\RImage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Request;
 
 class PromotionController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations;
+    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, ValidatesInput;
     
     public function __construct(Promotion $model)
     {
@@ -75,25 +76,10 @@ class PromotionController extends Controller
     {
         $sid = Request::input('id');
         
-        $rules = array(
-            'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'            => 'array',
-            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required',
-            'short_description' => 'required',
-            'long_description'  => 'required',
-            'start_date'        => 'required',
-            'end_date'          => 'required',
-        );
-        
-        $validation = Validator::make(Request::all(), $rules);
-         
-        if ($validation->fails()) {
-            if (isset($sid)) {
-                return redirect('admin/promotions/edit/' . $sid)->withErrors($validation)->withInput();
-            } else {
-                return redirect('admin/promotions/create')->withErrors($validation)->withInput();
-            }
+        $rules = new PromotionRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), isset($sid) ? 'admin/promotions/edit/' . $sid : 'admin/promotions/create');
+        if ($failure) {
+            return $failure;
         }
 
         $name               = Request::input('name');
