@@ -1,9 +1,13 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
+use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
+use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
+use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Media;
@@ -12,15 +16,13 @@ use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
-use Redooor\Redminportal\App\Models\Translation;
-use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Models\Pricelist;
 use Redooor\Redminportal\App\Models\Order;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class ModuleController extends Controller
 {
-    use SorterController, ImageGalleryController;
+    use SorterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags;
     
     public function __construct(Module $model)
     {
@@ -96,12 +98,10 @@ class ModuleController extends Controller
 
         // No such id
         if ($module == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/modules',
                 "The module cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/modules')->withErrors($errors);
         }
 
         $categories = Category::where('active', true)
@@ -110,19 +110,9 @@ class ModuleController extends Controller
             ->orderBy('name')
             ->get();
 
-        $tagString = "";
-        foreach ($module->tags as $tag) {
-            if (! empty($tagString)) {
-                $tagString .= ",";
-            }
-
-            $tagString .= $tag->name;
-        }
+        $tagString = $this->tagStringFor($module);
         
-        $translated = array();
-        foreach ($module->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
+        $translated = $this->translatedContentFor($module);
 
         $pricelists = array();
         foreach (Membership::orderBy('rank')->get() as $membership) {
@@ -197,12 +187,10 @@ class ModuleController extends Controller
         $module = (isset($sid) ? Module::find($sid) : new Module);
         
         if ($module == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/modules',
                 "The module cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/modules')->withErrors($errors);
         }
         
         $module->name = $name;
@@ -217,30 +205,7 @@ class ModuleController extends Controller
         $module->save();
         
         // Save translations
-        $translations = Config::get('redminportal::translation');
-        foreach ($translations as $translation) {
-            $lang = $translation['lang'];
-            if ($lang == 'en') {
-                continue;
-            }
-
-            $translated_content = array(
-                'name'                  => Request::input($lang . '_name'),
-                'short_description'     => Request::input($lang . '_short_description'),
-                'long_description'      => Request::input($lang . '_long_description')
-            );
-
-            // Check if lang exist
-            $translated_model = $module->translations->where('lang', $lang)->first();
-            if ($translated_model == null) {
-                $translated_model = new Translation;
-            }
-
-            $translated_model->lang = $lang;
-            $translated_model->content = json_encode($translated_content);
-
-            $module->translations()->save($translated_model);
-        }
+        $this->saveTranslationsFromInput($module, array('name', 'short_description', 'long_description'));
 
         // Save pricelist
         foreach (Membership::all() as $membership) {
@@ -294,15 +259,7 @@ class ModuleController extends Controller
             }
         }
 
-        if (! empty($tags)) {
-            // Delete old tags
-            $module->tags()->detach();
-
-            // Save tags
-            foreach (explode(',', $tags) as $tagName) {
-                Tag::addTag($module, $tagName);
-            }
-        }
+        $this->syncTagsFromInput($module, $tags);
 
         $imageFiles = ImageService::filesFrom();
 
@@ -344,23 +301,6 @@ class ModuleController extends Controller
         return redirect()->back();
     }
     
-    public function getImgremove($sid)
-    {
-        $image = $this->findOwnedImage($sid, Module::class);
-
-        if ($image == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return redirect('/admin/modules')->withErrors($errors);
-        }
-
-        $model_id = $image->imageable_id;
-
-        $image->delete();
-
-        return redirect('admin/modules/edit/' . $model_id);
-    }
-
     protected function galleryModelClass(): string
     {
         return Module::class;
