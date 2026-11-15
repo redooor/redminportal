@@ -1,11 +1,12 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
 use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
 use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
 use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\BundleRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
@@ -18,7 +19,7 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, SavesTranslations, SyncsTags;
+    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, SavesTranslations, SyncsTags, ValidatesInput;
     
     public function __construct(Bundle $model)
     {
@@ -154,22 +155,10 @@ class BundleController extends Controller
             $url = 'admin/bundles/create';
         }
         
-        $rules = array(
-            'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'            => 'array',
-            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:products,name' . (isset($sid) ? ',' . $sid : ''),
-            'short_description' => 'required',
-            'price'             => 'numeric',
-            'sku'               => 'required|alpha_dash|unique:bundles,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
-        );
-        
-        $validation = Validator::make(Request::all(), $rules);
-
-        if ($validation->fails()) {
-            return redirect($url)->withErrors($validation)->withInput();
+        $rules = new BundleRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $url);
+        if ($failure) {
+            return $failure;
         }
         
         // If id is set, check that it exists
