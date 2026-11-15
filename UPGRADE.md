@@ -345,6 +345,10 @@ Category names, product names and the order builder labels are escaped. `Categor
 
 
 **Picker and gallery.** The file picker on the create and edit forms is now the partial `partials/image-input` (a multiple-file input named `images[]`, with a thumbnail per chosen file), and the "uploaded photos" card on the edit pages is the partial `partials/image-gallery` with a Primary badge and buttons to make an image primary or move it earlier or later. The controllers still accept the old single `image` field, so custom forms keep working; custom edit views can include the two partials. New routes on each content module (`announcements`, `bundles`, `categories`, `medias`, `modules`, `pages`, `portfolios`, `posts`, `products`, `promotions`): `POST admin/<module>/imgprimary/{id}` and `POST admin/<module>/imgmove/{id}/{earlier|later}`. Both need the **update** permission, like removing an image, and only work on images owned by that module. Rebuilt assets: publish them again (`vendor:publish --tag=public --force`). Product variant forms use the multiple-file picker, but their gallery has no primary or order controls yet.
+### Step 18 — Controller helpers (no action needed)
+
+The ten content controllers now use internal helper traits (`Redooor\Redminportal\App\Http\Concerns`) and per-form rules classes (`Redooor\Redminportal\App\Http\Validation`). Routes, public controller method names and signatures, redirects, error messages, validation rules and stored data are unchanged, so a host application that extends one of these controllers keeps working, including an override of `postStore()` that calls `parent::postStore()`. The helper methods are `private` and the new classes are internal, not an extension API. `getImgremove` is still a public method on the same route in every controller; in eight of them it now calls a shared private helper with the controller's fixed model class and path, so overriding the gallery methods used by the primary and order actions does not change image removal.
+
 ---
 
 ### Upgrade checklist

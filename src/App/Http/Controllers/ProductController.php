@@ -1,19 +1,21 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
+use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\ProductRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\ProductVariantController;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
-use Redooor\Redminportal\App\Models\Translation;
-use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Redooor\Redminportal\App\Classes\Weight;
 use Redooor\Redminportal\App\Classes\Volume;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
 
@@ -22,7 +24,7 @@ class ProductController extends Controller
     private $weight_units;
     private $volume_units;
     
-    use SorterController, ProductVariantController, ImageGalleryController;
+    use SorterController, ProductVariantController, ImageGalleryController, PreparesEditData, RedirectsNotFound, SavesTranslations, SyncsTags, ValidatesInput;
 
     public function __construct(Product $model)
     {
@@ -87,9 +89,11 @@ class ProductController extends Controller
 
         // No such id
         if ($product == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return redirect($this->pageRoute)->withErrors($errors);
+            return $this->redirectNotFoundWithMessage(
+                $this->pageRoute,
+                Lang::get('redminportal::messages.error_no_such_product'),
+                'errorNoSuchProduct'
+            );
         }
 
         $categories = Category::where('active', true)
@@ -98,19 +102,9 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        $tagString = "";
-        foreach ($product->tags as $tag) {
-            if (! empty($tagString)) {
-                $tagString .= ",";
-            }
+        $tagString = $this->tagStringFor($product);
 
-            $tagString .= $tag->name;
-        }
-
-        $translated = array();
-        foreach ($product->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
+        $translated = $this->translatedContentFor($product);
         
         $data = array(
             'product' => $product,
@@ -133,48 +127,30 @@ class ProductController extends Controller
         /*
          * Validate
          */
-        $rules = array(
-            'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'            => 'array',
-            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:products,name' . (isset($sid) ? ',' . $sid : ''),
-            'short_description' => 'required',
-            'price'             => 'numeric',
-            'sku'               => 'required|alpha_dash|unique:products,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
-            'weight'            => 'numeric',
-            'length'            => 'numeric',
-            'width'             => 'numeric',
-            'height'            => 'numeric'
-        );
-        
-        $messages = [
-            'category_id.min' => 'The category field is required.'
-        ];
+        $redirect_url = $this->pageRoute . '/create';
 
-        $validation = Validator::make(Request::all(), $rules, $messages);
-        
-        if ($validation->fails()) {
-            $redirect_url = $this->pageRoute . '/create';
-            
-            if ($product_id and $sid) {
-                $redirect_url = $this->pageRoute . '/edit-variant/' . $product_id . '/' . $sid;
-            } elseif ($product_id and !$sid) {
-                $redirect_url = $this->pageRoute . '/create-variant/' . $product_id;
-            } elseif ($sid) {
-                $redirect_url = $this->pageRoute . '/edit/' . $sid;
-            }
-            
-            return redirect($redirect_url)->withErrors($validation)->withInput();
+        if ($product_id and $sid) {
+            $redirect_url = $this->pageRoute . '/edit-variant/' . $product_id . '/' . $sid;
+        } elseif ($product_id and !$sid) {
+            $redirect_url = $this->pageRoute . '/create-variant/' . $product_id;
+        } elseif ($sid) {
+            $redirect_url = $this->pageRoute . '/edit/' . $sid;
+        }
+
+        $rules = new ProductRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $redirect_url);
+        if ($failure) {
+            return $failure;
         }
         
         if ($product_id) {
             $parentProduct = Product::find($product_id);
             if (! $parentProduct) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add('errorDeleteRecord', Lang::get('redminportal::messages.error_no_such_product'));
-                return redirect($this->pageRoute)->withErrors($errors);
+                return $this->redirectNotFoundWithMessage(
+                    $this->pageRoute,
+                    Lang::get('redminportal::messages.error_no_such_product'),
+                    'errorDeleteRecord'
+                );
             }
         }
 
@@ -198,9 +174,11 @@ class ProductController extends Controller
         $product = (isset($sid) ? Product::find($sid) : new Product);
 
         if ($product == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('errorNoSuchProduct', Lang::get('redminportal::messages.error_no_such_product'));
-            return redirect($this->pageRoute)->withErrors($errors);
+            return $this->redirectNotFoundWithMessage(
+                $this->pageRoute,
+                Lang::get('redminportal::messages.error_no_such_product'),
+                'errorNoSuchProduct'
+            );
         }
 
         $product->name = $name;
@@ -227,40 +205,9 @@ class ProductController extends Controller
         }
 
         // Save translations
-        $translations = Config::get('redminportal::translation');
-        foreach ($translations as $translation) {
-            $lang = $translation['lang'];
-            if ($lang == 'en') {
-                continue;
-            }
+        $this->saveTranslationsFromInput($product, array('name', 'short_description', 'long_description'));
 
-            $translated_content = array(
-                'name'                  => Request::input($lang . '_name'),
-                'short_description'     => Request::input($lang . '_short_description'),
-                'long_description'      => Request::input($lang . '_long_description')
-            );
-
-            // Check if lang exist
-            $translated_model = $product->translations->where('lang', $lang)->first();
-            if ($translated_model == null) {
-                $translated_model = new Translation;
-            }
-
-            $translated_model->lang = $lang;
-            $translated_model->content = json_encode($translated_content);
-
-            $product->translations()->save($translated_model);
-        }
-
-        if (! empty($tags)) {
-            // Delete old tags
-            $product->tags()->detach();
-
-            // Save tags
-            foreach (explode(',', $tags) as $tagName) {
-                Tag::addTag($product, $tagName);
-            }
-        }
+        $this->syncTagsFromInput($product, $tags);
 
         $imageFiles = ImageService::filesFrom();
 

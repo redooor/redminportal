@@ -1,21 +1,24 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
+use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
+use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
+use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\PostRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Post;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
-use Redooor\Redminportal\App\Models\Translation;
-use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class PostController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController;
+    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags, ValidatesInput;
     
     public function __construct(Post $model)
     {
@@ -62,18 +65,13 @@ class PostController extends Controller
         $post = Post::find($sid);
 
         if ($post == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                'admin/posts',
                 "The post cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('admin/posts')->withErrors($errors);
         }
         
-        $translated = array();
-        foreach ($post->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
+        $translated = $this->translatedContentFor($post);
 
         $categories = Category::where('active', true)
             ->where('category_id', 0)
@@ -81,14 +79,7 @@ class PostController extends Controller
             ->orderBy('name')
             ->get();
         
-        $tagString = "";
-        foreach ($post->tags as $tag) {
-            if (! empty($tagString)) {
-                $tagString .= ",";
-            }
-
-            $tagString .= $tag->name;
-        }
+        $tagString = $this->tagStringFor($post);
         
         $data = [
             'post' => $post,
@@ -105,21 +96,10 @@ class PostController extends Controller
     {
         $sid = Request::input('id');
         
-        $rules = array(
-            'image'         => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'        => 'array',
-            'images.*'      => 'mimes:jpg,jpeg,png,gif|max:500',
-            'title'         => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
-            'slug'          => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
-            'content'       => 'required',
-        );
-
-        $validation = Validator::make(Request::all(), $rules);
-        
-        if ($validation->fails()) {
-            return redirect('admin/posts/' . (isset($sid) ? 'edit/' . $sid : 'create'))
-                ->withErrors($validation)
-                ->withInput();
+        $rules = new PostRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), 'admin/posts/' . (isset($sid) ? 'edit/' . $sid : 'create'));
+        if ($failure) {
+            return $failure;
         }
         
         $title              = Request::input('title');
@@ -134,12 +114,10 @@ class PostController extends Controller
         $post = (isset($sid) ? Post::find($sid) : new Post);
 
         if ($post == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/posts',
                 "The post cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/posts')->withErrors($errors);
         }
 
         $post->title = $title;
@@ -156,30 +134,9 @@ class PostController extends Controller
         $post->save();
 
         // Save translations
-        $translations = Config::get('redminportal::translation');
-        foreach ($translations as $translation) {
-            $lang = $translation['lang'];
-            if ($lang == 'en') {
-                continue;
-            }
-
-            $translated_content = array(
-                'title'     => Request::input($lang . '_title'),
-                'slug'      => str_replace(' ', '_', Request::input($lang . '_slug')),
-                'content'   => Request::input($lang . '_content')
-            );
-
-            // Check if lang exist
-            $translated_model = $post->translations->where('lang', $lang)->first();
-            if ($translated_model == null) {
-                $translated_model = new Translation;
-            }
-
-            $translated_model->lang = $lang;
-            $translated_model->content = json_encode($translated_content);
-
-            $post->translations()->save($translated_model);
-        }
+        $this->saveTranslationsFromInput($post, array('title', 'slug', 'content'), function ($field, $value) {
+            return $field == 'slug' ? str_replace(' ', '_', $value) : $value;
+        });
 
         $imageFiles = ImageService::filesFrom();
 
@@ -187,34 +144,14 @@ class PostController extends Controller
             (new ImageService)->attach($post, $imageFiles, 'posts');
         }
 
-        if (! empty($tags)) {
-            // Delete old tags
-            $post->tags()->detach();
-
-            // Save tags
-            foreach (explode(',', $tags) as $tagName) {
-                Tag::addTag($post, $tagName);
-            }
-        }
+        $this->syncTagsFromInput($post, $tags);
 
         return redirect('admin/posts');
     }
 
     public function getImgremove($sid)
     {
-        $image = $this->findOwnedImage($sid, Post::class);
-
-        if ($image == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return redirect('/admin/posts')->withErrors($errors);
-        }
-
-        $post_id = $image->imageable_id;
-
-        $image->delete();
-
-        return redirect('admin/posts/edit/' . $post_id);
+        return $this->removeOwnedGalleryImage($sid, Post::class, 'admin/posts');
     }
 
     protected function galleryModelClass(): string

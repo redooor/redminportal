@@ -1,23 +1,25 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
+use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
+use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\BundleRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Bundle;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Models\Pricelist;
-use Redooor\Redminportal\App\Models\Translation;
-use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class BundleController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController;
+    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, SavesTranslations, SyncsTags, ValidatesInput;
     
     public function __construct(Bundle $model)
     {
@@ -85,12 +87,10 @@ class BundleController extends Controller
     {
         $bundle = Bundle::find($sid);
         if ($bundle == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/bundles',
                 "The bundle cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/bundles')->withErrors($errors);
         }
         
         $categories = Category::where('active', true)
@@ -126,19 +126,9 @@ class BundleController extends Controller
             $pricelist_id[$pricelist->id] = $pricelist->id;
         }
         
-        $tagString = "";
-        foreach ($bundle->tags as $tag) {
-            if (! empty($tagString)) {
-                $tagString .= ",";
-            }
-
-            $tagString .= $tag->name;
-        }
+        $tagString = $this->tagStringFor($bundle);
         
-        $translated = array();
-        foreach ($bundle->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
+        $translated = $this->translatedContentFor($bundle);
         
         $data = array(
             'categories' => $categories,
@@ -165,31 +155,21 @@ class BundleController extends Controller
             $url = 'admin/bundles/create';
         }
         
-        $rules = array(
-            'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'            => 'array',
-            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:products,name' . (isset($sid) ? ',' . $sid : ''),
-            'short_description' => 'required',
-            'price'             => 'numeric',
-            'sku'               => 'required|alpha_dash|unique:bundles,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
-        );
-        
-        $validation = Validator::make(Request::all(), $rules);
-
-        if ($validation->fails()) {
-            return redirect($url)->withErrors($validation)->withInput();
+        $rules = new BundleRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $url);
+        if ($failure) {
+            return $failure;
         }
         
         // If id is set, check that it exists
         if (isset($sid)) {
             $bundle = Bundle::find($sid);
             if ($bundle == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add('bundleError', "The bundle does not exist or may have been deleted.");
-                return redirect('admin/bundles')->withErrors($errors);
+                return $this->redirectNotFoundWithMessage(
+                    'admin/bundles',
+                    "The bundle does not exist or may have been deleted.",
+                    'bundleError'
+                );
             }
         }
         
@@ -258,40 +238,9 @@ class BundleController extends Controller
         }
         
         // Save translations
-        $translations = Config::get('redminportal::translation');
-        foreach ($translations as $translation) {
-            $lang = $translation['lang'];
-            if ($lang == 'en') {
-                continue;
-            }
-
-            $translated_content = array(
-                'name'                  => Request::input($lang . '_name'),
-                'short_description'     => Request::input($lang . '_short_description'),
-                'long_description'      => Request::input($lang . '_long_description')
-            );
-
-            // Check if lang exist
-            $translated_model = $newBundle->translations->where('lang', $lang)->first();
-            if ($translated_model == null) {
-                $translated_model = new Translation;
-            }
-            
-            $translated_model->lang = $lang;
-            $translated_model->content = json_encode($translated_content);
-
-            $newBundle->translations()->save($translated_model);
-        }
+        $this->saveTranslationsFromInput($newBundle, array('name', 'short_description', 'long_description'));
         
-        if (! empty($tags)) {
-            // Delete old tags
-            $newBundle->tags()->detach();
-
-            // Save tags
-            foreach (explode(',', $tags) as $tagName) {
-                Tag::addTag($newBundle, $tagName);
-            }
-        }
+        $this->syncTagsFromInput($newBundle, $tags);
 
         $imageFiles = ImageService::filesFrom();
 

@@ -1,18 +1,21 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
+use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
+use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
+use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\CategoryRules;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
-use Redooor\Redminportal\App\Models\Translation;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    use ImageGalleryController;
+    use ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, ValidatesInput;
 
     public function getIndex()
     {
@@ -55,18 +58,13 @@ class CategoryController extends Controller
         $category = Category::find($sid);
 
         if ($category == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/categories',
                 Lang::get('redminportal::messages.category_error_category_not_found')
             );
-            return redirect('/admin/categories')->withErrors($errors);
         }
         
-        $translated = array();
-        foreach ($category->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
+        $translated = $this->translatedContentFor($category);
 
         $categories = Category::where('active', true)
             ->where('category_id', 0)
@@ -90,19 +88,10 @@ class CategoryController extends Controller
         /*
          * Validate
          */
-        $rules = array(
-            'image'                 => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'                => 'array',
-            'images.*'              => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'                  => 'required',
-            'short_description'     => 'required',
-            'order'                 => 'required|min:0',
-        );
-
-        $validation = Validator::make(Request::all(), $rules);
-        
-        if ($validation->fails()) {
-            return redirect($return_path)->withErrors($validation)->withInput();
+        $rules = new CategoryRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), $return_path);
+        if ($failure) {
+            return $failure;
         }
         
         $name               = Request::input('name');
@@ -116,12 +105,10 @@ class CategoryController extends Controller
         $category = (isset($sid) ? Category::find($sid) : new Category);
 
         if ($category == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/categories',
                 Lang::get('redminportal::messages.category_error_category_not_found')
             );
-            return redirect('/admin/categories')->withErrors($errors);
         }
 
         // Check if there's an existing category with the same name under the same parent
@@ -158,30 +145,7 @@ class CategoryController extends Controller
         $category->save();
         
         // Save translations
-        $translations = Config::get('redminportal::translation');
-        foreach ($translations as $translation) {
-            $lang = $translation['lang'];
-            if ($lang == 'en') {
-                continue;
-            }
-            
-            $translated_content = array(
-                'name'                  => Request::input($lang . '_name'),
-                'short_description'     => Request::input($lang . '_short_description'),
-                'long_description'      => Request::input($lang . '_long_description')
-            );
-            
-            // Check if lang exist
-            $translated_model = $category->translations->where('lang', $lang)->first();
-            if ($translated_model == null) {
-                $translated_model = new Translation;
-            }
-            
-            $translated_model->lang = $lang;
-            $translated_model->content = json_encode($translated_content);
-            
-            $category->translations()->save($translated_model);
-        }
+        $this->saveTranslationsFromInput($category, array('name', 'short_description', 'long_description'));
 
         $imageFiles = ImageService::filesFrom();
 
@@ -229,19 +193,7 @@ class CategoryController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = $this->findOwnedImage($sid, Category::class);
-
-        if ($image == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return redirect('/admin/categories')->withErrors($errors);
-        }
-
-        $model_id = $image->imageable_id;
-
-        $image->delete();
-
-        return redirect('admin/categories/edit/' . $model_id);
+        return $this->removeOwnedGalleryImage($sid, Category::class, 'admin/categories');
     }
 
     protected function galleryModelClass(): string

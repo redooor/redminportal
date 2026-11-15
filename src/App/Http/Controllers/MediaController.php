@@ -1,10 +1,15 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
+use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
+use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
+use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\MediaRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\MediaUploaderController;
 use Redooor\Redminportal\App\Models\Media;
@@ -12,14 +17,12 @@ use Redooor\Redminportal\App\Models\ModuleMediaMembership;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
-use Redooor\Redminportal\App\Models\Translation;
-use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Redooor\Redminportal\App\Classes\File as FileInfo;
 
 class MediaController extends Controller
 {
-    use SorterController, MediaUploaderController, ImageGalleryController;
+    use SorterController, MediaUploaderController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags, ValidatesInput;
     
     public function __construct(Media $model)
     {
@@ -68,12 +71,10 @@ class MediaController extends Controller
 
         // No such id
         if ($media == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/medias',
                 "The media cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/medias')->withErrors($errors);
         }
 
         $categories = Category::where('active', true)
@@ -82,19 +83,9 @@ class MediaController extends Controller
             ->orderBy('name')
             ->get();
 
-        $tagString = "";
-        foreach ($media->tags as $tag) {
-            if (! empty($tagString)) {
-                $tagString .= ",";
-            }
+        $tagString = $this->tagStringFor($media);
 
-            $tagString .= $tag->name;
-        }
-
-        $translated = array();
-        foreach ($media->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
+        $translated = $this->translatedContentFor($media);
 
         return view('redminportal::medias/edit')
             ->with('media', $media)
@@ -108,27 +99,10 @@ class MediaController extends Controller
     {
         $sid = Request::input('id');
         
-        $rules = array(
-            'image'             => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'            => 'array',
-            'images.*'          => 'mimes:jpg,jpeg,png,gif|max:500',
-            'name'              => 'required|unique:medias,name' . (isset($sid) ? ',' . $sid : ''),
-            'short_description' => 'required',
-            'sku'               => 'required|alpha_dash|unique:medias,sku' . (isset($sid) ? ',' . $sid : ''),
-            'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
-        );
-        
-        $messages = [
-            'category_id.min' => 'The category field is required.'
-        ];
-
-        $validation = Validator::make(Request::all(), $rules, $messages);
-        
-        if ($validation->fails()) {
-            return redirect('admin/medias/' . (isset($sid) ? 'edit/' . $sid : 'create'))
-                ->withErrors($validation)
-                ->withInput();
+        $rules = new MediaRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), 'admin/medias/' . (isset($sid) ? 'edit/' . $sid : 'create'));
+        if ($failure) {
+            return $failure;
         }
         
         $name               = Request::input('name');
@@ -144,12 +118,10 @@ class MediaController extends Controller
         $media = (isset($sid) ? Media::find($sid) : new Media);
 
         if ($media == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/medias',
                 "The media cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/medias')->withErrors($errors);
         }
 
         $media->name = $name;
@@ -183,40 +155,9 @@ class MediaController extends Controller
         $media->save();
 
         // Save translations
-        $translations = Config::get('redminportal::translation');
-        foreach ($translations as $translation) {
-            $lang = $translation['lang'];
-            if ($lang == 'en') {
-                continue;
-            }
+        $this->saveTranslationsFromInput($media, array('name', 'short_description', 'long_description'));
 
-            $translated_content = array(
-                'name'                  => Request::input($lang . '_name'),
-                'short_description'     => Request::input($lang . '_short_description'),
-                'long_description'      => Request::input($lang . '_long_description')
-            );
-
-            // Check if lang exist
-            $translated_model = $media->translations->where('lang', $lang)->first();
-            if ($translated_model == null) {
-                $translated_model = new Translation;
-            }
-
-            $translated_model->lang = $lang;
-            $translated_model->content = json_encode($translated_content);
-
-            $media->translations()->save($translated_model);
-        }
-
-        if (! empty($tags)) {
-            // Delete old tags
-            $media->tags()->detach();
-
-            // Save tags
-            foreach (explode(',', $tags) as $tagName) {
-                Tag::addTag($media, $tagName);
-            }
-        }
+        $this->syncTagsFromInput($media, $tags);
 
         $imageFiles = ImageService::filesFrom();
 
@@ -303,19 +244,7 @@ class MediaController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = $this->findOwnedImage($sid, Media::class);
-
-        if ($image == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return redirect('/admin/medias')->withErrors($errors);
-        }
-
-        $model_id = $image->imageable_id;
-
-        $image->delete();
-
-        return redirect('admin/medias/edit/' . $model_id);
+        return $this->removeOwnedGalleryImage($sid, Media::class, 'admin/medias');
     }
 
     protected function galleryModelClass(): string

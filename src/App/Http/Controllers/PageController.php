@@ -1,21 +1,24 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
+use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
+use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
+use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
+use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\PageRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Page;
 use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
-use Redooor\Redminportal\App\Models\Translation;
-use Redooor\Redminportal\App\Models\Tag;
 use Redooor\Redminportal\App\Helpers\RImage;
 
 class PageController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController;
+    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags, ValidatesInput;
     
     public function __construct(Page $model)
     {
@@ -62,18 +65,13 @@ class PageController extends Controller
         $page = Page::find($sid);
 
         if ($page == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                'admin/pages',
                 "The page cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('admin/pages')->withErrors($errors);
         }
         
-        $translated = array();
-        foreach ($page->translations as $translation) {
-            $translated[$translation->lang] = json_decode($translation->content);
-        }
+        $translated = $this->translatedContentFor($page);
 
         $categories = Category::where('active', true)
             ->where('category_id', 0)
@@ -81,14 +79,7 @@ class PageController extends Controller
             ->orderBy('name')
             ->get();
         
-        $tagString = "";
-        foreach ($page->tags as $tag) {
-            if (! empty($tagString)) {
-                $tagString .= ",";
-            }
-
-            $tagString .= $tag->name;
-        }
+        $tagString = $this->tagStringFor($page);
         
         $data = [
             'page' => $page,
@@ -105,21 +96,10 @@ class PageController extends Controller
     {
         $sid = Request::input('id');
         
-        $rules = array(
-            'image'         => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'        => 'array',
-            'images.*'      => 'mimes:jpg,jpeg,png,gif|max:500',
-            'title'         => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
-            'slug'          => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
-            'content'       => 'required',
-        );
-
-        $validation = Validator::make(Request::all(), $rules);
-        
-        if ($validation->fails()) {
-            return redirect('admin/pages/' . (isset($sid) ? 'edit/' . $sid : 'create'))
-                ->withErrors($validation)
-                ->withInput();
+        $rules = new PageRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), 'admin/pages/' . (isset($sid) ? 'edit/' . $sid : 'create'));
+        if ($failure) {
+            return $failure;
         }
         
         $title              = Request::input('title');
@@ -133,12 +113,10 @@ class PageController extends Controller
         $page = (isset($sid) ? Page::find($sid) : new Page);
 
         if ($page == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/pages',
                 "The page cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/pages')->withErrors($errors);
         }
 
         $page->title = $title;
@@ -154,30 +132,9 @@ class PageController extends Controller
         $page->save();
 
         // Save translations
-        $translations = Config::get('redminportal::translation');
-        foreach ($translations as $translation) {
-            $lang = $translation['lang'];
-            if ($lang == 'en') {
-                continue;
-            }
-
-            $translated_content = array(
-                'title'     => Request::input($lang . '_title'),
-                'slug'      => str_replace(' ', '_', Request::input($lang . '_slug')),
-                'content'   => Request::input($lang . '_content')
-            );
-
-            // Check if lang exist
-            $translated_model = $page->translations->where('lang', $lang)->first();
-            if ($translated_model == null) {
-                $translated_model = new Translation;
-            }
-
-            $translated_model->lang = $lang;
-            $translated_model->content = json_encode($translated_content);
-
-            $page->translations()->save($translated_model);
-        }
+        $this->saveTranslationsFromInput($page, array('title', 'slug', 'content'), function ($field, $value) {
+            return $field == 'slug' ? str_replace(' ', '_', $value) : $value;
+        });
 
         $imageFiles = ImageService::filesFrom();
 
@@ -185,34 +142,14 @@ class PageController extends Controller
             (new ImageService)->attach($page, $imageFiles, 'pages');
         }
 
-        if (! empty($tags)) {
-            // Delete old tags
-            $page->tags()->detach();
-
-            // Save tags
-            foreach (explode(',', $tags) as $tagName) {
-                Tag::addTag($page, $tagName);
-            }
-        }
+        $this->syncTagsFromInput($page, $tags);
 
         return redirect('admin/pages');
     }
 
     public function getImgremove($sid)
     {
-        $image = $this->findOwnedImage($sid, Page::class);
-
-        if ($image == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return redirect('/admin/pages')->withErrors($errors);
-        }
-
-        $page_id = $image->imageable_id;
-
-        $image->delete();
-
-        return redirect('admin/pages/edit/' . $page_id);
+        return $this->removeOwnedGalleryImage($sid, Page::class, 'admin/pages');
     }
 
     protected function galleryModelClass(): string

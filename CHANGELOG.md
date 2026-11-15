@@ -90,6 +90,9 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 4. New `ImageService` for attaching, removing, ordering and promoting images; `Image::delete()` uses it and keeps firing model events.
 5. The create and edit forms use a multiple-file picker (`images[]`, with previews) and the edit pages show a gallery with a Primary badge and make-primary and move earlier/later buttons (new `imgprimary` and `imgmove` routes, update permission).
 
+**Controllers (contributors)**
+1. The ten content controllers (Announcement, Bundle, Category, Media, Module, Page, Portfolio, Post, Product, Promotion) share small internal helpers (`App\Http\Concerns`) for saving translations, syncing tags, preparing edit data, not-found redirects, input validation and removing gallery images. Each form's validation rules moved to a class in `App\Http\Validation`. Routes, redirects, messages, validation rules and the public controller methods are unchanged.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.

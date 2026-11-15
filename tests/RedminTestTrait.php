@@ -24,13 +24,13 @@ trait RedminTestTrait
 
     /**
      * Sets up environment for each test.
-     * Temporariliy increase memory limit, run migrations and set Mail::pretend to true.
+     * Temporarily increase memory limit, run migrations and set Mail::pretend to true.
      */
     public function setUp(): void
     {
         parent::setUp();
 
-        ini_set('memory_limit', '400M'); // Temporarily increase memory limit to 400MB
+        ini_set('memory_limit', '1G'); // Temporarily increase memory limit; the controller tests keep their app alive until the run ends
 
         /**
          * By default, Laravel keeps a log in memory of all queries that have been run for

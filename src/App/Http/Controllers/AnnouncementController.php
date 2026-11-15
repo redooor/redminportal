@@ -7,10 +7,12 @@ use Redooor\Redminportal\App\Models\Announcement;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Http\Traits\ImageGalleryController;
 use Redooor\Redminportal\App\Helpers\RImage;
+use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
+use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
 
 class AnnouncementController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController;
+    use SorterController, DeleterController, ImageGalleryController, RemovesGalleryImages, RedirectsNotFound;
     
     public function __construct(Announcement $model)
     {
@@ -49,12 +51,10 @@ class AnnouncementController extends Controller
         $announcement = Announcement::find($sid);
         
         if ($announcement == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add(
-                'editError',
+            return $this->redirectNotFoundWithMessage(
+                '/admin/announcements',
                 "The announcement cannot be found because it does not exist or may have been deleted."
             );
-            return redirect('/admin/announcements')->withErrors($errors);
         }
         
         if (empty($announcement->options)) {
@@ -87,12 +87,10 @@ class AnnouncementController extends Controller
             $announcement = (isset($sid) ? Announcement::find($sid) : new Announcement);
             
             if ($announcement == null) {
-                $errors = new \Illuminate\Support\MessageBag;
-                $errors->add(
-                    'editError',
+                return $this->redirectNotFoundWithMessage(
+                    '/admin/announcements',
                     "The Announcement cannot be found because it does not exist or may have been deleted."
                 );
-                return redirect('/admin/announcements')->withErrors($errors);
             }
 
             $announcement->title = $title;
@@ -120,19 +118,7 @@ class AnnouncementController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = $this->findOwnedImage($sid, Announcement::class);
-        
-        if ($image == null) {
-            $errors = new \Illuminate\Support\MessageBag;
-            $errors->add('deleteError', "The image cannot be deleted at this time.");
-            return redirect('/admin/announcements')->withErrors($errors);
-        }
-        
-        $announcement_id = $image->imageable_id;
-        
-        $image->delete();
-        
-        return redirect('admin/announcements/edit/' . $announcement_id);
+        return $this->removeOwnedGalleryImage($sid, Announcement::class, 'admin/announcements');
     }
 
     protected function galleryModelClass(): string
