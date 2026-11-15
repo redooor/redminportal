@@ -92,6 +92,7 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 
 **Controllers (contributors)**
 1. The ten content controllers (Announcement, Bundle, Category, Media, Module, Page, Portfolio, Post, Product, Promotion) share small internal helpers (`App\Http\Concerns`) for saving translations, syncing tags, preparing edit data, not-found redirects, input validation and removing gallery images. Each form's validation rules moved to a class in `App\Http\Validation`. Routes, redirects, messages, validation rules and the public controller methods are unchanged.
+2. The validation rules of Coupon, Group, Mailinglist, Membership, Myaccount, Purchase and User moved to rules classes the same way. The order of the permission, authentication and not-found checks around validation is unchanged and pinned by tests.
 
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
