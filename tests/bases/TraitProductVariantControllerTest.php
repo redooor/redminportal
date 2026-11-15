@@ -609,7 +609,7 @@ trait TraitProductVariantControllerTest
         $this->call('POST', $this->page . '/variant-imgremove/' . $parentProduct->id . '/' . $image->id);
 
         $this->assertResponseStatus(302);
-        $this->assertRedirectedTo($this->page . '/edit-variant/' . $parentProduct->id . '/' . $image->id);
+        $this->assertRedirectedTo($this->page . '/edit/' . $parentProduct->id);
         $this->assertSessionHasErrors('errorDeleteImage');
         $this->assertNotNull(Image::find($image->id));
     }

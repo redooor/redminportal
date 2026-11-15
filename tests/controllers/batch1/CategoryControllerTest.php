@@ -169,7 +169,7 @@ class CategoryControllerTest extends BaseControllerTest
     {
         $this->call('GET', $this->page . '/detail/1');
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(404);
     }
     
     /**

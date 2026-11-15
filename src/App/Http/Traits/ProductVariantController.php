@@ -181,7 +181,8 @@ trait ProductVariantController
         if (! $is_variant) {
             $errors = new MessageBag;
             $errors->add('errorDeleteImage', Lang::get('redminportal::messages.error_delete_image'));
-            return redirect($this->pageRoute . '/edit-variant/'. $product_id . '/' . $sid)->withErrors($errors);
+            $url = ($product != null) ? $this->pageRoute . '/edit/' . $product_id : $this->pageRoute;
+            return redirect($url)->withErrors($errors);
         }
         
         $model_id = $image->imageable_id;

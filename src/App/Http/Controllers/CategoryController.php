@@ -44,7 +44,7 @@ class CategoryController extends Controller
         $category = Category::find($sid);
 
         if ($category == null) {
-            return view('redminportal::pages.404');
+            return response()->view('redminportal::pages.404', [], 404);
         }
 
         return view('redminportal::categories/detail')
