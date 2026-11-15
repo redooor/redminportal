@@ -1,12 +1,13 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
 use Redooor\Redminportal\App\Http\Concerns\PreparesEditData;
 use Redooor\Redminportal\App\Http\Concerns\RedirectsNotFound;
 use Redooor\Redminportal\App\Http\Concerns\RemovesGalleryImages;
 use Redooor\Redminportal\App\Http\Concerns\SavesTranslations;
 use Redooor\Redminportal\App\Http\Concerns\SyncsTags;
+use Redooor\Redminportal\App\Http\Concerns\ValidatesInput;
+use Redooor\Redminportal\App\Http\Validation\PostRules;
 use Redooor\Redminportal\App\Http\Traits\SorterController;
 use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\Post;
@@ -17,7 +18,7 @@ use Redooor\Redminportal\App\Helpers\RImage;
 
 class PostController extends Controller
 {
-    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags;
+    use SorterController, DeleterController, ImageGalleryController, PreparesEditData, RedirectsNotFound, RemovesGalleryImages, SavesTranslations, SyncsTags, ValidatesInput;
     
     public function __construct(Post $model)
     {
@@ -95,21 +96,10 @@ class PostController extends Controller
     {
         $sid = Request::input('id');
         
-        $rules = array(
-            'image'         => 'mimes:jpg,jpeg,png,gif|max:500',
-            'images'        => 'array',
-            'images.*'      => 'mimes:jpg,jpeg,png,gif|max:500',
-            'title'         => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
-            'slug'          => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
-            'content'       => 'required',
-        );
-
-        $validation = Validator::make(Request::all(), $rules);
-        
-        if ($validation->fails()) {
-            return redirect('admin/posts/' . (isset($sid) ? 'edit/' . $sid : 'create'))
-                ->withErrors($validation)
-                ->withInput();
+        $rules = new PostRules;
+        $failure = $this->validateInputOrRedirect($rules->rules($sid), $rules->messages(), 'admin/posts/' . (isset($sid) ? 'edit/' . $sid : 'create'));
+        if ($failure) {
+            return $failure;
         }
         
         $title              = Request::input('title');
