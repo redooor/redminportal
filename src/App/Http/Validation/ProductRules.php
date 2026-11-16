@@ -22,7 +22,7 @@ class ProductRules extends InputRules
             'price'             => 'numeric',
             'sku'               => 'required|alpha_dash|unique:products,sku' . (isset($id) ? ',' . $id : ''),
             'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
+            'tags'              => 'nullable|regex:/^[a-z,0-9 -]+$/i',
             'weight'            => 'nullable|numeric',
             'length'            => 'nullable|numeric',
             'width'             => 'nullable|numeric',

@@ -21,7 +21,7 @@ class ModuleRules extends InputRules
             'short_description' => 'required',
             'sku'               => 'required|alpha_dash|unique:modules,sku' . (isset($id) ? ',' . $id : ''),
             'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
+            'tags'              => 'nullable|regex:/^[a-z,0-9 -]+$/i',
         );
     }
 

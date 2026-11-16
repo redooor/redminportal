@@ -543,9 +543,9 @@ class BundleCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Fail): an empty tags string becomes null and fails the regex rule, saving nothing
+     * Test (Pass): an empty tags string clears the old tags and still saves the bundle
      */
-    public function testCharacterizationEmptyTagsStringFailsValidation()
+    public function testCharacterizationEmptyTagsStringClearsOldTags()
     {
         $this->postStore($this->bundleInput(array(
             'name' => 'Tagged bundle',
@@ -555,25 +555,22 @@ class BundleCharacterizationTest extends BaseControllerTest
 
         $bundle = Bundle::first();
 
-        $this->assertValidationFailure(
-            '/admin/bundles/edit/' . $bundle->id,
-            $this->bundleInput(array(
-                'id' => $bundle->id,
-                'name' => 'Tagged bundle updated',
-                'sku' => 'TAGGED-BUNDLE',
-                'tags' => ''
-            )),
-            array('tags' => 'The tags field format is invalid.')
-        );
+        $this->postStore($this->bundleInput(array(
+            'id' => $bundle->id,
+            'name' => 'Tagged bundle updated',
+            'sku' => 'TAGGED-BUNDLE',
+            'tags' => ''
+        )));
 
-        $this->assertSame('Tagged bundle', Bundle::find($bundle->id)->name);
-        $this->assertSame(array('alpha'), $this->tagNames(Bundle::find($bundle->id)));
+        $this->assertRedirectedTo('/admin/bundles');
+        $this->assertSame('Tagged bundle updated', Bundle::find($bundle->id)->name);
+        $this->assertSame(array(), $this->tagNames(Bundle::find($bundle->id)));
     }
 
     /**
-     * Test (Pass): a tags value of "0" keeps the old tags and still saves the bundle
+     * Test (Pass): a tags value of "0" is empty() so it clears the old tags
      */
-    public function testCharacterizationZeroTagsStringKeepsOldTags()
+    public function testCharacterizationZeroTagsStringClearsOldTags()
     {
         $this->postStore($this->bundleInput(array(
             'name' => 'Tagged bundle',
@@ -592,7 +589,7 @@ class BundleCharacterizationTest extends BaseControllerTest
 
         $this->assertRedirectedTo('/admin/bundles');
         $this->assertSame('Tagged bundle updated', Bundle::find($bundle->id)->name);
-        $this->assertSame(array('alpha'), $this->tagNames(Bundle::find($bundle->id)));
+        $this->assertSame(array(), $this->tagNames(Bundle::find($bundle->id)));
     }
 
     /**

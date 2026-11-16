@@ -560,9 +560,9 @@ class ModuleCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Fail): an empty tags string fails the regex rule, saves nothing and keeps the old tags
+     * Test (Pass): an empty tags string clears the old tags and still saves the module
      */
-    public function testCharacterizationEmptyTagsStringFailsValidation()
+    public function testCharacterizationEmptyTagsStringClearsOldTags()
     {
         $this->postStore(array(
             'name' => 'Tagged module',
@@ -574,27 +574,24 @@ class ModuleCharacterizationTest extends BaseControllerTest
 
         $module = Module::first();
 
-        $this->assertValidationFailure(
-            '/admin/modules/edit/' . $module->id,
-            array(
-                'id' => $module->id,
-                'name' => 'Tagged module updated',
-                'sku' => 'TAGGED-SKU',
-                'short_description' => 'Short',
-                'category_id' => 1,
-                'tags' => ''
-            ),
-            array('tags' => 'The tags field format is invalid.')
-        );
+        $this->postStore(array(
+            'id' => $module->id,
+            'name' => 'Tagged module updated',
+            'sku' => 'TAGGED-SKU',
+            'short_description' => 'Short',
+            'category_id' => 1,
+            'tags' => ''
+        ));
 
-        $this->assertSame('Tagged module', Module::find($module->id)->name);
-        $this->assertSame(array('alpha'), $this->tagNames(Module::find($module->id)));
+        $this->assertRedirectedTo('/admin/modules');
+        $this->assertSame('Tagged module updated', Module::find($module->id)->name);
+        $this->assertSame(array(), $this->tagNames(Module::find($module->id)));
     }
 
     /**
-     * Test (Pass): a tags value of "0" keeps the old tags and still saves the module
+     * Test (Pass): a tags value of "0" is empty() so it clears the old tags
      */
-    public function testCharacterizationZeroTagsStringKeepsOldTags()
+    public function testCharacterizationZeroTagsStringClearsOldTags()
     {
         $this->postStore(array(
             'name' => 'Tagged module',
@@ -617,7 +614,7 @@ class ModuleCharacterizationTest extends BaseControllerTest
 
         $this->assertRedirectedTo('/admin/modules');
         $this->assertSame('Tagged module updated', Module::find($module->id)->name);
-        $this->assertSame(array('alpha'), $this->tagNames(Module::find($module->id)));
+        $this->assertSame(array(), $this->tagNames(Module::find($module->id)));
     }
 
     /**
