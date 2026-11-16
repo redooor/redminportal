@@ -94,6 +94,10 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 1. The ten content controllers (Announcement, Bundle, Category, Media, Module, Page, Portfolio, Post, Product, Promotion) share small internal helpers (`App\Http\Concerns`) for saving translations, syncing tags, preparing edit data, not-found redirects, input validation and removing gallery images. Each form's validation rules moved to a class in `App\Http\Validation`. Routes, redirects, messages, validation rules and the public controller methods are unchanged.
 2. The validation rules of Coupon, Group, Mailinglist, Membership, Myaccount, Purchase and User moved to rules classes the same way. The order of the permission, authentication and not-found checks around validation is unchanged and pinned by tests.
 
+**Fixes after the controller refactor**
+1. The purchase "already purchased" check and the module delete guard now join orders to `order_pricelist.order_id` (they used the pivot's own id), so repeat purchases are detected and a purchased module cannot be deleted. `Tag::addTag` trims and lowercases the name before the empty check and the lookup.
+2. Saving a bundle without `product_id` or `pricelist_id` no longer returns a 500: it shows the "not selected" message, and a non-array value is a validation error. A failed variant image removal redirects to the product's edit page (or the products list) instead of the variant edit page with the image id. A missing category detail answers HTTP 404 (the category tree shows the error page in the panel).
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.

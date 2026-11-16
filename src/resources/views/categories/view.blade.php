@@ -55,7 +55,11 @@
                     $('.rdpt-preloader').show();
                     $url = "{{ URL::to('admin/categories/detail') }}";
                     $detail_url = $url + '/' + $(this).attr('href');
-                    $('#category-detail').empty().load($detail_url, function() {
+                    $('#category-detail').empty().load($detail_url, function(response, status, xhr) {
+                        // A missing category answers 404 with the error page; show it instead of an empty panel
+                        if (status === 'error') {
+                            $(this).html(xhr.responseText);
+                        }
                         $('.rdpt-preloader').hide();
                     });
                     return false;

@@ -349,6 +349,13 @@ Category names, product names and the order builder labels are escaped. `Categor
 
 The ten content controllers, and the Coupon, Group, Mailinglist, Membership, Myaccount, Purchase and User controllers (validation rules only), now use internal helper traits (`Redooor\Redminportal\App\Http\Concerns`) and per-form rules classes (`Redooor\Redminportal\App\Http\Validation`). Routes, public controller method names and signatures, redirects, error messages, validation rules and stored data are unchanged, so a host application that extends one of these controllers keeps working, including an override of `postStore()` that calls `parent::postStore()`. The helper methods are `private` and the new classes are internal, not an extension API. `getImgremove` is still a public method on the same route in every controller; in eight of them it now calls a shared private helper with the controller's fixed model class and path, so overriding the gallery methods used by the primary and order actions does not change image removal.
 
+### Step 19 — Fixes after the controller refactor (check published views and tests)
+
+- `admin/categories/detail/{id}` now answers HTTP 404 (with the same error view) for a missing category, where it answered 200. If you published `categories/view.blade.php`, copy the new loader callback: jQuery `.load()` only inserts a response on success, so without it the panel stays empty for a deleted category.
+- A failed `variant-imgremove` redirects to `admin/products/edit/{product_id}` (or `admin/products` when the product is gone) instead of `edit-variant/{product_id}/{image id}`.
+- Bundle forms: `product_id` and `pricelist_id` must be arrays when sent; a missing value is treated as no selection.
+- The purchase and module-delete checks now use `order_pricelist.order_id`. No data change is needed.
+
 ---
 
 ### Upgrade checklist

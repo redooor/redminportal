@@ -186,7 +186,7 @@ class BundleController extends Controller
 
         $apply_to_models = array();
 
-        $products = Request::input('product_id');
+        $products = Request::input('product_id') ?? array();
         if (count($products) > 0) {
             foreach ($products as $item) {
                 $model = Product::find($item);
@@ -196,7 +196,7 @@ class BundleController extends Controller
             }
         }
 
-        $pricelists = Request::input('pricelist_id');
+        $pricelists = Request::input('pricelist_id') ?? array();
         if (count($pricelists) > 0) {
             foreach ($pricelists as $item) {
                 $model = Pricelist::find($item);

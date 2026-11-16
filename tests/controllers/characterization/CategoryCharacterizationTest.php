@@ -715,13 +715,13 @@ class CategoryCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Pass): getDetail for a missing id still renders the 404 view with a 200 response
+     * Test (Fail): getDetail for a missing id renders the 404 view with a 404 response
      */
     public function testCharacterizationGetDetailMissing()
     {
         $this->call('GET', '/admin/categories/detail/999');
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(404);
         $this->response->assertViewIs('redminportal::pages.404');
     }
 

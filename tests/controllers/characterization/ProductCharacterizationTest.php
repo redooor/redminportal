@@ -1382,7 +1382,7 @@ class ProductCharacterizationTest extends BaseControllerTest
 
         $this->call('POST', '/admin/products/variant-imgremove/' . $parent->id . '/' . $image->id);
 
-        $this->assertRedirectedTo('/admin/products/edit-variant/' . $parent->id . '/' . $image->id);
+        $this->assertRedirectedTo('/admin/products/edit/' . $parent->id);
         $this->assertErrorMessage('errorDeleteImage', 'The image cannot be deleted at this time.');
         $this->assertNotNull(Image::find($image->id));
     }
@@ -1396,7 +1396,7 @@ class ProductCharacterizationTest extends BaseControllerTest
 
         $this->call('POST', '/admin/products/variant-imgremove/' . $parent->id . '/999999');
 
-        $this->assertRedirectedTo('/admin/products/edit-variant/' . $parent->id . '/999999');
+        $this->assertRedirectedTo('/admin/products/edit/' . $parent->id);
         $this->assertErrorMessage('errorDeleteImage', 'The image cannot be deleted at this time.');
     }
 
