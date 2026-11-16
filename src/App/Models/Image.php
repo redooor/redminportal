@@ -55,12 +55,8 @@ class Image extends Model
             return;
         }
 
-        // Absolute targets and stored paths under the upload directory must stay
-        // inside the configured upload path. Other relative paths use the
-        // public_path() fallback for legacy stored paths.
-        $confined = ImagePath::isAbsolute($target) || ImagePath::isUnderUploadDir($target);
-
-        if ($confined && ! ImagePath::isInsideUploadPath($resolved)) {
+        // Every target must stay inside the configured upload path
+        if (! ImagePath::isInsideUploadPath($resolved)) {
             return;
         }
 

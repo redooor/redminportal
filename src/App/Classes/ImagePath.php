@@ -47,24 +47,6 @@ class ImagePath
     }
 
     /**
-     * Check that a stored path starts with the configured upload directory
-     *
-     * @param  string $path
-     * @return bool
-     */
-    public static function isUnderUploadDir($path)
-    {
-        if (! is_string($path) || $path === '' || self::isAbsolute($path) || self::hasParentSegment($path)) {
-            return false;
-        }
-
-        $path = self::normalizeRelative($path);
-        $uploadDir = self::normalizeRelative((string) Config::get('redminportal::image.upload_dir'));
-
-        return $uploadDir !== '' && self::hasPathPrefix($path, $uploadDir);
-    }
-
-    /**
      * Check that a resolved target is inside the configured upload path
      *
      * @param  string $target
@@ -108,8 +90,19 @@ class ImagePath
     {
         $path = str_replace('\\', '/', (string) $path);
 
-        if ($path === '' || self::hasParentSegment($path) || ! self::isAbsolute($path)) {
+        if ($path === '' || self::hasParentSegment($path)) {
             return null;
+        }
+
+        // A relative path is relative to the working directory, as uploads are written
+        if (! self::isAbsolute($path)) {
+            $cwd = getcwd();
+
+            if ($cwd === false) {
+                return null;
+            }
+
+            $path = rtrim(str_replace('\\', '/', $cwd), '/') . '/' . $path;
         }
 
         $real = realpath($path);
@@ -202,6 +195,8 @@ class ImagePath
      */
     public static function isAbsolute($path)
     {
+        $path = str_replace('\\', '/', (string) $path);
+
         return isset($path[0])
             && ($path[0] === '/' || preg_match('#^[A-Za-z]:/#', $path) === 1);
     }

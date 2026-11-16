@@ -317,6 +317,54 @@ class ImageDeleteUploadPathFixTest extends BaseControllerTest
     }
 
     /**
+     * Test (Fail): a stored path outside the upload directory is not deleted through the public_path() fallback
+     */
+    public function testStoredPathOutsideUploadDirIsIgnored()
+    {
+        $stray = public_path('redmin_stray_' . uniqid() . '.txt');
+        file_put_contents($stray, 'stray');
+
+        try {
+            (new Image)->deleteFiles(basename($stray));
+
+            $this->assertFileExists($stray);
+        } finally {
+            @unlink($stray);
+        }
+    }
+
+    /**
+     * Test (Fail): a backslash absolute target outside the upload path is ignored
+     */
+    public function testBackslashAbsoluteTargetOutsideUploadPathIsIgnored()
+    {
+        $outside = $this->outsidePath . 'backslash.png';
+        file_put_contents($outside, 'outside');
+
+        (new Image)->deleteFiles(str_replace('/', '\\', $outside));
+
+        $this->assertFileExists($outside);
+    }
+
+    /**
+     * Test (Pass): a relative upload path resolves against the working directory for deletion
+     */
+    public function testRelativeUploadPathStillDeletesFiles()
+    {
+        chdir($this->workingPath);
+        Config::set('redminportal::image.upload_dir', 'rel/img');
+        Config::set('redminportal::image.upload_path', 'rel/img/');
+
+        mkdir($this->workingPath . 'rel/img/pages/1', 0777, true);
+        $file = $this->workingPath . 'rel/img/pages/1/x.png';
+        file_put_contents($file, 'inside');
+
+        (new Image)->deleteFiles('rel/img/pages/1/x.png');
+
+        $this->assertFileDoesNotExist($file);
+    }
+
+    /**
      * Recursively delete only the folder provided
      */
     private function deleteFolder($folder)
