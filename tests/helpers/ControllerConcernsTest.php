@@ -288,19 +288,29 @@ class ControllerConcernsTest extends RedminTestCase
         $this->assertSame(3, Tag::count());
     }
 
-    public function testSyncTagsFromInputIgnoresEmptyValues()
+    public function testSyncTagsFromInputClearsTagsForEmptyValues()
+    {
+        $double = new ControllerConcernsTagsDouble;
+
+        foreach (array('', '0', array(), null) as $tags) {
+            $page = $this->createPage();
+            $double->sync($page, 'c');
+
+            $double->sync($page, $tags);
+
+            $this->assertSame(array(), $page->tags()->get()->pluck('name')->all());
+        }
+    }
+
+    public function testSyncTagsFromInputKeepsTagsWhenFieldIsNotPosted()
     {
         $page = $this->createPage();
         $double = new ControllerConcernsTagsDouble;
 
         $double->sync($page, 'c');
+        $double->syncWithoutField($page);
 
-        foreach (array('', '0', array(), null) as $tags) {
-            $double->sync($page, $tags);
-
-            $this->assertSame(array('c'), $page->tags()->get()->pluck('name')->all());
-            $this->assertSame(1, Tag::count());
-        }
+        $this->assertSame(array('c'), $page->tags()->get()->pluck('name')->all());
     }
 
     public function testSyncTagsFromInputReattachesExistingTagWithoutDuplicateRow()
@@ -491,7 +501,17 @@ class ControllerConcernsTagsDouble
 
     public function sync($model, $tags): void
     {
+        // The helper acts on a posted tags field, so post it as the form would
+        \Illuminate\Support\Facades\Request::merge(array('tags' => $tags));
+
         $this->syncTagsFromInput($model, $tags);
+    }
+
+    public function syncWithoutField($model): void
+    {
+        \Illuminate\Support\Facades\Request::replace(array());
+
+        $this->syncTagsFromInput($model, null);
     }
 }
 
