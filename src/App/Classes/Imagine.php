@@ -62,6 +62,12 @@ class Imagine
     public function resize($url, $width = 100, $height = null, $crop = false, $quality = 90)
     {
         if ($url) {
+            $sourceFilePath = ImagePath::resolve($url);
+
+            if ($sourceFilePath === null) {
+                return null;
+            }
+
             // URL info
             $info = pathinfo($url);
      
@@ -75,8 +81,7 @@ class Imagine
      
             // Directories and file names
             $fileName       = $info['basename'];
-            $sourceDirPath  = public_path() . '/' . $info['dirname'];
-            $sourceFilePath = $sourceDirPath . '/' . $fileName;
+            $sourceDirPath  = dirname($sourceFilePath);
             $targetDirName  = $width . 'x' . $height . ($crop ? '_crop' : '');
             $targetDirPath  = $sourceDirPath . '/' . $targetDirName . '/';
             $targetFilePath = $targetDirPath . $fileName;
@@ -477,9 +482,6 @@ class Imagine
         // Get default dimensions
         $defaultDimensions = Config::get('redminportal::image.dimensions');
         
-        // Get upload path
-        $upload_path = Config::get('redminportal::image.upload_path');
-
         $dimension = $defaultDimensions[$size];
 
         // Get dimmensions and quality
@@ -498,9 +500,18 @@ class Imagine
         // Directories and file names
         $fileName       = $info['basename'];
         $targetDirName  = $width . 'x' . $height . ($crop ? '_crop' : '');
-        $targetUrl      = RHelper::joinPaths($upload_path . $info['dirname'], $targetDirName, $fileName);
         $relativeUrl    = RHelper::joinPaths($info['dirname'], $targetDirName, $fileName);
 
-        return ($fullUrl ? $targetUrl : $relativeUrl);
+        if ($fullUrl) {
+            $sourceFilePath = ImagePath::resolve($url);
+
+            if ($sourceFilePath === null) {
+                return null;
+            }
+
+            return RHelper::joinPaths(dirname($sourceFilePath), $targetDirName, $fileName);
+        }
+
+        return $relativeUrl;
     }
 }
