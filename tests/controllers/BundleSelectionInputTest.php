@@ -137,6 +137,51 @@ class BundleSelectionInputTest extends BaseControllerTest
     }
 
     /**
+     * Test (Fail): a scalar pricelist_id gives a validation error instead of a 500
+     */
+    public function testScalarPricelistIdGivesValidationError()
+    {
+        $product = $this->createProductFixture('Scalar pricelist product', 'SCALAR-PRICELIST');
+
+        $this->postStore($this->bundleInput(array(
+            'product_id' => array($product->id),
+            'pricelist_id' => 1
+        )));
+
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedTo('/admin/bundles/create');
+        $this->assertErrorMessage('pricelist_id', 'The pricelist id field must be an array.');
+        $this->assertSame(0, Bundle::count());
+    }
+
+    /**
+     * Test (Fail): a rejected edit keeps the saved fields and selections
+     */
+    public function testRejectedEditKeepsFieldsAndSelections()
+    {
+        $product = $this->createProductFixture('Kept product', 'KEPT-PRODUCT');
+
+        $this->postStore($this->bundleInput(array('product_id' => array($product->id))));
+        $bundle = Bundle::first();
+        $this->assertNotNull($bundle);
+
+        foreach (array(
+            array('product_id' => 1),
+            array('pricelist_id' => 1),
+            array('product_id' => null, 'pricelist_id' => null)
+        ) as $selection) {
+            $this->postStore($this->bundleInput(array_merge(
+                array('id' => $bundle->id, 'name' => 'Changed name'),
+                $selection
+            )));
+
+            $this->assertRedirectedTo('/admin/bundles/edit/' . $bundle->id);
+            $this->assertSame('Bundle name', Bundle::find($bundle->id)->name);
+            $this->assertSame(array($product->id), $this->pivotIds(Bundle::find($bundle->id), 'products'));
+        }
+    }
+
+    /**
      * Build a valid bundle input, optionally removing keys
      */
     private function bundleInput(array $overrides = array(), array $remove = array())
