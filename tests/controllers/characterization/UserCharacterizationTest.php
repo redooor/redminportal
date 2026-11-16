@@ -265,14 +265,17 @@ class UserCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Pass): there is no email format rule, so a malformed email is saved as-is
+     * Test (Fail): the email rule rejects a malformed email with the default message
      */
-    public function testCharacterizationMalformedEmailIsAccepted()
+    public function testCharacterizationMalformedEmailIsRejected()
     {
-        $this->postStore($this->userInput(1, array('email' => 'not-an-email')));
+        $this->assertValidationFailure(
+            '/admin/users/create',
+            $this->userInput(1, array('email' => 'not-an-email')),
+            array('email' => 'The email field must be a valid email address.')
+        );
 
-        $this->assertRedirectedTo('/admin/users');
-        $this->assertNotNull(User::where('email', 'not-an-email')->first());
+        $this->assertSame(1, User::count());
     }
 
     /**

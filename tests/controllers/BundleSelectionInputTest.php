@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\App\Models\Bundle;
+use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Pricelist;
@@ -16,6 +17,12 @@ class BundleSelectionInputTest extends BaseControllerTest
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->createModel(Category::class, array(
+            'name' => 'Bundle selection category',
+            'short_description' => 'Short',
+            'order' => 1
+        ));
 
         $this->page = '/admin/bundles';
         $this->viewhas = array(

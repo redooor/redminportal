@@ -355,6 +355,7 @@ The ten content controllers, and the Coupon, Group, Mailinglist, Membership, Mya
 - A failed `variant-imgremove` redirects to `admin/products/edit/{product_id}` (or `admin/products` when the product is gone) instead of `edit-variant/{product_id}/{image id}`.
 - Bundle forms: `product_id` and `pricelist_id` must be arrays when sent; a missing value is treated as no selection.
 - The purchase and module-delete checks now use `order_pricelist.order_id`. No data change is needed.
+- Stricter validation (input that used to be saved is now rejected with a normal validation message): Promotion `start_date`/`end_date` must be `d/m/Y` and the end not before the start; Coupon `amount` is required and the dates must match `d/m/Y h:i A` (what the coupon form posts); Mailinglist and User `email` must be a valid address; Membership `rank` must be an integer of 0 or more; Group `name` must be unique; Bundle `name` is unique among bundles and `category_id` must be an existing category. Existing records are not changed, but a record that already holds, for example, an invalid email must be corrected the next time it is saved. Product weight, length, width and height may now be left empty. Custom or published forms that post other formats need updating.
 
 ---
 

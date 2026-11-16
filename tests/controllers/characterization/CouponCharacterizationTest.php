@@ -308,19 +308,17 @@ class CouponCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Pass): amount missing does not fail validation because the later numeric rule wins
+     * Test (Fail): amount is required
      */
-    public function testCharacterizationAmountMissingPassesValidation()
+    public function testCharacterizationAmountMissingFailsValidation()
     {
-        $this->postStore($this->couponInput(array(), array('amount', 'category_id')));
-
-        $this->assertRedirectedTo('/admin/coupons/create');
-        $this->assertSessionHasErrors('applyToError');
-        $this->assertErrorMessage(
-            'applyToError',
-            'You have not selected any Category, Product or Membership/Module under Restricted To.'
+        $this->assertValidationFailure(
+            '/admin/coupons/create',
+            $this->couponInput(array(), array('amount')),
+            array('amount' => 'The amount field is required.')
         );
-        $this->assertFalse($this->defaultErrors()->has('amount'));
+
+        $this->assertFalse($this->defaultErrors()->has('applyToError'));
         $this->assertSame(0, Coupon::count());
     }
 
