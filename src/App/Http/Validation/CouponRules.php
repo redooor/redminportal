@@ -15,10 +15,9 @@ class CouponRules extends InputRules
     {
         return array(
             'code'          => 'required',
-            // The earlier 'amount' => 'required' rule was overridden by this rule and must not be restored
-            'amount'        => 'numeric',
-            'start_date'    => 'required',
-            'end_date'      => 'required',
+            'amount'        => 'required|numeric',
+            'start_date'    => 'required|date_format:d/m/Y h:i A',
+            'end_date'      => 'required|date_format:d/m/Y h:i A',
             'min_spent'     => 'numeric',
             'max_spent'     => 'numeric'
         );

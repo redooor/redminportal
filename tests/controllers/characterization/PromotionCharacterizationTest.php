@@ -279,45 +279,43 @@ class PromotionCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Pass): an unparseable date passes validation and is stored as zero
+     * Test (Fail): an unparseable start date is rejected by the date_format rule
      */
-    public function testCharacterizationInvalidDatePassesValidationAndStoresZero()
+    public function testCharacterizationInvalidDateIsRejected()
     {
-        $this->postStore(array(
-            'name' => 'Bad date',
-            'short_description' => 'Short',
-            'long_description' => 'Long',
-            'start_date' => 'not-a-date',
-            'end_date' => '01/03/2016'
-        ));
+        $this->assertValidationFailure(
+            '/admin/promotions/create',
+            array(
+                'name' => 'Bad date',
+                'short_description' => 'Short',
+                'long_description' => 'Long',
+                'start_date' => 'not-a-date',
+                'end_date' => '01/03/2016'
+            ),
+            array('start_date' => 'The start date field must match the format d/m/Y.')
+        );
 
-        $this->assertRedirectedTo('/admin/promotions');
-        $this->assertSame(1, Promotion::count());
-
-        $promotion = Promotion::first();
-        $this->assertEquals(0, $promotion->start_date);
-        $this->assertStringStartsWith('2016-03-01', $promotion->end_date);
+        $this->assertSame(0, Promotion::count());
     }
 
     /**
-     * Test (Pass): there is no date ordering rule, so an end before start is accepted
+     * Test (Fail): an end before start is rejected by the after_or_equal rule
      */
-    public function testCharacterizationDateOrderingIsNotValidated()
+    public function testCharacterizationDateOrderingIsValidated()
     {
-        $this->postStore(array(
-            'name' => 'Backwards dates',
-            'short_description' => 'Short',
-            'long_description' => 'Long',
-            'start_date' => '01/03/2016',
-            'end_date' => '29/02/2016'
-        ));
+        $this->assertValidationFailure(
+            '/admin/promotions/create',
+            array(
+                'name' => 'Backwards dates',
+                'short_description' => 'Short',
+                'long_description' => 'Long',
+                'start_date' => '01/03/2016',
+                'end_date' => '29/02/2016'
+            ),
+            array('end_date' => 'The end date field must be a date after or equal to start date.')
+        );
 
-        $this->assertRedirectedTo('/admin/promotions');
-        $this->assertSame(1, Promotion::count());
-
-        $promotion = Promotion::first();
-        $this->assertStringStartsWith('2016-03-01', $promotion->start_date);
-        $this->assertStringStartsWith('2016-02-29', $promotion->end_date);
+        $this->assertSame(0, Promotion::count());
     }
 
     /**

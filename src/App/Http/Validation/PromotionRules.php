@@ -20,8 +20,8 @@ class PromotionRules extends InputRules
             'name'              => 'required',
             'short_description' => 'required',
             'long_description'  => 'required',
-            'start_date'        => 'required',
-            'end_date'          => 'required',
+            'start_date'        => 'required|date_format:d/m/Y',
+            'end_date'          => 'required|date_format:d/m/Y|after_or_equal:start_date',
         );
     }
 
