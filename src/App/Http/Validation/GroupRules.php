@@ -14,7 +14,7 @@ class GroupRules extends InputRules
     public function rules($id = null): array
     {
         return array(
-            'name' => 'required',
+            'name' => 'required|unique:groups,name' . (isset($id) ? ',' . $id : ''),
             'permission-inherit' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
             'permission-allow' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
             'permission-deny' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i'

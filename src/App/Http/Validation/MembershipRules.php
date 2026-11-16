@@ -15,7 +15,7 @@ class MembershipRules extends InputRules
     {
         return array(
             'name'   => 'required|unique:memberships,name' . (isset($id) ? ',' . $id : ''),
-            'rank'   => 'required|min:0',
+            'rank'   => 'required|integer|min:0',
         );
     }
 

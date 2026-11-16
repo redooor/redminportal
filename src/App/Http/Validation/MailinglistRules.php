@@ -14,7 +14,7 @@ class MailinglistRules extends InputRules
     public function rules($id = null): array
     {
         return array(
-            'email'          => 'required|unique:mailinglists,email' . (isset($id) ? ',' . $id : ''),
+            'email'          => 'required|email|unique:mailinglists,email' . (isset($id) ? ',' . $id : ''),
             'first_name'     => 'required',
             'last_name'      => 'required'
         );

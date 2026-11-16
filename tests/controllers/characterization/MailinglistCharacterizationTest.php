@@ -181,15 +181,17 @@ class MailinglistCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Pass): the email rule has no email format check, so a non-email string is stored
+     * Test (Fail): the email rule rejects a non-email string with the default message
      */
-    public function testCharacterizationInvalidEmailFormatIsAccepted()
+    public function testCharacterizationInvalidEmailFormatIsRejected()
     {
-        $this->postStore($this->mailinglistInput(array('email' => 'not-an-email')));
+        $this->assertValidationFailure(
+            '/admin/mailinglists/create',
+            $this->mailinglistInput(array('email' => 'not-an-email')),
+            array('email' => 'The email field must be a valid email address.')
+        );
 
-        $this->assertRedirectedTo('/admin/mailinglists');
-        $this->assertSame(1, Mailinglist::count());
-        $this->assertSame('not-an-email', Mailinglist::first()->email);
+        $this->assertSame(0, Mailinglist::count());
     }
 
     /**

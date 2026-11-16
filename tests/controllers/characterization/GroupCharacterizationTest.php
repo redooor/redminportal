@@ -402,17 +402,17 @@ class GroupCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Fail): the database unique name is not a validation rule, so the save error is shown
+     * Test (Fail): a duplicate name is rejected by validation with the default unique message
      */
-    public function testCharacterizationDuplicateNameIsCaughtAtSave()
+    public function testCharacterizationDuplicateNameIsRejected()
     {
-        $this->postStore($this->groupInput(array('name' => 'Admin')));
-
-        $this->assertRedirectedTo('/admin/groups/create');
-        $this->assertErrorMessage(
-            'editError',
-            'The group cannot be saved due to some problem. Please try again.'
+        $this->assertValidationFailure(
+            '/admin/groups/create',
+            $this->groupInput(array('name' => 'Admin')),
+            array('name' => 'The name has already been taken.')
         );
+
+        $this->assertOldInput(array('name' => 'Admin'));
         $this->assertSame(2, Group::count());
     }
 }

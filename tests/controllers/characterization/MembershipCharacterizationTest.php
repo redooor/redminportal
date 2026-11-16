@@ -192,27 +192,31 @@ class MembershipCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Pass): a negative rank passes min:0 because there is no numeric rule to switch it to value mode
+     * Test (Fail): a negative rank fails min:0 with the default numeric message
      */
-    public function testCharacterizationNegativeRankPassesMin()
+    public function testCharacterizationNegativeRankFailsMin()
     {
-        $this->postStore($this->membershipInput(array('name' => 'Negative rank', 'rank' => '-5')));
+        $this->assertValidationFailure(
+            '/admin/memberships/create',
+            $this->membershipInput(array('name' => 'Negative rank', 'rank' => '-5')),
+            array('rank' => 'The rank field must be at least 0.')
+        );
 
-        $this->assertRedirectedTo('/admin/memberships');
-        $this->assertSame(1, Membership::count());
-        $this->assertSame('-5', (string) Membership::first()->rank);
+        $this->assertSame(0, Membership::count());
     }
 
     /**
-     * Test (Pass): a non-numeric rank passes min:0 because the string length is compared
+     * Test (Fail): a non-numeric rank fails the integer rule with the default message
      */
-    public function testCharacterizationNonNumericRankPassesMin()
+    public function testCharacterizationNonNumericRankFailsInteger()
     {
-        $this->postStore($this->membershipInput(array('name' => 'Text rank', 'rank' => 'abc')));
+        $this->assertValidationFailure(
+            '/admin/memberships/create',
+            $this->membershipInput(array('name' => 'Text rank', 'rank' => 'abc')),
+            array('rank' => 'The rank field must be an integer.')
+        );
 
-        $this->assertRedirectedTo('/admin/memberships');
-        $this->assertSame(1, Membership::count());
-        $this->assertSame('abc', (string) Membership::first()->rank);
+        $this->assertSame(0, Membership::count());
     }
 
     /**

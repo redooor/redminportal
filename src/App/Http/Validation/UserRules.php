@@ -17,7 +17,7 @@ class UserRules extends InputRules
             'first_name'    => 'required',
             'last_name'     => 'required',
             'role'          => 'required',
-            'email'         => 'required|unique:users,email,' . $id,
+            'email'         => 'required|email|unique:users,email,' . $id,
             'permission-inherit' => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
             'permission-allow'   => 'nullable|regex:/^[a-z,0-9._\-?]+$/i',
             'permission-deny'    => 'nullable|regex:/^[a-z,0-9._\-?]+$/i'
