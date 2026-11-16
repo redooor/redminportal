@@ -97,6 +97,7 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 **Fixes after the controller refactor**
 1. The purchase "already purchased" check and the module delete guard now join orders to `order_pricelist.order_id` (they used the pivot's own id), so repeat purchases are detected and a purchased module cannot be deleted. `Tag::addTag` trims and lowercases the name before the empty check and the lookup.
 2. Saving a bundle without `product_id` or `pricelist_id` no longer returns a 500: it shows the "not selected" message, and a non-array value is a validation error. A failed variant image removal redirects to the product's edit page (or the products list) instead of the variant edit page with the image id. A missing category detail answers HTTP 404 (the category tree shows the error page in the panel).
+3. Validation is stricter where it was missing or wrong: Promotion dates must be `d/m/Y` with the end on or after the start; Coupon `amount` is required again and its dates must match `d/m/Y h:i A`; Mailinglist and User emails must be valid addresses; Membership `rank` must be a whole number of 0 or more; a duplicate Group name shows a validation error; empty Product weight, length, width and height are accepted; a Bundle name must be unique among bundles (it was checked against products) and its category must exist.
 
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
