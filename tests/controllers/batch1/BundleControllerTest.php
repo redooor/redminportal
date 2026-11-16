@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Pricelist;
 use Redooor\Redminportal\App\Models\Module;
 use Redooor\Redminportal\App\Models\Membership;
@@ -53,6 +54,13 @@ class BundleControllerTest extends BaseControllerTest
         
         // For testing sort
         $this->sortBy = 'name';
+        
+        // Add category
+        $category = new Category;
+        $category->name = 'Bundle category';
+        $category->short_description = 'Short';
+        $category->order = 1;
+        $category->save();
         
         // Add membership
         $membership = new Membership;

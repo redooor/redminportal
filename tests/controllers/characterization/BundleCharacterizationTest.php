@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\Test;
 
 use Redooor\Redminportal\App\Models\Bundle;
+use Redooor\Redminportal\App\Models\Category;
 use Redooor\Redminportal\App\Models\Image;
 use Redooor\Redminportal\App\Models\Membership;
 use Redooor\Redminportal\App\Models\Module;
@@ -21,6 +22,12 @@ class BundleCharacterizationTest extends BaseControllerTest
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->createModel(Category::class, array(
+            'name' => 'Bundle characterization category',
+            'short_description' => 'Short',
+            'order' => 1
+        ));
 
         $this->page = '/admin/bundles';
         $this->viewhas = array(
@@ -333,34 +340,36 @@ class BundleCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Fail): the name rule checks the products table, so a Product name blocks a Bundle name
+     * Test (Pass): a product name does not block a Bundle name because bundles use their own table
      */
-    public function testCharacterizationProductNameBlocksBundleName()
+    public function testCharacterizationProductNameDoesNotBlockBundleName()
     {
         $this->createProductFixture('Shared product name', 'SHARED-PRODUCT-SKU');
 
-        $this->assertValidationFailure(
-            '/admin/bundles/create',
-            $this->bundleInput(array('name' => 'Shared product name', 'sku' => 'SHARED-BUNDLE-SKU')),
-            array('name' => 'The name has already been taken.')
-        );
+        $this->postStore($this->bundleInput(array('name' => 'Shared product name', 'sku' => 'SHARED-BUNDLE-SKU')));
 
-        $this->assertSame(0, Bundle::count());
+        $this->assertRedirectedTo('/admin/bundles');
+        $this->response->assertSessionHasNoErrors();
+        $this->assertSame(1, Bundle::count());
+        $this->assertSame('Shared product name', Bundle::first()->name);
     }
 
     /**
-     * Test (Pass): Bundle names are not unique among bundles, only against products
+     * Test (Fail): Bundle names are unique among bundles
      */
-    public function testCharacterizationBundleNameCanRepeatAcrossBundles()
+    public function testCharacterizationBundleNameCannotRepeatAcrossBundles()
     {
         $this->postStore($this->bundleInput(array('name' => 'Duplicate bundle', 'sku' => 'DUPLICATE-ONE')));
         $this->assertRedirectedTo('/admin/bundles');
+        $this->assertSame(1, Bundle::count());
 
-        $this->postStore($this->bundleInput(array('name' => 'Duplicate bundle', 'sku' => 'DUPLICATE-TWO')));
-        $this->assertRedirectedTo('/admin/bundles');
+        $this->assertValidationFailure(
+            '/admin/bundles/create',
+            $this->bundleInput(array('name' => 'Duplicate bundle', 'sku' => 'DUPLICATE-TWO')),
+            array('name' => 'The name has already been taken.')
+        );
 
-        $this->assertSame(2, Bundle::count());
-        $this->assertSame(2, Bundle::where('name', 'Duplicate bundle')->count());
+        $this->assertSame(1, Bundle::count());
     }
 
     /**

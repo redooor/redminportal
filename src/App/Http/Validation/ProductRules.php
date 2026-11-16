@@ -23,10 +23,10 @@ class ProductRules extends InputRules
             'sku'               => 'required|alpha_dash|unique:products,sku' . (isset($id) ? ',' . $id : ''),
             'category_id'       => 'required|numeric|min:1',
             'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
-            'weight'            => 'numeric',
-            'length'            => 'numeric',
-            'width'             => 'numeric',
-            'height'            => 'numeric'
+            'weight'            => 'nullable|numeric',
+            'length'            => 'nullable|numeric',
+            'width'             => 'nullable|numeric',
+            'height'            => 'nullable|numeric'
         );
     }
 
