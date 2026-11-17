@@ -90,6 +90,8 @@ class CsrfFormsMarkupTest extends TestCase
 
                 $allowed = strpos($tag[0], 'btn-confirm') !== false
                     || strpos($tag[0], 'data-ajax-post') !== false
+                    // fragment modals post the link with the token (redmin-fragment.js)
+                    || strpos($tag[0], 'data-fragment-post') !== false
                     || preg_match('/\bdata-method\s*=\s*["\']post["\']/i', $tag[0]);
 
                 if (! $allowed) {
@@ -102,7 +104,7 @@ class CsrfFormsMarkupTest extends TestCase
         $this->assertGreaterThanOrEqual(25, $links, 'No links to the POST-only routes were found');
         $this->assertEmpty(
             $offenders,
-            "These links point at POST-only routes without btn-confirm, data-method=\"post\" or data-ajax-post (a link a script posts with the token):\n" . implode("\n", $offenders)
+            "These links point at POST-only routes without btn-confirm, data-method=\"post\", data-ajax-post or data-fragment-post (a link a script posts with the token):\n" . implode("\n", $offenders)
         );
     }
 

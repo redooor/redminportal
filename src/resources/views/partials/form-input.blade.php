@@ -26,7 +26,7 @@
                 {{ $input_option_key }}="{{ $input_option_value }}"
             @endforeach
         @endif
-        @if (isset($input_value) and $input_value != null)
+        @if (isset($input_value) and $input_value !== null)
             value="{{ $input_value }}"
         @endif
     >{{-- Input end --}}

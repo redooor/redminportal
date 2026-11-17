@@ -140,7 +140,7 @@
                     </div>
                     <div class="card-body">
                         <input type="hidden" 
-                               id="category_id" 
+                               id="variant-category_id" 
                                name="category_id" 
                                value="{{ $product->category_id }}">
                         <ul class="redmin-hierarchy">
