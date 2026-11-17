@@ -663,7 +663,7 @@ class CategoryCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Pass): a childless category is deleted with its Image rows and its relative asset folder
+     * Test (Pass): a childless category is deleted with its Image rows and its configured asset folder
      */
     public function testCharacterizationGetDeleteChildless()
     {
@@ -689,9 +689,9 @@ class CategoryCharacterizationTest extends BaseControllerTest
         $this->assertRedirectedTo('/admin/categories');
         $this->assertSame(0, Category::count());
         $this->assertSame(0, Image::count());
-        $this->assertFileDoesNotExist($this->relativeFolder . '/relative.png');
-        $this->assertDirectoryDoesNotExist($this->relativeFolder);
-        $this->assertFileExists($configuredFolder . '/dummy.png');
+        $this->assertFileDoesNotExist($configuredFolder . '/dummy.png');
+        $this->assertDirectoryDoesNotExist($configuredFolder);
+        $this->assertFileExists($this->relativeFolder . '/relative.png');
     }
 
     /**

@@ -356,7 +356,7 @@ class PostCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Pass): missing translated inputs store null title/content and an empty slug
+     * Test (Pass): missing translated inputs store null title/content and a null slug
      */
     public function testCharacterizationMissingTranslatedInputs()
     {
@@ -371,7 +371,7 @@ class PostCharacterizationTest extends BaseControllerTest
         $this->assertTranslations(Post::first(), array(
             'cn' => array(
                 'title' => null,
-                'slug' => '',
+                'slug' => null,
                 'content' => null
             )
         ));
@@ -422,9 +422,9 @@ class PostCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Pass): an empty tags string keeps the old tags
+     * Test (Pass): an empty tags string clears the old tags
      */
-    public function testCharacterizationEmptyTagsStringKeepsOldTags()
+    public function testCharacterizationEmptyTagsStringClearsOldTags()
     {
         $this->postStore(array(
             'title' => 'Tagged post',
@@ -444,13 +444,13 @@ class PostCharacterizationTest extends BaseControllerTest
         ));
 
         $this->assertRedirectedTo('/admin/posts');
-        $this->assertSame(array('alpha'), $this->tagNames(Post::find($post->id)));
+        $this->assertSame(array(), $this->tagNames(Post::find($post->id)));
     }
 
     /**
-     * Test (Pass): a tags value of "0" is empty() so it keeps the old tags
+     * Test (Pass): a tags value of "0" is empty() so it clears the old tags
      */
-    public function testCharacterizationZeroTagsStringKeepsOldTags()
+    public function testCharacterizationZeroTagsStringClearsOldTags()
     {
         $this->postStore(array(
             'title' => 'Tagged post',
@@ -470,13 +470,13 @@ class PostCharacterizationTest extends BaseControllerTest
         ));
 
         $this->assertRedirectedTo('/admin/posts');
-        $this->assertSame(array('alpha'), $this->tagNames(Post::find($post->id)));
+        $this->assertSame(array(), $this->tagNames(Post::find($post->id)));
     }
 
     /**
-     * Test (Pass): a tags array is empty() so it keeps the old tags
+     * Test (Fail): an array tags input fails validation and keeps the old tags
      */
-    public function testCharacterizationArrayTagsKeepsOldTags()
+    public function testCharacterizationArrayTagsFailsValidation()
     {
         $this->postStore(array(
             'title' => 'Tagged post',
@@ -487,15 +487,19 @@ class PostCharacterizationTest extends BaseControllerTest
 
         $post = Post::first();
 
-        $this->postStore(array(
-            'id' => $post->id,
-            'title' => 'Tagged post updated',
-            'slug' => 'tagged post',
-            'content' => 'Body',
-            'tags' => array()
-        ));
+        $this->assertValidationFailure(
+            '/admin/posts/edit/' . $post->id,
+            array(
+                'id' => $post->id,
+                'title' => 'Tagged post updated',
+                'slug' => 'tagged post',
+                'content' => 'Body',
+                'tags' => array()
+            ),
+            array('tags' => 'The tags field must be a string.')
+        );
 
-        $this->assertRedirectedTo('/admin/posts');
+        $this->assertSame('Tagged post', Post::find($post->id)->title);
         $this->assertSame(array('alpha'), $this->tagNames(Post::find($post->id)));
     }
 

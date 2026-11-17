@@ -566,9 +566,9 @@ class ProductCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Fail): an empty tags string becomes null and fails the regex rule, saving nothing
+     * Test (Pass): an empty tags string clears the old tags and still saves the product
      */
-    public function testCharacterizationEmptyTagsStringFailsValidation()
+    public function testCharacterizationEmptyTagsStringClearsOldTags()
     {
         $this->postStore($this->productInput(array(
             'name' => 'Tagged product',
@@ -578,25 +578,22 @@ class ProductCharacterizationTest extends BaseControllerTest
 
         $product = Product::first();
 
-        $this->assertValidationFailure(
-            '/admin/products/edit/' . $product->id,
-            $this->productInput(array(
-                'id' => $product->id,
-                'name' => 'Tagged product updated',
-                'sku' => 'TAGGED-PRODUCT',
-                'tags' => ''
-            )),
-            array('tags' => 'The tags field format is invalid.')
-        );
+        $this->postStore($this->productInput(array(
+            'id' => $product->id,
+            'name' => 'Tagged product updated',
+            'sku' => 'TAGGED-PRODUCT',
+            'tags' => ''
+        )));
 
-        $this->assertSame('Tagged product', Product::find($product->id)->name);
-        $this->assertSame(array('alpha'), $this->tagNames(Product::find($product->id)));
+        $this->assertRedirectedTo('/admin/products');
+        $this->assertSame('Tagged product updated', Product::find($product->id)->name);
+        $this->assertSame(array(), $this->tagNames(Product::find($product->id)));
     }
 
     /**
-     * Test (Pass): a tags value of "0" keeps the old tags and still saves the product
+     * Test (Pass): a tags value of "0" is empty() so it clears the old tags
      */
-    public function testCharacterizationZeroTagsStringKeepsOldTags()
+    public function testCharacterizationZeroTagsStringClearsOldTags()
     {
         $this->postStore($this->productInput(array(
             'name' => 'Tagged product',
@@ -615,7 +612,7 @@ class ProductCharacterizationTest extends BaseControllerTest
 
         $this->assertRedirectedTo('/admin/products');
         $this->assertSame('Tagged product updated', Product::find($product->id)->name);
-        $this->assertSame(array('alpha'), $this->tagNames(Product::find($product->id)));
+        $this->assertSame(array(), $this->tagNames(Product::find($product->id)));
     }
 
     /**

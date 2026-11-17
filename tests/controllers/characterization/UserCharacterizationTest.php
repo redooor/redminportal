@@ -671,9 +671,9 @@ class UserCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Fail): an unknown role id is only detected by addGroup after the user row is saved
+     * Test (Fail): an unknown role id is rejected before the user row is saved
      */
-    public function testCharacterizationUnknownRoleSavesUserThenFailsAddGroup()
+    public function testCharacterizationUnknownRoleLeavesNoUserRow()
     {
         $this->postStore($this->userInput(999, array('email' => 'unknown-role@test.com')));
 
@@ -683,10 +683,8 @@ class UserCharacterizationTest extends BaseControllerTest
             'The user cannot be updated because the selected group cannot be found. Please try again.'
         );
 
-        $user = User::where('email', 'unknown-role@test.com')->first();
-        $this->assertNotNull($user);
-        $this->assertSame('New', $user->first_name);
-        $this->assertSame(0, $user->groups()->count());
+        $this->assertNull(User::where('email', 'unknown-role@test.com')->first());
+        $this->assertSame(1, User::count());
     }
 
     /**

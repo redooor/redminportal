@@ -22,7 +22,7 @@ class BundleRules extends InputRules
             'price'             => 'numeric',
             'sku'               => 'required|alpha_dash|unique:bundles,sku' . (isset($id) ? ',' . $id : ''),
             'category_id'       => 'required|integer|exists:categories,id',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
+            'tags'              => 'nullable|regex:/^[a-z,0-9 -]+$/i',
             'product_id'        => 'nullable|array',
             'pricelist_id'      => 'nullable|array',
         );

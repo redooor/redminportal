@@ -135,7 +135,16 @@ class PostController extends Controller
 
         // Save translations
         $this->saveTranslationsFromInput($post, array('title', 'slug', 'content'), function ($field, $value) {
-            return $field == 'slug' ? str_replace(' ', '_', $value) : $value;
+            if ($field == 'slug') {
+                // A missing or blank translated slug is stored as null.
+                if ($value === null || (is_string($value) && trim($value) === '')) {
+                    return null;
+                }
+
+                return str_replace(' ', '_', $value);
+            }
+
+            return $value;
         });
 
         $imageFiles = ImageService::filesFrom();

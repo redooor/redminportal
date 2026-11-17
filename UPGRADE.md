@@ -356,6 +356,10 @@ The ten content controllers, and the Coupon, Group, Mailinglist, Membership, Mya
 - Bundle forms: `product_id` and `pricelist_id` must be arrays when sent; a missing value is treated as no selection.
 - The purchase and module-delete checks now use `order_pricelist.order_id`. No data change is needed.
 - Stricter validation (input that used to be saved is now rejected with a normal validation message): Promotion `start_date`/`end_date` must be `d/m/Y` and the end not before the start; Coupon `amount` is required and the dates must match `d/m/Y h:i A` (what the coupon form posts); Mailinglist and User `email` must be a valid address; Membership `rank` must be an integer of 0 or more; Group `name` must be unique; Bundle `name` is unique among bundles and `category_id` must be an existing category. Existing records are not changed, but a record that already holds, for example, an invalid email must be corrected the next time it is saved. Product weight, length, width and height may now be left empty. Custom or published forms that post other formats need updating.
+- Tags: a posted but empty `tags` field now removes all tags from the item; a form that does not post `tags` leaves them alone. The `tags` rule accepts empty values on Bundle, Media, Module and Product, and Page and Post require a string.
+- User form: the groups are checked first and the user and groups are saved together, so an unknown group no longer leaves a saved user behind (same `groupError` message).
+- Images: files are located through `image.upload_dir` and `image.upload_path`; a stored path that resolves outside `upload_path` is not deleted. If you stored absolute or unusual paths in `images.path`, check that deleting an image still removes its files. `Media::delete()` removes its own `assets/medias` folder directly.
+- Page and Post: a blank translated slug is stored as null.
 
 ---
 

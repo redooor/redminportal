@@ -21,7 +21,7 @@ class MediaRules extends InputRules
             'short_description' => 'required',
             'sku'               => 'required|alpha_dash|unique:medias,sku' . (isset($id) ? ',' . $id : ''),
             'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
+            'tags'              => 'nullable|regex:/^[a-z,0-9 -]+$/i',
         );
     }
 

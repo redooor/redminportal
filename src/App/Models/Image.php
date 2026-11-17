@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Redooor\Redminportal\App\Classes\ImagePath;
 use Redooor\Redminportal\App\Classes\ImageService;
 use Redooor\Redminportal\App\Helpers\RImage;
 
@@ -43,23 +44,53 @@ class Image extends Model
     }
     
     /*
-     * php delete function that deals with directories recursively
+     * Delete a file or folder, resolving relative targets through the image configuration.
+     * Targets outside the configured upload path are ignored.
      */
     public function deleteFiles($target)
     {
+        $resolved = ImagePath::resolve($target);
+
+        if ($resolved === null) {
+            return;
+        }
+
+        // Every target must stay inside the configured upload path
+        if (! ImagePath::isInsideUploadPath($resolved)) {
+            return;
+        }
+
+        $this->deleteResolvedFiles($resolved);
+    }
+
+    /*
+     * php delete function that deals with directories recursively
+     */
+    private function deleteResolvedFiles($target)
+    {
+        $target = rtrim($target, '/');
+
+        if (is_link($target)) {
+            @unlink($target);
+
+            return;
+        }
+
         if (is_dir($target)) {
-            $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
+            $files = glob($target . '/*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
+
+            if ($files === false) {
+                return;
+            }
 
             foreach ($files as $file) {
-                $this->deleteFiles($file);
+                $this->deleteResolvedFiles($file);
             }
 
-            if (is_dir($target)) {
-                rmdir($target);
-            }
+            @rmdir($target);
 
         } elseif (is_file($target)) {
-            unlink($target);
+            @unlink($target);
         }
     }
 }

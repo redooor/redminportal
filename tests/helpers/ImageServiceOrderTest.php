@@ -39,13 +39,6 @@ class ImageServiceOrderTest extends RedminTestCase
             $this->deleteFolder($this->uploadPath);
         }
 
-        if ($this->relativeRoot) {
-            $root = getcwd() . '/' . $this->relativeRoot;
-            $this->deleteFolder($root);
-            @rmdir(dirname($root));
-            @rmdir(dirname(dirname($root)));
-        }
-
         $this->tempFiles = array();
         $this->uploadPath = null;
         $this->relativeRoot = null;
@@ -252,8 +245,8 @@ class ImageServiceOrderTest extends RedminTestCase
         $next = $this->storedImage($category, 'next.png', 2);
         $last = $this->storedImage($category, 'last.png', 3);
 
-        $original = getcwd() . '/' . $primary->path;
-        $thumbnail = getcwd() . '/' . (new RImage)->getUrl($primary->path, 'thumb');
+        $original = $this->storedFilePath($primary->path);
+        $thumbnail = $this->storedFilePath((new RImage)->getUrl($primary->path, 'thumb'));
 
         (new ImageService)->remove($primary);
 
@@ -291,8 +284,8 @@ class ImageServiceOrderTest extends RedminTestCase
         $category = $this->createCategory();
         $image = $this->storedImage($category, 'delete.png', 1, true);
 
-        $original = getcwd() . '/' . $image->path;
-        $thumbnail = getcwd() . '/' . (new RImage)->getUrl($image->path, 'thumb');
+        $original = $this->storedFilePath($image->path);
+        $thumbnail = $this->storedFilePath((new RImage)->getUrl($image->path, 'thumb'));
 
         $this->assertTrue($image->delete());
         $this->assertNull(Image::find($image->id));
@@ -307,7 +300,7 @@ class ImageServiceOrderTest extends RedminTestCase
     {
         $category = $this->createCategory();
         $image = $this->storedImage($category, 'veto.png', 1, true);
-        $original = getcwd() . '/' . $image->path;
+        $original = $this->storedFilePath($image->path);
 
         Image::deleting(function () {
             return false;
@@ -377,7 +370,7 @@ class ImageServiceOrderTest extends RedminTestCase
     {
         $category = $this->createCategory();
         $image = $this->storedImage($category, 'rollback.png', 1, true);
-        $original = getcwd() . '/' . $image->path;
+        $original = $this->storedFilePath($image->path);
 
         try {
             \Illuminate\Support\Facades\DB::transaction(function () use ($image) {
@@ -498,13 +491,13 @@ class ImageServiceOrderTest extends RedminTestCase
     }
 
     /**
-     * Create a saved Image and its original and thumbnail files under the current directory
+     * Create a saved Image and its original and thumbnail files under the upload path
      */
     private function storedImage($model, $filename, $sortOrder = 0, $isPrimary = false)
     {
         $path = $this->relativeRoot . '/stored/' . $filename;
-        $absolute = getcwd() . '/' . $path;
-        $thumbnail = getcwd() . '/' . (new RImage)->getUrl($path, 'thumb');
+        $absolute = $this->storedFilePath($path);
+        $thumbnail = $this->storedFilePath((new RImage)->getUrl($path, 'thumb'));
 
         foreach (array($absolute, $thumbnail) as $file) {
             if (! is_dir(dirname($file))) {
@@ -520,6 +513,21 @@ class ImageServiceOrderTest extends RedminTestCase
         $model->images()->save($image);
 
         return $image;
+    }
+
+    /**
+     * Map a stored path to its file under the configured upload path
+     */
+    private function storedFilePath($path)
+    {
+        $uploadDir = trim((string) Config::get('redminportal::image.upload_dir'), '/\\');
+        $path = ltrim(str_replace('\\', '/', $path), '/');
+
+        if ($uploadDir !== '' && strpos($path, $uploadDir . '/') === 0) {
+            return rtrim($this->uploadPath, '/\\') . '/' . substr($path, strlen($uploadDir) + 1);
+        }
+
+        return public_path($path);
     }
 
     /**

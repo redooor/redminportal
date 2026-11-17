@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Lang;
@@ -227,35 +228,61 @@ class UserController extends Controller
             }
         }
         
+        // Check that every submitted group exists before saving the user
+        foreach ($submitted_roles as $group_id) {
+            if ($group_id === null || $group_id === '') {
+                continue;
+            }
+
+            if (Group::find($group_id) == null) {
+                $errors->add(
+                    'groupError',
+                    Lang::get('redminportal::messages.user_error_group_not_found')
+                );
+                return redirect($path)->withErrors($errors)->withInput();
+            }
+        }
+
         // Save or Update
-        $user->email = Request::input('email');
-        
-        $password = Request::input('password');
-        if ($password != '') {
-            $user->password = Hash::make($password);
-        }
-        
-        $user->first_name = Request::input('first_name');
-        $user->last_name = Request::input('last_name');
-        $user->activated = $activated;
-        $user->permissions = json_encode($permissions);
-        
-        if (! $user->save()) {
-            $errors->add(
-                'saveError',
-                Lang::get('redminportal::messages.user_error_update_unknown')
-            );
-            return redirect($path)->withErrors($errors)->withInput();
-        }
-        
-        // Assign group(s) to user
-        // Return error message if group has error
-        if (! $user->addGroup(Request::input('role'))) {
-            $errors->add(
-                'groupError',
-                Lang::get('redminportal::messages.user_error_group_not_found')
-            );
-            return redirect($path)->withErrors($errors)->withInput();
+        DB::beginTransaction();
+
+        try {
+            $user->email = Request::input('email');
+
+            $password = Request::input('password');
+            if ($password != '') {
+                $user->password = Hash::make($password);
+            }
+
+            $user->first_name = Request::input('first_name');
+            $user->last_name = Request::input('last_name');
+            $user->activated = $activated;
+            $user->permissions = json_encode($permissions);
+
+            if (! $user->save()) {
+                DB::rollBack();
+                $errors->add(
+                    'saveError',
+                    Lang::get('redminportal::messages.user_error_update_unknown')
+                );
+                return redirect($path)->withErrors($errors)->withInput();
+            }
+
+            // Assign group(s) to user
+            // Return error message if group has error
+            if (! $user->addGroup(Request::input('role'))) {
+                DB::rollBack();
+                $errors->add(
+                    'groupError',
+                    Lang::get('redminportal::messages.user_error_group_not_found')
+                );
+                return redirect($path)->withErrors($errors)->withInput();
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
 
         return redirect('admin/users');

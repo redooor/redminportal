@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File as Filesystem;
 use Redooor\Redminportal\App\Helpers\RHelper;
 use Redooor\Redminportal\App\Models\Traits\HasImages;
 
@@ -66,7 +67,7 @@ class Media extends Model
         
         // Delete all media files folder
         $url_path = RHelper::joinPaths(public_path(), 'assets/medias', $this->category_id, $this->id);
-        $deleteFolder->deleteFiles($url_path);
+        Filesystem::deleteDirectory($url_path);
         
         return parent::delete();
     }

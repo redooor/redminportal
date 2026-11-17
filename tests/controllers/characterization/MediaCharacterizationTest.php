@@ -574,9 +574,9 @@ class MediaCharacterizationTest extends BaseControllerTest
     }
 
     /**
-     * Test (Fail): an empty tags string fails the regex rule, saves nothing and keeps the old tags
+     * Test (Pass): an empty tags string clears the old tags and still saves the media
      */
-    public function testCharacterizationEmptyTagsStringFailsValidation()
+    public function testCharacterizationEmptyTagsStringClearsOldTags()
     {
         $this->postStore(array(
             'name' => 'Tagged media',
@@ -588,27 +588,24 @@ class MediaCharacterizationTest extends BaseControllerTest
 
         $media = Media::first();
 
-        $this->assertValidationFailure(
-            '/admin/medias/edit/' . $media->id,
-            array(
-                'id' => $media->id,
-                'name' => 'Tagged media updated',
-                'sku' => 'TAGGED-SKU',
-                'short_description' => 'Short',
-                'category_id' => 1,
-                'tags' => ''
-            ),
-            array('tags' => 'The tags field format is invalid.')
-        );
+        $this->postStore(array(
+            'id' => $media->id,
+            'name' => 'Tagged media updated',
+            'sku' => 'TAGGED-SKU',
+            'short_description' => 'Short',
+            'category_id' => 1,
+            'tags' => ''
+        ));
 
-        $this->assertSame('Tagged media', Media::find($media->id)->name);
-        $this->assertSame(array('alpha'), $this->tagNames(Media::find($media->id)));
+        $this->assertRedirectedTo('/admin/medias');
+        $this->assertSame('Tagged media updated', Media::find($media->id)->name);
+        $this->assertSame(array(), $this->tagNames(Media::find($media->id)));
     }
 
     /**
-     * Test (Pass): a tags value of "0" keeps the old tags and still saves the media
+     * Test (Pass): a tags value of "0" is empty() so it clears the old tags
      */
-    public function testCharacterizationZeroTagsStringKeepsOldTags()
+    public function testCharacterizationZeroTagsStringClearsOldTags()
     {
         $this->postStore(array(
             'name' => 'Tagged media',
@@ -631,7 +628,7 @@ class MediaCharacterizationTest extends BaseControllerTest
 
         $this->assertRedirectedTo('/admin/medias');
         $this->assertSame('Tagged media updated', Media::find($media->id)->name);
-        $this->assertSame(array('alpha'), $this->tagNames(Media::find($media->id)));
+        $this->assertSame(array(), $this->tagNames(Media::find($media->id)));
     }
 
     /**

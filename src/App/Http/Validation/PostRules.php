@@ -20,6 +20,7 @@ class PostRules extends InputRules
             'title'         => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
             'slug'          => 'required|regex:/^[a-z,0-9 ._\(\)-?]+$/i',
             'content'       => 'required',
+            'tags'          => 'nullable|string',
         );
     }
 

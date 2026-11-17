@@ -326,7 +326,7 @@ class ImageService
         $defaultDimensions = Config::get('redminportal::image.dimensions');
 
         foreach (array_keys($defaultDimensions) as $key) {
-            $filename_variant = $imagine->getUrl($filename, $key);
+            $filename_variant = $imagine->getUrl($filename, $key, true);
             $image->deleteFiles($filename_variant);
         }
     }

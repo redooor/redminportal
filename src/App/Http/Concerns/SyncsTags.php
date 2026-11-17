@@ -1,6 +1,7 @@
 <?php namespace Redooor\Redminportal\App\Http\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Request;
 use Redooor\Redminportal\App\Models\Tag;
 
 /*
@@ -17,11 +18,16 @@ trait SyncsTags
      */
     private function syncTagsFromInput(Model $model, $tags): void
     {
-        if (! empty($tags)) {
-            // Delete old tags
-            $model->tags()->detach();
+        // A missing tags key means the form does not manage tags, so keep them.
+        if (! Request::has('tags')) {
+            return;
+        }
 
-            // Save tags
+        // Delete old tags. An empty value means the tags were cleared.
+        $model->tags()->detach();
+
+        // Save tags
+        if (! empty($tags)) {
             foreach (explode(',', $tags) as $tagName) {
                 Tag::addTag($model, $tagName);
             }
