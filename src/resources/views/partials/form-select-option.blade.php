@@ -22,7 +22,7 @@
 ?>
 <div class="mb-3 {{ $wrapper_classes ?? '' }}">
     @if (isset($label))
-    <label class="{{ $label_classes ?? '' }}" for="{{ $select_name }}">{{ $label }}</label>
+    <label class="{{ $label_classes ?? '' }}" for="{{ $select_id ?? $select_name }}">{{ $label }}</label>
     @endif
     <select class="form-select {{ $select_classes ?? '' }}" name="{{ $select_name }}" id="{{ $select_id ?? $select_name }}">
         @foreach ($select_options as $select_option_key => $select_option_value)

@@ -1,11 +1,15 @@
 <?php namespace Redooor\Redminportal\App\Http\Traits;
 
+use Redooor\Redminportal\App\Http\Concerns\RendersFragments;
+
 /*
  * Add revision capability to controller
  */
 
 trait RevisionableController
 {
+    use RendersFragments;
+
     /* -- Requires --
     protected $model;
     ----------------- */
@@ -36,12 +40,9 @@ trait RevisionableController
                 ? 'redminportal::revisions.table'
                 : 'redminportal::revisions.view';
 
-            return response()->view($view, $data, 200)
-                ->header('Cache-Control', 'no-store')
-                ->header('X-Redmin-Fragment', '1');
+            return $this->fragmentResponse($view, $data);
         }
 
-        return response()->view('redminportal::revisions.view', $data, 200)
-            ->header('Cache-Control', 'no-store');
+        return $this->fragmentResponse('redminportal::revisions.view', $data);
     }
 }

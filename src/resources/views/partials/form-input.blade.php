@@ -18,7 +18,7 @@
 --}}
 <div class="mb-3 {{ $wrapper_classes ?? '' }}">
     @if (isset($label))
-    <label class="{{ $label_classes ?? '' }}" for="{{ $input_name }}">{{ $label }}</label>
+    <label class="{{ $label_classes ?? '' }}" for="{{ $input_id ?? $input_name }}">{{ $label }}</label>
     @endif
     <input class="form-control" name="{{ $input_name }}" id="{{ $input_id ?? $input_name }}"
         @if (isset($input_options))
