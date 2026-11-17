@@ -125,6 +125,11 @@
         body.appendChild(alert);
         body.setAttribute('aria-busy', 'false');
         setStatus(modal, message);
+        // The focused control was removed with the old content; keep focus (and Escape) inside the modal.
+        if (modal.classList.contains('show')) {
+            alert.setAttribute('tabindex', '-1');
+            alert.focus();
+        }
     }
     function isFocusable(el) {
         return !!(el && el.isConnected && typeof el.focus === 'function'
