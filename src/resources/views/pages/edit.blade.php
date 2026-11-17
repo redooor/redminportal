@@ -25,7 +25,7 @@
                     <div class="mb-3">
                         <div class="form-check">
                             <label class="form-check-label" for="private-checker">
-                                {!! Form::checkbox('private', $page->private, $page->private, array('class' => 'form-check-input', 'id' => 'private-checker')) !!} {{ Lang::get('redminportal::forms.private') }}
+                                {!! Form::checkbox('private', 1, $page->private, array('class' => 'form-check-input', 'id' => 'private-checker')) !!} {{ Lang::get('redminportal::forms.private') }}
                             </label>
                         </div>
                     </div>

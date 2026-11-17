@@ -46,7 +46,7 @@
                                 <div class="col-lg-8">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            {!! Form::checkbox('is_percent', $coupon->is_percent, $coupon->is_percent, array('class' => 'form-check-input', 'id' => 'is_percent', 'name' => 'is_percent')) !!}
+                                            {!! Form::checkbox('is_percent', 1, $coupon->is_percent, array('class' => 'form-check-input', 'id' => 'is_percent', 'name' => 'is_percent')) !!}
                                             <i>{{ Lang::get('redminportal::forms.discount_explanation') }}</i>
                                         </label>
                                     </div>
@@ -82,7 +82,7 @@
                                 <div class="col-lg-8">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            {!! Form::checkbox('multiple_coupons', $coupon->multiple_coupons, $coupon->multiple_coupons, array('class' => 'form-check-input', 'id' => 'multiple_coupons')) !!}
+                                            {!! Form::checkbox('multiple_coupons', 1, $coupon->multiple_coupons, array('class' => 'form-check-input', 'id' => 'multiple_coupons')) !!}
                                             <i>{{ Lang::get('redminportal::forms.multiple_coupons_explanation') }}</i>
                                         </label>
                                     </div>
@@ -93,7 +93,7 @@
                                 <div class="col-lg-8">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            {!! Form::checkbox('exclude_sale_item', $coupon->exclude_sale_item, $coupon->exclude_sale_item, array('class' => 'form-check-input', 'id' => 'exclude_sale_item')) !!}
+                                            {!! Form::checkbox('exclude_sale_item', 1, $coupon->exclude_sale_item, array('class' => 'form-check-input', 'id' => 'exclude_sale_item')) !!}
                                             <i>{{ Lang::get('redminportal::forms.exclude_sale_item_explanation') }}</i>
                                         </label>
                                     </div>
@@ -104,7 +104,7 @@
                                 <div class="col-lg-8">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            {!! Form::checkbox('automatically_apply', $coupon->automatically_apply, $coupon->automatically_apply, array('class' => 'form-check-input', 'id' => 'automatically_apply')) !!}
+                                            {!! Form::checkbox('automatically_apply', 1, $coupon->automatically_apply, array('class' => 'form-check-input', 'id' => 'automatically_apply')) !!}
                                             <i>{{ Lang::get('redminportal::forms.automatically_apply_explanation') }}</i>
                                         </label>
                                     </div>

@@ -25,7 +25,7 @@
                     <div class="mb-3">
                         <div class="form-check">
                             <label class="form-check-label" for="featured-checker">
-                                {!! Form::checkbox('featured', $post->featured, $post->featured, array('class' => 'form-check-input', 'id' => 'featured-checker')) !!} {{ Lang::get('redminportal::forms.featured') }}
+                                {!! Form::checkbox('featured', 1, $post->featured, array('class' => 'form-check-input', 'id' => 'featured-checker')) !!} {{ Lang::get('redminportal::forms.featured') }}
                             </label>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                     <div class="mb-3">
                         <div class="form-check">
                             <label class="form-check-label" for="private-checker">
-                                {!! Form::checkbox('private', $post->private, $post->private, array('class' => 'form-check-input', 'id' => 'private-checker')) !!} {{ Lang::get('redminportal::forms.private') }}
+                                {!! Form::checkbox('private', 1, $post->private, array('class' => 'form-check-input', 'id' => 'private-checker')) !!} {{ Lang::get('redminportal::forms.private') }}
                             </label>
                         </div>
                     </div>
