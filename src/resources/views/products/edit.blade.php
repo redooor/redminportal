@@ -218,7 +218,7 @@
                     <div id="list-variants" data-url="{{ url('admin/products/list-variants/' . $product->id) }}"></div>
                     <div class="card-footer text-end">
                         @permitted('admin/products/create-variant/' . $product->id)
-                        <a id="add-product-variant" href="{{ url('admin/products/create-variant/' . $product->id) }}" class="btn btn-primary btn-sm">Add</a>
+                        <a id="add-product-variant" href="{{ url('admin/products/create-variant/' . $product->id) }}" class="btn btn-primary btn-sm" data-fragment-modal="#product-variant-modal">Add</a>
                         @endpermitted
                     </div>
                 </div>
@@ -232,15 +232,17 @@
         </div>
     {!! Form::close() !!}
     
-    <!-- Modal window iframe -->
+    <!-- Modal window for product variants -->
     @include('redminportal::partials.modal-window', [
         'modal_id' => 'product-variant-modal',
-        'modal_size' => 'modal-lg',
+        'modal_size' => 'modal-lg modal-dialog-scrollable',
         'modal_progress' => 'modal-progress',
         'modal_title' => Lang::get('redminportal::forms.product_variation'),
-        'modal_body' => '<iframe id="iframe-variant-form"></iframe>'
+        'modal_title_id' => 'product-variant-modal-title',
+        'modal_body' => '<div data-fragment-body aria-live="off" data-fragment-loading="' . e(trans('redminportal::messages.fragment_loading')) . '" data-fragment-loaded="' . e(trans('redminportal::messages.fragment_loaded')) . '" data-fragment-error="' . e(trans('redminportal::messages.fragment_error')) . '" data-fragment-unknown="' . e(trans('redminportal::messages.fragment_unknown')) . '"></div>'
+            . '<div class="visually-hidden" role="status" data-fragment-status></div>'
     ])
-    <!-- End of modal window iframe -->
+    <!-- End of modal window for product variants -->
 
     <!-- Modal confirmation window -->
     @include('redminportal::partials.modal-window', [
@@ -281,34 +283,21 @@
                     });
                 }
                 //---------------------------------------------------------
-                // Add or View a product variant
+                // Add, Edit or View a product variant: the fragment module
+                // loads the content into [data-fragment-body].
                 //---------------------------------------------------------
-                $(document).on('click', '#add-product-variant, .view-product-variant, .edit-product-variant', function(e) {
-                    e.preventDefault();
-                    // Make iframe height 70% of window height
-                    $window_height = $(window).height();
-                    $('#iframe-variant-form').css('height', Math.round(($window_height*0.7-80), 0));
-                    // Load the source
-                    $create_url = $(this).attr('href');
-                    // jQuery 3 removed the .load(handler) shorthand: bind the event before setting src
-                    $('#iframe-variant-form').removeAttr('src').empty().data('loaded', false).off('load').on('load', function() {
-                        $(this).data('loaded', true);
-                        $('#modal-progress').parent().fadeOut();
-                    }).attr('src', $create_url);
-                    $('#product-variant-modal').modal('show');
+                $('#product-variant-modal').on('redmin:fragment-loaded', function (e) {
+                    if (!e.detail || !e.detail.body) { return; }
+                    window.redminInitEditors && window.redminInitEditors(e.detail.body);
+                    window.redminInitTags && window.redminInitTags(e.detail.body);
                 });
-                $('#product-variant-modal').on('shown.bs.modal', function (e) {
-                    // The iframe may already have loaded while the modal was fading in
-                    if ($('#iframe-variant-form').data('loaded')) { return; }
-                    $('#modal-progress').css('width', '0%').parent().fadeIn(function() {
-                        for(ipercent = 0; ipercent<=50; ipercent++) {
-                            $('#modal-progress').delay(4000).css('width', ipercent*2 + '%');
-                        }
-                    });
+                $('#product-variant-modal').on('redmin:fragment-clear', function (e) {
+                    if (!e.detail || !e.detail.body) { return; }
+                    window.redminDestroyEditors && window.redminDestroyEditors(e.detail.body);
+                    window.redminDestroyTags && window.redminDestroyTags(e.detail.body);
                 });
                 // Clear content when modal hidden
                 $('#product-variant-modal').on('hidden.bs.modal', function (e) {
-                    $('#iframe-variant-form').removeAttr('src').empty();
                     loadVariants(); // reload list of product variants
                 });
                 //---------------------------------------------------------

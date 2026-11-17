@@ -302,6 +302,65 @@ class ProductVariantFragmentTest extends RedminBrowserTestCase
         $this->assertStringNotContainsString('parent-only.jpg', json_encode($editImages));
     }
 
+    public function testProductEditPageUsesTheFragmentModal()
+    {
+        $html = $this->call('GET', '/admin/products/edit/' . $this->parent->id)->getContent();
+
+        $this->assertStringNotContainsString('<iframe', $html);
+        $this->assertStringContainsString('id="product-variant-modal"', $html);
+        $this->assertStringContainsString('id="product-variant-modal-title"', $html);
+        $this->assertStringContainsString('modal-lg modal-dialog-scrollable', $html);
+        $this->assertStringContainsString('id="modal-progress"', $html);
+        $this->assertStringContainsString('data-fragment-loading=', $html);
+        $this->assertStringContainsString('data-fragment-loaded=', $html);
+        $this->assertStringContainsString('data-fragment-error=', $html);
+        $this->assertStringContainsString('data-fragment-unknown=', $html);
+        $this->assertStringContainsString('data-fragment-status', $html);
+
+        $variantModal = $this->elementById($html, 'product-variant-modal', 'variant-remove-modal');
+        $this->assertStringContainsString('data-fragment-body', $variantModal);
+        $this->assertStringContainsString('id="variant-remove-modal"', $html);
+
+        $addButton = $this->elementById($html, 'add-product-variant');
+        $this->assertStringContainsString('data-fragment-modal="#product-variant-modal"', $addButton);
+    }
+
+    public function testVariantListLinksOpenTheFragmentModal()
+    {
+        $html = $this->call('GET', '/admin/products/list-variants/' . $this->parent->id)->getContent();
+
+        $edit = $this->anchorTag($html, 'edit-product-variant');
+        $this->assertStringContainsString('data-fragment-modal="#product-variant-modal"', $edit);
+        $this->assertStringContainsString('href="' . url('admin/products/edit-variant/' . $this->parent->id . '/' . $this->variant->id) . '"', $edit);
+
+        $view = $this->anchorTag($html, 'view-product-variant');
+        $this->assertStringContainsString('data-fragment-modal="#product-variant-modal"', $view);
+        $this->assertStringContainsString('href="' . url('admin/products/view-variant/' . $this->variant->id) . '"', $view);
+    }
+
+    public function testProductEditPageAndVariantFragmentsHaveDisjointIds()
+    {
+        $page = $this->call('GET', '/admin/products/edit/' . $this->parent->id)->getContent();
+        $pageIds = array_flip($this->idsInHtml($page));
+
+        $this->assertNotEmpty($pageIds);
+
+        $fragments = array(
+            'create' => $this->ajaxGet('/admin/products/create-variant/' . $this->parent->id)->getContent(),
+            'edit' => $this->ajaxGet('/admin/products/edit-variant/' . $this->parent->id . '/' . $this->variant->id)->getContent(),
+        );
+
+        foreach ($fragments as $name => $html) {
+            $fragmentIds = array_unique($this->idsInHtml($html));
+
+            $this->assertNotEmpty($fragmentIds, 'No ids in the ' . $name . ' fragment');
+
+            foreach ($fragmentIds as $id) {
+                $this->assertArrayNotHasKey($id, $pageIds, 'The ' . $name . ' fragment shares id ' . $id . ' with the product edit page');
+            }
+        }
+    }
+
     public function testCreateVariantValidationRestoresOldInput()
     {
         $input = $this->variantInput(array(
@@ -428,6 +487,42 @@ class ProductVariantFragmentTest extends RedminBrowserTestCase
         $this->assertStringContainsString(trans('redminportal::forms.create_product_variation'), $html);
         $this->assertStringNotContainsString(trans('redminportal::forms.view_product'), $html);
         $this->assertSame(0, Product::where('sku', 'VARIANT-INVALID-IMAGE-001')->count());
+    }
+
+    private function elementById($html, $id, $nextId = null)
+    {
+        $start = strpos($html, 'id="' . $id . '"');
+
+        if ($start === false) {
+            return '';
+        }
+
+        $start = max(0, strrpos(substr($html, 0, $start), '<'));
+
+        if ($nextId === null) {
+            $end = strpos($html, '>', $start);
+
+            return $end === false ? substr($html, $start) : substr($html, $start, $end - $start + 1);
+        }
+
+        $end = strpos($html, 'id="' . $nextId . '"', $start);
+
+        return $end === false ? substr($html, $start) : substr($html, $start, $end - $start);
+    }
+
+    private function anchorTag($html, $class)
+    {
+        preg_match_all('/<a\b[^>]*>/i', $html, $matches);
+
+        foreach ($matches[0] as $tag) {
+            if (strpos($tag, $class) !== false) {
+                return $tag;
+            }
+        }
+
+        $this->fail('Missing anchor with class ' . $class);
+
+        return '';
     }
 
     private function ajaxGet($url)
