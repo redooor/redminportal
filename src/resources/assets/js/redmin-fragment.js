@@ -116,6 +116,14 @@
         if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
         target.focus();
     }
+    // The control that had focus goes away with the old content: move focus to the persistent title so Escape still reaches the modal.
+    function keepFocusInside(modal, body) {
+        if (!body.contains(document.activeElement)) return;
+        var title = modal.querySelector('.modal-title');
+        if (!title || typeof title.focus !== 'function') return;
+        if (!title.hasAttribute('tabindex')) title.setAttribute('tabindex', '-1');
+        title.focus();
+    }
     function showError(modal, body, message, url, method) {
         clearBody(modal, body, states.get(modal), url, method);
         var alert = document.createElement('div');
@@ -173,6 +181,7 @@
             state.toggle = group ? group.querySelector('[data-bs-toggle="dropdown"]') : null;
         }
         body.setAttribute('aria-busy', 'true');
+        keepFocusInside(modal, body);
         clearBody(modal, body, state);
         setStatus(modal, body.getAttribute('data-fragment-loading'));
         var controller = new AbortController();
