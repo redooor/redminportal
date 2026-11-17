@@ -143,6 +143,7 @@
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-sidebar.min.js') }}" defer></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-lightbox.min.js') }}" defer></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-post.min.js') }}" defer></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-fragment.min.js') }}" defer></script>
         @stack('scripts')
 
         @section('footer')

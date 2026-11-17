@@ -224,6 +224,7 @@ Route::group(
             Route::post('search', [OrderController::class, 'postSearch']);
             Route::get('search-all/{search?}', [OrderController::class, 'getSearchAll']);
             Route::get('search/{field?}/{search?}', [OrderController::class, 'getSearch']);
+            Route::get('revisions/{sid}', [OrderController::class, 'getRevisions']);
         });
 
         // Pages

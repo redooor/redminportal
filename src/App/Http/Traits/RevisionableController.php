@@ -4,28 +4,44 @@
  * Add revision capability to controller
  */
 
-use Illuminate\Support\MessageBag;
-
 trait RevisionableController
 {
     /* -- Requires --
     protected $model;
     ----------------- */
-    
+
     public function getRevisions($sid)
     {
         $model = $this->model->find($sid);
-        
+        $ajax = request()->ajax();
+
         if ($model == null) {
-            $errors = new MessageBag;
-            $errors->add('getError', trans('redminportal::messages.error_find_no_such_record'));
-            return redirect()->back()->withErrors($errors);
+            $message = trans('redminportal::messages.error_find_no_such_record');
+
+            if ($ajax) {
+                return response($message, 404)
+                    ->header('Cache-Control', 'no-store');
+            }
+
+            return response()->view('redminportal::pages.404', [], 404)
+                ->header('Cache-Control', 'no-store');
         }
-        
+
         $data = [
             'model' => $model
         ];
-        
-        return view('redminportal::revisions.view', $data);
+
+        if ($ajax) {
+            $view = view()->exists('redminportal::revisions.table')
+                ? 'redminportal::revisions.table'
+                : 'redminportal::revisions.view';
+
+            return response()->view($view, $data, 200)
+                ->header('Cache-Control', 'no-store')
+                ->header('X-Redmin-Fragment', '1');
+        }
+
+        return response()->view('redminportal::revisions.view', $data, 200)
+            ->header('Cache-Control', 'no-store');
     }
 }

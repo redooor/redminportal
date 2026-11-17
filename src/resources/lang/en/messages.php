@@ -162,6 +162,12 @@ return array(
         => "That field is not supported. Please try again using the dropdown list.",
     'no_revision_found'
         => "No revision history.",
+    'fragment_loading'
+        => "Loading revision history...",
+    'fragment_loaded'
+        => "Revision history loaded.",
+    'fragment_error'
+        => "The revision history could not be loaded. Reload the page and try again.",
     'product_variant_inherits_from_parent_footnote'
         => "Variant inherits the same category as the main product. "
             . "If you don't see the category here, go back to the main product and save the changes first.",

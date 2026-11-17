@@ -9,10 +9,11 @@
         'modal_body' => 'Some body',
         'modal_footer' => 'Some footer',
         'modal_size' => 'modal-lg',
-        'modal_progress' => 'modal-progress-unique-id'
+        'modal_progress' => 'modal-progress-unique-id',
+        'modal_title_id' => 'modal-title-unique-id'
     ])
 --}}
-<div id="{{ $modal_id }}" class="modal fade" tabindex="-1">
+<div id="{{ $modal_id }}" class="modal fade" tabindex="-1"@if (! empty($modal_title_id)) aria-labelledby="{{ $modal_title_id }}"@endif>
     <div class="modal-dialog {{ $modal_size ?? '' }}">
         @if (isset($modal_progress))
         <div class="modal-progress">
@@ -26,7 +27,7 @@
         @endif
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">{{ $modal_title }}</h4>
+                <h4 class="modal-title"@if (! empty($modal_title_id)) id="{{ $modal_title_id }}"@endif>{{ $modal_title }}</h4>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ Lang::get('redminportal::buttons.close') }}"></button>
             </div>
             <div class="modal-body">
