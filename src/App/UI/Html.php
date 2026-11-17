@@ -63,6 +63,7 @@ class Html
      * @param string Optional footer
      * @param string Optional modal size
      * @param string Optional modal progress ID
+     * @param string Optional modal title ID
      * @return View
      */
     public function modalWindow(
@@ -71,13 +72,15 @@ class Html
         $modal_body,
         $modal_footer = null,
         $modal_size = null,
-        $modal_progress = null
+        $modal_progress = null,
+        $modal_title_id = null
     ) {
         $data = [
             'modal_id'          => $modal_id,
             'modal_size'        => $modal_size,
             'modal_progress'    => $modal_progress,
             'modal_title'       => $modal_title,
+            'modal_title_id'    => $modal_title_id,
             'modal_body'        => $modal_body,
             'modal_footer'      => $modal_footer
         ];

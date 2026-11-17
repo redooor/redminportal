@@ -165,7 +165,7 @@
 							<ul class="dropdown-menu dropdown-menu-end">
                                 @permitted('admin/orders/revisions/' . $order->id)
                                 <li>
-									<a class="dropdown-item btn-modal-revision" href="{{ URL::to('admin/orders/revisions/' . $order->id) }}">
+									<a class="dropdown-item" href="{{ URL::to('admin/orders/revisions/' . $order->id) }}" data-fragment-modal="#revision-modal-window">
 										<i class="fa-solid fa-clock"></i>Revision History</a>
 								</li>
                                 @endpermitted
@@ -206,10 +206,12 @@
     {!! Redminportal::html()->modalWindow(
         'revision-modal-window',
         trans('redminportal::forms.revision_history_title'),
-        '<iframe id="iframe-revision-history"></iframe>',
+        '<div data-fragment-body aria-live="off" data-fragment-loading="' . e(trans('redminportal::messages.fragment_loading')) . '" data-fragment-loaded="' . e(trans('redminportal::messages.fragment_loaded')) . '" data-fragment-error="' . e(trans('redminportal::messages.fragment_error')) . '"></div>'
+            . '<div class="visually-hidden" role="status" data-fragment-status></div>',
         null,
-        'modal-lg',
-        'revision-modal-progress'
+        'modal-lg modal-dialog-scrollable',
+        'revision-modal-progress',
+        'revision-modal-title'
     ) !!}
 @stop
 
@@ -222,36 +224,6 @@
                 $('.datepicker').css('z-index', '1051'); // make picker on top of modal window
                 $( '.input-group-text' ).click( function() {
                     $( this ).parent().find('input').datepicker( "show" );
-                });
-                //---------------------------------------------------------
-                // View revision history
-                //---------------------------------------------------------
-                $(document).on('click', '.btn-modal-revision', function(e) {
-                    e.preventDefault();
-                    // Make iframe height 70% of window height
-                    $window_height = $(window).height();
-                    $('#iframe-revision-history').css('height', Math.round(($window_height*0.7-80), 0));
-                    // Load the source
-                    $create_url = $(this).attr('href');
-                    // jQuery 3 removed the .load(handler) shorthand: bind the event before setting src
-                    $('#iframe-revision-history').removeAttr('src').empty().data('loaded', false).off('load').on('load', function() {
-                        $(this).data('loaded', true);
-                        $('#revision-modal-progress').parent().fadeOut();
-                    }).attr('src', $create_url);
-                    $('#revision-modal-window').modal('show');
-                });
-                $('#revision-modal-window').on('shown.bs.modal', function (e) {
-                    // The iframe may already have loaded while the modal was fading in
-                    if ($('#iframe-revision-history').data('loaded')) { return; }
-                    $('#revision-modal-progress').css('width', '0%').parent().fadeIn(function() {
-                        for(ipercent = 0; ipercent<=50; ipercent++) {
-                            $('#revision-modal-progress').delay(4000).css('width', ipercent*2 + '%');
-                        }
-                    });
-                });
-                // Clear content when modal hidden
-                $('#revision-modal-window').on('hidden.bs.modal', function (e) {
-                    $('#iframe-revision-history').removeAttr('src').empty();
                 });
             })
         }(window.jQuery);
