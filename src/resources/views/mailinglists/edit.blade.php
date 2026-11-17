@@ -38,7 +38,7 @@
                             <div class="mb-3">
                                 <div class="form-check">
                                     <label class="form-check-label" for="active-checker">
-                                        {!! Form::checkbox('active', $mailinglist->active, $mailinglist->active, array('class' => 'form-check-input', 'id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
+                                        {!! Form::checkbox('active', 1, $mailinglist->active, array('class' => 'form-check-input', 'id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
                                     </label>
                                 </div>
                             </div>

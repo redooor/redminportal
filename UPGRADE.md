@@ -360,6 +360,7 @@ The ten content controllers, and the Coupon, Group, Mailinglist, Membership, Mya
 - User form: the groups are checked first and the user and groups are saved together, so an unknown group no longer leaves a saved user behind (same `groupError` message).
 - Images: files are located through `image.upload_dir` and `image.upload_path`; a stored path that resolves outside `upload_path` is not deleted. If you stored absolute or unusual paths in `images.path`, check that deleting an image still removes its files. `Media::delete()` removes its own `assets/medias` folder directly.
 - Page and Post: a blank translated slug is stored as null.
+- Checkboxes: the bundled edit views now use `Form::checkbox('active', 1, $model->active, ...)`. If you published these views, change the value to `1` in the same way; a form that still posts the record's own value (`0` or `1`) keeps working, because the controllers treat any non-empty value as on, but a ticked box on a record that is off posts `0` and is saved as on only for that reason. Do not rely on `0` meaning off.
 
 ---
 

@@ -57,16 +57,6 @@ class AnnouncementController extends Controller
             );
         }
         
-        if (empty($announcement->options)) {
-            $announcement_cn = (object) array(
-                'name'                  => $announcement->name,
-                'short_description'     => $announcement->short_description,
-                'long_description'      => $announcement->long_description
-            );
-        } else {
-            $announcement_cn = json_decode($announcement->options);
-        }
-        
         return view('redminportal::announcements/edit')
             ->with('announcement', $announcement)
             ->with('imagine', new RImage);
