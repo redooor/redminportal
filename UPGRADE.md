@@ -366,6 +366,14 @@ The ten content controllers, and the Coupon, Group, Mailinglist, Membership, Mya
 
 The `redminsession` middleware group now starts with `PreventFraming`, which adds `X-Frame-Options: SAMEORIGIN` and a `Content-Security-Policy: frame-ancestors 'self'` header to every package page. Only the same origin may frame them. If you embed the admin pages in a frame on another origin, or send your own `X-Frame-Options`, note that your own `X-Frame-Options` is kept but the added `frame-ancestors 'self'` policy still applies; remove `PreventFraming` from the group in your service provider if you need cross-origin framing.
 
+### Step 21 — Revision history as a fragment (re-publish assets; check published views)
+
+- Re-publish the assets (`vendor:publish --tag=public --force`) to get `js/redmin-fragment.min.js` and the updated CSS.
+- The route `GET admin/orders/revisions/{sid}` now exists (`OrderController::getRevisions`). Grant the revisions permission to the groups that should see the history (the Revision History link is only shown to users who have it).
+- If you published the views: copy the new `revisions/table.blade.php` (the table markup) and move any customisation of the revision table into it; `revisions/view.blade.php` now extends `layouts.master` and includes the table. Without `revisions/table`, an Ajax request falls back to your published `revisions/view` and the modal shows that markup. In a published `layouts/master`, add `<script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-fragment.min.js') }}" defer></script>`. In a published `orders/view`, replace the iframe modal with the `data-fragment-modal` link and `data-fragment-body` modal body from the package view.
+- `partials/modal-window` and `Redminportal::html()->modalWindow()` accept an optional `modal_title_id` / seventh argument that names the dialog for assistive technology; callers that omit it render as before.
+- The `Authenticate`, `AuthenticateUser` and `EnsureSessionFingerprint` middleware return `response()->view(...)` (HTTP 200, same view) for an Ajax request without a valid session. Custom code that relied on a returned `View` object needs no change.
+
 ---
 
 ### Upgrade checklist

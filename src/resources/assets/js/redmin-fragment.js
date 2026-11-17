@@ -85,8 +85,8 @@
         var body = modal.querySelector('[data-fragment-body]');
         if (!body) return;
         var gen = ++generation;
-        var dropdown = link.closest('.dropdown');
-        var toggle = dropdown ? dropdown.querySelector('.dropdown-toggle') : null;
+        var group = link.closest('.dropdown, .dropup, .dropstart, .dropend, .btn-group');
+        var toggle = group ? group.querySelector('[data-bs-toggle="dropdown"]') : null;
         abortRequest();
         openers.set(modal, { opener: link, toggle: toggle });
         listen(modal);
