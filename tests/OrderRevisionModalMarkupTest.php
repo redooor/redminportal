@@ -41,6 +41,7 @@ class OrderRevisionModalMarkupTest extends RedminBrowserTestCase
         $this->assertStringContainsString('data-fragment-loading=', $html);
         $this->assertStringContainsString('data-fragment-loaded=', $html);
         $this->assertStringContainsString('data-fragment-error=', $html);
+        $this->assertStringContainsString('data-fragment-unknown=', $html);
     }
 
     public function testMasterLayoutLoadsTheFragmentScript()

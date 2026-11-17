@@ -8,4 +8,5 @@ return array(
     'fragment_loading' => 'Loading revision history...',
     'fragment_loaded' => 'Revision history loaded.',
     'fragment_error' => 'The revision history could not be loaded. Reload the page and try again.',
+    'fragment_unknown' => '結果未知。請先檢查列表，然後再試。',
 );
