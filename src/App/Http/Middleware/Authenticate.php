@@ -16,7 +16,7 @@ class Authenticate
     {
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax()) {
-                return view('redminportal::users.notauthorized');
+                return response()->view('redminportal::users.notauthorized');
             } else {
                 return redirect('login');
             }

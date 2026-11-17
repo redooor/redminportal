@@ -232,6 +232,14 @@ i {
     }
 }
 
+/* Keep long revision values inside their table cell */
+.revision-limit-view {
+    max-width: 200px;
+    max-height: 200px;
+    overflow: scroll;
+    display: block;
+}
+
 /* Style for iframe in modal window */
 .modal .modal-dialog .modal-content .modal-body iframe {
     width: 100%;
