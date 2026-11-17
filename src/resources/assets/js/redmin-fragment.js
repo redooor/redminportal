@@ -244,7 +244,8 @@
     // POSTs for forms and inline-confirm links. It deliberately does not use the content AbortController:
     // aborting cannot cancel the server, so a sent mutation stays tracked until its outcome is known.
     function postTo(modal, body, state, url, method, data, form, extraControls) {
-        if (!body || state.mutating) return;
+        // A hiding modal is about to clear its body, so a mutation started now would lose its outcome.
+        if (!body || state.mutating || state.hiding) return;
         var gen = state.generation;
         var controls = disableControls(form, extraControls);
         state.mutating = true;

@@ -38,6 +38,14 @@ class WidgetPluginInitialisersMarkupTest extends RedminTestCase
         $this->assertStringContainsString('.closest(\'.bootstrap-tagsinput\')', $html);
     }
 
+    public function testEditorInitialiserSkipsJoditsOwnTextareas()
+    {
+        $html = view('redminportal::plugins.editor', ['editorImages' => []])->render();
+
+        $this->assertStringContainsString('jodit-source__mirror', $html);
+        $this->assertStringContainsString("closest('.jodit-container')", $html);
+    }
+
     public function testBuiltFileinputExposesReleaseHook()
     {
         $path = dirname(__DIR__, 2) . '/src/public/js/redmin-fileinput.min.js';

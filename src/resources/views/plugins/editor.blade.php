@@ -114,6 +114,11 @@
             root = root || document;
 
             root.querySelectorAll('textarea').forEach(function (textarea) {
+                // Jodit's own source-mode mirror textarea lives inside the editor container; never make an editor of it
+                if (textarea.classList.contains('jodit-source__mirror') || textarea.closest('.jodit-container')) {
+                    return;
+                }
+
                 // Jodit marks the source textarea with a non-enumerable `component` (Jodit.isJoditAssigned)
                 if (Jodit.isJoditAssigned(textarea)) {
                     return;
