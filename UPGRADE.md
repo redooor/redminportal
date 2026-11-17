@@ -362,6 +362,10 @@ The ten content controllers, and the Coupon, Group, Mailinglist, Membership, Mya
 - Page and Post: a blank translated slug is stored as null.
 - Checkboxes: the bundled edit views now use `Form::checkbox('active', 1, $model->active, ...)`. If you published these views, change the value to `1` in the same way; a form that still posts the record's own value (`0` or `1`) keeps working, because the controllers treat any non-empty value as on, but a ticked box on a record that is off posts `0` and is saved as on only for that reason. Do not rely on `0` meaning off.
 
+### Step 20 — Anti-framing headers (no action needed unless you embed the admin)
+
+The `redminsession` middleware group now starts with `PreventFraming`, which adds `X-Frame-Options: SAMEORIGIN` and a `Content-Security-Policy: frame-ancestors 'self'` header to every package page. Only the same origin may frame them. If you embed the admin pages in a frame on another origin, or send your own `X-Frame-Options`, note that your own `X-Frame-Options` is kept but the added `frame-ancestors 'self'` policy still applies; remove `PreventFraming` from the group in your service provider if you need cross-origin framing.
+
 ---
 
 ### Upgrade checklist

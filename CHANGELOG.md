@@ -58,6 +58,7 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 **Admin actions**
 1. The admin routes verify the CSRF token. Actions that change data (delete, remove image, activate/deactivate user, change order status, update media duration, log out) now use `POST` instead of `GET` links. The package views are updated; custom views need the changes in [UPGRADE.md](UPGRADE.md) (Step 12).
 2. New `data-method="post"` links (`js/redmin-post.min.js`) post with the CSRF token; `window.redminCsrfToken()` returns the token for Ajax calls.
+3. Package pages (login, admin, my account) send `X-Frame-Options: SAMEORIGIN` and `Content-Security-Policy: frame-ancestors 'self'`, so other sites cannot embed them (clickjacking). The package's own iframe modals keep working. A host that already sends `X-Frame-Options` keeps its value.
 
 **Uploads**
 1. Media and image uploads validate file names and types. Media uploads accept only the extensions in the new `media.allowed_extensions` config and are limited by `media.max_size`; uploaded names are cleaned before they are stored.

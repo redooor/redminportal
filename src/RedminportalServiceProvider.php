@@ -75,6 +75,8 @@ class RedminportalServiceProvider extends ServiceProvider
         ], 'migrations');
 
         $router->middlewareGroup('redminsession', [
+            // First, so it also covers responses built from exceptions such as the CSRF rejection
+            \Redooor\Redminportal\App\Http\Middleware\PreventFraming::class,
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
