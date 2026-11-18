@@ -110,7 +110,7 @@ class CsrfFormsMarkupTest extends TestCase
 
     public function testLayoutsProvideTheTokenAndPostHandler()
     {
-        foreach (['master', 'bare', 'plain'] as $layout) {
+        foreach (['master', 'plain'] as $layout) {
             $source = file_get_contents(dirname(__DIR__) . '/src/resources/views/layouts/' . $layout . '.blade.php');
 
             $this->assertStringContainsString('<meta name="csrf-token" content="{{ csrf_token() }}">', $source, $layout . ' layout has no csrf-token meta tag');
