@@ -9,14 +9,15 @@
     
     @include('redminportal::partials.errors')
 
-    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\ProductController@postStore', 'role' => 'form')) !!}
+    <form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\ProductController@postStore') }}" enctype="multipart/form-data" role="form">
+    @csrf
 
     	<div class='row'>
             <div class="col-lg-3 order-lg-last">
                 <div class="card card-body bg-body-tertiary">
                     <div class='form-actions'>
-                        {!! HTML::link('admin/products', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                        {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm float-end')) !!}
+                        <a href="{{ URL::to('admin/products') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                        <input type="submit" value="{{ Lang::get('redminportal::buttons.create') }}" class="btn btn-primary btn-sm float-end">
                     </div>
                 </div>
                 <div class='card card-body bg-body-tertiary p-2'>
@@ -62,19 +63,19 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            {!! Form::label('sku', Lang::get('redminportal::forms.sku')) !!}
-                            {!! Form::text('sku', null, array('class' => 'form-control')) !!}
+                            <label for="sku">{{ Lang::get('redminportal::forms.sku') }}</label>
+                            <input type="text" name="sku" id="sku" value="{{ old('sku', null) }}" class="form-control">
                         </div>
                         <div class="mb-3">
-                            {!! Form::label('price', Lang::get('redminportal::forms.price')) !!}
+                            <label for="price">{{ Lang::get('redminportal::forms.price') }}</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                {!! Form::text('price', null, array('class' => 'form-control')) !!}
+                                <input type="text" name="price" id="price" value="{{ old('price', null) }}" class="form-control">
                             </div>
                         </div>
                         <div class="mb-3">
-                            {!! Form::label('tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
-                            {!! Form::text('tags', null, array('class' => 'form-control')) !!}
+                            <label for="tags">{{ Lang::get('redminportal::forms.tags_separated_by_comma') }}</label>
+                            <input type="text" name="tags" id="tags" value="{{ old('tags', null) }}" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -143,7 +144,7 @@
                 </div>
 	        </div>
         </div>
-    {!! Form::close() !!}
+    </form>
 @stop
 
 @section('footer')

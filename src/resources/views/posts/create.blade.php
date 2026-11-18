@@ -9,14 +9,15 @@
     
     @include('redminportal::partials.errors')
 
-    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\PostController@postStore', 'role' => 'form')) !!}
+    <form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\PostController@postStore') }}" enctype="multipart/form-data" role="form">
+    @csrf
 
     <div class='row'>
         <div class="col-lg-3 order-lg-last">
             <div class="card card-body bg-body-tertiary">
                 <div class='form-actions'>
-                    {!! HTML::link('admin/posts', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                    {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm float-end')) !!}
+                    <a href="{{ URL::to('admin/posts') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                    <input type="submit" value="{{ Lang::get('redminportal::buttons.create') }}" class="btn btn-primary btn-sm float-end">
                 </div>
             </div>
             <div class='card card-body bg-body-tertiary p-2'>
@@ -63,36 +64,36 @@
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="lang-en">
                             <div class="mb-3">
-                                {!! Form::label('title', Lang::get('redminportal::forms.title')) !!}
-                                {!! Form::text('title', null, array('class' => 'form-control')) !!}
+                                <label for="title">{{ Lang::get('redminportal::forms.title') }}</label>
+                                <input type="text" name="title" id="title" value="{{ old('title', null) }}" class="form-control">
                             </div>
 
                             <div class="mb-3">
-                                {!! Form::label('slug', Lang::get('redminportal::forms.slug')) !!}
-                                {!! Form::text('slug', null, array('class' => 'form-control')) !!}
+                                <label for="slug">{{ Lang::get('redminportal::forms.slug') }}</label>
+                                <input type="text" name="slug" id="slug" value="{{ old('slug', null) }}" class="form-control">
                             </div>
 
                             <div class="mb-3">
-                                {!! Form::label('content', Lang::get('redminportal::forms.content')) !!}
-                                {!! Form::textarea('content', null, array('class' => 'form-control', 'style' => 'height:400px')) !!}
+                                <label for="content">{{ Lang::get('redminportal::forms.content') }}</label>
+                                <textarea name="content" id="content" class="form-control" style="height:400px">{{ old('content', null) }}</textarea>
                             </div>
                         </div>
                         @foreach(\Config::get('redminportal::translation') as $translation)
                             @if($translation['lang'] != 'en')
                             <div class="tab-pane fade" id="lang-{{ $translation['lang'] }}">
                                 <div class="mb-3">
-                                    {!! Form::label($translation['lang'] . '_title', Lang::get('redminportal::forms.title')) !!}
-                                    {!! Form::text($translation['lang'] . '_title', null, array('class' => 'form-control')) !!}
+                                    <label for="{{ $translation['lang'] . '_title' }}">{{ Lang::get('redminportal::forms.title') }}</label>
+                                    <input type="text" name="{{ $translation['lang'] . '_title' }}" id="{{ $translation['lang'] . '_title' }}" value="{{ old($translation['lang'] . '_title', null) }}" class="form-control">
                                 </div>
 
                                 <div class="mb-3">
-                                    {!! Form::label($translation['lang'] . '_slug', Lang::get('redminportal::forms.slug')) !!}
-                                    {!! Form::text($translation['lang'] . '_slug', null, array('class' => 'form-control')) !!}
+                                    <label for="{{ $translation['lang'] . '_slug' }}">{{ Lang::get('redminportal::forms.slug') }}</label>
+                                    <input type="text" name="{{ $translation['lang'] . '_slug' }}" id="{{ $translation['lang'] . '_slug' }}" value="{{ old($translation['lang'] . '_slug', null) }}" class="form-control">
                                 </div>
 
                                 <div class="mb-3">
-                                    {!! Form::label($translation['lang'] . '_content', Lang::get('redminportal::forms.content')) !!}
-                                    {!! Form::textarea($translation['lang'] . '_content', null, array('class' => 'form-control', 'style' => 'height:400px')) !!}
+                                    <label for="{{ $translation['lang'] . '_content' }}">{{ Lang::get('redminportal::forms.content') }}</label>
+                                    <textarea name="{{ $translation['lang'] . '_content' }}" id="{{ $translation['lang'] . '_content' }}" class="form-control" style="height:400px">{{ old($translation['lang'] . '_content', null) }}</textarea>
                                 </div>
                             </div>
                             @endif
@@ -102,7 +103,7 @@
             </div>
         </div>
     </div>
-    {!! Form::close() !!}
+    </form>
 @stop
 
 @section('footer')

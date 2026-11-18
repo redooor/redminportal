@@ -26,7 +26,7 @@
                 <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#export-csv">{{ Lang::get('redminportal::buttons.export_csv') }}</button>
                 @permitted('admin/purchases/create')
                 @permitted('admin/orders/create')
-                {!! HTML::link('admin/purchases/create', Lang::get('redminportal::buttons.create_new'), array('class' => 'btn btn-primary btn-sm')) !!}
+                <a href="{{ URL::to('admin/purchases/create') }}" class="btn btn-primary btn-sm">{{ Lang::get('redminportal::buttons.create_new') }}</a>
                 @endpermitted
                 @endpermitted
             </div>
@@ -106,7 +106,8 @@
     <div id="export-csv" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\ReportController@postPurchases', 'report' => 'form')) !!}
+                <form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\ReportController@postPurchases') }}" report="form">
+                @csrf
                 <div class="modal-header">
                     <h4 class="modal-title">{{ Lang::get('redminportal::messages.export_to_csv') }}</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -115,16 +116,16 @@
                     <div class='row'>
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                {!! Form::label('start_date', Lang::get('redminportal::forms.start_date')) !!}
+                                <label for="start_date">{{ Lang::get('redminportal::forms.start_date') }}</label>
                                 <div class="input-group" id='start-date'>
-                                    {!! Form::input('text', 'start_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
+                                    <input type="text" name="start_date" id="start_date" value="{{ old('start_date', null) }}" class="form-control datepicker" readonly>
                                     <span class="input-group-text"><i class="fa-solid fa-calendar"></i></span>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                {!! Form::label('end_date', Lang::get('redminportal::forms.end_date')) !!}
+                                <label for="end_date">{{ Lang::get('redminportal::forms.end_date') }}</label>
                                 <div class="input-group" id='end-date'>
-                                    {!! Form::input('text', 'end_date', null, array('class' => 'form-control datepicker', 'readonly')) !!}
+                                    <input type="text" name="end_date" id="end_date" value="{{ old('end_date', null) }}" class="form-control datepicker" readonly>
                                     <span class="input-group-text"><i class="fa-solid fa-calendar"></i></span>
                                 </div>
                             </div>
@@ -134,9 +135,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ Lang::get('redminportal::buttons.close') }}</button>
-                    {!! Form::submit(Lang::get('redminportal::buttons.download_csv'), array('class' => 'btn btn-primary')) !!}
+                    <input type="submit" value="{{ Lang::get('redminportal::buttons.download_csv') }}" class="btn btn-primary">
                 </div>
-                {!! Form::close() !!}
+                </form>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->

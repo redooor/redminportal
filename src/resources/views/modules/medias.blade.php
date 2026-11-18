@@ -16,9 +16,9 @@
                 <td>{{ $media->short_description }}</td>
                 @foreach ($memberships as $membership)
                     @if (isset($modMediaMembership[$media->id][$membership->id]))
-                    <td>{!! Form::checkbox('media_checkbox[]', $media->id . '_' . $membership->id, true) !!}</td>
+                    <td><input type="checkbox" name="media_checkbox[]" value="{{ $media->id . '_' . $membership->id }}" @checked(in_array($media->id . '_' . $membership->id, (array) (session()->hasOldInput() ? old('media_checkbox', []) : [$media->id . '_' . $membership->id])))></td>
                     @else
-                    <td>{!! Form::checkbox('media_checkbox[]', $media->id . '_' . $membership->id, false) !!}</td>
+                    <td><input type="checkbox" name="media_checkbox[]" value="{{ $media->id . '_' . $membership->id }}" @checked(in_array($media->id . '_' . $membership->id, (array) (session()->hasOldInput() ? old('media_checkbox', []) : [])))></td>
                     @endif
                 @endforeach
             </tr>

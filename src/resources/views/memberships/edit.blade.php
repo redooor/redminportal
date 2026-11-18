@@ -9,8 +9,9 @@
     
     @include('redminportal::partials.errors')
 
-    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\MembershipController@postStore', 'role' => 'form')) !!}
-        {!! Form::hidden('id', $membership->id)!!}
+    <form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\MembershipController@postStore') }}" enctype="multipart/form-data" role="form">
+        @csrf
+        <input type="hidden" name="id" value="{{ old('id', $membership->id) }}">
 
         <div class='row'>
             <div class="col-lg-9">
@@ -20,12 +21,12 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            {!! Form::label('name', Lang::get('redminportal::forms.name')) !!}
-                            {!! Form::text('name', $membership->name, array('class' => 'form-control', 'required', 'autofocus')) !!}
+                            <label for="name">{{ Lang::get('redminportal::forms.name') }}</label>
+                            <input type="text" name="name" id="name" value="{{ old('name', $membership->name) }}" class="form-control" required autofocus>
                         </div>
                         <div class="mb-3">
-                            {!! Form::label('rank', Lang::get('redminportal::forms.rank')) !!}
-                            {!! Form::input('number', 'rank', $membership->rank, array('class' => 'form-control', 'min' => '0', 'required')) !!}
+                            <label for="rank">{{ Lang::get('redminportal::forms.rank') }}</label>
+                            <input type="number" name="rank" id="rank" value="{{ old('rank', $membership->rank) }}" class="form-control" min="0" required>
                         </div>
                     </div>
                 </div>
@@ -33,13 +34,13 @@
             <div class="col-lg-3">
                 <div class="card card-body bg-body-tertiary">
                     <div class='form-actions'>
-                        {!! HTML::link('admin/memberships', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary btn-sm float-end')) !!}
+                        <a href="{{ URL::to('admin/memberships') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                        <input type="submit" value="{{ Lang::get('redminportal::buttons.save') }}" class="btn btn-primary btn-sm float-end">
                     </div>
                 </div>
             </div>
         </div>
-    {!! Form::close() !!}
+    </form>
 @stop
 
 @section('footer')

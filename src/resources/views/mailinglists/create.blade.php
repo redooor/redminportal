@@ -9,7 +9,8 @@
     
     @include('redminportal::partials.errors')
 
-    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\MailinglistController@postStore', 'role' => 'form')) !!}
+    <form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\MailinglistController@postStore') }}" enctype="multipart/form-data" role="form">
+        @csrf
 
         <div class="row">
             <div class="col-lg-9">
@@ -19,18 +20,18 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            {!! Form::label('first_name', Lang::get('redminportal::forms.first_name')) !!}
-                            {!! Form::text('first_name', null, array('class' => 'form-control', 'required', 'autofocus')) !!}
+                            <label for="first_name">{{ Lang::get('redminportal::forms.first_name') }}</label>
+                            <input type="text" name="first_name" id="first_name" value="{{ old('first_name', null) }}" class="form-control" required autofocus>
                         </div>
 
                         <div class="mb-3">
-                            {!! Form::label('last_name', Lang::get('redminportal::forms.last_name')) !!}
-                            {!! Form::text('last_name', null, array('class' => 'form-control', 'required')) !!}
+                            <label for="last_name">{{ Lang::get('redminportal::forms.last_name') }}</label>
+                            <input type="text" name="last_name" id="last_name" value="{{ old('last_name', null) }}" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
-                            {!! Form::label('email', Lang::get('redminportal::forms.email')) !!}
-                            {!! Form::email('email', null, array('class' => 'form-control', 'required')) !!}
+                            <label for="email">{{ Lang::get('redminportal::forms.email') }}</label>
+                            <input type="email" name="email" id="email" value="{{ old('email', null) }}" class="form-control" required>
                         </div>
                         
                         <div class="card card-body bg-body-tertiary">
@@ -48,13 +49,13 @@
             <div class="col-lg-3">
                 <div class='card card-body bg-body-tertiary'>
                     <div class='form-actions'>
-                        {!! HTML::link('admin/mailinglists', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                        {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm float-end')) !!}
+                        <a href="{{ URL::to('admin/mailinglists') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                        <input type="submit" value="{{ Lang::get('redminportal::buttons.create') }}" class="btn btn-primary btn-sm float-end">
                     </div>
                 </div>
             </div>
         </div>
-    {!! Form::close() !!}
+    </form>
 @stop
 
 @section('footer')

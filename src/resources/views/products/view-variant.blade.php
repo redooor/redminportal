@@ -82,7 +82,7 @@
                     <div class='row'>
                         @foreach ($product->images as $image)
                         <div class='col-md-4'>
-                            {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                            <img src="{{ asset($imagine->getUrl($image->path)) }}" alt="{{ $product->name }}" class="img-thumbnail">
                         </div>
                         @endforeach
                     </div>
@@ -95,7 +95,7 @@
                 <div class="mb-3">
                     <div class="form-check">
                         <label class="form-check-label" for="variant-featured-checker">
-                            {!! Form::checkbox('featured', 1, $product->featured, array('class' => 'form-check-input', 'id' => 'variant-featured-checker', 'disabled' => 'disabled')) !!} {{ Lang::get('redminportal::forms.featured') }}
+                            <input type="checkbox" name="featured" value="1" id="variant-featured-checker" class="form-check-input" disabled="disabled" @checked(session()->hasOldInput() ? old('featured') : $product->featured)> {{ Lang::get('redminportal::forms.featured') }}
                         </label>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                 <div class="mb-3">
                     <div class="form-check">
                         <label class="form-check-label" for="variant-active-checker">
-                            {!! Form::checkbox('active', 1, $product->active, array('class' => 'form-check-input', 'id' => 'variant-active-checker', 'disabled' => 'disabled')) !!} {{ Lang::get('redminportal::forms.active') }}
+                            <input type="checkbox" name="active" value="1" id="variant-active-checker" class="form-check-input" disabled="disabled" @checked(session()->hasOldInput() ? old('active') : $product->active)> {{ Lang::get('redminportal::forms.active') }}
                         </label>
                     </div>
                 </div>

@@ -9,7 +9,8 @@
     
     @include('redminportal::partials.errors')
 
-	{!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\GroupController@postStore', 'role' => 'form')) !!}
+	<form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\GroupController@postStore') }}" role="form">
+	@csrf
 	<div class="row">
         <div class="col-lg-9">
             <div class="card">
@@ -18,8 +19,8 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        {!! Form::label('name', Lang::get('redminportal::forms.name')) !!}
-                        {!! Form::text('name', old('name'), array('class' => 'form-control', 'autofocus', 'required')) !!}
+                        <label for="name">{{ Lang::get('redminportal::forms.name') }}</label>
+                        <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" autofocus required>
                     </div>
                 </div>
             </div>
@@ -96,14 +97,14 @@
 		<div class="col-lg-3">
             <div class="card card-body bg-body-tertiary">
                 <div class='form-actions'>
-                    {!! HTML::link('admin/groups', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                    {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm float-end')) !!}
+                    <a href="{{ URL::to('admin/groups') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                    <input type="submit" value="{{ Lang::get('redminportal::buttons.create') }}" class="btn btn-primary btn-sm float-end">
                 </div>
             </div>
         </div>
     </div>
 		
-	{!! Form::close() !!}
+	</form>
 @stop
 
 @section('footer')

@@ -113,6 +113,9 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 **Layouts**
 1. The unused `layouts/bare` view was removed (it was the layout of the iframe modals, which are now fragments). `layouts/plain` stays: the login and not-authorised pages use it.
 
+**Forms**
+1. The bundled views no longer use `Form::` or `HTML::`; they are plain Blade (`@csrf`, `old()`, `@checked`, `@selected`). The markup is the same apart from these intentional differences: no `accept-charset` on forms, no default `cols="50" rows="10"` on textareas, no empty `value=""` attribute, `@csrf` adds `autocomplete="off"` to the token input, a required field the user cleared stays empty after a failed validation (it no longer falls back to the saved value), and a value containing an HTML entity (`A &amp; B`) is shown as typed instead of decoded.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.

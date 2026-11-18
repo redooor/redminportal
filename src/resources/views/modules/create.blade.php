@@ -9,14 +9,15 @@
     
     @include('redminportal::partials.errors')
 
-    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\ModuleController@postStore', 'role' => 'form')) !!}
+    <form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\ModuleController@postStore') }}" enctype="multipart/form-data" role="form">
+    @csrf
 
     	<div class='row'>
             <div class="col-lg-3 order-lg-last">
                 <div class="card card-body bg-body-tertiary">
                     <div class='form-actions'>
-                        {!! HTML::link('admin/modules', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                        {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm float-end')) !!}
+                        <a href="{{ URL::to('admin/modules') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                        <input type="submit" value="{{ Lang::get('redminportal::buttons.create') }}" class="btn btn-primary btn-sm float-end">
                     </div>
                 </div>
                 <div class='card card-body bg-body-tertiary p-2'>
@@ -61,36 +62,36 @@
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="lang-en">
                                 <div class="mb-3">
-                                    {!! Form::label('name', Lang::get('redminportal::forms.title')) !!}
-                                    {!! Form::text('name', null, array('class' => 'form-control')) !!}
+                                    <label for="name">{{ Lang::get('redminportal::forms.title') }}</label>
+                                    <input type="text" name="name" id="name" value="{{ old('name', null) }}" class="form-control">
                                 </div>
 
                                 <div class="mb-3">
-                                    {!! Form::label('short_description', Lang::get('redminportal::forms.summary')) !!}
-                                    {!! Form::text('short_description', null, array('class' => 'form-control')) !!}
+                                    <label for="short_description">{{ Lang::get('redminportal::forms.summary') }}</label>
+                                    <input type="text" name="short_description" id="short_description" value="{{ old('short_description', null) }}" class="form-control">
                                 </div>
 
                                 <div class="mb-3">
-                                    {!! Form::label('long_description', Lang::get('redminportal::forms.description')) !!}
-                                    {!! Form::textarea('long_description', null, array('class' => 'form-control', 'style' => 'height:200px')) !!}
+                                    <label for="long_description">{{ Lang::get('redminportal::forms.description') }}</label>
+                                    <textarea name="long_description" id="long_description" class="form-control" style="height:200px">{{ old('long_description', null) }}</textarea>
                                 </div>
                             </div>
                             @foreach(\Config::get('redminportal::translation') as $translation)
                                 @if($translation['lang'] != 'en')
                                 <div class="tab-pane fade" id="lang-{{ $translation['lang'] }}">
                                     <div class="mb-3">
-                                        {!! Form::label($translation['lang'] . '_name', Lang::get('redminportal::forms.title')) !!}
-                                        {!! Form::text($translation['lang'] . '_name', null, array('class' => 'form-control')) !!}
+                                        <label for="{{ $translation['lang'] . '_name' }}">{{ Lang::get('redminportal::forms.title') }}</label>
+                                        <input type="text" name="{{ $translation['lang'] . '_name' }}" id="{{ $translation['lang'] . '_name' }}" value="{{ old($translation['lang'] . '_name', null) }}" class="form-control">
                                     </div>
 
                                     <div class="mb-3">
-                                        {!! Form::label($translation['lang'] . '_short_description', Lang::get('redminportal::forms.summary')) !!}
-                                        {!! Form::text($translation['lang'] . '_short_description', null, array('class' => 'form-control')) !!}
+                                        <label for="{{ $translation['lang'] . '_short_description' }}">{{ Lang::get('redminportal::forms.summary') }}</label>
+                                        <input type="text" name="{{ $translation['lang'] . '_short_description' }}" id="{{ $translation['lang'] . '_short_description' }}" value="{{ old($translation['lang'] . '_short_description', null) }}" class="form-control">
                                     </div>
 
                                     <div class="mb-3">
-                                        {!! Form::label($translation['lang'] . '_long_description', Lang::get('redminportal::forms.description')) !!}
-                                        {!! Form::textarea($translation['lang'] . '_long_description', null, array('class' => 'form-control', 'style' => 'height:200px')) !!}
+                                        <label for="{{ $translation['lang'] . '_long_description' }}">{{ Lang::get('redminportal::forms.description') }}</label>
+                                        <textarea name="{{ $translation['lang'] . '_long_description' }}" id="{{ $translation['lang'] . '_long_description' }}" class="form-control" style="height:200px">{{ old($translation['lang'] . '_long_description', null) }}</textarea>
                                     </div>
                                 </div>
                                 @endif
@@ -104,12 +105,12 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            {!! Form::label('sku', Lang::get('redminportal::forms.sku')) !!}
-                            {!! Form::text('sku', null, array('class' => 'form-control')) !!}
+                            <label for="sku">{{ Lang::get('redminportal::forms.sku') }}</label>
+                            <input type="text" name="sku" id="sku" value="{{ old('sku', null) }}" class="form-control">
                         </div>
                         <div class="mb-3">
-                            {!! Form::label('tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
-                            {!! Form::text('tags', null, array('class' => 'form-control')) !!}
+                            <label for="tags">{{ Lang::get('redminportal::forms.tags_separated_by_comma') }}</label>
+                            <input type="text" name="tags" id="tags" value="{{ old('tags', null) }}" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -130,12 +131,12 @@
                         @foreach ($memberships as $membership)
                             <tr>
                                 <td>{{ $membership->name }}</td>
-                                <td>{!! Form::text('price_' . $membership->id, null, array('class' => 'form-control')) !!}</td>
+                                <td><input type="text" name="{{ 'price_' . $membership->id }}" value="{{ old('price_' . $membership->id, null) }}" class="form-control"></td>
                                 <td>
                                     <div class="mb-3">
                                         <div class="form-check">
                                             <label class="form-check-label" for="{{ 'price_active_' . $membership->id }}">
-                                                {!! Form::checkbox('price_active_' . $membership->id, 'true', false, array('class' => 'form-check-input', 'id' => 'price_active_' . $membership->id)) !!}
+                                                <input type="checkbox" name="{{ 'price_active_' . $membership->id }}" value="true" id="{{ 'price_active_' . $membership->id }}" class="form-check-input" @checked(session()->hasOldInput() ? old('price_active_' . $membership->id) : false)>
                                             </label>
                                         </div>
                                     </div>
@@ -156,7 +157,7 @@
                 </div>
 	        </div>
         </div>
-    {!! Form::close() !!}
+    </form>
 @stop
 
 @section('footer')
