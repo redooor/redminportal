@@ -16,9 +16,10 @@
         }
     @endphp
     <div data-editor-images="{{ json_encode($editorImages) }}">
-    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\ProductController@postStore', 'role' => 'form', 'data-fragment-form' => 'data-fragment-form')) !!}
-    {!! Form::hidden('id', $product->id, array('id' => 'variant-id')) !!}
-    {!! Form::hidden('product_id', $product_id, array('id' => 'variant-product_id')) !!}
+    <form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\ProductController@postStore') }}" enctype="multipart/form-data" role="form" data-fragment-form>
+    @csrf
+    <input type="hidden" name="id" id="variant-id" value="{{ old('id', $product->id) }}">
+    <input type="hidden" name="product_id" id="variant-product_id" value="{{ old('product_id', $product_id) }}">
 
     	<div class='row'>
 	        <div class="col-md-8">
@@ -41,19 +42,19 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            {!! Form::label('variant-sku', Lang::get('redminportal::forms.sku')) !!}
-                            {!! Form::text('sku', old('sku', $product->sku), array('class' => 'form-control', 'id' => 'variant-sku')) !!}
+                            <label for="variant-sku">{{ Lang::get('redminportal::forms.sku') }}</label>
+                            <input type="text" name="sku" id="variant-sku" value="{{ old('sku', old('sku', $product->sku)) }}" class="form-control">
                         </div>
                         <div class="mb-3">
-                            {!! Form::label('variant-price', Lang::get('redminportal::forms.price')) !!}
+                            <label for="variant-price">{{ Lang::get('redminportal::forms.price') }}</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                {!! Form::text('price', old('price', $product->price), array('class' => 'form-control', 'id' => 'variant-price')) !!}
+                                <input type="text" name="price" id="variant-price" value="{{ old('price', old('price', $product->price)) }}" class="form-control">
                             </div>
                         </div>
                         <div class="mb-3">
-                            {!! Form::label('variant-tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
-                            {!! Form::text('tags', old('tags', $tagString), array('class' => 'form-control', 'id' => 'variant-tags', 'data-redmin-tags' => '')) !!}
+                            <label for="variant-tags">{{ Lang::get('redminportal::forms.tags_separated_by_comma') }}</label>
+                            <input type="text" name="tags" id="variant-tags" value="{{ old('tags', old('tags', $tagString)) }}" class="form-control" data-redmin-tags="">
                         </div>
                     </div>
                 </div>
@@ -135,7 +136,7 @@
                         <div class='row'>
                             @foreach ($product->images as $image)
                             <div class='col-md-4'>
-                                {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+                                <img src="{{ asset($imagine->getUrl($image->path)) }}" alt="{{ $product->name }}" class="img-thumbnail">
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
                                     @permitted('admin/products/variant-imgremove/' . $product_id . '/' . $image->id)
@@ -172,14 +173,14 @@
             <div class="col-md-4">
                 <div class="card card-body bg-body-tertiary d-none d-md-block">
                     <div class='form-actions text-end'>
-                        {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary btn-sm')) !!}
+                        <input type="submit" value="{{ Lang::get('redminportal::buttons.save') }}" class="btn btn-primary btn-sm">
                     </div>
                 </div>
                 <div class='card card-body bg-body-tertiary p-2'>
                     <div class="mb-3">
                         <div class="form-check">
                             <label class="form-check-label" for="variant-featured-checker">
-                                {!! Form::checkbox('featured', 1, session()->hasOldInput() ? old('featured') : $product->featured, array('class' => 'form-check-input', 'id' => 'variant-featured-checker')) !!} {{ Lang::get('redminportal::forms.featured') }}
+                                <input type="checkbox" name="featured" value="1" id="variant-featured-checker" class="form-check-input" @checked(session()->hasOldInput() ? old('featured') : $product->featured)> {{ Lang::get('redminportal::forms.featured') }}
                             </label>
                         </div>
                     </div>
@@ -187,7 +188,7 @@
                     <div class="mb-3">
                         <div class="form-check">
                             <label class="form-check-label" for="variant-active-checker">
-                                {!! Form::checkbox('active', 1, session()->hasOldInput() ? old('active') : $product->active, array('class' => 'form-check-input', 'id' => 'variant-active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
+                                <input type="checkbox" name="active" value="1" id="variant-active-checker" class="form-check-input" @checked(session()->hasOldInput() ? old('active') : $product->active)> {{ Lang::get('redminportal::forms.active') }}
                             </label>
                         </div>
                     </div>
@@ -214,12 +215,12 @@
                 </div>
                 <div class="card card-body bg-body-tertiary d-md-none">
                     <div class='form-actions text-end'>
-                        {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm')) !!}
+                        <input type="submit" value="{{ Lang::get('redminportal::buttons.create') }}" class="btn btn-primary btn-sm">
                     </div>
                 </div>
 	        </div>
         </div>
-    {!! Form::close() !!}
+    </form>
     </div>
     @if (! request()->ajax())
     @include('redminportal::partials.confirm-delete')
