@@ -48,7 +48,6 @@ trait RedminTestTrait
     {
         return [
             'Redooor\Redminportal\RedminportalServiceProvider',
-            'Collective\Html\HtmlServiceProvider',
         ];
     }
 
@@ -59,8 +58,6 @@ trait RedminTestTrait
     {
         return [
             'Redminportal' => 'Redooor\Redminportal\Facades\Redminportal',
-            'Form'         => 'Collective\Html\FormFacade',
-            'HTML'         => 'Collective\Html\HtmlFacade',
         ];
     }
 }

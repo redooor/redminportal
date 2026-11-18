@@ -34,28 +34,42 @@ The most common breaking changes encountered along the way:
 
 ---
 
-### Step 2 — Replace `laravelcollective/html` with `rdx/laravelcollective-html`
+### Step 2 — `laravelcollective/html` is no longer required
 
-The original `laravelcollective/html` package is no longer maintained and does
-not support Laravel 13. The drop-in replacement keeps identical class names so
-no view changes are required.
+The package's views are plain Blade and no longer use the `Form::` or `HTML::`
+helpers, so the package no longer depends on a Collective HTML fork, registers
+its service provider or defines the `Form` and `HTML` aliases.
 
-Remove the old package and add the new one:
+If your application does not use these helpers itself, remove the package:
 
 ```bash
 composer remove laravelcollective/html
+```
+
+Also remove `Collective\Html\HtmlServiceProvider::class` from `providers` and the
+`Form` and `HTML` entries from `aliases` in `config/app.php` if you added them
+by hand; the application fails to boot once the package is gone while they
+remain.
+
+**Published views that still use `Form::` or `HTML::` will break.** Either
+migrate them to plain Blade (see the bundled views for examples), or keep the
+helpers in your own application:
+
+```bash
 composer require rdx/laravelcollective-html:^6.10
 ```
 
-If you registered the service provider or aliases manually in
-`config/app.php`, **no changes are needed** — the class names are identical:
+The fork registers only the `Html` alias, so also add the `HTML` alias yourself
+in `config/app.php`:
 
 ```php
-// These remain exactly the same
-Collective\Html\HtmlServiceProvider::class
-'Form' => Collective\Html\FormFacade::class
-'HTML' => Collective\Html\HtmlFacade::class
+'aliases' => [
+    // ...
+    'HTML' => Collective\Html\HtmlFacade::class,
+],
 ```
+
+`Form` is registered by the fork's own package discovery.
 
 ---
 
@@ -132,7 +146,7 @@ php artisan vendor:publish \
 ### Step 7 — Remove `Session::token()` from a published login view
 
 If you published and customised the login view, remove any explicit CSRF hidden
-field that uses `Session::token()`. The `Form::open()` call already injects the
+field that uses `Session::token()`. The plain-Blade `@csrf` already injects the
 token automatically:
 
 ```blade
@@ -266,7 +280,7 @@ If you published or wrote your own admin views, check them:
 
 | Your view has | Change it to |
 |---|---|
-| A `<form method="POST">` written by hand | Add `@csrf` as its first child. Forms made with `Form::open` already have the token. |
+| A `<form method="POST">` written by hand | Add `@csrf` as its first child. The bundled forms already have the token. |
 | A link such as `<a href="admin/pages/delete/1">` | Keep the link and add `class="btn-confirm"` (needs `@include('redminportal::partials.confirm-delete')`), or add `data-method="post"`. |
 | `$.get` / `$.getJSON` to one of the routes above | `$.post(url, { _token: window.redminCsrfToken() }, ...)` |
 | Other Ajax calls that `POST` | Send the `X-CSRF-TOKEN` header or a `_token` field. |
@@ -360,7 +374,7 @@ The ten content controllers, and the Coupon, Group, Mailinglist, Membership, Mya
 - User form: the groups are checked first and the user and groups are saved together, so an unknown group no longer leaves a saved user behind (same `groupError` message).
 - Images: files are located through `image.upload_dir` and `image.upload_path`; a stored path that resolves outside `upload_path` is not deleted. If you stored absolute or unusual paths in `images.path`, check that deleting an image still removes its files. `Media::delete()` removes its own `assets/medias` folder directly.
 - Page and Post: a blank translated slug is stored as null.
-- Checkboxes: the bundled edit views now use `Form::checkbox('active', 1, $model->active, ...)`. If you published these views, change the value to `1` in the same way; a form that still posts the record's own value (`0` or `1`) keeps working, because the controllers treat any non-empty value as on, but a ticked box on a record that is off posts `0` and is saved as on only for that reason. Do not rely on `0` meaning off.
+- Checkboxes: the bundled edit views now post `1` for a ticked box (`<input type="checkbox" name="active" value="1" @checked(...)>`). If you published these views, change the value to `1` in the same way; a form that still posts the record's own value (`0` or `1`) keeps working, because the controllers treat any non-empty value as on, but a ticked box on a record that is off posts `0` and is saved as on only for that reason. Do not rely on `0` meaning off.
 
 ### Step 20 — Anti-framing headers (no action needed unless you embed the admin)
 
@@ -387,7 +401,7 @@ The `redminsession` middleware group now starts with `PreventFraming`, which add
 
 ### Step 24 — Bundled views use plain Blade forms (check published views)
 
-- The bundled views no longer call `Form::` or `HTML::`, so re-publish any view you published and merge your changes into the new version. Your own published views that still use `Form::`/`HTML::` keep working while `rdx/laravelcollective-html` is installed. Markup differences are listed in the CHANGELOG ("Forms").
+- The bundled views no longer call `Form::` or `HTML::`, so re-publish any view you published and merge your changes into the new version. Published views that still use `Form::`/`HTML::` need the migration described in Step 2. Markup differences are listed in the CHANGELOG ("Forms").
 
 ---
 
@@ -398,7 +412,7 @@ data and the other 44 migrations need no changes, and already-run migrations
 will not run again.
 
 - [ ] Application is on PHP 8.3+ and Laravel 13 (Step 1)
-- [ ] `laravelcollective/html` replaced with `rdx/laravelcollective-html` (Step 2)
+- [ ] `laravelcollective/html` removed, or published views migrated off `Form::`/`HTML::` (Step 2)
 - [ ] `orchestra/imagine` removed, and any `Imagine::` facade calls replaced (Step 3)
 - [ ] `password_reset_tokens` table created or renamed from `password_resets` (Step 4)
 - [ ] Config re-published, so `auth.php` points to `password_reset_tokens` (Step 5)
@@ -430,12 +444,12 @@ Admin URLs, routes, models and table names are otherwise unchanged.
 |---|---|---|
 | PHP | ^7.1.3 | ^8.3 |
 | Laravel | ^5.8 | ^13.0 |
-| HTML/Form package | `laravelcollective/html` | `rdx/laravelcollective-html ^6.10` |
+| HTML/Form package | `laravelcollective/html` | none (plain Blade views) |
 | Image processing | `orchestra/imagine` (wrapper) | `imagine/imagine ^1.4` (direct) |
 | Excel exports | Laravel Excel 2.x (`Excel::create`) | Laravel Excel 3.1 (`Excel::download`) |
 | Password reset table | `password_resets` | `password_reset_tokens` |
 | Migrations | Named classes | Anonymous classes |
-| CSRF in login view | `Session::token()` | Handled by `Form::open()` |
+| CSRF in login view | `Session::token()` | `@csrf` |
 | Admin UI framework | Bootstrap 3.3 + Glyphicons | Bootstrap 5.3 + Redmaterials 0.2 + Font Awesome 7 |
 | Build tooling | Grunt, Bower, LESS | npm, Sass (contributors only) |
 | Data-changing admin actions | `GET` links, no CSRF check | `POST` with CSRF token |

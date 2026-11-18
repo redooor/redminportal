@@ -121,14 +121,11 @@ class RedminportalServiceProvider extends ServiceProvider
         
         $this->bindSharedInstances();
         
-        $this->app->register('Collective\Html\HtmlServiceProvider');
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
         
         $this->app->booting(function () {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
             $loader->alias('Redminportal', 'Redooor\Redminportal\App\Facades\Redminportal');
-            $loader->alias('Form', 'Collective\Html\FormFacade');
-            $loader->alias('HTML', 'Collective\Html\HtmlFacade');
             $loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
         });
         

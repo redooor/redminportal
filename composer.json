@@ -14,7 +14,6 @@
     "require": {
         "php": "^8.3",
         "laravel/framework": "^13.0",
-        "rdx/laravelcollective-html": "^6.10",
         "doctrine/dbal": "^4.0",
         "imagine/imagine": "^1.4",
         "maatwebsite/excel": "^3.1",
@@ -56,13 +55,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Redooor\\Redminportal\\RedminportalServiceProvider",
-                "Collective\\Html\\HtmlServiceProvider"
+                "Redooor\\Redminportal\\RedminportalServiceProvider"
             ],
             "aliases": {
-                "Redminportal": "Redooor\\Redminportal\\Facades\\Redminportal",
-                "Form": "Collective\\Html\\FormFacade",
-                "HTML": "Collective\\Html\\HtmlFacade"
+                "Redminportal": "Redooor\\Redminportal\\Facades\\Redminportal"
             }
         }
     }
