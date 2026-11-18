@@ -14,7 +14,7 @@
         @if($category->images()->count() > 0)
         <li class="list-group-item">
             @foreach( $category->images as $image )
-            {!! HTML::image($imagine->getUrl($image->path), $category->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
+            <img src="{{ asset($imagine->getUrl($image->path)) }}" alt="{{ $category->name }}" class="img-thumbnail">
             @endforeach
         </li>
         @endif
