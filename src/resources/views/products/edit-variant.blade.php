@@ -150,7 +150,7 @@
                                     </a>
                                     @endif
                                     @endpermitted
-                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy" title="{{ Lang::get('redminportal::forms.copy_link') }}" aria-label="{{ Lang::get('redminportal::forms.copy_link') }}" data-copied="{{ Lang::get('redminportal::forms.link_copied') }}" data-copy-failed="{{ Lang::get('redminportal::forms.link_copy_failed') }}">
                                         <i class="fa-solid fa-link"></i>
                                     </a>
                                     @if (request()->ajax())

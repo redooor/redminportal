@@ -13,4 +13,6 @@ return array(
     'move_image_earlier' => '前移',
     'move_image_later' => '后移',
     'copy_link' => '复制链接',
+    'link_copied' => '链接已复制',
+    'link_copy_failed' => '无法复制链接',
 );

@@ -83,6 +83,8 @@ return array(
     'move_image_earlier' => 'Move earlier',
     'move_image_later' => 'Move later',
     'copy_link' => 'Copy link',
+    'link_copied' => 'Link copied',
+    'link_copy_failed' => 'Could not copy the link',
     'created' => 'Created',
     'updated' => 'Updated',
     'created_at' => 'Created',

@@ -5,6 +5,9 @@
  * hidden form with the CSRF token from the page's meta tag so the matching
  * route receives a POST. window.redminCsrfToken() exposes the same token to
  * the Ajax callers.
+ *
+ * Links with the btn-copy class copy their href as an absolute URL instead of
+ * opening it, and announce data-copied (or data-copy-failed) politely.
  */
 (function () {
     'use strict';
@@ -38,9 +41,79 @@
 
     window.redminCsrfToken = csrfToken;
 
+    function announce(message) {
+        var region = document.getElementById('redmin-copy-status');
+
+        if (!region) {
+            region = document.createElement('div');
+            region.id = 'redmin-copy-status';
+            region.className = 'visually-hidden';
+            region.setAttribute('role', 'status');
+            region.setAttribute('aria-live', 'polite');
+            document.body.appendChild(region);
+        }
+
+        // Clear first so repeating the same message is announced again.
+        region.textContent = '';
+        window.setTimeout(function () {
+            region.textContent = message;
+        }, 50);
+    }
+
+    function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+        }
+
+        return new Promise(function (resolve, reject) {
+            var area = document.createElement('textarea');
+
+            area.value = text;
+            area.setAttribute('readonly', '');
+            area.style.position = 'fixed';
+            area.style.opacity = '0';
+            document.body.appendChild(area);
+            area.select();
+
+            try {
+                document.execCommand('copy') ? resolve() : reject(new Error('copy refused'));
+            } catch (error) {
+                reject(error);
+            } finally {
+                document.body.removeChild(area);
+            }
+        });
+    }
+
+    function copyLink(link) {
+        var icon = link.querySelector('i');
+
+        copyText(link.href).then(function () {
+            announce(link.getAttribute('data-copied') || '');
+
+            if (icon) {
+                icon.classList.replace('fa-link', 'fa-check');
+                window.setTimeout(function () {
+                    icon.classList.replace('fa-check', 'fa-link');
+                }, 1500);
+            }
+        }, function () {
+            announce(link.getAttribute('data-copy-failed') || '');
+        });
+    }
+
     function start() {
         document.addEventListener('click', function (event) {
             var target = event.target;
+            var copy = target && target.closest ? target.closest('a.btn-copy') : null;
+
+            if (copy && !event.defaultPrevented && isPlainLeftClick(event)) {
+                event.preventDefault();
+                copyLink(copy);
+
+                return;
+            }
+
             var link = target && target.closest ? target.closest('a[data-method="post"]') : null;
 
             // Links with their own handler (modal or Ajax) have already claimed the click.

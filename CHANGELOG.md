@@ -117,6 +117,9 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 1. The bundled views no longer use `Form::` or `HTML::`; they are plain Blade (`@csrf`, `old()`, `@checked`, `@selected`). The markup is the same apart from these intentional differences: no `accept-charset` on forms, no default `cols="50" rows="10"` on textareas, no empty `value=""` attribute, `@csrf` adds `autocomplete="off"` to the token input, a required field the user cleared stays empty after a failed validation (it no longer falls back to the saved value), and a value containing an HTML entity (`A &amp; B`) is shown as typed instead of decoded.
 2. The package no longer depends on `rdx/laravelcollective-html` and no longer registers the `Form` and `HTML` aliases. **Breaking for published views that use `Form::` or `HTML::`**: migrate them to plain Blade, or `composer require rdx/laravelcollective-html:^6.10` in your application and add the `HTML` alias yourself (see UPGRADE Step 2).
 
+**Copy link**
+1. The "copy link" button on uploaded images now works: it copies the absolute image URL and announces "Link copied" (or "Could not copy the link") to screen readers. Re-publish the assets (`php artisan vendor:publish --tag=public --force`); a published view that uses the button needs the `data-copied` and `data-copy-failed` attributes (see the bundled `partials/image-gallery.blade.php`).
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.
