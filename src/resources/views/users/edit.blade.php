@@ -9,8 +9,9 @@
     
     @include('redminportal::partials.errors')
 
-    {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\UserController@postStore', 'role' => 'form')) !!}
-    {!! Form::hidden('id', $user->id) !!}
+    <form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\UserController@postStore') }}" role="form">
+    @csrf
+    <input type="hidden" name="id" value="{{ old('id', $user->id) }}">
     <div class="row">
         <div class="col-lg-9">
             <div class="card">
@@ -19,29 +20,29 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        {!! Form::label('first_name', Lang::get('redminportal::forms.first_name')) !!}
-                        {!! Form::text('first_name', $user->first_name, array('class' => 'form-control', 'required')) !!}
+                        <label for="first_name">{{ Lang::get('redminportal::forms.first_name') }}</label>
+                        <input type="text" name="first_name" id="first_name" value="{{ old('first_name', $user->first_name) }}" class="form-control" required>
                     </div>
 
                     <div class="mb-3">
-                        {!! Form::label('last_name', Lang::get('redminportal::forms.last_name')) !!}
-                        {!! Form::text('last_name', $user->last_name, array('class' => 'form-control', 'required')) !!}
+                        <label for="last_name">{{ Lang::get('redminportal::forms.last_name') }}</label>
+                        <input type="text" name="last_name" id="last_name" value="{{ old('last_name', $user->last_name) }}" class="form-control" required>
                     </div>
 
                     <div class="mb-3">
-                        {!! Form::label('email', Lang::get('redminportal::forms.email')) !!}
-                        {!! Form::email('email', $user->email, array('class' => 'form-control', 'required')) !!}
+                        <label for="email">{{ Lang::get('redminportal::forms.email') }}</label>
+                        <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="form-control" required>
                     </div>
 
                     <div class="mb-3">
-                        {!! Form::label('password', Lang::get('redminportal::forms.password')) !!}
-                        {!! Form::password('password', array('class' => 'form-control')) !!}
+                        <label for="password">{{ Lang::get('redminportal::forms.password') }}</label>
+                        <input type="password" name="password" id="password" class="form-control">
                         <p class="form-text">{{ Lang::get('redminportal::messages.leave_password_empty_to_keep_existing_password') }}</p>
                     </div>
 
                     <div class="mb-3">
-                        {!! Form::label('password_confirmation', Lang::get('redminportal::forms.reenter_password')) !!}
-                        {!! Form::password('password_confirmation', array('class' => 'form-control')) !!}
+                        <label for="password_confirmation">{{ Lang::get('redminportal::forms.reenter_password') }}</label>
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
                     </div>
                 </div>
             </div>
@@ -51,7 +52,7 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        {!! Form::select('role', $roles, $groups, array('class' => 'form-select', 'id' => 'role', 'multiple', 'name' => 'role[]')) !!}
+                        <select name="role[]" id="role" class="form-select" multiple>@foreach ($roles as $k => $label)<option value="{{ $k }}" @selected(in_array((string) $k, array_map('strval', (array) old('role', $groups)), true))>{{ $label }}</option>@endforeach</select>
                         <p class="form-text">{{ Lang::get('redminportal::messages.allow_select_multiple') }}</p>
                         <p class="form-text">{{ Lang::get('redminportal::messages.how_to_deselect_multiple') }}</p>
                     </div>
@@ -130,15 +131,15 @@
         <div class="col-lg-3">
             <div class="card card-body bg-body-tertiary">
                 <div class='form-actions'>
-                    {!! HTML::link('admin/users', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                    {!! Form::submit(Lang::get('redminportal::buttons.save'), array('class' => 'btn btn-primary btn-sm float-end')) !!}
+                    <a href="{{ URL::to('admin/users') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                    <input type="submit" value="{{ Lang::get('redminportal::buttons.save') }}" class="btn btn-primary btn-sm float-end">
                 </div>
             </div>
             <div class="card card-body bg-body-tertiary">
                 <div class="mb-3">
                     <div class="form-check">
                         <label class="form-check-label" for="activated-checker">
-                            {!! Form::checkbox('activated', 'yes', $user->activated, array('class' => 'form-check-input', 'id' => 'activated-checker')) !!} {{ Lang::get('redminportal::forms.activate_now') }}
+                            <input type="checkbox" name="activated" value="yes" id="activated-checker" class="form-check-input" @checked(session()->hasOldInput() ? old('activated') : $user->activated)> {{ Lang::get('redminportal::forms.activate_now') }}
                         </label>
                     </div>
                     <p class="form-text">{{ Lang::get('redminportal::messages.allow_user_to_login_this_account') }}</p>
@@ -146,7 +147,7 @@
             </div>
         </div>
     </div>
-	{!! Form::close() !!}
+	</form>
 @stop
 
 @section('footer')
