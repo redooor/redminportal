@@ -13,7 +13,8 @@
     
     @include('redminportal::partials.errors')
     
-    {!! Form::open(array('action' => '\Redooor\Redminportal\App\Http\Controllers\CouponController@postStore', 'role' => 'form', 'id' => 'form_add')) !!}
+    <form method="POST" action="{{ action('\Redooor\Redminportal\App\Http\Controllers\CouponController@postStore') }}" role="form" id="form_add">
+    @csrf
         <div class='row'>
 	        <div class="col-lg-9">
                 <div>
@@ -25,19 +26,19 @@
                             <div class="row mb-3">
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.coupon_code') }}</label>
                                 <div class="col-lg-8">
-                                    {!! Form::text('code', null, array('class' => 'form-control')) !!}
+                                    <input type="text" name="code" value="{{ old('code', null) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.description') . ' (' . Lang::get('redminportal::forms.optional') . ')' }}</label>
                                 <div class="col-lg-8">
-                                    {!! Form::textarea('description', null, array('class' => 'form-control', 'rows' => '3')) !!}
+                                    <textarea name="description" class="form-control" rows="3">{{ old('description', null) }}</textarea>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.amount') }}</label>
                                 <div class="col-lg-8">
-                                    {!! Form::text('amount', null, array('class' => 'form-control')) !!}
+                                    <input type="text" name="amount" value="{{ old('amount', null) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -45,7 +46,7 @@
                                 <div class="col-lg-8">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            {!! Form::checkbox('is_percent', null, null, array('class' => 'form-check-input', 'id' => 'is_percent', 'name' => 'is_percent')) !!}
+                                            <input type="checkbox" name="is_percent" id="is_percent" class="form-check-input" @checked(session()->hasOldInput() ? old('is_percent') : null)>
                                             <i>{{ Lang::get('redminportal::forms.discount_explanation') }}</i>
                                         </label>
                                     </div>
@@ -55,7 +56,7 @@
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.start_date') }}</label>
                                 <div class="col-lg-8">
                                     <div class="input-group" id="start-date" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        {!! Form::input('text', 'start_date', null, array('class' => 'form-control', 'data-td-target' => '#start-date', 'autocomplete' => 'off')) !!}
+                                        <input type="text" name="start_date" value="{{ old('start_date', null) }}" class="form-control" data-td-target="#start-date" autocomplete="off">
                                         <span class="input-group-text" data-td-target="#start-date" data-td-toggle="datetimepicker"><i class="fa-solid fa-calendar"></i></span>
                                     </div>
                                 </div>
@@ -64,7 +65,7 @@
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.expiry_date') }}</label>
                                 <div class="col-lg-8">
                                     <div class="input-group" id="end-date" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                                        {!! Form::input('text', 'end_date', null, array('class' => 'form-control', 'data-td-target' => '#end-date', 'autocomplete' => 'off')) !!}
+                                        <input type="text" name="end_date" value="{{ old('end_date', null) }}" class="form-control" data-td-target="#end-date" autocomplete="off">
                                         <span class="input-group-text" data-td-target="#end-date" data-td-toggle="datetimepicker"><i class="fa-solid fa-calendar"></i></span>
                                     </div>
                                 </div>
@@ -81,7 +82,7 @@
                                 <div class="col-lg-8">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            {!! Form::checkbox('multiple_coupons',  null,  null, array('class' => 'form-check-input', 'id' => 'multiple_coupons')) !!}
+                                            <input type="checkbox" name="multiple_coupons" id="multiple_coupons" class="form-check-input" @checked(session()->hasOldInput() ? old('multiple_coupons') : null)>
                                             <i>{{ Lang::get('redminportal::forms.multiple_coupons_explanation') }}</i>
                                         </label>
                                     </div>
@@ -92,7 +93,7 @@
                                 <div class="col-lg-8">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            {!! Form::checkbox('exclude_sale_item',  null,  null, array('class' => 'form-check-input', 'id' => 'exclude_sale_item')) !!}
+                                            <input type="checkbox" name="exclude_sale_item" id="exclude_sale_item" class="form-check-input" @checked(session()->hasOldInput() ? old('exclude_sale_item') : null)>
                                             <i>{{ Lang::get('redminportal::forms.exclude_sale_item_explanation') }}</i>
                                         </label>
                                     </div>
@@ -103,7 +104,7 @@
                                 <div class="col-lg-8">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            {!! Form::checkbox('automatically_apply',  null,  null, array('class' => 'form-check-input', 'id' => 'automatically_apply')) !!}
+                                            <input type="checkbox" name="automatically_apply" id="automatically_apply" class="form-check-input" @checked(session()->hasOldInput() ? old('automatically_apply') : null)>
                                             <i>{{ Lang::get('redminportal::forms.automatically_apply_explanation') }}</i>
                                         </label>
                                     </div>
@@ -112,14 +113,14 @@
                             <div class="row mb-3">
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.min_spent') }}</label>
                                 <div class="col-lg-8">
-                                    {!! Form::text('min_spent', null, array('class' => 'form-control')) !!}
+                                    <input type="text" name="min_spent" value="{{ old('min_spent', null) }}" class="form-control">
                                     <p class="form-text">{{ Lang::get('redminportal::messages.applies_to_whole_cart_spent') }}</p>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.max_spent') }}</label>
                                 <div class="col-lg-8">
-                                    {!! Form::text('max_spent', null, array('class' => 'form-control')) !!}
+                                    <input type="text" name="max_spent" value="{{ old('max_spent', null) }}" class="form-control">
                                     <p class="form-text">{{ Lang::get('redminportal::messages.applies_to_whole_cart_spent') }}</p>
                                 </div>
                             </div>
@@ -129,28 +130,44 @@
                                     <h4>{{ Lang::get('redminportal::forms.categories') }}</h4>
                                     @if (count($categories) > 0)
                                     <p></p>
-                                    {!! Form::select('category_id', $categories, null, array('class' => 'form-select', 'id' => 'category_id', 'multiple', 'name' => 'category_id[]')) !!}
+                                    <select name="category_id[]" id="category_id" class="form-select" multiple>
+                                        @foreach ($categories as $k => $label)
+                                        <option value="{{ $k }}" @selected(in_array((string) $k, array_map('strval', (array) old('category_id', null)), true))>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                     @else
                                     <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_category_found') }}</div>
                                     @endif
                                     <h4>{{ Lang::get('redminportal::forms.products') }}</h4>
                                     @if (count($products) > 0)
                                     <p></p>
-                                    {!! Form::select('product_id', $products, null, array('class' => 'form-select', 'id' => 'product_id', 'multiple', 'name' => 'product_id[]')) !!}
+                                    <select name="product_id[]" id="product_id" class="form-select" multiple>
+                                        @foreach ($products as $k => $label)
+                                        <option value="{{ $k }}" @selected(in_array((string) $k, array_map('strval', (array) old('product_id', null)), true))>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                     @else
                                     <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_product_found') }}</div>
                                     @endif
                                     <h4>{{ Lang::get('redminportal::forms.membership_modules') }}</h4>
                                     @if (count($membermodules) > 0)
                                     <p></p>
-                                    {!! Form::select('pricelist_id', $membermodules, null, array('class' => 'form-select', 'id' => 'pricelist_id', 'multiple', 'name' => 'pricelist_id[]')) !!}
+                                    <select name="pricelist_id[]" id="pricelist_id" class="form-select" multiple>
+                                        @foreach ($membermodules as $k => $label)
+                                        <option value="{{ $k }}" @selected(in_array((string) $k, array_map('strval', (array) old('pricelist_id', null)), true))>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                     @else
                                     <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_pricelist_found') }}</div>
                                     @endif
                                     <h4>{{ Lang::get('redminportal::forms.bundles') }}</h4>
                                     @if (count($bundles) > 0)
                                     <p></p>
-                                    {!! Form::select('bundle_id', $bundles, null, array('class' => 'form-select', 'id' => 'bundle_id', 'multiple', 'name' => 'bundle_id[]')) !!}
+                                    <select name="bundle_id[]" id="bundle_id" class="form-select" multiple>
+                                        @foreach ($bundles as $k => $label)
+                                        <option value="{{ $k }}" @selected(in_array((string) $k, array_map('strval', (array) old('bundle_id', null)), true))>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                     @else
                                     <div class="alert alert-warning">{{ Lang::get('redminportal::messages.no_bundle_found') }}</div>
                                     @endif
@@ -167,13 +184,13 @@
                             <div class="row mb-3">
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.usage_limit_per_coupon') }}</label>
                                 <div class="col-lg-8">
-                                    {!! Form::text('usage_limit_per_coupon', null, array('class' => 'form-control')) !!}
+                                    <input type="text" name="usage_limit_per_coupon" value="{{ old('usage_limit_per_coupon', null) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-form-label text-lg-end col-lg-4">{{ Lang::get('redminportal::forms.usage_limit_per_user') }}</label>
                                 <div class="col-lg-8">
-                                    {!! Form::text('usage_limit_per_user', null, array('class' => 'form-control')) !!}
+                                    <input type="text" name="usage_limit_per_user" value="{{ old('usage_limit_per_user', null) }}" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -183,13 +200,13 @@
             <div class="col-lg-3">
                 <div class="card card-body bg-body-tertiary">
                     <div class='form-actions'>
-                        {!! HTML::link('admin/coupons', Lang::get('redminportal::buttons.cancel'), array('class' => 'btn btn-link btn-sm'))!!}
-                        {!! Form::submit(Lang::get('redminportal::buttons.create'), array('class' => 'btn btn-primary btn-sm float-end')) !!}
+                        <a href="{{ URL::to('admin/coupons') }}" class="btn btn-link btn-sm">{{ Lang::get('redminportal::buttons.cancel') }}</a>
+                        <input type="submit" value="{{ Lang::get('redminportal::buttons.create') }}" class="btn btn-primary btn-sm float-end">
                     </div>
                 </div>
 	        </div>
         </div>
-    {!! Form::close() !!}
+    </form>
 @stop
 
 @section('footer')
