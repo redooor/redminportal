@@ -41,16 +41,16 @@
 
     window.redminCsrfToken = csrfToken;
 
-    function announce(message) {
-        var region = document.getElementById('redmin-copy-status');
+    // The container is the open modal when there is one: an aria-modal dialog hides everything outside it.
+    function announce(container, message) {
+        var region = container.querySelector('.redmin-copy-status');
 
         if (!region) {
             region = document.createElement('div');
-            region.id = 'redmin-copy-status';
-            region.className = 'visually-hidden';
+            region.className = 'redmin-copy-status visually-hidden';
             region.setAttribute('role', 'status');
             region.setAttribute('aria-live', 'polite');
-            document.body.appendChild(region);
+            container.appendChild(region);
         }
 
         // Clear first so repeating the same message is announced again.
@@ -60,7 +60,7 @@
         }, 50);
     }
 
-    function copyText(text) {
+    function copyText(text, container) {
         if (navigator.clipboard && window.isSecureContext) {
             return navigator.clipboard.writeText(text);
         }
@@ -72,7 +72,9 @@
             area.setAttribute('readonly', '');
             area.style.position = 'fixed';
             area.style.opacity = '0';
-            document.body.appendChild(area);
+            var focused = document.activeElement;
+
+            container.appendChild(area);
             area.select();
 
             try {
@@ -80,16 +82,21 @@
             } catch (error) {
                 reject(error);
             } finally {
-                document.body.removeChild(area);
+                container.removeChild(area);
+
+                if (focused && typeof focused.focus === 'function') {
+                    focused.focus();
+                }
             }
         });
     }
 
     function copyLink(link) {
         var icon = link.querySelector('i');
+        var container = link.closest('.modal') || document.body;
 
-        copyText(link.href).then(function () {
-            announce(link.getAttribute('data-copied') || '');
+        copyText(link.href, container).then(function () {
+            announce(container, link.getAttribute('data-copied') || '');
 
             if (icon) {
                 icon.classList.replace('fa-link', 'fa-check');
@@ -98,7 +105,7 @@
                 }, 1500);
             }
         }, function () {
-            announce(link.getAttribute('data-copy-failed') || '');
+            announce(container, link.getAttribute('data-copy-failed') || '');
         });
     }
 
