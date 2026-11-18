@@ -18,7 +18,7 @@ class ListActionLinksMarkupTest extends TestCase
             $lines = file($view);
 
             foreach ($lines as $number => $line) {
-                if (! preg_match("#(?:URL::to|url|HTML::link)\\('admin/(?:[a-z-]+/(?:create|edit/|delete/|activate/|deactivate/|uploadform/|revisions/)|' \\. \\\$model_view \\. '/create')#", $line)) {
+                if (! preg_match("#(?:URL::to|url)\\('admin/(?:[a-z-]+/(?:create|edit/|delete/|activate/|deactivate/|uploadform/|revisions/)|' \\. \\\$model_view \\. '/create')#", $line)) {
                     continue;
                 }
 
