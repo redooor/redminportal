@@ -385,6 +385,10 @@ The `redminsession` middleware group now starts with `PreventFraming`, which add
 
 - The package no longer ships `layouts/bare`. If a view of yours extends `redminportal::layouts.bare`, extend `redminportal::layouts.fragment` for content loaded into a modal, or `redminportal::layouts.master` for a full page. `layouts/plain` is unchanged.
 
+### Step 24 — Bundled views use plain Blade forms (check published views)
+
+- The bundled views no longer call `Form::` or `HTML::`, so re-publish any view you published and merge your changes into the new version. Your own published views that still use `Form::`/`HTML::` keep working while `rdx/laravelcollective-html` is installed. Markup differences are listed in the CHANGELOG ("Forms").
+
 ---
 
 ### Upgrade checklist
