@@ -110,6 +110,9 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 4. Save flows no longer leave half-saved state: posting an empty `tags` field clears the tags (a form without the field keeps them), and Page and Post reject an array `tags` value before saving; a User and its groups are saved in one transaction and unknown groups are rejected before anything is written; image files (original and resized copies) and the category image folder are deleted from the configured `image.upload_path` whatever the working directory, and paths that resolve outside it are ignored; a missing translated Page or Post slug is stored as null instead of an empty string.
 5. The bundled edit forms post `1` for a ticked flag checkbox (featured, active, private and the coupon options); they used to post the record's current value, so ticking a box on a record that was off posted `0`. The controllers still treat any non-empty value as on, so published views and custom forms keep working. The dead translation lookup in the announcement edit action was removed.
 
+**Layouts**
+1. The unused `layouts/bare` view was removed (it was the layout of the iframe modals, which are now fragments). `layouts/plain` stays: the login and not-authorised pages use it.
+
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
 2. Third-party licence notices ship in `src/public/licenses/`.
