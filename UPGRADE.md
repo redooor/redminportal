@@ -381,6 +381,10 @@ The `redminsession` middleware group now starts with `PreventFraming`, which add
 - Copy the new `plugins/editor`, `plugins/tagsinput`, `partials/form-input`, `partials/form-select-option`, `partials/lang-selector-form` and `layouts/master` views. They add the per-fragment widget initialisers, read editor images from `[data-editor-images]`, label the field's real id and load the fragment script. A variant form without the `variant-` id prefix shares ids with the parent product form.
 - After a variant POST the module follows the redirect to the success view or to the form with the validation errors. A redirect issued by your own middleware to another origin is not covered: the browser follows it before the module can check the final URL, so keep such redirects out of the variant save flow.
 
+### Step 23 — `layouts/bare` removed (check published views)
+
+- The package no longer ships `layouts/bare`. If a view of yours extends `redminportal::layouts.bare`, extend `redminportal::layouts.fragment` for content loaded into a modal, or `redminportal::layouts.master` for a full page. `layouts/plain` is unchanged.
+
 ---
 
 ### Upgrade checklist
