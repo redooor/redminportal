@@ -118,7 +118,7 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 2. The package no longer depends on `rdx/laravelcollective-html` and no longer registers the `Form` and `HTML` aliases. **Breaking for published views that use `Form::` or `HTML::`**: migrate them to plain Blade, or `composer require rdx/laravelcollective-html:^6.10` in your application and add the `HTML` alias yourself (see UPGRADE Step 2).
 
 **Copy link**
-1. The "copy link" button on uploaded images now works: it copies the absolute image URL and announces "Link copied" (or "Could not copy the link") to screen readers. Re-publish the assets (`php artisan vendor:publish --tag=public --force`); a published view that uses the button needs the `data-copied` and `data-copy-failed` attributes (see the bundled `partials/image-gallery.blade.php`).
+1. The "copy link" button on uploaded images now works: it copies the full public URL of the large image (for pasting into the page or post editor) and announces "Link copied" (or "Could not copy the link") to screen readers. Re-publish the assets (`php artisan vendor:publish --tag=public --force`); a published view that uses the button needs the `data-copied` and `data-copy-failed` attributes (see the bundled `partials/image-gallery.blade.php`).
 
 **Build tooling (contributors)**
 1. Grunt, Bower and LESS replaced by npm scripts and Sass (`npm ci && npm run build`, Node 22.12+). This also removes the vulnerable Grunt development dependencies that Dependabot reported.
