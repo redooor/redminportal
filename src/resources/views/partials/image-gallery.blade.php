@@ -61,7 +61,7 @@
                         <i class="fa-solid fa-xmark"></i>
                     </a>
                     @endpermitted
-                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy" title="{{ Lang::get('redminportal::forms.copy_link') }}" aria-label="{{ Lang::get('redminportal::forms.copy_link') }}">
+                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy" title="{{ Lang::get('redminportal::forms.copy_link') }}" aria-label="{{ Lang::get('redminportal::forms.copy_link') }}" data-copied="{{ Lang::get('redminportal::forms.link_copied') }}" data-copy-failed="{{ Lang::get('redminportal::forms.link_copy_failed') }}">
                         <i class="fa-solid fa-link"></i>
                     </a>
                     <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank" data-lightbox="uploaded-images" data-lightbox-title="{{ $image->path }}" aria-label="{{ Lang::get('redminportal::buttons.view_image') }}">

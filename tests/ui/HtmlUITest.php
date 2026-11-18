@@ -81,7 +81,7 @@ class HtmlUITest extends RedminTestCase
                             <a href="http://localhost/admin/images/delete/1" class="btn btn-danger btn-confirm">
                                 <i class="fa-solid fa-xmark"></i>
                             </a>
-                            <a href="http://localhost/./800x600/dummy.jpg" class="btn btn-primary btn-copy">
+                            <a href="http://localhost/./800x600/dummy.jpg" class="btn btn-primary btn-copy" title="Copy link" aria-label="Copy link" data-copied="Link copied" data-copy-failed="Could not copy the link">
                                 <i class="fa-solid fa-link"></i>
                             </a>
                             <a href="http://localhost/./800x600/dummy.jpg" class="btn btn-info" target="_blank" data-lightbox="uploaded-images" data-lightbox-title="dummy.jpg" aria-label="View image">
