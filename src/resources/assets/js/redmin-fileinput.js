@@ -26,6 +26,11 @@
         root._redminUrls = [];
     }
 
+    // Drop the preview URLs of every file input inside a removed fragment without touching the input value.
+    window.redminFileinputRelease = function (root) {
+        Array.prototype.forEach.call((root || document).querySelectorAll(ROOT), releaseUrls);
+    };
+
     function reset(root) {
         releaseUrls(root);
         root.querySelector('input[type=file]').value = '';

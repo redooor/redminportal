@@ -1,4 +1,4 @@
-@extends('redminportal::layouts.bare')
+@extends(request()->ajax() ? 'redminportal::layouts.fragment' : 'redminportal::layouts.master')
 
 @section('content')
     
@@ -6,19 +6,30 @@
     
     @if (isset($product))
     <!-- if product exists (START) -->
-    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\ProductController@postStore', 'role' => 'form')) !!}
-    {!! Form::hidden('id', $product->id) !!}
-    {!! Form::hidden('product_id', $product_id, array('id' => 'product_id')) !!}
+    @php
+        $editorImages = array();
+        foreach ($product->images as $image) {
+            $editorImages[] = array(
+                'title' => pathinfo($image->path)['filename'],
+                'value' => url($imagine->getUrl($image->path, 'large')),
+            );
+        }
+    @endphp
+    <div data-editor-images="{{ json_encode($editorImages) }}">
+    {!! Form::open(array('files' => TRUE, 'action' => '\Redooor\Redminportal\App\Http\Controllers\ProductController@postStore', 'role' => 'form', 'data-fragment-form' => 'data-fragment-form')) !!}
+    {!! Form::hidden('id', $product->id, array('id' => 'variant-id')) !!}
+    {!! Form::hidden('product_id', $product_id, array('id' => 'variant-product_id')) !!}
 
     	<div class='row'>
 	        <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title mb-0">{{ Lang::get('redminportal::forms.create_product_variation') }}</h4>
+                        <h4 class="card-title mb-0" data-fragment-title>{{ Lang::get('redminportal::forms.create_product_variation') }}</h4>
                     </div>
                     <div class="card-body">
                         @include('redminportal::partials.lang-selector-form', [
                             'selector_name' => '-variant',
+                            'id_prefix' => 'variant-',
                             'translatable' => $product,
                             'translated' => $translated
                         ])
@@ -30,19 +41,19 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            {!! Form::label('sku', Lang::get('redminportal::forms.sku')) !!}
-                            {!! Form::text('sku', $product->sku, array('class' => 'form-control')) !!}
+                            {!! Form::label('variant-sku', Lang::get('redminportal::forms.sku')) !!}
+                            {!! Form::text('sku', old('sku', $product->sku), array('class' => 'form-control', 'id' => 'variant-sku')) !!}
                         </div>
                         <div class="mb-3">
-                            {!! Form::label('price', Lang::get('redminportal::forms.price')) !!}
+                            {!! Form::label('variant-price', Lang::get('redminportal::forms.price')) !!}
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                {!! Form::text('price', $product->price, array('class' => 'form-control')) !!}
+                                {!! Form::text('price', old('price', $product->price), array('class' => 'form-control', 'id' => 'variant-price')) !!}
                             </div>
                         </div>
                         <div class="mb-3">
-                            {!! Form::label('tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
-                            {!! Form::text('tags', $tagString, array('class' => 'form-control')) !!}
+                            {!! Form::label('variant-tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
+                            {!! Form::text('tags', old('tags', $tagString), array('class' => 'form-control', 'id' => 'variant-tags', 'data-redmin-tags' => '')) !!}
                         </div>
                     </div>
                 </div>
@@ -55,53 +66,59 @@
                     <div class="card-body">
                         <!-- Weight information -->
                         <div class="mb-3">
-                            <label>{{ Lang::get('redminportal::forms.weight') }}</label>
+                            <span class="form-label d-block">{{ Lang::get('redminportal::forms.weight') }}</span>
                             <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-                                {!! Redminportal::form()->inputer('weight', (old('weight') ? old('weight') : $product->weight), [
+                                {!! Redminportal::form()->inputer('weight', old('weight', $product->weight), [
                                     'label' => Lang::get('redminportal::forms.weight'),
                                     'label_classes' => 'visually-hidden',
+                                    'id' => 'variant-weight',
                                     'type' => 'number',
                                     'step' => '0.001',
                                     'placeholder' => '0.00'
                                 ]) !!}
-                                {!! Redminportal::form()->selector('weight_unit', $weight_units, (old('weight_unit') ? old('weight_unit') : $product->weight_unit), [
+                                {!! Redminportal::form()->selector('weight_unit', $weight_units, old('weight_unit', $product->weight_unit), [
                                     'label' => Lang::get('redminportal::forms.weight_unit'),
                                     'label_classes' => 'visually-hidden',
+                                    'id' => 'variant-weight_unit',
                                     'value_as_key' => true
                                 ]) !!}
                             </div>
                         </div>
                         <!-- Volume information -->
                         <div class="mb-3">
-                            <label>{{ Lang::get('redminportal::forms.volume') }}</label>
+                            <span class="form-label d-block">{{ Lang::get('redminportal::forms.volume') }}</span>
                             <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-                                {!! Redminportal::form()->inputer('length', (old('length') ? old('length') : $product->length), [
+                                {!! Redminportal::form()->inputer('length', old('length', $product->length), [
                                     'label' => Lang::get('redminportal::forms.length'),
                                     'label_classes' => 'visually-hidden',
+                                    'id' => 'variant-length',
                                     'type' => 'number',
                                     'step' => '0.001',
                                     'placeholder' => '0.00',
                                     'help_text' => Lang::get('redminportal::forms.length')
                                 ]) !!}
-                                {!! Redminportal::form()->inputer('width', (old('width') ? old('width') : $product->width), [
+                                {!! Redminportal::form()->inputer('width', old('width', $product->width), [
                                     'label' => Lang::get('redminportal::forms.width'),
                                     'label_classes' => 'visually-hidden',
+                                    'id' => 'variant-width',
                                     'type' => 'number',
                                     'step' => '0.001',
                                     'placeholder' => '0.00',
                                     'help_text' => Lang::get('redminportal::forms.width')
                                 ]) !!}
-                                {!! Redminportal::form()->inputer('height', (old('height') ? old('height') : $product->height), [
+                                {!! Redminportal::form()->inputer('height', old('height', $product->height), [
                                     'label' => Lang::get('redminportal::forms.height'),
                                     'label_classes' => 'visually-hidden',
+                                    'id' => 'variant-height',
                                     'type' => 'number',
                                     'step' => '0.001',
                                     'placeholder' => '0.00',
                                     'help_text' => Lang::get('redminportal::forms.height')
                                 ]) !!}
-                                {!! Redminportal::form()->selector('volume_unit', $volume_units, (old('volume_unit') ? old('volume_unit') : $product->volume_unit), [
+                                {!! Redminportal::form()->selector('volume_unit', $volume_units, old('volume_unit', $product->volume_unit), [
                                     'label' => Lang::get('redminportal::forms.volume_unit'),
                                     'label_classes' => 'visually-hidden',
+                                    'id' => 'variant-volume_unit',
                                     'value_as_key' => true,
                                     'help_text' => Lang::get('redminportal::messages.unit_applies_to_all_dimensions')
                                 ]) !!}
@@ -122,16 +139,28 @@
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
                                     @permitted('admin/products/variant-imgremove/' . $product_id . '/' . $image->id)
+                                    @if (request()->ajax())
+                                    <a href="{{ URL::to('admin/products/variant-imgremove/' . $product_id . '/' . $image->id) }}" class="btn btn-danger" data-fragment-post data-fragment-confirm="{{ Lang::get('redminportal::messages.are_you_sure_you_want_to_delete') }}" data-fragment-confirm-yes="{{ Lang::get('redminportal::buttons.delete_yes') }}" data-fragment-confirm-no="{{ Lang::get('redminportal::buttons.delete_no') }}" aria-label="{{ Lang::get('redminportal::forms.remove_images') }}">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </a>
+                                    @else
                                     <a href="{{ URL::to('admin/products/variant-imgremove/' . $product_id . '/' . $image->id) }}" class="btn btn-danger btn-confirm">
                                         <i class="fa-solid fa-xmark"></i>
                                     </a>
+                                    @endif
                                     @endpermitted
                                     <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
                                         <i class="fa-solid fa-link"></i>
                                     </a>
+                                    @if (request()->ajax())
+                                    <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank" rel="noopener" aria-label="{{ Lang::get('redminportal::buttons.view_image') }}">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    @else
                                     <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-info" target="_blank" data-lightbox="uploaded-images" data-lightbox-title="{{ $image->path }}" aria-label="{{ Lang::get('redminportal::buttons.view_image') }}">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
+                                    @endif
                                 </div>
                             </div>
                             @endforeach
@@ -149,16 +178,16 @@
                 <div class='card card-body bg-body-tertiary p-2'>
                     <div class="mb-3">
                         <div class="form-check">
-                            <label class="form-check-label" for="featured-checker">
-                                {!! Form::checkbox('featured', 1, $product->featured, array('class' => 'form-check-input', 'id' => 'featured-checker')) !!} {{ Lang::get('redminportal::forms.featured') }}
+                            <label class="form-check-label" for="variant-featured-checker">
+                                {!! Form::checkbox('featured', 1, session()->hasOldInput() ? old('featured') : $product->featured, array('class' => 'form-check-input', 'id' => 'variant-featured-checker')) !!} {{ Lang::get('redminportal::forms.featured') }}
                             </label>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <div class="form-check">
-                            <label class="form-check-label" for="active-checker">
-                                {!! Form::checkbox('active', 1, $product->active, array('class' => 'form-check-input', 'id' => 'active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
+                            <label class="form-check-label" for="variant-active-checker">
+                                {!! Form::checkbox('active', 1, session()->hasOldInput() ? old('active') : $product->active, array('class' => 'form-check-input', 'id' => 'variant-active-checker')) !!} {{ Lang::get('redminportal::forms.active') }}
                             </label>
                         </div>
                     </div>
@@ -169,7 +198,7 @@
                     </div>
                     <div class="card-body">
                         <input type="hidden" 
-                               id="category_id" 
+                               id="variant-category_id" 
                                name="category_id" 
                                value="{{ $parent->category_id }}">
                         <ul class="redmin-hierarchy">
@@ -191,7 +220,10 @@
 	        </div>
         </div>
     {!! Form::close() !!}
+    </div>
+    @if (! request()->ajax())
     @include('redminportal::partials.confirm-delete')
+    @endif
     <!-- if product exists (END) -->
     @endif
 @stop

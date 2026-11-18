@@ -18,7 +18,7 @@
 --}}
 <div class="mb-3 {{ $wrapper_classes ?? '' }}">
     @if (isset($label))
-    <label class="{{ $label_classes ?? '' }}" for="{{ $input_name }}">{{ $label }}</label>
+    <label class="{{ $label_classes ?? '' }}" for="{{ $input_id ?? $input_name }}">{{ $label }}</label>
     @endif
     <input class="form-control" name="{{ $input_name }}" id="{{ $input_id ?? $input_name }}"
         @if (isset($input_options))
@@ -26,7 +26,7 @@
                 {{ $input_option_key }}="{{ $input_option_value }}"
             @endforeach
         @endif
-        @if (isset($input_value) and $input_value != null)
+        @if (isset($input_value) and $input_value !== null)
             value="{{ $input_value }}"
         @endif
     >{{-- Input end --}}

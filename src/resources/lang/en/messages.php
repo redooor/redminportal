@@ -168,6 +168,8 @@ return array(
         => "Revision history loaded.",
     'fragment_error'
         => "The revision history could not be loaded. Reload the page and try again.",
+    'fragment_unknown'
+        => "The result is unknown. Check the list before trying again.",
     'product_variant_inherits_from_parent_footnote'
         => "Variant inherits the same category as the main product. "
             . "If you don't see the category here, go back to the main product and save the changes first.",

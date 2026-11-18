@@ -20,6 +20,11 @@ class ImageLightboxMarkupTest extends TestCase
             preg_match_all('/<a [^\n]*>\s*<i class="fa-solid fa-eye"><\/i>/', file_get_contents($view), $links);
 
             foreach ($links[0] as $link) {
+                // Inside a fragment modal the link opens the image in a new tab: a second modal would stack on the open one.
+                if (strpos($link, 'target="_blank"') !== false && strpos($link, 'rel="noopener"') !== false && strpos($link, 'data-lightbox') === false) {
+                    continue;
+                }
+
                 $found++;
                 $this->assertStringContainsString('data-lightbox="uploaded-images"', $link, basename(dirname($view)) . '/' . basename($view) . ' has a view link that opens a new tab');
                 $this->assertStringContainsString('data-lightbox-title=', $link);

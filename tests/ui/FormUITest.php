@@ -33,7 +33,7 @@ class FormUITest extends RedminTestCase
         $input = str_replace(array("\r", "\n", " "), '', $input);
         
         $output = '<div class="mb-3 biang">
-            <label class="label-class-lor" for="tags">label-leh</label>
+            <label class="label-class-lor" for="bleh">label-leh</label>
             <input class="form-control" name="tags" id="bleh" placeholder="wah" value="test1,test2,test3">
         </div>';
         
@@ -143,7 +143,7 @@ class FormUITest extends RedminTestCase
         $input = str_replace(array("\r", "\n", " "), '', $input);
         
         $output = '<div class="mb-3 ">
-            <label class="testclass" for="test">testlabel</label>
+            <label class="testclass" for="test_id">testlabel</label>
             <select class="form-select " name="test" id="test_id">
                 <option value="test1">test1</option>
                 <option value="test2">test2</option>

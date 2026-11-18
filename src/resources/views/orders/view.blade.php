@@ -206,7 +206,7 @@
     {!! Redminportal::html()->modalWindow(
         'revision-modal-window',
         trans('redminportal::forms.revision_history_title'),
-        '<div data-fragment-body aria-live="off" data-fragment-loading="' . e(trans('redminportal::messages.fragment_loading')) . '" data-fragment-loaded="' . e(trans('redminportal::messages.fragment_loaded')) . '" data-fragment-error="' . e(trans('redminportal::messages.fragment_error')) . '"></div>'
+        '<div data-fragment-body aria-live="off" data-fragment-loading="' . e(trans('redminportal::messages.fragment_loading')) . '" data-fragment-loaded="' . e(trans('redminportal::messages.fragment_loaded')) . '" data-fragment-error="' . e(trans('redminportal::messages.fragment_error')) . '" data-fragment-unknown="' . e(trans('redminportal::messages.fragment_unknown')) . '"></div>'
             . '<div class="visually-hidden" role="status" data-fragment-status></div>',
         null,
         'modal-lg modal-dialog-scrollable',

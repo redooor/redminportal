@@ -374,6 +374,13 @@ The `redminsession` middleware group now starts with `PreventFraming`, which add
 - `partials/modal-window` and `Redminportal::html()->modalWindow()` accept an optional `modal_title_id` / seventh argument that names the dialog for assistive technology; callers that omit it render as before.
 - The `Authenticate`, `AuthenticateUser` and `EnsureSessionFingerprint` middleware return `response()->view(...)` (HTTP 200, same view) for an Ajax request without a valid session. The return type changes from a `View` to an HTTP response, so custom code that wrapped these middleware and called `with(...)` or read view data on what they returned must read the response instead.
 
+### Step 22 — Product variant modal as a fragment (re-publish assets; check published views)
+
+- Re-publish the assets (`vendor:publish --tag=public --force`) to get the updated `js/redmin-fragment.min.js` and `js/redmin-fileinput.min.js`.
+- Published views replace the package directory. If you published the product views, copy the new `products/edit`, `products/create-variant`, `products/edit-variant`, `products/view-variant` and `products/list-variants` views, plus the new `layouts/fragment` view. The variant views extend `layouts/fragment` for an Ajax request and carry the fragment hooks. An older published variant view still renders a full document; the client refuses to inject it and shows its error message in the modal instead.
+- Copy the new `plugins/editor`, `plugins/tagsinput`, `partials/form-input`, `partials/form-select-option`, `partials/lang-selector-form` and `layouts/master` views. They add the per-fragment widget initialisers, read editor images from `[data-editor-images]`, label the field's real id and load the fragment script. A variant form without the `variant-` id prefix shares ids with the parent product form.
+- After a variant POST the module follows the redirect to the success view or to the form with the validation errors. A redirect issued by your own middleware to another origin is not covered: the browser follows it before the module can check the final URL, so keep such redirects out of the variant save flow.
+
 ---
 
 ### Upgrade checklist

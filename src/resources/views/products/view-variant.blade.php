@@ -1,4 +1,4 @@
-@extends('redminportal::layouts.bare')
+@extends(request()->ajax() ? 'redminportal::layouts.fragment' : 'redminportal::layouts.master')
 
 @section('content')
     @include('redminportal::partials.errors')
@@ -7,8 +7,13 @@
     <div class='row'>
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title mb-0">{{ Lang::get('redminportal::forms.view_product') }}</h4>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0" data-fragment-title>{{ Lang::get('redminportal::forms.view_product') }}</h4>
+                    @if (isset($parent_id) && $parent_id)
+                    @permitted('admin/products/edit-variant/' . $parent_id . '/' . $product->id)
+                    <a class="btn btn-secondary btn-sm" href="{{ URL::to('admin/products/edit-variant/' . $parent_id . '/' . $product->id) }}" data-fragment-modal="#product-variant-modal">{{ Lang::get('redminportal::buttons.edit') }}</a>
+                    @endpermitted
+                    @endif
                 </div>
                 <div class="card-body">
                     @include('redminportal::partials.lang-selector-view', [
@@ -24,15 +29,15 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        {!! Form::label('sku', Lang::get('redminportal::forms.sku')) !!}
+                        <div class="form-label">{{ Lang::get('redminportal::forms.sku') }}</div>
                         <div>{{ $product->sku }}</div>
                     </div>
                     <div class="mb-3">
-                        {!! Form::label('price', Lang::get('redminportal::forms.price')) !!}
+                        <div class="form-label">{{ Lang::get('redminportal::forms.price') }}</div>
                         <div>$ {{ $product->price }}</div>
                     </div>
                     <div class="mb-3">
-                        {!! Form::label('tags', Lang::get('redminportal::forms.tags_separated_by_comma')) !!}
+                        <div class="form-label">{{ Lang::get('redminportal::forms.tags_separated_by_comma') }}</div>
                         <div class="clearfix">
                             @foreach ($product->tags as $tag)
                             <span class="badge text-bg-info" style="font-size:1em;">{{ $tag->name }}</span>
@@ -50,7 +55,7 @@
                 <div class="card-body">
                     <!-- Weight information -->
                     <div class="mb-3">
-                        <label>{{ Lang::get('redminportal::forms.weight') }}</label>
+                        <div class="form-label">{{ Lang::get('redminportal::forms.weight') }}</div>
                         @if ($product->weight)
                         <div class="mb-3">{{ $product->weight }} {{ $product->weight_unit }}</div>
                         @else
@@ -59,7 +64,7 @@
                     </div>
                     <!-- Volume information -->
                     <div class="mb-3">
-                        <label>{{ Lang::get('redminportal::forms.volume') }}</label>
+                        <div class="form-label">{{ Lang::get('redminportal::forms.volume') }}</div>
                         @if ($product->length || $product->width || $product->height)
                         <div class="mb-3">(L) {{ $product->length }} {{ $product->volume_unit }}, (W) {{ $product->width }} {{ $product->volume_unit }}, (H) {{ $product->height }} {{ $product->volume_unit }}</div>
                         @else
@@ -89,16 +94,16 @@
             <div class='card card-body bg-body-tertiary p-2'>
                 <div class="mb-3">
                     <div class="form-check">
-                        <label class="form-check-label" for="featured-checker">
-                            {!! Form::checkbox('featured', 1, $product->featured, array('class' => 'form-check-input', 'id' => 'featured-checker', 'disabled' => 'disabled')) !!} {{ Lang::get('redminportal::forms.featured') }}
+                        <label class="form-check-label" for="variant-featured-checker">
+                            {!! Form::checkbox('featured', 1, $product->featured, array('class' => 'form-check-input', 'id' => 'variant-featured-checker', 'disabled' => 'disabled')) !!} {{ Lang::get('redminportal::forms.featured') }}
                         </label>
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <div class="form-check">
-                        <label class="form-check-label" for="active-checker">
-                            {!! Form::checkbox('active', 1, $product->active, array('class' => 'form-check-input', 'id' => 'active-checker', 'disabled' => 'disabled')) !!} {{ Lang::get('redminportal::forms.active') }}
+                        <label class="form-check-label" for="variant-active-checker">
+                            {!! Form::checkbox('active', 1, $product->active, array('class' => 'form-check-input', 'id' => 'variant-active-checker', 'disabled' => 'disabled')) !!} {{ Lang::get('redminportal::forms.active') }}
                         </label>
                     </div>
                 </div>

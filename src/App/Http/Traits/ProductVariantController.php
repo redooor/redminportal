@@ -6,12 +6,15 @@
 
 use Exception;
 use Illuminate\Support\Facades\Lang;
+use Redooor\Redminportal\App\Http\Concerns\RendersFragments;
 use Redooor\Redminportal\App\Models\Product;
 use Redooor\Redminportal\App\Helpers\RImage;
 use Illuminate\Support\MessageBag;
 
 trait ProductVariantController
 {
+    use RendersFragments;
+
     /* -- Requires --
     protected $model;
     protected $pageRoute;
@@ -35,7 +38,7 @@ trait ProductVariantController
             'volume_units' => $this->volume_units
         );
 
-        return view('redminportal::products/create-variant', $data);
+        return $this->fragmentResponse('redminportal::products/create-variant', $data);
     }
     
     public function getEditVariant($product_id, $sid)
@@ -85,7 +88,7 @@ trait ProductVariantController
             'volume_units' => $this->volume_units
         );
 
-        return view('redminportal::products/edit-variant', $data);
+        return $this->fragmentResponse('redminportal::products/edit-variant', $data);
     }
     
     public function getViewVariant($sid)
@@ -105,10 +108,14 @@ trait ProductVariantController
             $translated[$translation->lang] = json_decode($translation->content);
         }
 
-        return view('redminportal::products/view-variant')
-            ->with('product', $product)
-            ->with('translated', $translated)
-            ->with('imagine', new RImage);
+        $parent = $product->variantParents->first();
+
+        return $this->fragmentResponse('redminportal::products/view-variant', array(
+            'product' => $product,
+            'translated' => $translated,
+            'imagine' => new RImage,
+            'parent_id' => ($parent != null) ? $parent->id : null
+        ));
     }
     
     /*
