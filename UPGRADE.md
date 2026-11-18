@@ -46,6 +46,11 @@ If your application does not use these helpers itself, remove the package:
 composer remove laravelcollective/html
 ```
 
+Also remove `Collective\Html\HtmlServiceProvider::class` from `providers` and the
+`Form` and `HTML` entries from `aliases` in `config/app.php` if you added them
+by hand; the application fails to boot once the package is gone while they
+remain.
+
 **Published views that still use `Form::` or `HTML::` will break.** Either
 migrate them to plain Blade (see the bundled views for examples), or keep the
 helpers in your own application:
