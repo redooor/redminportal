@@ -10,6 +10,12 @@ Re-publish the public assets to get the new `redmin-post.js`:
 
     php artisan vendor:publish --tag=public --force
 
+Uploads are now restricted to the extensions listed in `config/media.php` and to the total size set by `max_size`. If you have customised the package config, re-publish it and merge your changes:
+
+    php artisan vendor:publish --tag=config
+
+Uploads with other extensions are rejected until they are added to `allowed_extensions`.
+
 ## Upgrading to v0.58
 
 This version is focused on upgrading the code to support Laravel 5.8. Most of the models should remain unchanged.

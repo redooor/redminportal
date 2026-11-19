@@ -29,6 +29,8 @@ Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to lat
 
 Admin actions that change data now use POST and carry the session CSRF token.
 
+Uploaded file names and types are validated, with a configurable extension allowlist and size limit in `config/media.php`.
+
 ## Version 0.58.0
 
 Focus on supporting Laravel 5.8 and making sure all models and controllers work.

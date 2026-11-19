@@ -66,7 +66,7 @@
                 }
                 
                 plupload.each(up.files, function(file) {
-                    html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b><a href="#" class="link-del">delete</a></b></li>';
+                    html += '<li id="' + file.id + '">' + $('<span>').text(file.name).html() + ' (' + plupload.formatSize(file.size) + ') <b><a href="#" class="link-del">delete</a></b></li>';
                 });
                 document.getElementById('filelist').innerHTML = html;
             });
