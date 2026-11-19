@@ -25,12 +25,10 @@ class EnsureSessionFingerprint
             $storedFingerprint = $request->session()->get('redmin_password_fingerprint');
             $storedUserId = $request->session()->get('redmin_fingerprint_user');
 
-            if ($storedFingerprint === null || $storedUserId != $user->id) {
-                // First request for this user in this session, remember the current password
-                $request->session()->put('redmin_fingerprint_user', $user->id);
-                $request->session()->put('redmin_password_fingerprint', $fingerprint);
-            } elseif ($storedFingerprint !== $fingerprint) {
-                // The password has changed since this session started
+            if ($storedFingerprint === null
+                || $storedUserId != $user->id
+                || $storedFingerprint !== $fingerprint) {
+                // Sessions without a usable fingerprint, or with a changed password, must sign in again
                 Auth::guard($guard)->logout();
                 $request->session()->invalidate();
 

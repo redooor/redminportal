@@ -138,6 +138,8 @@ return array(
         => "Failed to open output stream.",
     'upload_error_file_type_not_allowed'
         => "This file type is not allowed.",
+    'upload_error_file_content_type_not_allowed'
+        => "The file content does not match its type.",
     'upload_error_file_too_large'
         => "This file is too large.",
     'group_error_edit_no_group_found'

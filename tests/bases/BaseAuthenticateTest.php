@@ -153,7 +153,7 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -170,7 +170,7 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesDeniedAccess();
     }
@@ -189,7 +189,7 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -208,7 +208,7 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesDeniedAccess();
     }
@@ -227,7 +227,7 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -246,7 +246,7 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesDeniedAccess();
     }
@@ -267,7 +267,7 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
         $this->user->groups()->save($allow_group_3);
         $this->user->groups()->save($allow_group_4);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -288,7 +288,7 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
         $this->user->groups()->save($deny_group_3);
         $this->user->groups()->save($deny_group_4);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesDeniedAccess();
     }

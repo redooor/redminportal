@@ -41,7 +41,7 @@ class AuthenticateUserTest extends RedminBrowserTestCase
     {
         $user = $this->createUser();
 
-        Auth::guard('redminguard')->loginUsingId($user->id);
+        $this->loginRedminUser($user->id);
 
         $this->call('GET', '/api/tag');
 
@@ -52,7 +52,7 @@ class AuthenticateUserTest extends RedminBrowserTestCase
     {
         $user = $this->createUser(0);
 
-        Auth::guard('redminguard')->loginUsingId($user->id);
+        $this->loginRedminUser($user->id);
 
         $this->call('GET', '/api/tag');
 

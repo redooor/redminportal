@@ -31,7 +31,7 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         $group->save();
 
         $this->user->groups()->save($group);
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
     }
 
     public function tearDown(): void

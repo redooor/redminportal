@@ -16,7 +16,7 @@ Uploads are now restricted to the extensions listed in `config/media.php` and to
 
     php artisan vendor:publish --tag=config
 
-Uploads with other extensions are rejected until they are added to `allowed_extensions`.
+Uploads with other extensions are rejected until they are added to `allowed_extensions`. Uploaded content must also match the extension's entry in `allowed_mimes`; a file whose content does not match its extension is rejected.
 
 Users who manage users or groups can only grant permissions they hold themselves, and can only assign groups whose permissions they fully hold. Removing a deny counts as granting access, so it follows the same rule. An account or group that holds more access than the logged-in account cannot be edited, activated, deactivated or deleted by that account. Use an account with full access for these tasks.
 
@@ -30,7 +30,7 @@ If an existing site still has the old documented `admin@admin.com` / `admin` acc
 
 **Passwords and sessions.** New passwords (new users, user edits and My Account) need at least 10 characters. This is set by the new `password.min_length` config; publish the config with `--tag=config` to change it. Existing passwords keep working.
 
-Changing a password signs out that user's other sessions on their next request. Changing your own password in My Account keeps you signed in. Sign-in is limited to five failed attempts per minute for each email address and IP address.
+Changing a password signs out that user's other sessions on their next request. Changing your own password in My Account keeps you signed in. Sign-in is limited to five failed attempts per minute for each account and twenty failed attempts per minute for each IP address. Signed-in sessions started before the upgrade are asked to sign in once more.
 
 **Descriptions.** The summary and description fields of categories and translations (and the product views that share the language selector) are passed through `RHelper::cleanHtml()` before they are shown. It uses HTML Purifier (`ezyang/htmlpurifier`, now a direct requirement; it was already installed through the spreadsheet package) and keeps basic formatting: paragraphs, headings, lists, tables, bold/italic, links (`http`, `https`, `mailto`) and images. Scripts, event attributes (`onclick`, `onerror`), inline styles, iframes, forms and `javascript:` or `data:` URLs are removed. Stored data is not changed, only what is displayed. Custom views that print these fields with `{!! !!}` should call `\Redooor\Redminportal\App\Helpers\RHelper::cleanHtml($value)` too, or use `{{ }}`.
 

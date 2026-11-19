@@ -29,7 +29,7 @@ Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to lat
 
 Admin actions that change data now use POST and carry the session CSRF token.
 
-Uploaded file names and types are validated, with a configurable extension allowlist and size limit in `config/media.php`.
+Uploaded file names and types are validated, with a configurable extension allowlist and size limit in `config/media.php`. Uploaded content is checked against its file type before it is stored.
 
 Permission checks use the decoded request path and an explicit action per route; image removal checks the owner, and purchases delete also needs orders access.
 
@@ -37,7 +37,7 @@ Users who manage users or groups can only grant permissions they hold themselves
 
 `RedminSeeder` no longer creates `admin@admin.com` / `admin` or deletes existing users and groups. The first administrator is created from `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD`, or with a generated password that is printed once.
 
-Sign-in is limited to five failed attempts per minute for each email address and IP address. New passwords need at least 10 characters (`password.min_length`). Changing a password ends that user's other sessions, while changing your own password in My Account keeps the current session signed in.
+Sign-in failures are counted per account, and separately per IP address, before a password is checked. New passwords need at least 10 characters (`password.min_length`). Changing a password ends that user's other sessions, while changing your own password in My Account keeps the current session signed in.
 
 Category, product and translation descriptions are cleaned with HTML Purifier before they are shown; names and order builder labels are escaped.
 

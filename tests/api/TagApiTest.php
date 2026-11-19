@@ -41,7 +41,7 @@ class TagApiTest extends RedminBrowserTestCase
         $user->activated = $activated;
         $user->save();
 
-        Auth::guard('redminguard')->loginUsingId($user->id);
+        $this->loginRedminUser($user->id);
     }
 
     /**
@@ -51,7 +51,7 @@ class TagApiTest extends RedminBrowserTestCase
     {
         $admin = User::where('email', 'admin@admin.com')->first();
 
-        Auth::guard('redminguard')->loginUsingId($admin->id);
+        $this->loginRedminUser($admin->id);
     }
 
     /**

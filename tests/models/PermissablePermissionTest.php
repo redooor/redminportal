@@ -83,7 +83,7 @@ class PermissablePermissionTest extends RedminBrowserTestCase
         $victim = $this->userWithPermissions(['admin.users.view' => 1]);
         $role = $victim->groups()->first();
 
-        Auth::guard('redminguard')->loginUsingId($admin->id);
+        $this->loginRedminUser($admin->id);
 
         $this->call('POST', '/admin/users/store?id=' . $victim->id, [
             'id' => '',
