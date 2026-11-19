@@ -31,6 +31,8 @@ Admin actions that change data now use POST and carry the session CSRF token.
 
 Uploaded file names and types are validated, with a configurable extension allowlist and size limit in `config/media.php`.
 
+Permission checks use the decoded request path and an explicit action per route; image removal checks the owner, and purchases delete also needs orders access.
+
 ## Version 0.58.0
 
 Focus on supporting Laravel 5.8 and making sure all models and controllers work.

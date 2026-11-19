@@ -5,4 +5,6 @@ return array(
     'error' => '系统无法存档：',
     'upload_error_file_type_not_allowed' => '此文件类型不被允许。',
     'upload_error_file_too_large' => '此文件过大。',
+    'purchase_error_delete_no_orders_permission' => '您还需要删除订单的权限。',
+    'purchase_error_create_no_orders_permission' => '您还需要新增订单的权限。',
 );

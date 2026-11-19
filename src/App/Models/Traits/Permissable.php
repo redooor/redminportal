@@ -20,7 +20,8 @@ trait Permissable
      **/
     public function hasAccess(Request $request)
     {
-        $route = $request->path();
+        // Use the decoded path, the same one the router matches
+        $route = $request->decodedPath();
         
         // Check the type of request
         $type = $this->checkType($request);
@@ -60,14 +61,33 @@ trait Permissable
     private function checkType(Request $request)
     {
         $type = 'view';
-        if ($request->is('*/create')) {
+        if ($request->is('*/activate/*')
+            || $request->is('*/deactivate/*')
+            || $request->is('*/imgremove/*')
+            || $request->is('*/variant-imgremove/*')
+            || $request->is('*/uploadform/*')
+            || $request->is('*/upload/*')
+            || $request->is('*/duration/*')) {
+            $type = 'update';
+        } elseif ($request->is('*/delete-variant-json/*')) {
+            $type = 'delete';
+        } elseif ($request->is('*/create-variant/*')) {
             $type = 'create';
-        } elseif ($request->is('*/edit/*') || $request->is('*/update/*')) {
+        } elseif ($request->is('*/edit-variant/*')) {
+            $type = 'update';
+        } elseif ($request->is('*/create')) {
+            $type = 'create';
+        } elseif ($request->is('*/edit/*') || $request->is('*/update') || $request->is('*/update/*')) {
             $type = 'update';
         } elseif ($request->is('*/delete/*')) {
             $type = 'delete';
+        } elseif ($request->is('admin/orders/store', 'admin/purchases/store') && $request->isMethod('post')) {
+            // These handlers always add a new order, whatever id is sent
+            $type = 'create';
         } elseif ($request->is('*/store') && $request->isMethod('post')) {
-            if ($request->filled('id')) {
+            // Use the same id for the permission check and the controller
+            $id = $request->input('id');
+            if (is_array($id) || (is_scalar($id) && trim((string) $id) !== '')) {
                 $type = 'update';
             } else {
                 $type = 'create';

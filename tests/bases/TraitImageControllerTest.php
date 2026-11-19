@@ -28,5 +28,6 @@ trait TraitImageControllerTest
 
         $this->assertResponseStatus(302); // Redirected
         $this->assertRedirectedTo($this->page . '/edit/' . $model->id);
+        $this->assertNull(Image::find($newimage->id));
     }
 }

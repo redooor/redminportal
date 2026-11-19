@@ -4,6 +4,8 @@
 
 Admin routes now verify the session CSRF token, and actions that change data use POST instead of GET.
 
+Groups that relied on `admin.purchases.delete` alone must also be granted `admin.orders.delete`, because purchases are rows of the orders table. Adding a purchase (`admin/purchases/store`) likewise also needs `admin.orders.create`. Read-only users can no longer run activate, deactivate, imgremove, upload or duration actions: those actions now need the **update** permission.
+
 If you published the package views or wrote custom admin views, update every link to the admin delete, activate, deactivate, imgremove, order status, logout and media duration routes. Replace each GET link with a POST link using `data-method="post"` together with the bundled `redmin-post.js`, or use a form that posts with `@csrf`. Hand-written `<form method="POST">` tags also need `@csrf`. Ajax calls to these routes should send the token from `window.redminCsrfToken()` as a `_token` field or an `X-CSRF-TOKEN` header.
 
 Re-publish the public assets to get the new `redmin-post.js`:

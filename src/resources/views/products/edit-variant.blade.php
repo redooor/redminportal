@@ -121,7 +121,7 @@
                                 {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ URL::to('admin/products/variant-imgremove/' . $product->id . '/' . $image->id) }}" class="btn btn-danger btn-confirm">
+                                    <a href="{{ URL::to('admin/products/variant-imgremove/' . $product_id . '/' . $image->id) }}" class="btn btn-danger btn-confirm">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </a>
                                     <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
