@@ -39,6 +39,14 @@ Users who manage users or groups can only grant permissions they hold themselves
 
 Sign-in is limited to five failed attempts per minute for each email address and IP address. New passwords need at least 10 characters (`password.min_length`). Changing a password ends that user's other sessions, while changing your own password in My Account keeps the current session signed in.
 
+Category, product and translation descriptions are cleaned with HTML Purifier before they are shown; names and order builder labels are escaped.
+
+Report text cells that start with `=`, `+`, `-` or `@` (or a tab or carriage return) are prefixed with `'` so spreadsheets show them as text. Commas are still replaced with dots.
+
+`/api/tag` and `/api/tag/name` now need a signed-in, active user.
+
+`ezyang/htmlpurifier` is now a direct requirement (it was already installed through the spreadsheet package).
+
 ## Version 0.58.0
 
 Focus on supporting Laravel 5.8 and making sure all models and controllers work.

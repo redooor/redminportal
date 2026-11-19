@@ -328,6 +328,16 @@ Route::group(
         Route::get('/', function () {
             return redirect('/');
         });
+    }
+);
+
+Route::group(
+    [
+        'middleware' => ['redminsession', 'redminuser'],
+        'namespace' => 'Redooor\Redminportal\App\Http\API',
+        'prefix' => 'api'
+    ],
+    function () {
         Route::get('tag', 'TagApi@getIndex');
         Route::get('tag/name', 'TagApi@getName');
     }

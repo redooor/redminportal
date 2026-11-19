@@ -30,6 +30,7 @@
                 <h4 class="modal-title">{{ $modal_title }}</h4>
             </div>
             <div class="modal-body">
+                {{-- $modal_body and $modal_footer are raw markup: the caller must pass trusted HTML only. --}}
                 {!! $modal_body !!}
             </div>
             @if (isset($modal_footer))

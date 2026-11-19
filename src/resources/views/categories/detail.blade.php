@@ -10,7 +10,7 @@
         <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.parent_category') }}:</strong><br>@if($category->category_id > 0){{ $category->parentCategory->name }}@else{{ "None" }}@endif</li>
         <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.priority_order') }}:</strong><br>{{ $category->order }}</li>
         <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.summary') }}:</strong><br>{{ $category->short_description }}</li>
-        <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.description') }}:</strong><br>{!! $category->long_description !!}</li>
+        <li class="list-group-item"><strong>{{ Lang::get('redminportal::forms.description') }}:</strong><br>{!! \Redooor\Redminportal\App\Helpers\RHelper::cleanHtml($category->long_description) !!}</li>
         @if($category->images()->count() > 0)
         <li class="list-group-item">
             @foreach( $category->images as $image )

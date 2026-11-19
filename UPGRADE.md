@@ -32,6 +32,14 @@ If an existing site still has the old documented `admin@admin.com` / `admin` acc
 
 Changing a password signs out that user's other sessions on their next request. Changing your own password in My Account keeps you signed in. Sign-in is limited to five failed attempts per minute for each email address and IP address.
 
+**Descriptions.** The summary and description fields of categories and translations (and the product views that share the language selector) are passed through `RHelper::cleanHtml()` before they are shown. It uses HTML Purifier (`ezyang/htmlpurifier`, now a direct requirement; it was already installed through the spreadsheet package) and keeps basic formatting: paragraphs, headings, lists, tables, bold/italic, links (`http`, `https`, `mailto`) and images. Scripts, event attributes (`onclick`, `onerror`), inline styles, iframes, forms and `javascript:` or `data:` URLs are removed. Stored data is not changed, only what is displayed. Custom views that print these fields with `{!! !!}` should call `\Redooor\Redminportal\App\Helpers\RHelper::cleanHtml($value)` too, or use `{{ }}`.
+
+Category names, product names and the order builder labels are escaped. `Category::printCategory()` escapes the name and returns HTML, so keep printing it with `{!! !!}`.
+
+**Exports.** The purchases, orders and mailing list exports pass free-text cells through `RHelper::exportCell()`: commas become dots as before, and a value that starts with `=`, `+`, `-` or `@` (or a tab or carriage return) gets a leading `'` so Excel and similar programs show it as text. Custom exports can call the same helper.
+
+**Tag API.** `GET /api/tag` and `GET /api/tag/name` need a signed-in, active user (new `redminuser` middleware: no route permission is required, so anyone editing content can use the tag field). Guests are redirected to `login`. If a public front end reads these URLs, provide your own public endpoint with the tags you want to expose.
+
 ## Upgrading to v0.58
 
 This version is focused on upgrading the code to support Laravel 5.8. Most of the models should remain unchanged.
