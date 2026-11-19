@@ -69,7 +69,7 @@ class UserControllerTest extends BaseControllerTest
     {
         $this->testStoreCreatePass();
         
-        $this->call('GET', $this->page . '/delete/2');
+        $this->call('POST', $this->page . '/delete/2');
 
         $this->assertRedirectedTo('/'); // Redirected to previous page, which is root
     }
@@ -80,7 +80,7 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testDeleteFailNoRecord()
     {
-        $this->call('GET', $this->page . '/delete/2');
+        $this->call('POST', $this->page . '/delete/2');
 
         $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
@@ -92,7 +92,7 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testDeleteFailDeleteSelf()
     {
-        $this->call('GET', $this->page . '/delete/1');
+        $this->call('POST', $this->page . '/delete/1');
 
         $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
@@ -103,7 +103,7 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testActivateFail()
     {
-        $this->call('GET', $this->page . '/activate/2');
+        $this->call('POST', $this->page . '/activate/2');
 
         $this->assertRedirectedTo($this->page);
         $this->assertSessionHasErrors();
@@ -114,7 +114,7 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testActivatePassActivateSelf()
     {
-        $this->call('GET', $this->page . '/activate/1');
+        $this->call('POST', $this->page . '/activate/1');
         
         $this->assertRedirectedTo('/'); // Redirected to previous page, which is root
     }
@@ -128,7 +128,7 @@ class UserControllerTest extends BaseControllerTest
         $this->testStoreCreatePass();
         
         // Then try activate it
-        $this->call('GET', $this->page . '/activate/2');
+        $this->call('POST', $this->page . '/activate/2');
         
         $this->assertRedirectedTo('/'); // Redirected to previous page, which is root
     }
@@ -138,7 +138,7 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testDeactivateFailNoRecord()
     {
-        $this->call('GET', $this->page . '/deactivate/2');
+        $this->call('POST', $this->page . '/deactivate/2');
 
         $this->assertRedirectedTo($this->page);
         $this->assertSessionHasErrors();
@@ -150,7 +150,7 @@ class UserControllerTest extends BaseControllerTest
      */
     public function testDeactivateFailDeactivateSelf()
     {
-        $this->call('GET', $this->page . '/deactivate/1');
+        $this->call('POST', $this->page . '/deactivate/1');
         
         $this->assertResponseStatus(302); // Redirected
         $this->assertSessionHasErrors();
@@ -165,7 +165,7 @@ class UserControllerTest extends BaseControllerTest
         $this->testStoreCreatePass();
         
         // Then try deactivate it
-        $this->call('GET', $this->page . '/deactivate/2');
+        $this->call('POST', $this->page . '/deactivate/2');
         
         $this->assertResponseStatus(302); // Redirected
         $this->assertRedirectedTo('/'); // Redirected to previous page, which is root

@@ -84,12 +84,12 @@
 							<ul class="dropdown-menu pull-right" role="menu">
 								@if ($user->activated)
 									<li>
-										<a href="{{ URL::to('admin/users/deactivate/' . $user->id) }}">
+										<a href="{{ URL::to('admin/users/deactivate/' . $user->id) }}" data-method="post">
 											<i class="glyphicon glyphicon-eye-close"></i>{{ Lang::get('redminportal::buttons.deactivate') }}</a>
 									</li>
 								@else
 									<li>
-										<a href="{{ URL::to('admin/users/activate/' . $user->id) }}">
+										<a href="{{ URL::to('admin/users/activate/' . $user->id) }}" data-method="post">
 											<i class="glyphicon glyphicon-eye-open"></i>{{ Lang::get('redminportal::buttons.activate') }}</a>
 									</li>
 								@endif

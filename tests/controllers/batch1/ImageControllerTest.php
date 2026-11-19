@@ -42,7 +42,7 @@ class ImageControllerTest extends RedminBrowserTestCase
      */
     public function testDeleteFail()
     {
-        $this->call('GET', $this->page . '/delete/1');
+        $this->call('POST', $this->page . '/delete/1');
 
         $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
@@ -67,7 +67,7 @@ class ImageControllerTest extends RedminBrowserTestCase
         // save photo to the loaded model
         $model->images()->save($newimage);
         
-        $this->call('GET', $this->page . '/delete/' . $newimage->id);
+        $this->call('POST', $this->page . '/delete/' . $newimage->id);
 
         $this->assertRedirectedTo('/');
     }

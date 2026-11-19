@@ -205,7 +205,7 @@ trait TraitProductVariantControllerTest
      */
     public function testDeleteVariantFailNoSuchProduct()
     {
-        $response = $this->call('GET', $this->page . '/delete-variant-json/1');
+        $response = $this->call('POST', $this->page . '/delete-variant-json/1');
         
         $array = json_decode($response->getContent());
         $this->assertTrue($array->status == false);
@@ -236,7 +236,7 @@ trait TraitProductVariantControllerTest
         $order = $this->createNewModel(new Order, $testcase_2);
         $order->products()->attach($product->id);
         
-        $response = $this->call('GET', $this->page . '/delete-variant-json/1');
+        $response = $this->call('POST', $this->page . '/delete-variant-json/1');
         
         $array = json_decode($response->getContent());
         $this->assertTrue($array->status == false);
@@ -258,7 +258,7 @@ trait TraitProductVariantControllerTest
         );
         $this->createNewModel(new Product, $testcase_1);
         
-        $response = $this->call('GET', $this->page . '/delete-variant-json/1');
+        $response = $this->call('POST', $this->page . '/delete-variant-json/1');
         
         $array = json_decode($response->getContent());
         $this->assertTrue($array->status == true);
@@ -302,7 +302,7 @@ trait TraitProductVariantControllerTest
         $order = $this->createNewModel(new Order, $testcase_3);
         $order->products()->attach($variant->id);
         
-        $this->call('GET', $this->page . '/delete/1');
+        $this->call('POST', $this->page . '/delete/1');
         
         $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();

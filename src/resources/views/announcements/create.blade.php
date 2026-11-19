@@ -10,7 +10,7 @@
     @include('redminportal::partials.errors')
 
     <form method="POST" action="{{ url('admin/announcements/store') }}" accept-charset="UTF-8" role="form" enctype="multipart/form-data">
-        {{ csrf_field() }}
+        @csrf
         
     	<div class='row'>
             <div class="col-md-3 col-md-push-9">

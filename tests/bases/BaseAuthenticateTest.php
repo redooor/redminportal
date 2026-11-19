@@ -11,6 +11,7 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
     protected $test_pages;
     protected $test_redirects;
     protected $test_posts;
+    protected $test_method = 'GET';
     
     /**
      * Setup initial data for use in tests
@@ -55,21 +56,40 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
     }
     
     /**
+     * Call a test page, keeping the previous URL in step with GET requests.
+     *
+     * POST requests do not store the current URL, so set it explicitly to
+     * keep the redirect assertions working after the GET-to-POST conversion.
+     **/
+    protected function callTestPage($page, &$previous)
+    {
+        if ($this->test_method !== 'GET' && $previous !== null) {
+            $this->app['session']->setPreviousUrl($this->app['url']->to($previous));
+        }
+
+        $this->call($this->test_method, $page);
+
+        $previous = $page;
+    }
+
+    /**
      * Run through all pages to check HTTP status
      **/
     protected function runThroughAllPagesAllowedAccess()
     {
         $this->echoText('--- testing allowed access ---');
         
+        $previous = null;
+
         foreach ($this->test_pages as $page) {
             $this->echoText('testing: ' . $page . ' ...');
-            $this->call('GET', $page);
+            $this->callTestPage($page, $previous);
             $this->assertResponseStatus(200);
         }
         
         foreach ($this->test_redirects as $page => $redirect) {
             $this->echoText('testing: ' . $page . ' ...');
-            $this->call('GET', $page);
+            $this->callTestPage($page, $previous);
             $this->assertResponseStatus(302);
             $this->assertRedirectedTo($redirect);
         }
@@ -89,16 +109,18 @@ class BaseAuthenticateTest extends RedminBrowserTestCase
     {
         $this->echoText('--- testing denied access ---');
         
+        $previous = null;
+
         foreach ($this->test_pages as $page) {
             $this->echoText('testing: ' . $page . ' ...');
-            $this->call('GET', $page);
+            $this->callTestPage($page, $previous);
             $this->assertResponseStatus(302);
             $this->assertRedirectedTo($redirected_page);
         }
         
         foreach ($this->test_redirects as $page => $redirect) {
             $this->echoText('testing: ' . $page . ' ...');
-            $this->call('GET', $page);
+            $this->callTestPage($page, $previous);
             $this->assertResponseStatus(302);
             $this->assertRedirectedTo($redirected_page);
         }

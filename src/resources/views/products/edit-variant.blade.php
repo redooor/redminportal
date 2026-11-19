@@ -200,7 +200,7 @@
         'modal_id' => 'confirm-modal',
         'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
         'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
-        'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
+        'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger" data-method="post">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
     ])
     <!-- End of modal window -->
     <!-- if product exists (END) -->

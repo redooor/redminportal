@@ -11,6 +11,8 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
     {
         parent::setUp();
 
+        $this->test_method = 'POST';
+
         $this->test_pages = [
             '/admin/products/delete-variant-json/1',
         ];

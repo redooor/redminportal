@@ -13,7 +13,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="POST" action="{{ $export_url }}" accept-charset="UTF-8" report="form">
-                {{ csrf_field() }}
+                @csrf
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ Lang::get('redminportal::buttons.close') }}</span></button>
                     <h4 class="modal-title">{{ $export_title }}</h4>

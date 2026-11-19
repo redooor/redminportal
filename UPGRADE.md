@@ -1,5 +1,15 @@
 # Upgrade Guide
 
+## Upgrading to 0.58.1
+
+Admin routes now verify the session CSRF token, and actions that change data use POST instead of GET.
+
+If you published the package views or wrote custom admin views, update every link to the admin delete, activate, deactivate, imgremove, order status, logout and media duration routes. Replace each GET link with a POST link using `data-method="post"` together with the bundled `redmin-post.js`, or use a form that posts with `@csrf`. Hand-written `<form method="POST">` tags also need `@csrf`. Ajax calls to these routes should send the token from `window.redminCsrfToken()` as a `_token` field or an `X-CSRF-TOKEN` header.
+
+Re-publish the public assets to get the new `redmin-post.js`:
+
+    php artisan vendor:publish --tag=public --force
+
 ## Upgrading to v0.58
 
 This version is focused on upgrading the code to support Laravel 5.8. Most of the models should remain unchanged.

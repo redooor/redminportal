@@ -24,7 +24,7 @@ trait TraitImageControllerTest
         // save photo to the loaded model
         $model->images()->save($newimage);
         
-        $this->call('GET', $this->page . '/imgremove/' . $newimage->id);
+        $this->call('POST', $this->page . '/imgremove/' . $newimage->id);
 
         $this->assertResponseStatus(302); // Redirected
         $this->assertRedirectedTo($this->page . '/edit/' . $model->id);

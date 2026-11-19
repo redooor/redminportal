@@ -18,11 +18,11 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
             'api/tag/name'
         ];
         
-        $this->test_redirects = [
+        $this->test_redirects = [];
+
+        $this->test_posts = [
             'logout' => '/',
         ];
-        
-        $this->test_posts = [];
     }
     
     /**

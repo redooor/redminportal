@@ -30,7 +30,7 @@ Route::group(
         'prefix' => 'logout'
     ],
     function () {
-        Route::get('/', 'LoginController@getLogout');
+        Route::post('/', 'LoginController@getLogout');
     }
 );
 
@@ -66,10 +66,10 @@ Route::group(
             Route::get('create', 'AnnouncementController@getCreate');
             Route::get('edit/{sid}', 'AnnouncementController@getEdit');
             Route::post('store', 'AnnouncementController@postStore');
-            Route::get('delete/{sid}', 'AnnouncementController@getDelete');
+            Route::post('delete/{sid}', 'AnnouncementController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'AnnouncementController@getSort');
             //
-            Route::get('imgremove/{sid}', 'AnnouncementController@getImgremove');
+            Route::post('imgremove/{sid}', 'AnnouncementController@getImgremove');
         });
 
         // Bundles
@@ -79,7 +79,7 @@ Route::group(
             Route::get('create', 'BundleController@getCreate');
             Route::get('edit/{sid}', 'BundleController@getEdit');
             Route::post('store', 'BundleController@postStore');
-            Route::get('delete/{sid}', 'BundleController@getDelete');
+            Route::post('delete/{sid}', 'BundleController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'BundleController@getSort');
         });
 
@@ -90,9 +90,9 @@ Route::group(
             Route::get('create', 'CategoryController@getCreate');
             Route::get('edit/{sid}', 'CategoryController@getEdit');
             Route::post('store', 'CategoryController@postStore');
-            Route::get('delete/{sid}', 'CategoryController@getDelete');
+            Route::post('delete/{sid}', 'CategoryController@getDelete');
             //
-            Route::get('imgremove/{sid}', 'CategoryController@getImgremove');
+            Route::post('imgremove/{sid}', 'CategoryController@getImgremove');
             Route::get('detail/{sid}', 'CategoryController@getDetail');
         });
 
@@ -103,7 +103,7 @@ Route::group(
             Route::get('create', 'CouponController@getCreate');
             Route::get('edit/{sid}', 'CouponController@getEdit');
             Route::post('store', 'CouponController@postStore');
-            Route::get('delete/{sid}', 'CouponController@getDelete');
+            Route::post('delete/{sid}', 'CouponController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'CouponController@getSort');
             //
             Route::get('categories', 'CouponController@getCategories');
@@ -116,7 +116,7 @@ Route::group(
             Route::get('create', 'GroupController@getCreate');
             Route::get('edit/{sid}', 'GroupController@getEdit');
             Route::post('store', 'GroupController@postStore');
-            Route::get('delete/{sid}', 'GroupController@getDelete');
+            Route::post('delete/{sid}', 'GroupController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'GroupController@getSort');
         });
 
@@ -124,7 +124,7 @@ Route::group(
         // ------
         Route::group(['prefix' => 'images'], function () {
             Route::get('/', 'ImageController@getIndex');
-            Route::get('delete/{sid}', 'ImageController@getDelete');
+            Route::post('delete/{sid}', 'ImageController@getDelete');
         });
 
         // Mailinglists
@@ -134,7 +134,7 @@ Route::group(
             Route::get('create', 'MailinglistController@getCreate');
             Route::get('edit/{sid}', 'MailinglistController@getEdit');
             Route::post('store', 'MailinglistController@postStore');
-            Route::get('delete/{sid}', 'MailinglistController@getDelete');
+            Route::post('delete/{sid}', 'MailinglistController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'MailinglistController@getSort');
         });
 
@@ -145,11 +145,11 @@ Route::group(
             Route::get('create', 'MediaController@getCreate');
             Route::get('edit/{sid}', 'MediaController@getEdit');
             Route::post('store', 'MediaController@postStore');
-            Route::get('delete/{sid}', 'MediaController@getDelete');
+            Route::post('delete/{sid}', 'MediaController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'MediaController@getSort');
             //
-            Route::get('imgremove/{sid}', 'MediaController@getImgremove');
-            Route::get('duration/{sid}', 'MediaController@getDuration');
+            Route::post('imgremove/{sid}', 'MediaController@getImgremove');
+            Route::post('duration/{sid}', 'MediaController@getDuration');
             Route::get('uploadform/{sid}', 'MediaController@getUploadform');
             Route::post('upload/{sid}', 'MediaController@postUpload');
         });
@@ -161,7 +161,7 @@ Route::group(
             Route::get('create', 'MembershipController@getCreate');
             Route::get('edit/{sid}', 'MembershipController@getEdit');
             Route::post('store', 'MembershipController@postStore');
-            Route::get('delete/{sid}', 'MembershipController@getDelete');
+            Route::post('delete/{sid}', 'MembershipController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'MembershipController@getSort');
         });
 
@@ -171,10 +171,10 @@ Route::group(
             Route::get('create', 'ModuleController@getCreate');
             Route::get('edit/{sid}', 'ModuleController@getEdit');
             Route::post('store', 'ModuleController@postStore');
-            Route::get('delete/{sid}', 'ModuleController@getDelete');
+            Route::post('delete/{sid}', 'ModuleController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'ModuleController@getSort');
             //
-            Route::get('imgremove/{sid}', 'ModuleController@getImgremove');
+            Route::post('imgremove/{sid}', 'ModuleController@getImgremove');
             Route::get('medias/{sid}', 'ModuleController@getMedias');
             Route::get('editmedias/{sid}/{module_id}', 'ModuleController@getEditmedias');
         });
@@ -186,10 +186,10 @@ Route::group(
             Route::get('create', 'OrderController@getCreate');
             Route::get('edit/{sid}', 'OrderController@getEdit'); // This will redirect to order
             Route::post('store', 'OrderController@postStore');
-            Route::get('delete/{sid}', 'OrderController@getDelete');
+            Route::post('delete/{sid}', 'OrderController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'OrderController@getSort');
             //
-            Route::get('update/{field?}/{sid?}/{status?}', 'OrderController@getUpdate');
+            Route::post('update/{field?}/{sid?}/{status?}', 'OrderController@getUpdate');
             Route::post('search', 'OrderController@postSearch');
             Route::get('search-all/{search?}', 'OrderController@getSearchAll');
             Route::get('search/{field?}/{search?}', 'OrderController@getSearch');
@@ -202,10 +202,10 @@ Route::group(
             Route::get('create', 'PageController@getCreate');
             Route::get('edit/{sid}', 'PageController@getEdit');
             Route::post('store', 'PageController@postStore');
-            Route::get('delete/{sid}', 'PageController@getDelete');
+            Route::post('delete/{sid}', 'PageController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'PageController@getSort');
             //
-            Route::get('imgremove/{sid}', 'PageController@getImgremove');
+            Route::post('imgremove/{sid}', 'PageController@getImgremove');
         });
 
         // Portfolio
@@ -215,10 +215,10 @@ Route::group(
             Route::get('create', 'PortfolioController@getCreate');
             Route::get('edit/{sid}', 'PortfolioController@getEdit');
             Route::post('store', 'PortfolioController@postStore');
-            Route::get('delete/{sid}', 'PortfolioController@getDelete');
+            Route::post('delete/{sid}', 'PortfolioController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'PortfolioController@getSort');
             //
-            Route::get('imgremove/{sid}', 'PortfolioController@getImgremove');
+            Route::post('imgremove/{sid}', 'PortfolioController@getImgremove');
         });
 
         // Posts
@@ -228,10 +228,10 @@ Route::group(
             Route::get('create', 'PostController@getCreate');
             Route::get('edit/{sid}', 'PostController@getEdit');
             Route::post('store', 'PostController@postStore');
-            Route::get('delete/{sid}', 'PostController@getDelete');
+            Route::post('delete/{sid}', 'PostController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'PostController@getSort');
             //
-            Route::get('imgremove/{sid}', 'PostController@getImgremove');
+            Route::post('imgremove/{sid}', 'PostController@getImgremove');
         });
 
         // Products
@@ -241,9 +241,9 @@ Route::group(
             Route::get('create', 'ProductController@getCreate');
             Route::get('edit/{sid}', 'ProductController@getEdit');
             Route::post('store', 'ProductController@postStore');
-            Route::get('delete/{sid}', 'ProductController@getDelete');
+            Route::post('delete/{sid}', 'ProductController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'ProductController@getSort');
-            Route::get('imgremove/{sid}', 'ProductController@getImgremove');
+            Route::post('imgremove/{sid}', 'ProductController@getImgremove');
             // ---------------
             // Product variant
             // ---------------
@@ -251,8 +251,8 @@ Route::group(
             Route::get('edit-variant/{product_id}/{sid}', 'ProductController@getEditVariant');
             Route::get('view-variant/{sid}', 'ProductController@getViewVariant');
             Route::get('list-variants/{sid}', 'ProductController@getListVariants');
-            Route::get('delete-variant-json/{sid}', 'ProductController@getDeleteVariantJson');
-            Route::get('variant-imgremove/{product_id}/{sid}', 'ProductController@getVariantImgremove');
+            Route::post('delete-variant-json/{sid}', 'ProductController@getDeleteVariantJson');
+            Route::post('variant-imgremove/{product_id}/{sid}', 'ProductController@getVariantImgremove');
         });
 
         // Promotions
@@ -262,10 +262,10 @@ Route::group(
             Route::get('create', 'PromotionController@getCreate');
             Route::get('edit/{sid}', 'PromotionController@getEdit');
             Route::post('store', 'PromotionController@postStore');
-            Route::get('delete/{sid}', 'PromotionController@getDelete');
+            Route::post('delete/{sid}', 'PromotionController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'PromotionController@getSort');
             //
-            Route::get('imgremove/{sid}', 'PromotionController@getImgremove');
+            Route::post('imgremove/{sid}', 'PromotionController@getImgremove');
         });
 
         // Purchases
@@ -275,7 +275,7 @@ Route::group(
             Route::get('create', 'PurchaseController@getCreate');
             Route::get('edit/{sid}', 'PurchaseController@getEdit');
             Route::post('store', 'PurchaseController@postStore');
-            Route::get('delete/{sid}', 'PurchaseController@getDelete');
+            Route::post('delete/{sid}', 'PurchaseController@getDelete');
         });
 
         // Reports
@@ -294,11 +294,11 @@ Route::group(
             Route::get('create', 'UserController@getCreate');
             Route::get('edit/{sid}', 'UserController@getEdit');
             Route::post('store', 'UserController@postStore');
-            Route::get('delete/{sid}', 'UserController@getDelete');
+            Route::post('delete/{sid}', 'UserController@getDelete');
             Route::get('sort/{sortBy?}/{orderBy?}', 'UserController@getSort');
             //
-            Route::get('activate/{sid}', 'UserController@getActivate');
-            Route::get('deactivate/{sid}', 'UserController@getDeactivate');
+            Route::post('activate/{sid}', 'UserController@getActivate');
+            Route::post('deactivate/{sid}', 'UserController@getDeactivate');
             Route::post('search', 'UserController@postSearch');
             Route::get('search-all/{search?}', 'UserController@getSearchAll');
             Route::get('search/{field?}/{search?}', 'UserController@getSearch');

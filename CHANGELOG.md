@@ -1,5 +1,6 @@
 # Change log
 
+* [Version 0.58.1](#version-0581)
 * [Version 0.58.0](#version-0580)
 * [Version 0.4.4, 0.3.4 and 0.2.4](#version-044-034-and-024)
 * [Version 0.3.3.1 and 0.2.3.1](#version-0331-and-0231)
@@ -23,6 +24,10 @@
 The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.
 
 Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.
+
+## Version 0.58.1
+
+Admin actions that change data now use POST and carry the session CSRF token.
 
 ## Version 0.58.0
 
