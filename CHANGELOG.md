@@ -33,6 +33,12 @@ Uploaded file names and types are validated, with a configurable extension allow
 
 Permission checks use the decoded request path and an explicit action per route; image removal checks the owner, and purchases delete also needs orders access.
 
+Users who manage users or groups can only grant permissions they hold themselves; accounts and groups with more access than the actor cannot be edited, activated, deactivated or deleted by that actor.
+
+`RedminSeeder` no longer creates `admin@admin.com` / `admin` or deletes existing users and groups. The first administrator is created from `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD`, or with a generated password that is printed once.
+
+Sign-in is limited to five failed attempts per minute for each email address and IP address. New passwords need at least 10 characters (`password.min_length`). Changing a password ends that user's other sessions, while changing your own password in My Account keeps the current session signed in.
+
 ## Version 0.58.0
 
 Focus on supporting Laravel 5.8 and making sure all models and controllers work.

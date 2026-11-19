@@ -18,6 +18,20 @@ Uploads are now restricted to the extensions listed in `config/media.php` and to
 
 Uploads with other extensions are rejected until they are added to `allowed_extensions`.
 
+Users who manage users or groups can only grant permissions they hold themselves, and can only assign groups whose permissions they fully hold. Removing a deny counts as granting access, so it follows the same rule. An account or group that holds more access than the logged-in account cannot be edited, activated, deactivated or deleted by that account. Use an account with full access for these tasks.
+
+**Administrator seeding.** `RedminSeeder` no longer creates `admin@admin.com` / `admin` and no longer deletes existing users and groups. On a fresh install, set the first administrator's credentials when you seed:
+
+    REDMIN_ADMIN_EMAIL=you@example.com REDMIN_ADMIN_PASSWORD='choose-a-long-password' php artisan db:seed --class="RedminSeeder"
+
+`REDMIN_ADMIN_PASSWORD` must be at least 10 characters. When it is not set, a random 20-character password is generated and printed once in the terminal; copy it from there. The email defaults to `admin@example.com` when `REDMIN_ADMIN_EMAIL` is not set.
+
+If an existing site still has the old documented `admin@admin.com` / `admin` account, sign in and change that password (or deactivate the account).
+
+**Passwords and sessions.** New passwords (new users, user edits and My Account) need at least 10 characters. This is set by the new `password.min_length` config; publish the config with `--tag=config` to change it. Existing passwords keep working.
+
+Changing a password signs out that user's other sessions on their next request. Changing your own password in My Account keeps you signed in. Sign-in is limited to five failed attempts per minute for each email address and IP address.
+
 ## Upgrading to v0.58
 
 This version is focused on upgrading the code to support Laravel 5.8. Most of the models should remain unchanged.

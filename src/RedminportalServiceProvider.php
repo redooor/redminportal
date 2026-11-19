@@ -59,6 +59,7 @@ class RedminportalServiceProvider extends ServiceProvider
         ]);
 
         $router->aliasMiddleware('redminauth', \Redooor\Redminportal\App\Http\Middleware\Authenticate::class);
+        $router->aliasMiddleware('redminfingerprint', \Redooor\Redminportal\App\Http\Middleware\EnsureSessionFingerprint::class);
     }
 
     /**
@@ -114,6 +115,7 @@ class RedminportalServiceProvider extends ServiceProvider
         $this->registerResources('pagination', 'redminportal::pagination');
         $this->registerResources('permissions', 'redminportal::permissions');
         $this->registerResources('payment_statuses', 'redminportal::payment_statuses');
+        $this->registerResources('password', 'redminportal::password');
         
         // Change Authentication model
         $this->mergeAuthConfig();

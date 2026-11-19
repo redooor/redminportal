@@ -7,4 +7,7 @@ return array(
     'upload_error_file_too_large' => '此檔案過大。',
     'purchase_error_delete_no_orders_permission' => '您還需要刪除訂單的權限。',
     'purchase_error_create_no_orders_permission' => '您還需要新增訂單的權限。',
+    'user_error_cannot_grant' => '您無法授予自己沒有的權限。',
+    'user_error_protected_account' => '您無法變更權限比自己高的帳號。',
+    'group_error_cannot_grant' => '您無法授予自己沒有的權限。',
 );

@@ -37,7 +37,7 @@ Route::group(
 // My Account controller
 Route::group(
     [
-        'middleware' => 'redminsession',
+        'middleware' => ['redminsession', 'redminfingerprint'],
         'namespace' => 'Redooor\Redminportal\App\Http\Controllers',
         'prefix' => 'myaccount'
     ],
