@@ -1,0 +1,508 @@
+<?php namespace Redooor\Redminportal\Test;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Redooor\Redminportal\App\Models\Category;
+use Redooor\Redminportal\App\Models\Media;
+
+class MediaUploadFilesTest extends RedminBrowserTestCase
+{
+    private $category;
+    private $media;
+    private $mediaFolder;
+    private $tmpFolder;
+    private $tempFiles = array();
+    private $lastStatus;
+    private $extraFolders = array();
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed('RedminSeeder');
+        $this->loginRedminUser(1);
+
+        $this->category = new Category;
+        $this->category->id = 800000 + random_int(1, 99999);
+        $this->category->name = 'Upload Test ' . uniqid();
+        $this->category->short_description = 'Upload test category';
+        $this->category->active = true;
+        $this->category->save();
+
+        $this->media = new Media;
+        $this->media->name = 'Upload Test ' . uniqid();
+        $this->media->path = 'broken.pdf';
+        $this->media->short_description = 'Upload test media';
+        $this->media->category_id = $this->category->id;
+        $this->media->save();
+
+        $this->tmpFolder = public_path() . '/assets/medias/tmp/'
+            . $this->category->id . '/' . $this->media->id;
+        $this->mediaFolder = public_path() . '/assets/medias/'
+            . $this->category->id . '/' . $this->media->id;
+    }
+
+    public function tearDown(): void
+    {
+        $_FILES = array();
+        $_REQUEST = array();
+
+        foreach ($this->tempFiles as $file) {
+            if (is_file($file)) {
+                @unlink($file);
+            }
+        }
+
+        if ($this->tmpFolder) {
+            $this->deleteFolder($this->tmpFolder);
+            @rmdir(dirname($this->tmpFolder));
+        }
+
+        if ($this->mediaFolder) {
+            $this->deleteFolder($this->mediaFolder);
+            @rmdir(dirname($this->mediaFolder));
+        }
+
+        foreach ($this->extraFolders as $folder) {
+            $this->deleteFolder($folder);
+        }
+
+        $this->tempFiles = array();
+        $this->extraFolders = array();
+        $this->media = null;
+        $this->category = null;
+        $this->tmpFolder = null;
+        $this->mediaFolder = null;
+
+        parent::tearDown();
+    }
+
+    /**
+     * Test (Pass): traversal names are contained inside the model folder
+     */
+    public function testTraversalNameStaysInsideModelFolder()
+    {
+        $result = $this->upload('../../escape.mp3', '../../escape.mp3', $this->audioContent(str_repeat('A', 64)));
+
+        $this->assertSame(1, $result['code'], $result['message']);
+        $this->assertFileExists($this->mediaFolder . '/escape.mp3');
+        $this->assertSame('escape.mp3', Media::find($this->media->id)->path);
+
+        $this->assertFileNotExists(public_path('assets/medias/escape.mp3'));
+        $this->assertFileNotExists(public_path('assets/escape.mp3'));
+        $this->assertFileNotExists(public_path('escape.mp3'));
+    }
+
+    /**
+     * Test (Pass): an allowed upload stores its sanitised name
+     */
+    public function testAllowedUploadStoresSanitisedName()
+    {
+        $result = $this->upload('..\\..\\My Song.mp3', '..\\..\\My Song.mp3', $this->audioContent(str_repeat('B', 64)));
+
+        $this->assertSame(1, $result['code'], $result['message']);
+        $this->assertFileExists($this->mediaFolder . '/My_Song.mp3');
+        $this->assertSame('My_Song.mp3', Media::find($this->media->id)->path);
+    }
+
+    /**
+     * Test (Fail): an executable extension is rejected without writing a file
+     */
+    public function testForbiddenExtensionIsRejected()
+    {
+        $result = $this->upload('shell.php', 'shell.php', '<?php echo "not allowed";');
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('This file type is not allowed.', $result['message']);
+
+        $this->assertFileNotExists($this->tmpFolder . '/shell.php');
+        $this->assertFileNotExists($this->tmpFolder . '/shell.php.part');
+        $this->assertFileNotExists($this->mediaFolder . '/shell.php');
+    }
+
+    /**
+     * Test (Pass): two chunks are assembled into the final file
+     */
+    public function testTwoChunkUploadAssemblesFile()
+    {
+        $this->prepareUpload('chunked.mp3', 'chunked.mp3', $this->audioContent('hello '), 0, 2);
+        $result = $this->callUpload('chunked.mp3', 0, 2);
+
+        $this->assertSame(1, $result['code'], $result['message']);
+        $this->assertFileExists($this->tmpFolder . '/chunked.mp3.part');
+
+        $this->prepareUpload('chunked.mp3', 'chunked.mp3', 'world', 1, 2);
+        $result = $this->callUpload('chunked.mp3', 1, 2);
+
+        $this->assertSame(1, $result['code'], $result['message']);
+        $this->assertFileExists($this->mediaFolder . '/chunked.mp3');
+        $this->assertSame($this->audioContent('hello world'), file_get_contents($this->mediaFolder . '/chunked.mp3'));
+        $this->assertFileNotExists($this->tmpFolder . '/chunked.mp3.part');
+    }
+
+    /**
+     * Test (Fail): a file larger than the configured limit is rejected and its part removed
+     */
+    public function testUploadLargerThanMaxSizeIsRejected()
+    {
+        Config::set('redminportal::media.max_size', 5);
+
+        $result = $this->upload('large.mp3', 'large.mp3', str_repeat('A', 20));
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('This file is too large.', $result['message']);
+        $this->assertFileNotExists($this->tmpFolder . '/large.mp3.part');
+        $this->assertFileNotExists($this->mediaFolder . '/large.mp3');
+    }
+
+    /**
+     * Test (Fail): the size limit is the total across chunks
+     */
+    public function testTotalChunkSizeOverLimitIsRejected()
+    {
+        Config::set('redminportal::media.max_size', 5);
+
+        $first = $this->upload('total.mp3', 'total.mp3', 'abc', 0, 2);
+        $this->assertSame(1, $first['code'], $first['message']);
+        $this->assertFileExists($this->tmpFolder . '/total.mp3.part');
+
+        $second = $this->upload('total.mp3', 'total.mp3', 'def', 1, 2);
+        $this->assertSame(0, $second['code']);
+        $this->assertSame('This file is too large.', $second['message']);
+        $this->assertFileNotExists($this->tmpFolder . '/total.mp3.part');
+        $this->assertFileNotExists($this->mediaFolder . '/total.mp3');
+    }
+
+    /**
+     * Test (Fail): negative chunk values are rejected
+     */
+    public function testNegativeChunkIsRejected()
+    {
+        $result = $this->upload('negative.mp3', 'negative.mp3', 'ID3', -1, 1);
+
+        $this->assertSame(0, $result['code']);
+        $this->assertFileNotExists($this->tmpFolder . '/negative.mp3.part');
+        $this->assertFileNotExists($this->mediaFolder . '/negative.mp3');
+    }
+
+    /**
+     * Test (Fail): a rejected chunk makes later chunks terminal
+     */
+    public function testChunkAfterSizeRejectionIsTerminal()
+    {
+        Config::set('redminportal::media.max_size', 5);
+
+        $result = $this->upload('terminal.mp3', 'terminal.mp3', 'abc', 0, 3);
+        $this->assertSame(1, $result['code'], $result['message']);
+
+        $result = $this->upload('terminal.mp3', 'terminal.mp3', 'def', 1, 3);
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('This file is too large.', $result['message']);
+        $this->assertFileNotExists($this->tmpFolder . '/terminal.mp3.part');
+
+        $result = $this->upload('terminal.mp3', 'terminal.mp3', 'g', 2, 3);
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('Failed to upload an empty file.', $result['message']);
+
+        $this->assertFileNotExists($this->tmpFolder . '/terminal.mp3.part');
+        $this->assertFileNotExists($this->mediaFolder . '/terminal.mp3');
+        $this->assertSame('broken.pdf', Media::find($this->media->id)->path);
+    }
+
+    /**
+     * Test (Fail): a later chunk sent without its first chunk is rejected
+     */
+    public function testChunkWithoutFirstChunkIsRejected()
+    {
+        $result = $this->upload('orphan.mp3', 'orphan.mp3', 'abc', 1, 2);
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('Failed to upload an empty file.', $result['message']);
+        $this->assertFileNotExists($this->tmpFolder . '/orphan.mp3.part');
+        $this->assertFileNotExists($this->mediaFolder . '/orphan.mp3');
+    }
+
+    /**
+     * Test (Fail): a chunk is rejected while another chunk holds the file lock
+     */
+    public function testChunkIsRejectedWhenLockIsHeld()
+    {
+        $fileName = 'locked.mp3';
+        $partPath = $this->tmpFolder . '/' . $fileName . '.part';
+        $lockPath = sys_get_temp_dir() . '/redmin-upload-' . md5($this->tmpFolder) . '.lock';
+        $lock = fopen($lockPath, 'c');
+
+        $this->assertNotFalse($lock);
+        $this->assertTrue(flock($lock, LOCK_EX | LOCK_NB));
+
+        try {
+            $result = $this->upload($fileName, $fileName, 'abc', 0, 1);
+
+            $this->assertSame(0, $result['code']);
+            $this->assertSame('Failed to open output stream.', $result['message']);
+            $this->assertSame(503, $this->lastStatus);
+            $this->assertFileNotExists($partPath);
+        } finally {
+            flock($lock, LOCK_UN);
+            fclose($lock);
+            @unlink($lockPath);
+        }
+    }
+
+    /**
+     * Test (Pass): finishing one upload keeps the partial file of another upload of the same media
+     */
+    public function testFinishingUploadKeepsAnotherPartialFile()
+    {
+        $first = $this->upload('first.mp3', 'first.mp3', 'abc', 0, 2);
+        $this->assertSame(1, $first['code']);
+        $this->assertFileExists($this->tmpFolder . '/first.mp3.part');
+
+        $second = $this->upload('second.mp3', 'second.mp3', $this->audioContent('xyz'), 0, 1);
+        $this->assertSame(1, $second['code']);
+
+        $this->assertFileExists($this->tmpFolder . '/first.mp3.part');
+        $this->assertFileExists($this->mediaFolder . '/second.mp3');
+    }
+
+    /**
+     * Test (Pass): uploading one media id keeps a sibling folder with a longer id
+     */
+    public function testUploadDoesNotDeleteSiblingMediaFolder()
+    {
+        $category = new Category;
+        $category->id = 800000 + random_int(1, 99999);
+        $category->name = 'Upload Sibling ' . uniqid();
+        $category->short_description = 'Upload sibling category';
+        $category->active = true;
+        $category->save();
+
+        $categoryFolder = public_path() . '/assets/medias/' . $category->id;
+        $folder12 = $categoryFolder . '/12';
+        $folder120 = $categoryFolder . '/120';
+        $this->extraFolders[] = $categoryFolder;
+        $this->extraFolders[] = public_path() . '/assets/medias/tmp/' . $category->id;
+
+        mkdir($folder12, 0777, true);
+        mkdir($folder120, 0777, true);
+        file_put_contents($folder12 . '/old.mp3', 'old');
+        file_put_contents($folder120 . '/keep.mp3', 'keep');
+
+        foreach (array(12, 120) as $id) {
+            $media = new Media;
+            $media->id = $id;
+            $media->name = 'Sibling Media ' . $id;
+            $media->path = 'broken.pdf';
+            $media->short_description = 'Sibling media';
+            $media->category_id = $category->id;
+            $media->save();
+        }
+
+        $result = $this->upload('sibling.mp3', 'sibling.mp3', $this->audioContent(str_repeat('A', 64)), 0, 1, 12);
+
+        $this->assertSame(1, $result['code'], $result['message']);
+        $this->assertFileExists($folder12 . '/sibling.mp3');
+        $this->assertDirectoryExists($folder120);
+        $this->assertFileExists($folder120 . '/keep.mp3');
+    }
+
+    /**
+     * Test (Fail): HTML bytes named as a PDF are rejected without replacing the media.
+     */
+    public function testHtmlBytesNamedPdfAreRejected()
+    {
+        $existingPath = $this->createExistingMediaFile();
+
+        $result = $this->upload('x.pdf', 'x.pdf', '<html><body>not a pdf</body></html>');
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('The file content does not match its type.', $result['message']);
+        $this->assertFileNotExists($this->tmpFolder . '/x.pdf');
+        $this->assertFileNotExists($this->mediaFolder . '/x.pdf');
+        $this->assertSame('existing.pdf', Media::find($this->media->id)->path);
+        $this->assertSame('existing', file_get_contents($existingPath));
+    }
+
+    /**
+     * Test (Fail): SVG bytes named as a PDF are rejected without replacing the media.
+     */
+    public function testSvgBytesNamedPdfAreRejected()
+    {
+        $existingPath = $this->createExistingMediaFile();
+
+        $result = $this->upload('vector.pdf', 'vector.pdf', '<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('The file content does not match its type.', $result['message']);
+        $this->assertFileNotExists($this->tmpFolder . '/vector.pdf');
+        $this->assertFileNotExists($this->mediaFolder . '/vector.pdf');
+        $this->assertSame('existing.pdf', Media::find($this->media->id)->path);
+        $this->assertSame('existing', file_get_contents($existingPath));
+    }
+
+    /**
+     * Test (Fail): PDF bytes with a JPG extension are rejected.
+     */
+    public function testPdfBytesNamedJpgAreRejected()
+    {
+        $existingPath = $this->createExistingMediaFile();
+
+        $result = $this->upload('x.jpg', 'x.jpg', $this->pdfContent());
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('The file content does not match its type.', $result['message']);
+        $this->assertFileNotExists($this->tmpFolder . '/x.jpg');
+        $this->assertFileNotExists($this->mediaFolder . '/x.jpg');
+        $this->assertSame('existing.pdf', Media::find($this->media->id)->path);
+        $this->assertSame('existing', file_get_contents($existingPath));
+    }
+
+    /**
+     * Test (Pass): real PDF, PNG and ZIP files are accepted.
+     */
+    public function testRealPdfPngAndZipFilesAreAccepted()
+    {
+        $files = array(
+            array('real.pdf', $this->pdfContent()),
+            array('real.png', $this->pngContent()),
+            array('real.zip', $this->zipContent()),
+        );
+
+        foreach ($files as $file) {
+            $result = $this->upload($file[0], $file[0], $file[1], 0, 1);
+
+            $this->assertSame(1, $result['code'], $result['message']);
+            $this->assertFileExists($this->mediaFolder . '/' . $file[0]);
+            $this->assertSame($file[0], Media::find($this->media->id)->path);
+        }
+    }
+
+    /**
+     * Create a media file that must survive a rejected upload.
+     */
+    private function createExistingMediaFile()
+    {
+        if (! is_dir($this->mediaFolder)) {
+            mkdir($this->mediaFolder, 0777, true);
+        }
+
+        $path = $this->mediaFolder . '/existing.pdf';
+        file_put_contents($path, 'existing');
+
+        $this->media->path = 'existing.pdf';
+        $this->media->save();
+
+        return $path;
+    }
+
+    /**
+     * Prefix content with an MP3 frame header so the detected type is audio.
+     */
+    private function audioContent($content = '')
+    {
+        return "\xFF\xFB\x90\x64" . $content;
+    }
+
+    private function pdfContent()
+    {
+        return "%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n"
+            . "2 0 obj\n<< /Type /Pages /Kids [] /Count 0 >>\nendobj\n"
+            . "trailer\n<< /Root 1 0 R >>\n%%EOF\n";
+    }
+
+    private function pngContent()
+    {
+        return base64_decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='
+        );
+    }
+
+    private function zipContent()
+    {
+        return base64_decode(
+            'UEsDBBQAAAAAAEV3c12GphA2BQAAAAUAAAAFAAAAYS50eHRoZWxsb1BLAQIUAxQAAAAAAEV3c12GphA2'
+            . 'BQAAAAUAAAAFAAAAAAAAAAAAAACAAQAAAABhLnR4dFBLBQYAAAAAAQABADMAAAAoAAAAAAA='
+        );
+    }
+
+    /**
+     * Prepare the raw superglobals used by the controller trait
+     */
+    private function prepareUpload($requestName, $fileName, $content, $chunk, $chunks)
+    {
+        $tmpName = tempnam(sys_get_temp_dir(), 'redmin_upload_');
+        file_put_contents($tmpName, $content);
+        $this->tempFiles[] = $tmpName;
+
+        $_FILES = array(
+            'file' => array(
+                'name' => $fileName,
+                'type' => 'application/octet-stream',
+                'size' => strlen($content),
+                'tmp_name' => $tmpName,
+                'error' => 0,
+            ),
+        );
+
+        $_REQUEST = array(
+            'name' => $requestName,
+            'chunk' => $chunk,
+            'chunks' => $chunks,
+        );
+    }
+
+    /**
+     * Call the upload route and decode the JSON response
+     */
+    private function callUpload($requestName, $chunk, $chunks, $mediaId = null)
+    {
+        if ($mediaId === null) {
+            $mediaId = $this->media->id;
+        }
+
+        $response = $this->call('POST', '/admin/medias/upload/' . $mediaId, array(
+            'name' => $requestName,
+            'chunk' => $chunk,
+            'chunks' => $chunks,
+        ));
+
+        $this->lastStatus = $response->getStatusCode();
+
+        return json_decode($response->getContent(), true);
+    }
+
+    /**
+     * Prepare and upload a single chunk
+     */
+    private function upload($requestName, $fileName, $content, $chunk = 0, $chunks = 1, $mediaId = null)
+    {
+        $this->prepareUpload($requestName, $fileName, $content, $chunk, $chunks);
+
+        return $this->callUpload($requestName, $chunk, $chunks, $mediaId);
+    }
+
+    /**
+     * Recursively delete only the folder provided
+     */
+    private function deleteFolder($folder)
+    {
+        if (! is_dir($folder)) {
+            return;
+        }
+
+        $items = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($folder, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($items as $item) {
+            if ($item->isDir()) {
+                @rmdir($item->getPathname());
+            } else {
+                @unlink($item->getPathname());
+            }
+        }
+
+        @rmdir($folder);
+    }
+}

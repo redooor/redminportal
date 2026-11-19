@@ -128,7 +128,7 @@ class AnnouncementController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Announcement::class);
         
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;

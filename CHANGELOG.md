@@ -1,5 +1,6 @@
 # Change log
 
+* [Version 0.58.1](#version-0581)
 * [Version 0.58.0](#version-0580)
 * [Version 0.4.4, 0.3.4 and 0.2.4](#version-044-034-and-024)
 * [Version 0.3.3.1 and 0.2.3.1](#version-0331-and-0231)
@@ -23,6 +24,28 @@
 The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.
 
 Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.
+
+## Version 0.58.1
+
+Admin actions that change data now use POST and carry the session CSRF token.
+
+Uploaded file names and types are validated, with a configurable extension allowlist and size limit in `config/media.php`. Uploaded content is checked against its file type before it is stored.
+
+Permission checks use the decoded request path and an explicit action per route; image removal checks the owner, and purchases delete also needs orders access.
+
+Users who manage users or groups can only grant permissions they hold themselves; accounts and groups with more access than the actor cannot be edited, activated, deactivated or deleted by that actor.
+
+`RedminSeeder` no longer creates `admin@admin.com` / `admin` or deletes existing users and groups. The first administrator is created from `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD`, or with a generated password that is printed once.
+
+Sign-in failures are counted per account, and separately per IP address, before a password is checked. New passwords need at least 10 characters (`password.min_length`). Changing a password ends that user's other sessions, while changing your own password in My Account keeps the current session signed in.
+
+Category, product and translation descriptions are cleaned with HTML Purifier before they are shown; names and order builder labels are escaped.
+
+Report text cells that start with `=`, `+`, `-` or `@` (or a tab or carriage return) are prefixed with `'` so spreadsheets show them as text. Commas are still replaced with dots.
+
+`/api/tag` and `/api/tag/name` now need a signed-in, active user.
+
+`ezyang/htmlpurifier` is now a direct requirement (it was already installed through the spreadsheet package).
 
 ## Version 0.58.0
 

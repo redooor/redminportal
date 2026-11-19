@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>RedminPortal by Redooor</title>
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jquery-ui/themes/blitzer/jquery-ui.min.css') }}">
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jasny-bootstrap.css') }}">
@@ -35,7 +36,7 @@
                     <div class="navbar-collapse collapse">
                         @if (Auth::guard('redminguard')->check())
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
+                            <li><a href="{{ URL::to('logout') }}" data-method="post" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>
                         @endif
                     </div><!--/.nav-collapse -->
@@ -58,6 +59,7 @@
         <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/datetimepicker/bootstrap-datetimepicker.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmaterials.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-post.js') }}" defer></script>
 
         @section('footer')
         @show

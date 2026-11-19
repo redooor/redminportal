@@ -121,7 +121,7 @@
                                 {!! HTML::image($imagine->getUrl($image->path), $product->name, array('class' => 'img-thumbnail', 'alt' => $image->path)) !!}
                                 <br><br>
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ URL::to('admin/products/variant-imgremove/' . $product->id . '/' . $image->id) }}" class="btn btn-danger btn-confirm">
+                                    <a href="{{ URL::to('admin/products/variant-imgremove/' . $product_id . '/' . $image->id) }}" class="btn btn-danger btn-confirm">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </a>
                                     <a href="{{ URL::to($imagine->getUrl($image->path, 'large')) }}" class="btn btn-primary btn-copy">
@@ -200,7 +200,7 @@
         'modal_id' => 'confirm-modal',
         'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
         'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
-        'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
+        'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger" data-method="post">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
     ])
     <!-- End of modal window -->
     <!-- if product exists (END) -->

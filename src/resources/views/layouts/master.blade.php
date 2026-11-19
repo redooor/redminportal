@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>RedminPortal by Redooor</title>
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jquery-ui/themes/blitzer/jquery-ui.min.css') }}">
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jasny-bootstrap.css') }}">
@@ -41,7 +42,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; {{ Auth::guard('redminguard')->user()->first_name }} {{ Auth::guard('redminguard')->user()->last_name }}</a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url('myaccount') }}"><span class="glyphicon glyphicon-cog"></span> {{ Lang::get('redminportal::menus.my_account') }}</a></li>
-                                <li><a href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
+                                <li><a href="{{ URL::to('logout') }}" data-method="post" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -49,7 +50,7 @@
                         <ul class="nav navbar-nav navbar-right visible-xs">
                             <li class="disabled"><a>Signed in as {{ Auth::guard('redminguard')->user()->first_name }} {{ Auth::guard('redminguard')->user()->last_name }}</a></li>
                             <li><a href="#"><span class="glyphicon glyphicon-cog"></span> {{ Lang::get('redminportal::menus.my_account') }}</a></li>
-                            <li><a href="{{ URL::to('logout') }}" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
+                            <li><a href="{{ URL::to('logout') }}" data-method="post" title="Lang::get('redminportal::menus.logout')"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::get('redminportal::menus.logout') }}</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
@@ -78,7 +79,7 @@
             'confirm-modal',
             Lang::get('redminportal::messages.confirm_delete'),
             Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
-            '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
+            '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="confirm-modal-proceed" class="btn btn-danger" data-method="post">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
         ) !!}
         <!-- End of modal window -->
         
@@ -88,6 +89,7 @@
         <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/datetimepicker/bootstrap-datetimepicker.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmaterials.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-post.js') }}" defer></script>
         <script>
             !function ($) {
                 $(function(){

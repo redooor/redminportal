@@ -18,6 +18,7 @@
         "orchestra/imagine": "~3.6",
         "maatwebsite/excel": "~3.0",
         "james-heinrich/getid3": "^1.9.11",
+        "ezyang/htmlpurifier": "^4.16",
         "fideloper/proxy": "^4.0"
     },
     "require-dev": {

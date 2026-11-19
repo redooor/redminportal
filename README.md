@@ -172,11 +172,11 @@ You can install Laravel version 5.8 using the command:
 
     **CAUTION: using --force will overwrite existing files**
     
-6. Run the following in a terminal to seed the database with initial admin username and password:
+6. Run the following in a terminal to seed the database with the first administrator. Set `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD` (at least 10 characters); if you leave out the password, a random password is generated and printed once:
 
-        php artisan db:seed --class="RedminSeeder"
-        
-        Username/password: admin@admin.com/admin
+        REDMIN_ADMIN_EMAIL=you@example.com REDMIN_ADMIN_PASSWORD='choose-a-long-password' php artisan db:seed --class="RedminSeeder"
+
+    Copy the generated password from the terminal when you do not set one. The seeder creates the Admin and User groups and one active administrator. It does not remove existing users or groups.
 
 7. Publish package assets by running this in a terminal:
 
@@ -298,11 +298,11 @@ You can install Laravel version 5.8 using the command:
         
     **CAUTION: using --force will overwrite existing files**
 
-9. Run the following in a terminal to seed the database with initial admin username and password:
+9. Run the following in a terminal to seed the database with the first administrator. Set `REDMIN_ADMIN_EMAIL` and `REDMIN_ADMIN_PASSWORD` (at least 10 characters); if you leave out the password, a random password is generated and printed once:
 
-        php artisan db:seed --class="RedminSeeder"
-        
-        Username/password: admin@admin.com/admin
+        REDMIN_ADMIN_EMAIL=you@example.com REDMIN_ADMIN_PASSWORD='choose-a-long-password' php artisan db:seed --class="RedminSeeder"
+
+    Copy the generated password from the terminal when you do not set one. The seeder does not remove existing users or groups.
 
 10. Publish package assets by running this in a terminal:
 

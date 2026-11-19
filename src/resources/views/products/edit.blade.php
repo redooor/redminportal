@@ -272,7 +272,7 @@
         'modal_id' => 'variant-remove-modal',
         'modal_title' => Lang::get('redminportal::messages.confirm_delete'),
         'modal_body' => Lang::get('redminportal::messages.are_you_sure_you_want_to_delete'),
-        'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="variant-remove-modal-proceed" class="btn btn-danger">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
+        'modal_footer' => '<button type="button" class="btn btn-default" data-dismiss="modal">' . Lang::get('redminportal::buttons.delete_no') . '</button><a href="#" id="variant-remove-modal-proceed" class="btn btn-danger" data-method="post">' . Lang::get('redminportal::buttons.delete_yes') . '</a>'
     ])
     <!-- End of modal window -->
 @stop
@@ -351,25 +351,21 @@
                     e.preventDefault();
                     $delete_url = $(this).attr('href');
                     $(this).addClass('disabled');
-                    $.getJSON( $delete_url )
+                    $.post( $delete_url, { _token: window.redminCsrfToken() }, null, 'json' )
                         .done(function( json ) {
                             if (json.status == true) {
                                 $('#variant-remove-modal').modal('hide');
                             } else {
-                                $errormsg = '<div class="alert alert-danger">';
-                                $errormsg += json.message;
-                                $errormsg += '</div>';
+                                var $errormsg = $('<div>').addClass('alert alert-danger').text(json.message);
                                 $('#variant-remove-modal .modal-footer').hide();
-                                $('#variant-remove-modal .modal-body').html($errormsg);
+                                $('#variant-remove-modal .modal-body').empty().append($errormsg);
                             }
                         })
                         .fail(function( jqxhr, textStatus, error ) {
                             var err = textStatus + ", " + error;
-                            $errormsg = '<div class="alert alert-danger">';
-                            $errormsg += err;
-                            $errormsg += '</div>';
+                            var $errormsg = $('<div>').addClass('alert alert-danger').text(err);
                             $('#variant-remove-modal .modal-footer').hide();
-                            $('#variant-remove-modal .modal-body').html($errormsg);
+                            $('#variant-remove-modal .modal-body').empty().append($errormsg);
                         });
                 });
                 // Clear content when modal hidden

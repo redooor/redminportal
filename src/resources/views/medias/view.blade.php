@@ -126,13 +126,13 @@
                         if (obj.text() == '') {
                             var url = obj.attr('data-url');
                             obj.text('Fetching');
-                            $.get(url, function(data) {
+                            $.post(url, { _token: window.redminCsrfToken() }, function(data) {
                                 if (data.status == 'success') {
                                     obj.text(data.data);
                                 } else {
                                     obj.text('Error');
                                 }
-                            })
+                            }, 'json')
                             .fail(function() {
                                 obj.text('Failed connection')
                             });
