@@ -9,6 +9,21 @@
                     <h2><u>Change log</u></h2>
                     <p>The focus of the development will be on branch 0.58, which supports the Laravel version 5.8.</p>
                     <p>Development for branch v0.1, 0.2, 0.3 and 0.4 has stopped. Please upgrade to later versions.</p>
+                    <h3>Version 0.58.1</h3>
+                    <p>Maintenance release for Laravel 5.8 sites.</p>
+                    <p><strong>IMPORTANT:</strong> Refer to UPGRADE.md for the upgrading instructions. Links and scripts that changed data with a GET request must now use POST with the session token.</p>
+                    <h4>Enhancements:</h4>
+                    <ol>
+                        <li>Admin actions that change data use POST and carry the session CSRF token.</li>
+                        <li>Uploaded file names, types and content are validated, with an extension allowlist and size limit in config/media.php.</li>
+                        <li>Permission checks use the decoded request path and an explicit action per route; image removal checks the owner.</li>
+                        <li>Users can only grant permissions they hold themselves, and cannot change accounts or groups with more access than their own.</li>
+                        <li>The seeder takes the first administrator from REDMIN_ADMIN_EMAIL and REDMIN_ADMIN_PASSWORD (or generates a password) and no longer deletes users or groups.</li>
+                        <li>Sign-in attempts are limited, new passwords need at least 10 characters, and changing a password ends the user's other sessions. Sessions started before the upgrade ask for a sign-in once.</li>
+                        <li>Descriptions, names and order builder labels are cleaned or escaped before they are shown.</li>
+                        <li>Report cells that start with =, +, - or @ are prefixed so spreadsheets show them as text.</li>
+                        <li>The tag API needs a signed-in user.</li>
+                    </ol>
                     <h3>Version 0.58.0</h3>
                     <p>Focus on supporting Laravel 5.8 and making sure all models and controllers work.</p>
                     <ol>
