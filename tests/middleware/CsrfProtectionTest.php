@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Lang;
 use Redooor\Redminportal\App\Models\Group;
 use Redooor\Redminportal\App\Models\Page;
 use Redooor\Redminportal\App\Models\User;
@@ -89,6 +90,20 @@ class CsrfProtectionTest extends RedminBrowserTestCase
 
         $this->assertResponseStatus(302);
         $this->seeInDatabase('pages', ['slug' => 'a-page']);
+    }
+
+    public function testSignedOutAjaxRequestGetsTheNotAuthorizedPage()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $this->call('GET', '/admin/pages', [], [], [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+
+        $this->assertResponseStatus(200);
+        $this->assertStringContainsString(
+            e(Lang::get('redminportal::messages.not_authorized_to_view_this_page')),
+            $this->response->getContent()
+        );
     }
 
     public function testDeleteWithoutTokenIsRejected()
