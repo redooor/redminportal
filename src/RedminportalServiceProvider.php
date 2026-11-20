@@ -51,6 +51,8 @@ class RedminportalServiceProvider extends ServiceProvider
         ], 'migrations');
 
         $router->middlewareGroup('redminsession', [
+            // Same cookie handling as the default web group, so both share one session cookie
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,

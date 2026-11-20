@@ -106,6 +106,27 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         );
     }
 
+    public function testAdminCookiesAreEncryptedLikeTheWebGroup()
+    {
+        $group = $this->app['router']->getMiddlewareGroups()['redminsession'];
+
+        $this->assertSame(\Illuminate\Cookie\Middleware\EncryptCookies::class, $group[0]);
+
+        // The array session driver sets no session cookie in tests; the token cookie goes through the same middleware
+        $this->call('GET', '/login');
+        $cookie = null;
+
+        foreach ($this->response->headers->getCookies() as $item) {
+            if ($item->getName() == 'XSRF-TOKEN') {
+                $cookie = $item;
+            }
+        }
+
+        $this->assertNotNull($cookie, 'The login page sets no token cookie');
+        $this->assertNotSame(40, strlen($cookie->getValue()), 'The cookie is not encrypted');
+        $this->assertNotFalse(@$this->app['encrypter']->decrypt($cookie->getValue(), false));
+    }
+
     public function testDeleteWithoutTokenIsRejected()
     {
         $this->app['env'] = 'production';
