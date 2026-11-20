@@ -11,4 +11,5 @@ return array(
     'user_error_cannot_grant' => '您無法授予自己沒有的權限。',
     'user_error_protected_account' => '您無法變更權限比自己高的帳號。',
     'group_error_cannot_grant' => '您無法授予自己沒有的權限。',
+    'login_error_session_expired' => '您的工作階段已過期，請重新登入。',
 );

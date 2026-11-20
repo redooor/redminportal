@@ -45,6 +45,8 @@ Report text cells that start with `=`, `+`, `-` or `@` (or a tab or carriage ret
 
 `/api/tag` and `/api/tag/name` now need a signed-in, active user.
 
+A sign-in form left open until its session expired sends the user back to the sign-in page with a message instead of a "Page Expired" error.
+
 The admin routes now encrypt cookies like the default `web` group, so visiting the host's public pages no longer replaces the admin session cookie and signs the user out.
 
 `ezyang/htmlpurifier` is now a direct requirement (it was already installed through the spreadsheet package).

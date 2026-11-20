@@ -127,6 +127,26 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         $this->assertNotFalse(@$this->app['encrypter']->decrypt($cookie->getValue(), false));
     }
 
+    public function testExpiredLoginFormRedirectsToTheLoginPage()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $this->call('POST', '/login/login', ['_token' => 'expired', 'email' => 'peter@test.com', 'password' => 'test']);
+
+        $this->assertRedirectedTo('login');
+        $this->assertSessionHasErrors('invalid');
+        $this->assertTrue(Auth::guard('redminguard')->guest());
+    }
+
+    public function testOtherFormsWithoutTokenStillGetTheTokenMismatchResponse()
+    {
+        $this->app['env'] = 'production';
+
+        $this->call('POST', '/admin/pages/delete/1', ['_token' => 'expired']);
+        $this->assertResponseStatus(419);
+    }
+
     public function testDeleteWithoutTokenIsRejected()
     {
         $this->app['env'] = 'production';

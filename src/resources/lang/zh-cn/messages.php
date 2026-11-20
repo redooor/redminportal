@@ -11,4 +11,5 @@ return array(
     'user_error_cannot_grant' => '您无法授予自己没有的权限。',
     'user_error_protected_account' => '您无法更改权限比自己高的账号。',
     'group_error_cannot_grant' => '您无法授予自己没有的权限。',
+    'login_error_session_expired' => '您的会话已过期，请重新登录。',
 );

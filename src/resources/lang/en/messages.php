@@ -167,6 +167,8 @@ return array(
             . "If you don't see the category here, go back to the main product and save the changes first.",
     'user_authentication_error'
         => "We had a problem authenticating your access. Please try again.",
+    'login_error_session_expired'
+        => 'Your session expired. Please sign in again.',
     'login_error_too_many_attempts'
         => 'Too many login attempts. Try again in :seconds seconds.',
     'user_error_old_password_required'
