@@ -161,6 +161,37 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         $this->assertFalse(Auth::guard('redminguard')->check());
     }
 
+    public function testExpiredLoginFormRedirectsToTheLoginPage()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $this->call('POST', '/login/login', ['_token' => 'expired', 'email' => 'peter@test.com', 'password' => 'test']);
+
+        $this->assertRedirectedTo('login');
+        $this->assertSessionHasErrors('invalid');
+        $this->assertTrue(Auth::guard('redminguard')->guest());
+    }
+
+    public function testExpiredLoginPostSentAsJsonKeepsTheTokenMismatchResponse()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $body = json_encode(['_token' => 'expired', 'email' => 'peter@test.com', 'password' => 'test']);
+        $this->call('POST', '/login/login', [], [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => '*/*'], $body);
+
+        $this->assertResponseStatus(419);
+    }
+
+    public function testOtherFormsWithoutTokenStillGetTheTokenMismatchResponse()
+    {
+        $this->app['env'] = 'production';
+
+        $this->call('POST', '/admin/pages/delete/1', ['_token' => 'expired']);
+        $this->assertResponseStatus(419);
+    }
+
     public function testGetRoutesDoNotChangeData()
     {
         $offending = [];

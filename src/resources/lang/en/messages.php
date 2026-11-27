@@ -179,6 +179,8 @@ return array(
         => "We had a problem authenticating your access. Please try again.",
     'login_error_too_many_attempts'
         => 'Too many login attempts. Try again in :seconds seconds.',
+    'login_error_session_expired'
+        => "Your session expired. Please sign in again.",
     'user_error_old_password_required'
         => 'You need to provide your existing password to save any changes.',
     'warning_new_password_logout'
