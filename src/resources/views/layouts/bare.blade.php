@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>RedminPortal by Redooor</title>
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jquery-ui/themes/blitzer/jquery-ui.min.css') }}">
         <link rel="stylesheet" href="{{ URL::to('vendor/redooor/redminportal/css/jasny-bootstrap.css') }}">
@@ -37,6 +38,7 @@
         <script src="{{ URL::to('vendor/redooor/redminportal/js/bootstrap.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/datetimepicker/bootstrap-datetimepicker.min.js') }}"></script>
         <script src="{{ URL::to('vendor/redooor/redminportal/js/redmaterials.min.js') }}"></script>
+        <script src="{{ URL::to('vendor/redooor/redminportal/js/redmin-post.js') }}" defer></script>
 
         @section('footer')
         @show

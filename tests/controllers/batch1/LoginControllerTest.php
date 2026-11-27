@@ -13,7 +13,7 @@ class LoginControllerTest extends RedminBrowserTestCase
 
         $this->seed('RedminSeeder');
         
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
     }
     
     /**
@@ -39,7 +39,7 @@ class LoginControllerTest extends RedminBrowserTestCase
      */
     public function testLogout()
     {
-        $this->call('GET', '/logout');
+        $this->call('POST', '/logout');
         $this->assertRedirectedTo('/');
     }
     

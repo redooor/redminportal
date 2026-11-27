@@ -11,6 +11,8 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
     {
         parent::setUp();
 
+        $this->test_method = 'POST';
+
         $this->test_pages = [
             '/admin/products/delete-variant-json/1',
         ];
@@ -81,7 +83,7 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -129,7 +131,7 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }

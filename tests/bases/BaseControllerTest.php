@@ -17,7 +17,7 @@ class BaseControllerTest extends RedminBrowserTestCase
 
         $this->seed('RedminSeeder');
         
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
     }
     
     /**
@@ -86,6 +86,20 @@ class BaseControllerTest extends RedminBrowserTestCase
     }
     
     /**
+     * Test (Pass): a form saved without tags posts an empty tags field, which the app's
+     * ConvertEmptyStringsToNull middleware turns into null. That must not fail validation.
+     */
+    public function testStoreCreatePassWithEmptyTags()
+    {
+        $input = $this->input['create'];
+        $input['tags'] = null;
+
+        $this->call('POST', $this->page . '/store', $input);
+
+        $this->assertRedirectedTo($this->page);
+    }
+
+    /**
      * Test (Fail): access getEdit, return 404
      */
     public function testEditFail404()
@@ -131,7 +145,7 @@ class BaseControllerTest extends RedminBrowserTestCase
      */
     public function testDeleteFail()
     {
-        $this->call('GET', $this->page . '/delete/1');
+        $this->call('POST', $this->page . '/delete/1');
 
         $this->assertRedirectedTo('/');
         $this->assertSessionHasErrors();
@@ -144,7 +158,7 @@ class BaseControllerTest extends RedminBrowserTestCase
     {
         $this->testStoreCreatePass();
         
-        $this->call('GET', $this->page . '/delete/1');
+        $this->call('POST', $this->page . '/delete/1');
 
         $this->assertResponseStatus(302); // Redirected
     }

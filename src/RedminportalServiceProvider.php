@@ -51,13 +51,35 @@ class RedminportalServiceProvider extends ServiceProvider
         ], 'migrations');
 
         $router->middlewareGroup('redminsession', [
+            // Same cookie handling as the default web group, so both share one session cookie
+            static::cookieEncrypter(),
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
+            \Redooor\Redminportal\App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
         $router->aliasMiddleware('redminauth', \Redooor\Redminportal\App\Http\Middleware\Authenticate::class);
+        $router->aliasMiddleware('redminuser', \Redooor\Redminportal\App\Http\Middleware\AuthenticateUser::class);
+        $router->aliasMiddleware('redminfingerprint', \Redooor\Redminportal\App\Http\Middleware\EnsureSessionFingerprint::class);
+    }
+
+    /**
+     * The middleware that encrypts cookies for the admin routes. A host application normally
+     * has its own App\Http\Middleware\EncryptCookies with a list of cookies that stay plain
+     * text. Use it when present so both route groups follow the same rules.
+     *
+     * @param  string  $host  Class name of the host's middleware
+     * @return string
+     */
+    public static function cookieEncrypter($host = 'App\\Http\\Middleware\\EncryptCookies')
+    {
+        if (class_exists($host) && is_subclass_of($host, \Illuminate\Cookie\Middleware\EncryptCookies::class)) {
+            return $host;
+        }
+
+        return \Illuminate\Cookie\Middleware\EncryptCookies::class;
     }
 
     /**
@@ -106,12 +128,14 @@ class RedminportalServiceProvider extends ServiceProvider
         
         // Register all config files
         $this->registerResources('image', 'redminportal::image');
+        $this->registerResources('media', 'redminportal::media');
         $this->registerResources('menu', 'redminportal::menu');
         $this->registerResources('translation', 'redminportal::translation');
         $this->registerResources('tinymce', 'redminportal::tinymce');
         $this->registerResources('pagination', 'redminportal::pagination');
         $this->registerResources('permissions', 'redminportal::permissions');
         $this->registerResources('payment_statuses', 'redminportal::payment_statuses');
+        $this->registerResources('password', 'redminportal::password');
         
         // Change Authentication model
         $this->mergeAuthConfig();

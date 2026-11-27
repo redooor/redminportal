@@ -4,7 +4,9 @@ use Redooor\Redminportal\App\Http\Traits\DeleterController;
 use Redooor\Redminportal\App\Models\User;
 use Redooor\Redminportal\App\Models\UserPricelist;
 use Redooor\Redminportal\App\Models\Pricelist;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 
 class PurchaseController extends Controller
@@ -12,12 +14,30 @@ class PurchaseController extends Controller
     protected $model;
     protected $perpage;
     
-    use DeleterController;
+    use DeleterController {
+        getDelete as protected deletePurchase;
+    }
     
     public function __construct(UserPricelist $model)
     {
         $this->model = $model;
         $this->perpage = config('redminportal::pagination.size');
+    }
+
+    /**
+     * Delete a purchase only when the user may also delete orders.
+     */
+    public function getDelete($sid)
+    {
+        $user = Auth::guard('redminguard')->user();
+
+        if ($user == null || ! $user->hasAccess(Request::create('admin/orders/delete/' . $sid, 'POST'))) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('deleteError', trans('redminportal::messages.purchase_error_delete_no_orders_permission'));
+            return redirect()->back()->withErrors($errors);
+        }
+
+        return $this->deletePurchase($sid);
     }
     
     public function getIndex()
@@ -69,6 +89,15 @@ class PurchaseController extends Controller
 
     public function postStore()
     {
+        // Purchases are rows of the orders table, so adding one also needs permission to add an order
+        $user = Auth::guard('redminguard')->user();
+
+        if ($user == null || ! $user->hasAccess(Request::create('admin/orders/store', 'POST'))) {
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add('createError', trans('redminportal::messages.purchase_error_create_no_orders_permission'));
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
         $sid = Input::get('id');
 
         $rules = array(

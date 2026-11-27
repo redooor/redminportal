@@ -164,7 +164,7 @@ class ModuleController extends Controller
             'short_description' => 'required',
             'sku'               => 'required|alpha_dash|unique:modules,sku' . (isset($sid) ? ',' . $sid : ''),
             'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
+            'tags'              => 'nullable|regex:/^[a-z,0-9 -]+$/i',
         );
         
         $messages = [
@@ -352,7 +352,7 @@ class ModuleController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Module::class);
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;

@@ -10,11 +10,11 @@
         </tr>
         @foreach ($data as $item)
             <tr>
-                <td>{{ str_replace(',', '.', $item->email) }}</td>
-                <td>{{ str_replace(',', '.', $item->first_name) }}</td>
-                <td>{{ str_replace(',', '.', $item->last_name) }}</td>
+                <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($item->email) }}</td>
+                <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($item->first_name) }}</td>
+                <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($item->last_name) }}</td>
                 <td>@if($item->active){{ 'Yes' }}@else{{ 'No' }}@endif</td>
-                <td>{{ str_replace(',', '.', $item->updated_at) }}</td>
+                <td>{{ \Redooor\Redminportal\App\Helpers\RHelper::exportCell($item->updated_at) }}</td>
             </tr>
         @endforeach
     </table>

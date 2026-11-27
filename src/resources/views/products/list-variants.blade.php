@@ -15,7 +15,7 @@
             <div class="media-body">
                 <div class="action-buttons pull-right">
                     <a class="btn btn-grey btn-sm edit-product-variant" href="{{ url('admin/products/edit-variant/' . $variantParent->id . '/' . $variant->id) }}">Edit</a>
-                    <a class="btn btn-danger btn-sm delete-product-variant" href="{{ url('admin/products/delete-variant-json/' . $variant->id) }}">Delete</a>
+                    <a class="btn btn-danger btn-sm delete-product-variant" href="{{ url('admin/products/delete-variant-json/' . $variant->id) }}" data-method="post">Delete</a>
                 </div>
                 <h4 class="media-heading"><a class="view-product-variant" href="{{ url('admin/products/view-variant/' . $variant->id) }}">{{ $variant->name }}</a></h4>
                 <p>Price: <strong>{{ $variant->price }}</strong></p>

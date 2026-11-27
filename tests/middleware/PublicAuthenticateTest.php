@@ -13,16 +13,14 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         
         $this->test_pages = [
             'login',
-            'login/unauthorized',
-            'api/tag',
-            'api/tag/name'
+            'login/unauthorized'
         ];
         
-        $this->test_redirects = [
+        $this->test_redirects = [];
+
+        $this->test_posts = [
             'logout' => '/',
         ];
-        
-        $this->test_posts = [];
     }
     
     /**
@@ -48,7 +46,7 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         // This part is different from parent
         $this->runThroughAllPagesAllowedAccess();
@@ -70,7 +68,7 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -91,7 +89,7 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -114,8 +112,33 @@ class PublicAuthenticateTest extends BaseAuthenticateTest
         $this->user->groups()->save($deny_group_3);
         $this->user->groups()->save($deny_group_4);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
+    }
+
+    /**
+     * Test (fail): the tag API is no longer publicly accessible
+     **/
+    public function testTagApiWithoutAuthenticationIsRedirected()
+    {
+        foreach (['api/tag', 'api/tag/name'] as $page) {
+            $this->call('GET', $page);
+            $this->assertResponseStatus(302);
+            $this->assertRedirectedTo('login');
+        }
+    }
+
+    /**
+     * Test (pass): any authenticated account may use the tag API, even without admin permission
+     **/
+    public function testTagApiWithAuthenticationIsAllowed()
+    {
+        $this->loginRedminUser($this->user->id);
+
+        foreach (['api/tag', 'api/tag/name'] as $page) {
+            $this->call('GET', $page);
+            $this->assertResponseStatus(200);
+        }
     }
 }

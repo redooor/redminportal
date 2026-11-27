@@ -93,7 +93,7 @@
                             <ul class="dropdown-menu">
                                 <li class="dropdown-header">Change Status</li>
                                 @foreach ($payment_statuses as $key => $value)
-                                <li><a href="{{ url('admin/orders/update/status/' . $order->id . '/' . $key) }}">{{ $value }}</a></li>
+                                <li><a href="{{ url('admin/orders/update/status/' . $order->id . '/' . $key) }}" data-method="post">{{ $value }}</a></li>
                                 @endforeach
                             </ul>
                         </div>

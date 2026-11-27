@@ -113,7 +113,7 @@ class MediaController extends Controller
             'short_description' => 'required',
             'sku'               => 'required|alpha_dash|unique:medias,sku' . (isset($sid) ? ',' . $sid : ''),
             'category_id'       => 'required|numeric|min:1',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
+            'tags'              => 'nullable|regex:/^[a-z,0-9 -]+$/i',
         );
         
         $messages = [
@@ -309,7 +309,7 @@ class MediaController extends Controller
     
     public function getImgremove($sid)
     {
-        $image = Image::find($sid);
+        $image = $this->findOwnedImage($sid, Media::class);
 
         if ($image == null) {
             $errors = new \Illuminate\Support\MessageBag;
