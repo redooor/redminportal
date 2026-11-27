@@ -192,6 +192,20 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         $this->assertResponseStatus(419);
     }
 
+    public function testSignedOutAjaxRequestGetsTheNotAuthorizedPage()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $response = $this->call('GET', '/admin/pages', [], [], [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+
+        $response->assertOk();
+        $this->assertStringContainsString(
+            e(trans('redminportal::messages.not_authorized_to_view_this_page')),
+            $response->getContent()
+        );
+    }
+
     public function testGetRoutesDoNotChangeData()
     {
         $offending = [];
