@@ -18,24 +18,12 @@
         </testsuite>
         <testsuite name="suite3">
             <directory suffix=".php">./tests/models</directory>
+            <directory suffix=".php">./tests/database</directory>
         </testsuite>
         <testsuite name="suite4">
             <directory suffix=".php">./tests/middleware</directory>
             <directory suffix=".php">./tests/relationships</directory>
             <directory suffix=".php">./tests/ui</directory>
-        </testsuite>
-        <testsuite name="suite5">
-            <directory suffix=".php">./tests/database</directory>
-            <file>./tests/ConfirmDeleteMarkupTest.php</file>
-            <file>./tests/CopyLinkMarkupTest.php</file>
-            <file>./tests/CsrfFormsMarkupTest.php</file>
-            <file>./tests/ImageLightboxMarkupTest.php</file>
-            <file>./tests/ListActionLinksMarkupTest.php</file>
-            <file>./tests/ListViewMarkupTest.php</file>
-            <file>./tests/ModalMarkupTest.php</file>
-            <file>./tests/OrderRevisionModalMarkupTest.php</file>
-            <file>./tests/PlainBladeFormsMarkupTest.php</file>
-            <file>./tests/SessionCookieEncryptionTest.php</file>
         </testsuite>
     </testsuites>
     <php>

@@ -10,7 +10,7 @@ class PlainBladeFormsMarkupTest extends TestCase
     private function views()
     {
         $files = [];
-        $views = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(__DIR__) . '/src/resources/views'));
+        $views = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(__DIR__, 2) . '/src/resources/views'));
 
         foreach ($views as $view) {
             if ($view->isFile() && substr($view->getFilename(), -10) === '.blade.php') {
@@ -30,7 +30,7 @@ class PlainBladeFormsMarkupTest extends TestCase
 
         foreach ($views as $view) {
             if (preg_match('/\b(?:Form|HTML|Html)::/', file_get_contents($view))) {
-                $offenders[] = str_replace(dirname(__DIR__) . '/src/resources/views/', '', $view);
+                $offenders[] = str_replace(dirname(__DIR__, 2) . '/src/resources/views/', '', $view);
             }
         }
 
@@ -41,7 +41,7 @@ class PlainBladeFormsMarkupTest extends TestCase
     public function testEveryFormViewUsesTheTokenAndOldInput()
     {
         foreach (['mailinglists/create', 'mailinglists/edit', 'users/login', 'products/edit'] as $name) {
-            $source = file_get_contents(dirname(__DIR__) . '/src/resources/views/' . $name . '.blade.php');
+            $source = file_get_contents(dirname(__DIR__, 2) . '/src/resources/views/' . $name . '.blade.php');
 
             $this->assertStringContainsString('@csrf', $source, $name);
             $this->assertStringContainsString('old(', $source, $name);

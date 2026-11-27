@@ -10,9 +10,9 @@ class ImageLightboxMarkupTest extends TestCase
     public function testEveryViewImageLinkOpensTheLightbox()
     {
         $views = array_merge(
-            glob(dirname(__DIR__) . '/src/resources/views/*/edit*.blade.php'),
-            glob(dirname(__DIR__) . '/src/resources/views/partials/uploaded-images.blade.php'),
-            glob(dirname(__DIR__) . '/src/resources/views/partials/image-gallery.blade.php')
+            glob(dirname(__DIR__, 2) . '/src/resources/views/*/edit*.blade.php'),
+            glob(dirname(__DIR__, 2) . '/src/resources/views/partials/uploaded-images.blade.php'),
+            glob(dirname(__DIR__, 2) . '/src/resources/views/partials/image-gallery.blade.php')
         );
         $found = 0;
 
@@ -37,7 +37,7 @@ class ImageLightboxMarkupTest extends TestCase
 
     public function testLayoutProvidesTheLightboxModalAndScript()
     {
-        $layout = file_get_contents(dirname(__DIR__) . '/src/resources/views/layouts/master.blade.php');
+        $layout = file_get_contents(dirname(__DIR__, 2) . '/src/resources/views/layouts/master.blade.php');
 
         foreach (['id="lightbox-modal"', 'id="lightbox-image"', 'id="lightbox-title"', 'id="lightbox-previous"', 'id="lightbox-next"', 'redmin-lightbox.min.js'] as $needle) {
             $this->assertStringContainsString($needle, $layout);

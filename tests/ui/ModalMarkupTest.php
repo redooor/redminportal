@@ -9,7 +9,7 @@ class ModalMarkupTest extends TestCase
 {
     public function testEveryModalCanBeClosedWithEscape()
     {
-        $views = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(__DIR__) . '/src/resources/views'));
+        $views = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(__DIR__, 2) . '/src/resources/views'));
         $found = 0;
 
         foreach ($views as $view) {

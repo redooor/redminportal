@@ -10,7 +10,7 @@ class ListViewMarkupTest extends TestCase
 {
     public function testEveryListTableIsResponsiveWithUnclippedRowMenus()
     {
-        $views = glob(dirname(__DIR__) . '/src/resources/views/*/view.blade.php');
+        $views = glob(dirname(__DIR__, 2) . '/src/resources/views/*/view.blade.php');
 
         $this->assertNotEmpty($views);
 

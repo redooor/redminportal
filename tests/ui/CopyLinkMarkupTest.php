@@ -9,7 +9,7 @@ class CopyLinkMarkupTest extends TestCase
 {
     private function root()
     {
-        return dirname(__DIR__) . '/src/resources';
+        return dirname(__DIR__, 2) . '/src/resources';
     }
 
     public function testEveryCopyLinkCarriesItsMessages()
