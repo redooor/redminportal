@@ -83,7 +83,7 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
      */
     public function testTraversalNameStaysInsideModelFolder()
     {
-        $result = $this->upload('../../escape.mp3', '../../escape.mp3', 'ID3' . str_repeat('A', 64));
+        $result = $this->upload('../../escape.mp3', '../../escape.mp3', $this->audioContent(str_repeat('A', 64)));
 
         $this->assertSame(1, $result['code'], $result['message']);
         $this->assertFileExists($this->mediaFolder . '/escape.mp3');
@@ -114,7 +114,7 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
      */
     public function testTwoChunkUploadAssemblesFile()
     {
-        $this->prepareUpload('chunked.mp3', 'chunked.mp3', 'hello ', 0, 2);
+        $this->prepareUpload('chunked.mp3', 'chunked.mp3', $this->audioContent('hello '), 0, 2);
         $result = $this->callUpload('chunked.mp3', 0, 2);
 
         $this->assertSame(1, $result['code'], $result['message']);
@@ -125,7 +125,7 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
 
         $this->assertSame(1, $result['code'], $result['message']);
         $this->assertFileExists($this->mediaFolder . '/chunked.mp3');
-        $this->assertSame('hello world', file_get_contents($this->mediaFolder . '/chunked.mp3'));
+        $this->assertSame($this->audioContent('hello world'), file_get_contents($this->mediaFolder . '/chunked.mp3'));
         $this->assertFileDoesNotExist($this->tmpFolder . '/chunked.mp3.part');
     }
 
@@ -229,7 +229,7 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
         $this->assertSame(1, $first['code']);
         $this->assertFileExists($this->tmpFolder . '/first.mp3.part');
 
-        $second = $this->upload('second.mp3', 'second.mp3', 'xyz', 0, 1);
+        $second = $this->upload('second.mp3', 'second.mp3', $this->audioContent('xyz'), 0, 1);
         $this->assertSame(1, $second['code']);
 
         $this->assertFileExists($this->tmpFolder . '/first.mp3.part');
@@ -269,12 +269,131 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
             $media->save();
         }
 
-        $result = $this->upload('sibling.mp3', 'sibling.mp3', 'ID3' . str_repeat('A', 64), 0, 1, 12);
+        $result = $this->upload('sibling.mp3', 'sibling.mp3', $this->audioContent(str_repeat('A', 64)), 0, 1, 12);
 
         $this->assertSame(1, $result['code'], $result['message']);
         $this->assertFileExists($folder12 . '/sibling.mp3');
         $this->assertDirectoryExists($folder120);
         $this->assertFileExists($folder120 . '/keep.mp3');
+    }
+
+    /**
+     * Test (Fail): HTML bytes named as a PDF are rejected without replacing the media.
+     */
+    public function testHtmlBytesNamedPdfAreRejected()
+    {
+        $existingPath = $this->createExistingMediaFile();
+
+        $result = $this->upload('x.pdf', 'x.pdf', '<html><body>not a pdf</body></html>');
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('The file content does not match its type.', $result['message']);
+        $this->assertFileDoesNotExist($this->tmpFolder . '/x.pdf');
+        $this->assertFileDoesNotExist($this->mediaFolder . '/x.pdf');
+        $this->assertSame('existing.pdf', Media::find($this->media->id)->path);
+        $this->assertSame('existing', file_get_contents($existingPath));
+    }
+
+    /**
+     * Test (Fail): SVG bytes named as a PDF are rejected without replacing the media.
+     */
+    public function testSvgBytesNamedPdfAreRejected()
+    {
+        $existingPath = $this->createExistingMediaFile();
+
+        $result = $this->upload('vector.pdf', 'vector.pdf', '<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('The file content does not match its type.', $result['message']);
+        $this->assertFileDoesNotExist($this->tmpFolder . '/vector.pdf');
+        $this->assertFileDoesNotExist($this->mediaFolder . '/vector.pdf');
+        $this->assertSame('existing.pdf', Media::find($this->media->id)->path);
+        $this->assertSame('existing', file_get_contents($existingPath));
+    }
+
+    /**
+     * Test (Fail): PDF bytes with a JPG extension are rejected.
+     */
+    public function testPdfBytesNamedJpgAreRejected()
+    {
+        $existingPath = $this->createExistingMediaFile();
+
+        $result = $this->upload('x.jpg', 'x.jpg', $this->pdfContent());
+
+        $this->assertSame(0, $result['code']);
+        $this->assertSame('The file content does not match its type.', $result['message']);
+        $this->assertFileDoesNotExist($this->tmpFolder . '/x.jpg');
+        $this->assertFileDoesNotExist($this->mediaFolder . '/x.jpg');
+        $this->assertSame('existing.pdf', Media::find($this->media->id)->path);
+        $this->assertSame('existing', file_get_contents($existingPath));
+    }
+
+    /**
+     * Test (Pass): real PDF, PNG and ZIP files are accepted.
+     */
+    public function testRealPdfPngAndZipFilesAreAccepted()
+    {
+        $files = array(
+            array('real.pdf', $this->pdfContent()),
+            array('real.png', $this->pngContent()),
+            array('real.zip', $this->zipContent()),
+        );
+
+        foreach ($files as $file) {
+            $result = $this->upload($file[0], $file[0], $file[1], 0, 1);
+
+            $this->assertSame(1, $result['code'], $result['message']);
+            $this->assertFileExists($this->mediaFolder . '/' . $file[0]);
+            $this->assertSame($file[0], Media::find($this->media->id)->path);
+        }
+    }
+
+    /**
+     * Create a media file that must survive a rejected upload.
+     */
+    private function createExistingMediaFile()
+    {
+        if (! is_dir($this->mediaFolder)) {
+            mkdir($this->mediaFolder, 0777, true);
+        }
+
+        $path = $this->mediaFolder . '/existing.pdf';
+        file_put_contents($path, 'existing');
+
+        $this->media->path = 'existing.pdf';
+        $this->media->save();
+
+        return $path;
+    }
+
+    /**
+     * Prefix content with an MP3 frame header so the detected type is audio.
+     */
+    private function audioContent($content = '')
+    {
+        return "\xFF\xFB\x90\x64" . $content;
+    }
+
+    private function pdfContent()
+    {
+        return "%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n"
+            . "2 0 obj\n<< /Type /Pages /Kids [] /Count 0 >>\nendobj\n"
+            . "trailer\n<< /Root 1 0 R >>\n%%EOF\n";
+    }
+
+    private function pngContent()
+    {
+        return base64_decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='
+        );
+    }
+
+    private function zipContent()
+    {
+        return base64_decode(
+            'UEsDBBQAAAAAAEV3c12GphA2BQAAAAUAAAAFAAAAYS50eHRoZWxsb1BLAQIUAxQAAAAAAEV3c12GphA2'
+            . 'BQAAAAUAAAAFAAAAAAAAAAAAAACAAQAAAABhLnR4dFBLBQYAAAAAAQABADMAAAAoAAAAAAA='
+        );
     }
 
     /**
