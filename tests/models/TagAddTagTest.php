@@ -74,7 +74,7 @@ class TagAddTagTest extends BaseModelTest
     public function testCommaListThroughPageControllerSkipsBlankTags()
     {
         $this->seed(RedminSeeder::class);
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $response = $this->call('POST', '/admin/pages/store', array(
             'title' => 'Comma tags page',

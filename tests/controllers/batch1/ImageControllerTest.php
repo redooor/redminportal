@@ -17,7 +17,7 @@ class ImageControllerTest extends RedminBrowserTestCase
 
         $this->seed('RedminSeeder');
         
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $this->page = '/admin/images';
     }

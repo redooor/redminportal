@@ -93,7 +93,7 @@ class PurchaseControllerTest extends BaseControllerTest
         $user->save();
         $user->groups()->save($group);
 
-        Auth::guard('redminguard')->loginUsingId($user->id);
+        $this->loginRedminUser($user->id);
     }
 
     /**

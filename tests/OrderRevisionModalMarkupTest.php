@@ -14,7 +14,7 @@ class OrderRevisionModalMarkupTest extends RedminBrowserTestCase
         parent::setUp();
 
         $this->seed(RedminSeeder::class);
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         Order::flushEventListeners();
         Order::boot();

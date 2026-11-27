@@ -142,7 +142,7 @@ class SessionRevocationTest extends RedminBrowserTestCase
         $user = $this->user->fresh();
         $oldFingerprint = hash('sha256', $user->password);
 
-        Auth::guard('redminguard')->loginUsingId($user->id);
+        $this->loginRedminUser($user->id);
 
         $this->call('GET', '/admin/dashboard');
 
@@ -150,6 +150,108 @@ class SessionRevocationTest extends RedminBrowserTestCase
         $this->assertSessionHas('redmin_password_fingerprint', $oldFingerprint);
 
         $user->password = Hash::make('changed-from-another-session');
+        $user->save();
+
+        Auth::forgetGuards();
+
+        $this->call('GET', '/admin/dashboard');
+
+        $this->assertRedirectedTo('login');
+        $this->assertTrue(Auth::guard('redminguard')->guest());
+    }
+
+    /**
+     * Test (Fail): an authenticated session without a fingerprint must sign in again.
+     */
+    public function testSessionWithoutFingerprintIsSignedOut()
+    {
+        $this->loginRedminUser($this->user->id);
+
+        $this->app['session']->forget('redmin_fingerprint_user');
+        $this->app['session']->forget('redmin_password_fingerprint');
+        Auth::forgetGuards();
+
+        $this->call('GET', '/admin/dashboard');
+
+        $this->assertRedirectedTo('login');
+        $this->assertTrue(Auth::guard('redminguard')->guest());
+        $this->response->assertSessionMissing('redmin_password_fingerprint');
+    }
+
+    /**
+     * Test (Fail): a session fingerprinted for another account must sign in again.
+     */
+    public function testSessionFingerprintedForAnotherUserIsSignedOut()
+    {
+        $other = new User;
+        $other->email = 'other@example.com';
+        $other->password = Hash::make('other-password');
+        $other->first_name = 'Other';
+        $other->last_name = 'User';
+        $other->activated = 1;
+        $other->save();
+
+        $this->loginRedminUser($this->user->id);
+
+        $this->app['session']->put('redmin_fingerprint_user', $other->id);
+        $this->app['session']->put('redmin_password_fingerprint', hash('sha256', $other->password));
+        Auth::forgetGuards();
+
+        $this->call('GET', '/admin/dashboard');
+
+        $this->assertRedirectedTo('login');
+        $this->assertTrue(Auth::guard('redminguard')->guest());
+    }
+
+    /**
+     * Test (Fail): a session without a fingerprint is signed out for ajax requests too.
+     */
+    public function testSessionWithoutFingerprintIsSignedOutForAjax()
+    {
+        $this->loginRedminUser($this->user->id);
+
+        $this->app['session']->forget('redmin_fingerprint_user');
+        $this->app['session']->forget('redmin_password_fingerprint');
+        Auth::forgetGuards();
+
+        $this->call('GET', '/admin/dashboard', [], [], [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+
+        $this->assertResponseOk();
+        $this->response->assertViewIs('redminportal::users.notauthorized');
+        $this->assertTrue(Auth::guard('redminguard')->guest());
+    }
+
+    /**
+     * Test (Pass): a normal sign-in still opens protected pages.
+     */
+    public function testNormalLoginStillWorks()
+    {
+        $this->login();
+
+        $this->assertTrue(Auth::guard('redminguard')->check());
+        $this->assertSessionHas('redmin_fingerprint_user', $this->user->id);
+        $this->assertSessionHas('redmin_password_fingerprint', hash('sha256', $this->user->password));
+
+        Auth::forgetGuards();
+
+        $this->call('GET', '/admin/dashboard');
+
+        $this->assertResponseOk();
+    }
+
+    /**
+     * Test (Fail): a password changed before the first request of an old session is not adopted.
+     */
+    public function testPasswordChangedBeforeFirstRequestAfterUpgradeIsSignedOut()
+    {
+        $user = $this->user->fresh();
+
+        $this->loginRedminUser($user->id);
+
+        $this->app['session']->forget('redmin_fingerprint_user');
+        $this->app['session']->forget('redmin_password_fingerprint');
+
+        $user->password = Hash::make('changed-before-upgrade-request');
         $user->save();
 
         Auth::forgetGuards();

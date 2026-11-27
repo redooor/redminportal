@@ -21,7 +21,7 @@ class MediaUploadFilesTest extends RedminBrowserTestCase
         parent::setUp();
 
         $this->seed(RedminSeeder::class);
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $this->category = new Category;
         $this->category->id = 800000 + random_int(1, 99999);

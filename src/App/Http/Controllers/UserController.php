@@ -244,6 +244,7 @@ class UserController extends Controller
         }
 
         // Save or Update
+        $password_changed = false;
         DB::beginTransaction();
 
         try {
@@ -252,6 +253,7 @@ class UserController extends Controller
             $password = Request::input('password');
             if ($password != '') {
                 $user->password = Hash::make($password);
+                $password_changed = true;
             }
 
             $user->first_name = Request::input('first_name');
@@ -283,6 +285,12 @@ class UserController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
+        }
+
+        // Keep the session of the user who changed their own password signed in
+        if ($password_changed && $actor->id == $user->id) {
+            Request::session()->put('redmin_fingerprint_user', $user->id);
+            Request::session()->put('redmin_password_fingerprint', hash('sha256', $user->password));
         }
 
         return redirect('admin/users');

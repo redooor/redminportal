@@ -22,7 +22,7 @@ class OrderRevisionsFragmentTest extends RedminBrowserTestCase
         parent::setUp();
 
         $this->seed(RedminSeeder::class);
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         Order::flushEventListeners();
         Order::boot();
@@ -404,7 +404,7 @@ class OrderRevisionsFragmentTest extends RedminBrowserTestCase
      */
     private function loginAs(User $user)
     {
-        Auth::guard('redminguard')->loginUsingId($user->id);
+        $this->loginRedminUser($user->id);
         Auth::forgetGuards();
     }
 }

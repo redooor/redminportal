@@ -1,8 +1,10 @@
 <?php namespace Redooor\Redminportal\Test;
 
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Redooor\Redminportal\App\Models\User;
 
 trait RedminTestTrait
 {
@@ -39,6 +41,50 @@ trait RedminTestTrait
         DB::disableQueryLog();
 
         $this->loadMigrationsFrom(realpath(__DIR__.'/../src/database/migrations'));
+    }
+
+    /**
+     * Sign in a redminguard user and record the password fingerprint for the session.
+     *
+     * @param mixed $user User model or user id
+     * @return \Redooor\Redminportal\App\Models\User|null
+     */
+    protected function loginRedminUser($user)
+    {
+        if (is_object($user)) {
+            $id = $user->getAuthIdentifier();
+        } else {
+            $id = $user;
+            $user = User::find($id);
+        }
+
+        Auth::guard('redminguard')->loginUsingId($id);
+
+        if ($user != null) {
+            $this->storeRedminFingerprint($user);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Store the current password fingerprint for a signed-in user.
+     *
+     * @param \Redooor\Redminportal\App\Models\User|null $user Defaults to the signed-in user
+     * @return void
+     */
+    protected function storeRedminFingerprint($user = null)
+    {
+        if ($user === null) {
+            $user = Auth::guard('redminguard')->user();
+        }
+
+        if ($user === null) {
+            return;
+        }
+
+        $this->app['session']->put('redmin_fingerprint_user', $user->id);
+        $this->app['session']->put('redmin_password_fingerprint', hash('sha256', $user->password));
     }
 
     /**

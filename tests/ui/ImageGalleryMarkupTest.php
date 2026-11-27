@@ -137,7 +137,7 @@ class ImageGalleryMarkupTest extends RedminBrowserTestCase
     private function renderGalleryAs(array $permissions, Page $page)
     {
         $this->user->groups()->save($this->group($permissions));
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
 
         return view('redminportal::partials.image-gallery', [
             'images' => $page->images,
@@ -149,7 +149,7 @@ class ImageGalleryMarkupTest extends RedminBrowserTestCase
 
     public function testImagePickerRendersMultipleInputOnCreateAndEditPages()
     {
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $category = $this->createCategory();
         $post = $this->createPost();
@@ -178,7 +178,7 @@ class ImageGalleryMarkupTest extends RedminBrowserTestCase
 
     public function testPickerTellsUserToReselectImagesAfterValidationErrors()
     {
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $clean = $this->call('GET', '/admin/pages/create')->getContent();
         $this->assertStringNotContainsString('were not kept', $clean);
@@ -192,7 +192,7 @@ class ImageGalleryMarkupTest extends RedminBrowserTestCase
 
     public function testGalleryShowsPrimaryBadgeAndHidesInvalidActions()
     {
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $post = $this->createPost();
         list($first, $second, $third) = $this->addImages($post);
@@ -226,7 +226,7 @@ class ImageGalleryMarkupTest extends RedminBrowserTestCase
 
     public function testBundleGalleryUsesItsLegacyImageDeleteRoute()
     {
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $bundle = $this->createBundle();
         list($first, $second) = $this->addImages($bundle);
