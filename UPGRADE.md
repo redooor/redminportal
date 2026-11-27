@@ -40,7 +40,7 @@ Category names, product names and the order builder labels are escaped. `Categor
 
 **Tag API.** `GET /api/tag` and `GET /api/tag/name` need a signed-in, active user (new `redminuser` middleware: no route permission is required, so anyone editing content can use the tag field). Guests are redirected to `login`. If a public front end reads these URLs, provide your own public endpoint with the tags you want to expose.
 
-**Cookies.** The `redminsession` group now starts with `Illuminate\Cookie\Middleware\EncryptCookies`, as in the default `web` group, so admin pages and the host's public pages share one session cookie (before, visiting a public page replaced the admin session cookie and signed the user out). If your own `web` group does not encrypt cookies, add `EncryptCookies` to it.
+**Cookies.** The `redminsession` group now starts with your `App\Http\Middleware\EncryptCookies` (or `Illuminate\Cookie\Middleware\EncryptCookies` when your application has none), as in the default `web` group. Admin pages and the host's public pages now share one session cookie (before, visiting a public page replaced the admin session cookie and signed the user out), and cookies you leave unencrypted in your own class stay plain text in the admin too. If your own `web` group does not encrypt cookies, add `EncryptCookies` to it.
 
 ## Upgrading to v0.58
 

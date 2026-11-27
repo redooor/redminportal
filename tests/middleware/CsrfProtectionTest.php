@@ -110,7 +110,7 @@ class CsrfProtectionTest extends RedminBrowserTestCase
     {
         $group = $this->app['router']->getMiddlewareGroups()['redminsession'];
 
-        $this->assertSame(\Illuminate\Cookie\Middleware\EncryptCookies::class, $group[0]);
+        $this->assertTrue(is_a($group[0], \Illuminate\Cookie\Middleware\EncryptCookies::class, true));
 
         // The array session driver sets no session cookie in tests; the token cookie goes through the same middleware
         $this->call('GET', '/login');
@@ -137,6 +137,34 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         $this->assertRedirectedTo('login');
         $this->assertSessionHasErrors('invalid');
         $this->assertTrue(Auth::guard('redminguard')->guest());
+    }
+
+    public function testExpiredLoginPostSentAsJsonKeepsTheTokenMismatchResponse()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $body = json_encode(['_token' => 'expired', 'email' => 'peter@test.com', 'password' => 'test']);
+        $this->call('POST', '/login/login', [], [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => '*/*'], $body);
+
+        $this->assertResponseStatus(419);
+    }
+
+    public function testAdminCookiesFollowTheHostEncryptionRules()
+    {
+        $this->assertSame(
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Redooor\Redminportal\RedminportalServiceProvider::cookieEncrypter()
+        );
+
+        // A host application keeps its own EncryptCookies with cookies that stay plain text
+        class_alias(HostEncryptCookiesStub::class, 'App\\Http\\Middleware\\EncryptCookies');
+
+        $this->assertSame(
+            'App\\Http\\Middleware\\EncryptCookies',
+            \Redooor\Redminportal\RedminportalServiceProvider::cookieEncrypter()
+        );
+        $this->assertTrue(HostEncryptCookiesStub::isPlain('locale'));
     }
 
     public function testOtherFormsWithoutTokenStillGetTheTokenMismatchResponse()
@@ -227,5 +255,15 @@ class CsrfProtectionTest extends RedminBrowserTestCase
             $offending,
             'These GET routes still change data: ' . implode(', ', $offending)
         );
+    }
+}
+
+class HostEncryptCookiesStub extends \Illuminate\Cookie\Middleware\EncryptCookies
+{
+    protected $except = ['locale'];
+
+    public static function isPlain($name)
+    {
+        return (new self(app('encrypter')))->isDisabled($name);
     }
 }

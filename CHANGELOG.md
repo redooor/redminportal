@@ -47,7 +47,7 @@ Report text cells that start with `=`, `+`, `-` or `@` (or a tab or carriage ret
 
 A sign-in form left open until its session expired sends the user back to the sign-in page with a message instead of a "Page Expired" error.
 
-The admin routes now encrypt cookies like the default `web` group, so visiting the host's public pages no longer replaces the admin session cookie and signs the user out.
+The admin routes now encrypt cookies like the default `web` group, so visiting the host's public pages no longer replaces the admin session cookie and signs the user out, and they use the host's `App\Http\Middleware\EncryptCookies` (with its list of plain text cookies) when it exists.
 
 Forms for modules, medias, products and bundles can be saved with the tags field left empty on hosts that convert empty strings to `null` (the default Laravel `ConvertEmptyStringsToNull` middleware); the tags rule is now `nullable`.
 

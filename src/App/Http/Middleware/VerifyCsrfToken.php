@@ -21,7 +21,7 @@ class VerifyCsrfToken extends BaseVerifyCsrfToken
         try {
             return parent::handle($request, $next);
         } catch (TokenMismatchException $e) {
-            if ($request->is('login/login') && ! $request->expectsJson()) {
+            if ($request->is('login/login') && ! $request->expectsJson() && ! $request->isJson()) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add('invalid', trans('redminportal::messages.login_error_session_expired'));
 

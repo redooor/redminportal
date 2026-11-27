@@ -52,7 +52,7 @@ class RedminportalServiceProvider extends ServiceProvider
 
         $router->middlewareGroup('redminsession', [
             // Same cookie handling as the default web group, so both share one session cookie
-            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            static::cookieEncrypter(),
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Redooor\Redminportal\App\Http\Middleware\VerifyCsrfToken::class,
@@ -63,6 +63,24 @@ class RedminportalServiceProvider extends ServiceProvider
         $router->aliasMiddleware('redminauth', \Redooor\Redminportal\App\Http\Middleware\Authenticate::class);
         $router->aliasMiddleware('redminuser', \Redooor\Redminportal\App\Http\Middleware\AuthenticateUser::class);
         $router->aliasMiddleware('redminfingerprint', \Redooor\Redminportal\App\Http\Middleware\EnsureSessionFingerprint::class);
+    }
+
+    /**
+     * The middleware that encrypts cookies for the admin routes. A host application normally
+     * has its own App\Http\Middleware\EncryptCookies with a list of cookies that stay plain
+     * text. Use it when present so both route groups follow the same rules.
+     *
+     * @return string
+     */
+    public static function cookieEncrypter()
+    {
+        $host = 'App\\Http\\Middleware\\EncryptCookies';
+
+        if (class_exists($host) && is_subclass_of($host, \Illuminate\Cookie\Middleware\EncryptCookies::class)) {
+            return $host;
+        }
+
+        return \Illuminate\Cookie\Middleware\EncryptCookies::class;
     }
 
     /**
