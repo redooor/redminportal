@@ -117,9 +117,23 @@ return array(
     'category_error_name_already_exists'
         => "The category cannot be added because there's an existing category with the same name.",
     'category_error_cannot_delete_in_use'
-        => "The category ':name' cannot be deleted because it is in use.",
+        => "The category ':name' cannot be deleted because it still contains :contents. Move or delete them first.",
     'category_error_cannot_delete_has_child'
         => "The category ':name' cannot be deleted because it has :children children categories.",
+    'category_content_bundles'
+        => ':count bundle|:count bundles',
+    'category_content_medias'
+        => ':count media|:count media',
+    'category_content_modules'
+        => ':count module|:count modules',
+    'category_content_pages'
+        => ':count page|:count pages',
+    'category_content_portfolios'
+        => ':count portfolio|:count portfolios',
+    'category_content_posts'
+        => ':count post|:count posts',
+    'category_content_products'
+        => ':count product|:count products',
     'error_find_no_such_record'
         => "Unable to find this record in the database. It may have been deleted.",
     'upload_error_failed_no_file_found'

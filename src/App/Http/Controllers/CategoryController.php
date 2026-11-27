@@ -184,6 +184,29 @@ class CategoryController extends Controller
             );
             return redirect()->back()->withErrors($errors);
         }
+
+        // Refuse to delete a category that still contains content
+        $contentCounts = $category->contentCounts();
+
+        if (! empty($contentCounts)) {
+            $contents = [];
+            foreach ($contentCounts as $kind => $count) {
+                $contents[] = Lang::choice(
+                    'redminportal::messages.category_content_' . $kind,
+                    $count
+                );
+            }
+
+            $errors = new \Illuminate\Support\MessageBag;
+            $errors->add(
+                'deleteError',
+                Lang::get(
+                    'redminportal::messages.category_error_cannot_delete_in_use',
+                    ['name' => $category->name, 'contents' => implode(', ', $contents)]
+                )
+            );
+            return redirect()->back()->withErrors($errors);
+        }
         
         // Delete the category
         $category->delete();
