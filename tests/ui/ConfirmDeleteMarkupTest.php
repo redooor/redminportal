@@ -10,7 +10,7 @@ class ConfirmDeleteMarkupTest extends TestCase
     private function views()
     {
         return array_filter(
-            glob(dirname(__DIR__) . '/src/resources/views/{,*/}*.blade.php', GLOB_BRACE),
+            glob(dirname(__DIR__, 2) . '/src/resources/views/{,*/}*.blade.php', GLOB_BRACE),
             function ($file) {
                 return basename(dirname($file)) !== 'layouts' && basename($file) !== 'confirm-delete.blade.php';
             }
@@ -19,7 +19,7 @@ class ConfirmDeleteMarkupTest extends TestCase
 
     public function testLayoutDoesNotRenderTheModalOnEveryPage()
     {
-        $layout = file_get_contents(dirname(__DIR__) . '/src/resources/views/layouts/master.blade.php');
+        $layout = file_get_contents(dirname(__DIR__, 2) . '/src/resources/views/layouts/master.blade.php');
 
         $this->assertStringNotContainsString('confirm-modal', $layout);
         $this->assertStringContainsString("@stack('modals')", $layout);
@@ -71,7 +71,7 @@ class ConfirmDeleteMarkupTest extends TestCase
 
     public function testLayoutsOfViewsWithTheModalRenderItsStacks()
     {
-        $viewsDir = dirname(__DIR__) . '/src/resources/views/';
+        $viewsDir = dirname(__DIR__, 2) . '/src/resources/views/';
 
         foreach ($this->views() as $view) {
             $source = file_get_contents($view);

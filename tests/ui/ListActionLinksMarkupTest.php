@@ -10,7 +10,7 @@ class ListActionLinksMarkupTest extends TestCase
 {
     public function testEveryListActionLinkIsWrappedInPermitted()
     {
-        $dir = dirname(__DIR__) . '/src/resources/views/';
+        $dir = dirname(__DIR__, 2) . '/src/resources/views/';
         $views = array_merge(glob($dir . '*/view.blade.php'), [$dir . 'categories/detail.blade.php', $dir . 'partials/html-view-nav-controls.blade.php']);
         $links = 0;
 
@@ -38,7 +38,7 @@ class ListActionLinksMarkupTest extends TestCase
 
     public function testOrderStatusChangeIsOnlyAMenuWhenUpdateIsPermitted()
     {
-        $source = file_get_contents(dirname(__DIR__) . '/src/resources/views/orders/view.blade.php');
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/resources/views/orders/view.blade.php');
 
         $this->assertStringContainsString("@permitted('admin/orders/update/status/'", $source);
     }

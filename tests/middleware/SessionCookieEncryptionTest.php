@@ -11,7 +11,7 @@ class SessionCookieEncryptionTest extends TestCase
 {
     public function testSessionGroupEncryptsCookiesBeforeStartingTheSession()
     {
-        $source = file_get_contents(dirname(__DIR__) . '/src/RedminportalServiceProvider.php');
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/RedminportalServiceProvider.php');
 
         preg_match("/middlewareGroup\('redminsession', \[(.*?)\]\)/s", $source, $group);
 

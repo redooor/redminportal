@@ -46,7 +46,7 @@ class OrderRevisionModalMarkupTest extends RedminBrowserTestCase
 
     public function testMasterLayoutLoadsTheFragmentScript()
     {
-        $layout = file_get_contents(dirname(__DIR__) . '/src/resources/views/layouts/master.blade.php');
+        $layout = file_get_contents(dirname(__DIR__, 2) . '/src/resources/views/layouts/master.blade.php');
 
         $this->assertStringContainsString('js/redmin-fragment.min.js', $layout);
     }

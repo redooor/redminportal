@@ -11,7 +11,7 @@ class CsrfFormsMarkupTest extends TestCase
     private function views()
     {
         $files = [];
-        $views = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(__DIR__) . '/src/resources/views'));
+        $views = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(__DIR__, 2) . '/src/resources/views'));
 
         foreach ($views as $view) {
             if ($view->isFile() && substr($view->getFilename(), -10) === '.blade.php') {
@@ -26,7 +26,7 @@ class CsrfFormsMarkupTest extends TestCase
 
     private function viewName($file)
     {
-        return str_replace(dirname(__DIR__) . '/src/resources/views/', '', $file);
+        return str_replace(dirname(__DIR__, 2) . '/src/resources/views/', '', $file);
     }
 
     private function postRoutes()
@@ -111,7 +111,7 @@ class CsrfFormsMarkupTest extends TestCase
     public function testLayoutsProvideTheTokenAndPostHandler()
     {
         foreach (['master', 'plain'] as $layout) {
-            $source = file_get_contents(dirname(__DIR__) . '/src/resources/views/layouts/' . $layout . '.blade.php');
+            $source = file_get_contents(dirname(__DIR__, 2) . '/src/resources/views/layouts/' . $layout . '.blade.php');
 
             $this->assertStringContainsString('<meta name="csrf-token" content="{{ csrf_token() }}">', $source, $layout . ' layout has no csrf-token meta tag');
             $this->assertStringContainsString("vendor/redooor/redminportal/js/redmin-post.min.js", $source, $layout . ' layout does not load redmin-post');
@@ -121,7 +121,7 @@ class CsrfFormsMarkupTest extends TestCase
 
     public function testMediaDurationIsPostedWithTheToken()
     {
-        $source = file_get_contents(dirname(__DIR__) . '/src/resources/views/medias/view.blade.php');
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/resources/views/medias/view.blade.php');
 
         $this->assertStringContainsString('$.post(url, { _token: window.redminCsrfToken() }', $source);
         $this->assertStringNotContainsString('$.get(url', $source);

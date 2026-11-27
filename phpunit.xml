@@ -8,15 +8,6 @@
          stopOnFailure="false"
 >
     <testsuites>
-        <testsuite name="Package Test Suite">
-            <directory suffix=".php">./tests/</directory>
-            <exclude>./tests/RedminTestCase.php</exclude>
-            <exclude>./tests/RedminBrowserTestCase.php</exclude>
-            <exclude>./tests/RedminTestTrait.php</exclude>
-            <exclude>./tests/bases/</exclude>
-            <exclude>./tests/dummy/</exclude>
-            <exclude>./tests/.gitkeep</exclude>
-        </testsuite>
         <testsuite name="suite1">
             <directory suffix=".php">./tests/api</directory>
             <directory suffix=".php">./tests/classes</directory>
@@ -27,6 +18,7 @@
         </testsuite>
         <testsuite name="suite3">
             <directory suffix=".php">./tests/models</directory>
+            <directory suffix=".php">./tests/database</directory>
         </testsuite>
         <testsuite name="suite4">
             <directory suffix=".php">./tests/middleware</directory>
