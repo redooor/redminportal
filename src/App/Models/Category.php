@@ -83,6 +83,26 @@ class Category extends Model
         return $this->belongsToMany('Redooor\Redminportal\App\Models\Coupon', 'coupon_category');
     }
 
+    /**
+     * Count the content that belongs directly to this category.
+     *
+     * @return array Relationship name => count, only kinds with records.
+     */
+    public function contentCounts(): array
+    {
+        $counts = [];
+
+        foreach (['bundles', 'medias', 'modules', 'pages', 'portfolios', 'posts', 'products'] as $relation) {
+            $count = $this->{$relation}()->count();
+
+            if ($count > 0) {
+                $counts[$relation] = $count;
+            }
+        }
+
+        return $counts;
+    }
+
     public static function getAllActiveOrdered()
     {
         return Category::where('active', '=', '1')->orderBy('order', 'desc')->orderBy('name')->get();

@@ -17,7 +17,7 @@ class CategoryImageUploadTest extends RedminBrowserTestCase
         parent::setUp();
 
         $this->seed(RedminSeeder::class);
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $this->uploadPath = sys_get_temp_dir() . '/redmin_category_images_' . uniqid() . '/';
         Config::set('redminportal::image.upload_path', $this->uploadPath);

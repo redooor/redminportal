@@ -15,7 +15,6 @@ return array(
     'promotions' => '促销管理',
     'news' => '新闻管理',
     'portfolios' => '作品管理',
-    'purchases' => '购买历史',
     'mailinglist' => '群发邮件',
     'coupons' => '优惠券管理'
 );

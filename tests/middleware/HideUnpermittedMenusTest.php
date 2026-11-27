@@ -38,7 +38,7 @@ class HideUnpermittedMenusTest extends RedminBrowserTestCase
     private function dashboardAs(array $permissions)
     {
         $this->user->groups()->save($this->group($permissions));
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
 
         $response = $this->call('GET', '/admin/dashboard');
         $response->assertStatus(200);
@@ -128,7 +128,7 @@ class HideUnpermittedMenusTest extends RedminBrowserTestCase
     public function testBreadcrumbDashboardLinkIsHiddenWithoutDashboardPermission()
     {
         $this->user->groups()->save($this->group(['admin.pages.view' => 1]));
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
 
         $response = $this->call('GET', '/admin/pages');
         $response->assertStatus(200);
@@ -139,7 +139,7 @@ class HideUnpermittedMenusTest extends RedminBrowserTestCase
     public function testDeniedParentKeepsPermittedChildrenAsPlainHeader()
     {
         $this->user->groups()->save($this->group(['admin.pages.view' => -1, 'admin.pages.update' => 1]));
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
 
         $menus = [[
             'name' => 'pages',

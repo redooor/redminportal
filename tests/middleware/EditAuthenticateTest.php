@@ -31,7 +31,6 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/posts/edit/1'            => 'admin/posts',
             'admin/products/edit/1'         => 'admin/products',
             'admin/promotions/edit/1'       => 'admin/promotions',
-            'admin/purchases/edit/1'        => 'admin/purchases',
             'admin/products/edit-variant/1/1' => 'admin/products',
         ];
         
@@ -89,7 +88,6 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/portfolios/edit/1'       => 'login/unauthorized',
             'admin/products/edit/1'         => 'login/unauthorized',
             'admin/products/create-variant/1' => 'login/unauthorized',
-            'admin/purchases/edit/1'        => 'login/unauthorized',
             'admin/reports'                 => 'login/unauthorized',
             'admin/users/edit/1'            => 'login/unauthorized',
             'admin/api/email'               => 'login/unauthorized',
@@ -104,7 +102,6 @@ class EditAuthenticateTest extends BaseAuthenticateTest
         
         $this->test_posts = [
             'admin/reports/mailinglist' => 'login/unauthorized',
-            'admin/reports/purchases'   => 'login/unauthorized',
             'admin/reports/orders'      => 'login/unauthorized',
             'admin/bundles/store'       => 'login/unauthorized',
             'admin/categories/store'    => 'login/unauthorized',
@@ -116,7 +113,6 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/orders/store'        => 'login/unauthorized',
             'admin/portfolios/store'    => 'login/unauthorized',
             'admin/products/store'      => 'login/unauthorized',
-            'admin/purchases/store'     => 'login/unauthorized',
             'admin/users/store'         => 'login/unauthorized',
             'admin/announcements/store' => 'admin/announcements/edit/1',
             'admin/coupons/store'       => 'admin/coupons/edit/1',
@@ -135,7 +131,7 @@ class EditAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -157,7 +153,6 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/orders/edit/1'           => 'admin/orders',
             'admin/portfolios/edit/1'       => 'admin/portfolios',
             'admin/products/edit/1'         => 'admin/products',
-            'admin/purchases/edit/1'        => 'admin/purchases',
             'admin/announcements/edit/1'   => 'login/unauthorized',
             'admin/coupons/edit/1'         => 'login/unauthorized',
             'admin/pages/edit/1'           => 'login/unauthorized',
@@ -167,7 +162,6 @@ class EditAuthenticateTest extends BaseAuthenticateTest
         
         $this->test_posts = [
             'admin/reports/mailinglist' => 'admin/mailinglists',
-            'admin/reports/purchases'   => 'admin/purchases',
             'admin/reports/orders'      => 'admin/orders',
             'admin/bundles/store'       => 'admin/bundles/edit/1',
             'admin/categories/store'    => 'admin/categories/edit/1',
@@ -179,7 +173,6 @@ class EditAuthenticateTest extends BaseAuthenticateTest
             'admin/orders/store'        => 'admin/orders/create',
             'admin/portfolios/store'    => 'admin/portfolios/edit/1',
             'admin/products/store'      => 'admin/products/edit/1',
-            'admin/purchases/store'     => 'admin/purchases/edit/1',
             'admin/users/store'         => 'admin/users/edit/1',
             'admin/announcements/store' => 'login/unauthorized',
             'admin/coupons/store'       => 'login/unauthorized',
@@ -199,7 +192,7 @@ class EditAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }

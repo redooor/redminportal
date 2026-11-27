@@ -21,7 +21,7 @@ class HomeControllerTest extends RedminBrowserTestCase
 
         $this->seed(RedminSeeder::class);
 
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
     }
 
     /**
@@ -43,7 +43,7 @@ class HomeControllerTest extends RedminBrowserTestCase
         $user->save();
         $user->groups()->save($group);
 
-        Auth::guard('redminguard')->loginUsingId($user->id);
+        $this->loginRedminUser($user->id);
     }
 
     public function testDashboardShowsCardsAndChartsForAdmin()

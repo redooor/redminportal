@@ -31,8 +31,6 @@ return array(
         => 'No memberships found.',
     'no_promotion_found'
         => 'No promotions found.',
-    'no_purchase_found'
-        => 'No purchases found.',
     'no_user_found'
         => 'No users found.',
     'no_bundle_found'
@@ -91,10 +89,6 @@ return array(
         => 'The image cannot be deleted at this time.',
     'error_image_not_found'
         => 'The image cannot be found because it does not exist or may belong to another record.',
-    'purchase_error_delete_no_orders_permission'
-        => 'You also need permission to delete orders.',
-    'purchase_error_create_no_orders_permission'
-        => "You also need permission to add orders.",
     'success_delete_record'
         => 'The record has been deleted successfully.',
     'error_delete_variant_already_ordered'
@@ -123,9 +117,23 @@ return array(
     'category_error_name_already_exists'
         => "The category cannot be added because there's an existing category with the same name.",
     'category_error_cannot_delete_in_use'
-        => "The category ':name' cannot be deleted because it is in use.",
+        => "The category ':name' cannot be deleted because it still contains :contents. Move or delete them first.",
     'category_error_cannot_delete_has_child'
         => "The category ':name' cannot be deleted because it has :children children categories.",
+    'category_content_bundles'
+        => ':count bundle|:count bundles',
+    'category_content_medias'
+        => ':count media|:count media',
+    'category_content_modules'
+        => ':count module|:count modules',
+    'category_content_pages'
+        => ':count page|:count pages',
+    'category_content_portfolios'
+        => ':count portfolio|:count portfolios',
+    'category_content_posts'
+        => ':count post|:count posts',
+    'category_content_products'
+        => ':count product|:count products',
     'error_find_no_such_record'
         => "Unable to find this record in the database. It may have been deleted.",
     'upload_error_failed_no_file_found'
@@ -140,6 +148,8 @@ return array(
         => "Failed to open output stream.",
     'upload_error_file_type_not_allowed'
         => "This file type is not allowed.",
+    'upload_error_file_content_type_not_allowed'
+        => "The file content does not match its type.",
     'upload_error_file_too_large'
         => "This file is too large.",
     'group_error_edit_no_group_found'
@@ -177,6 +187,8 @@ return array(
         => "We had a problem authenticating your access. Please try again.",
     'login_error_too_many_attempts'
         => 'Too many login attempts. Try again in :seconds seconds.',
+    'login_error_session_expired'
+        => "Your session expired. Please sign in again.",
     'user_error_old_password_required'
         => 'You need to provide your existing password to save any changes.',
     'warning_new_password_logout'

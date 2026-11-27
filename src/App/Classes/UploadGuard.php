@@ -92,6 +92,108 @@ class UploadGuard
     }
 
     /**
+     * Return the accepted content types for a media file name.
+     *
+     * @param string $fileName
+     * @return array
+     */
+    public static function allowedMimeTypes($fileName)
+    {
+        $extension = strtolower(pathinfo((string) $fileName, PATHINFO_EXTENSION));
+        $allowed = Config::get('redminportal::media.allowed_mimes');
+
+        if (! is_array($allowed)) {
+            // A published media.php replaces the package config as a whole, so a copy made
+            // before this key existed has no allowlist. Use the package default, not "allow nothing".
+            $defaults = require dirname(__DIR__, 2) . '/config/media.php';
+            $allowed = isset($defaults['allowed_mimes']) ? $defaults['allowed_mimes'] : array();
+        }
+
+        if ($extension == '' || ! is_array($allowed)
+            || ! isset($allowed[$extension]) || ! is_array($allowed[$extension])) {
+            return array();
+        }
+
+        return $allowed[$extension];
+    }
+
+    /**
+     * Check whether a detected content type is allowed for a media file name.
+     *
+     * @param string $fileName
+     * @param string $mimeType
+     * @return bool
+     */
+    public static function isAllowedMediaMime($fileName, $mimeType)
+    {
+        if (! is_string($mimeType)) {
+            return false;
+        }
+
+        $mimeType = strtolower(trim($mimeType));
+        $semicolon = strpos($mimeType, ';');
+
+        if ($semicolon !== false) {
+            $mimeType = trim(substr($mimeType, 0, $semicolon));
+        }
+
+        if ($mimeType == '') {
+            return false;
+        }
+
+        foreach (self::allowedMimeTypes($fileName) as $item) {
+            if (strtolower((string) $item) === $mimeType) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Detect the content type of a local file.
+     *
+     * @param string $path
+     * @return string|null
+     */
+    public static function detectMimeType($path)
+    {
+        if (! is_string($path) || $path == '' || ! is_file($path) || ! is_readable($path)) {
+            return null;
+        }
+
+        $mimeType = null;
+
+        if (function_exists('finfo_open')) {
+            $finfo = @finfo_open(FILEINFO_MIME_TYPE);
+
+            if ($finfo !== false) {
+                $mimeType = @finfo_file($finfo, $path);
+                @finfo_close($finfo);
+            }
+        }
+
+        if (! is_string($mimeType) || $mimeType == '') {
+            if (function_exists('mime_content_type')) {
+                $mimeType = @mime_content_type($path);
+            }
+        }
+
+        if (! is_string($mimeType) || $mimeType == '') {
+            return null;
+        }
+
+        $mimeType = strtolower(trim($mimeType));
+        $semicolon = strpos($mimeType, ';');
+
+        if ($semicolon !== false) {
+            $mimeType = trim(substr($mimeType, 0, $semicolon));
+        }
+
+        return $mimeType == '' ? null : $mimeType;
+    }
+
+    /**
      * Detect the real image type of a local file.
      *
      * @param string $path

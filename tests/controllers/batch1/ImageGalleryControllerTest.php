@@ -17,7 +17,7 @@ class ImageGalleryControllerTest extends RedminBrowserTestCase
         parent::setUp();
 
         $this->seed(RedminSeeder::class);
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $this->relativeRoot = 'assets/img/redmin_gallery_' . uniqid();
     }

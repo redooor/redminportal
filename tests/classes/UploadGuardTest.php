@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Classes\UploadGuard;
 
 class UploadGuardTest extends RedminTestCase
@@ -17,6 +18,31 @@ class UploadGuardTest extends RedminTestCase
         $this->tempFiles = array();
 
         parent::tearDown();
+    }
+
+    /**
+     * Test (Pass): a published media.php made before allowed_mimes existed still gets the package allowlist
+     */
+    public function testMissingMimeAllowlistInPublishedConfigFallsBackToThePackageDefault()
+    {
+        Config::set('redminportal::media', array(
+            'allowed_extensions' => array('pdf'),
+            'max_size' => 1048576,
+        ));
+
+        $this->assertTrue(UploadGuard::isAllowedMediaMime('file.pdf', 'application/pdf'));
+        $this->assertFalse(UploadGuard::isAllowedMediaMime('file.pdf', 'text/html'));
+    }
+
+    /**
+     * Test (Pass): an allowlist set in the published config is used as written
+     */
+    public function testMimeAllowlistInPublishedConfigIsHonoured()
+    {
+        Config::set('redminportal::media.allowed_mimes', array('pdf' => array('application/x-custom')));
+
+        $this->assertTrue(UploadGuard::isAllowedMediaMime('file.pdf', 'application/x-custom'));
+        $this->assertFalse(UploadGuard::isAllowedMediaMime('file.pdf', 'application/pdf'));
     }
 
     /**
@@ -137,6 +163,69 @@ class UploadGuardTest extends RedminTestCase
     }
 
     /**
+     * Test (Pass): a real PDF content type is allowed only for PDF names.
+     */
+    public function testPdfMimeMustMatchItsExtension()
+    {
+        $path = $this->tempFile('pdf');
+        file_put_contents($path, $this->pdfContent());
+
+        $mimeType = UploadGuard::detectMimeType($path);
+
+        $this->assertSame('application/pdf', $mimeType);
+        $this->assertTrue(UploadGuard::isAllowedMediaMime('document.pdf', $mimeType));
+        $this->assertFalse(UploadGuard::isAllowedMediaMime('document.jpg', $mimeType));
+    }
+
+    /**
+     * Test (Fail): HTML and SVG content are rejected for a PDF name.
+     */
+    public function testMarkupContentIsRejectedForPdfNames()
+    {
+        $html = $this->tempFile('pdf');
+        file_put_contents($html, '<html><body>not a pdf</body></html>');
+
+        $htmlMimeType = UploadGuard::detectMimeType($html);
+
+        $this->assertNotNull($htmlMimeType);
+        $this->assertFalse(UploadGuard::isAllowedMediaMime('document.pdf', $htmlMimeType));
+
+        $svg = $this->tempFile('pdf');
+        file_put_contents($svg, '<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+
+        $svgMimeType = UploadGuard::detectMimeType($svg);
+
+        $this->assertNotNull($svgMimeType);
+        $this->assertFalse(UploadGuard::isAllowedMediaMime('document.pdf', $svgMimeType));
+    }
+
+    /**
+     * Test (Pass): a real PNG is accepted for a PNG name and rejected for a JPG name.
+     */
+    public function testPngMimeMatchesOnlyImageExtensions()
+    {
+        $path = $this->createImage('png');
+        $mimeType = UploadGuard::detectMimeType($path);
+
+        $this->assertSame('image/png', $mimeType);
+        $this->assertTrue(UploadGuard::isAllowedMediaMime('picture.png', $mimeType));
+        $this->assertFalse(UploadGuard::isAllowedMediaMime('picture.jpg', $mimeType));
+    }
+
+    /**
+     * Test (Pass): office, zip and epub formats accept archive and binary types.
+     */
+    public function testOfficeAndZipMimesAreAllowed()
+    {
+        $extensions = array('doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'epub');
+
+        foreach ($extensions as $extension) {
+            $this->assertTrue(UploadGuard::isAllowedMediaMime('file.' . $extension, 'application/zip'));
+            $this->assertTrue(UploadGuard::isAllowedMediaMime('file.' . $extension, 'application/octet-stream'));
+        }
+    }
+
+    /**
      * Create a real image file using GD
      */
     private function createImage($type)
@@ -156,6 +245,13 @@ class UploadGuardTest extends RedminTestCase
         imagedestroy($image);
 
         return $path;
+    }
+
+    private function pdfContent()
+    {
+        return "%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n"
+            . "2 0 obj\n<< /Type /Pages /Kids [] /Count 0 >>\nendobj\n"
+            . "trailer\n<< /Root 1 0 R >>\n%%EOF\n";
     }
 
     /**

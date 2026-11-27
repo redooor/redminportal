@@ -14,7 +14,7 @@ class OutputEscapingTest extends RedminBrowserTestCase
         parent::setUp();
 
         $this->seed('RedminSeeder');
-        Auth::guard('redminguard')->loginUsingId(1);
+        $this->loginRedminUser(1);
 
         $this->category = new Category;
         $this->category->name = '<img src=x onerror=alert(1)>';

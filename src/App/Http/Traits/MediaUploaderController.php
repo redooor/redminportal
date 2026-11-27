@@ -244,6 +244,14 @@ trait MediaUploaderController
                 return json_encode($result);
             }
 
+            $mimeType = UploadGuard::detectMimeType($filePath);
+
+            if ($mimeType === null || ! UploadGuard::isAllowedMediaMime($fileName, $mimeType)) {
+                @unlink($filePath);
+                $result["message"] = Lang::get('redminportal::messages.upload_error_file_content_type_not_allowed');
+                return json_encode($result);
+            }
+
             $this->saveMedia($model, $filePath);
 
             $file = new FileInfo($filePath);

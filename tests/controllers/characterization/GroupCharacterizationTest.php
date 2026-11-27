@@ -75,7 +75,7 @@ class GroupCharacterizationTest extends BaseControllerTest
 
     private function login(User $user)
     {
-        Auth::guard('redminguard')->loginUsingId($user->id);
+        $this->loginRedminUser($user->id);
     }
 
     private function groupInput(array $overrides = array())

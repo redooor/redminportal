@@ -35,8 +35,7 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
             '/admin/posts/delete/1'          => '/admin/portfolios/delete/1',
             '/admin/products/delete/1'       => '/admin/posts/delete/1',
             '/admin/promotions/delete/1'     => '/admin/products/delete/1',
-            '/admin/purchases/delete/1'      => '/admin/promotions/delete/1',
-            '/admin/users/delete/1'          => '/admin/purchases/delete/1'
+            '/admin/users/delete/1'          => '/admin/promotions/delete/1'
         ];
         
         $this->test_posts = [];
@@ -62,7 +61,6 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
             '/admin/orders/delete/1'         => 'login/unauthorized',
             '/admin/portfolios/delete/1'     => 'login/unauthorized',
             '/admin/products/delete/1'       => 'login/unauthorized',
-            '/admin/purchases/delete/1'      => 'login/unauthorized',
             '/admin/users/delete/1'          => 'login/unauthorized',
             '/admin/announcements/delete/1'  => '/admin/users/delete/1',
             '/admin/coupons/delete/1'        => '/admin/announcements/delete/1',
@@ -83,7 +81,7 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -108,7 +106,6 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
             '/admin/orders/delete/1'         => '/admin/modules/delete/1',
             '/admin/portfolios/delete/1'     => '/admin/orders/delete/1',
             '/admin/products/delete/1'       => '/admin/portfolios/delete/1',
-            '/admin/purchases/delete/1'      => '/admin/products/delete/1',
             '/admin/users/delete/1'          => 'login/unauthorized',
             '/admin/announcements/delete/1'  => 'login/unauthorized',
             '/admin/coupons/delete/1'        => 'login/unauthorized',
@@ -131,7 +128,7 @@ class DeleteAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }

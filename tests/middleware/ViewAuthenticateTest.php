@@ -31,7 +31,6 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
             'admin/posts',
             'admin/products',
             'admin/promotions',
-            'admin/purchases',
             'admin/reports',
             'admin/users',
             'admin/api/email',
@@ -74,7 +73,6 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
             'admin/portfolios'      => 'login/unauthorized',
             'admin/products'        => 'login/unauthorized',
             'admin/products/view-variant/1' => 'login/unauthorized',
-            'admin/purchases'       => 'login/unauthorized',
             'admin/reports'         => 'login/unauthorized',
             'admin/users'           => 'login/unauthorized',
             'admin/api/email'       => 'login/unauthorized',
@@ -91,7 +89,7 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }
@@ -132,7 +130,6 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
             'admin/portfolios',
             'admin/products',
             'admin/products/view-variant/1',
-            'admin/purchases',
             'admin/reports',
             'admin/users',
             'admin/api/email',
@@ -158,7 +155,7 @@ class ViewAuthenticateTest extends BaseAuthenticateTest
         // Assign group to user
         $this->user->groups()->save($group);
         // Login as user
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
         
         $this->runThroughAllPagesAllowedAccess();
     }

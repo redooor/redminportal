@@ -31,7 +31,7 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         $group->save();
 
         $this->user->groups()->save($group);
-        Auth::guard('redminguard')->loginUsingId($this->user->id);
+        $this->loginRedminUser($this->user->id);
     }
 
     public function tearDown(): void
@@ -159,6 +159,68 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         $this->call('POST', '/logout', ['_token' => $this->token()])
             ->assertStatus(302);
         $this->assertFalse(Auth::guard('redminguard')->check());
+    }
+
+    public function testExpiredLoginFormRedirectsToTheLoginPage()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $this->call('POST', '/login/login', ['_token' => 'expired', 'email' => 'peter@test.com', 'password' => 'test']);
+
+        $this->assertRedirectedTo('login');
+        $this->assertSessionHasErrors('invalid');
+        $this->assertTrue(Auth::guard('redminguard')->guest());
+    }
+
+    public function testExpiredLoginPostSentAsJsonKeepsTheTokenMismatchResponse()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $body = json_encode(['_token' => 'expired', 'email' => 'peter@test.com', 'password' => 'test']);
+        $this->call('POST', '/login/login', [], [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => '*/*'], $body);
+
+        $this->assertResponseStatus(419);
+    }
+
+    public function testExpiredLoginPostSentByAjaxKeepsTheTokenMismatchResponse()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $this->call(
+            'POST',
+            '/login/login',
+            ['_token' => 'expired', 'email' => 'peter@test.com', 'password' => 'test'],
+            [],
+            [],
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'HTTP_ACCEPT' => 'text/html']
+        );
+
+        $this->assertResponseStatus(419);
+    }
+
+    public function testOtherFormsWithoutTokenStillGetTheTokenMismatchResponse()
+    {
+        $this->app['env'] = 'production';
+
+        $this->call('POST', '/admin/pages/delete/1', ['_token' => 'expired']);
+        $this->assertResponseStatus(419);
+    }
+
+    public function testSignedOutAjaxRequestGetsTheNotAuthorizedPage()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $response = $this->call('GET', '/admin/pages', [], [], [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+
+        $response->assertOk();
+        $this->assertStringContainsString(
+            e(trans('redminportal::messages.not_authorized_to_view_this_page')),
+            $response->getContent()
+        );
     }
 
     public function testGetRoutesDoNotChangeData()

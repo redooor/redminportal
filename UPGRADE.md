@@ -305,7 +305,7 @@ matches the real image type (jpg, png, gif). If you need other media types, re-p
 These actions now need **update** instead of **view**: `activate`, `deactivate`, `imgremove`, `variant-imgremove`, media `uploadform`, `upload` and `duration`, product `edit-variant`; `create-variant` needs **create**; `delete-variant-json` needs **delete**.
 Groups or users that were allowed these actions only through the `view` permission must now also be given `update` (or `create`/`delete`).
 Explicit entries such as `admin.users.deactivate.view` no longer apply to these routes; use `admin.users.deactivate.update`.
-Deleting a purchase (`admin/purchases/delete`) also needs `admin.orders.delete`, and adding one (`admin/purchases/store`) also needs `admin.orders.create`, because purchases are rows of the orders table. `store` on orders and purchases always needs the `create` permission, whatever `id` is sent.
+`store` on orders always needs the `create` permission, whatever `id` is sent.
 Custom controllers that read `Request::get('id')` should use `Request::input('id')`, so they see the same value as the permission check.
 
 ---
@@ -344,7 +344,7 @@ Use an administrator with full access for those tasks. Custom code can use `Perm
 **Descriptions.** The summary and description fields of categories and translations (and the product views that share the language selector) are passed through `RHelper::cleanHtml()` before they are shown. It uses HTML Purifier (`ezyang/htmlpurifier`, now a direct requirement; it was already installed through the spreadsheet package) and keeps basic formatting: paragraphs, headings, lists, tables, bold/italic, links (`http`, `https`, `mailto`) and images. Scripts, event attributes (`onclick`, `onerror`), inline styles, iframes, forms and `javascript:` or `data:` URLs are removed. Stored data is not changed, only what is displayed. Custom views that print these fields with `{!! !!}` should call `\Redooor\Redminportal\App\Helpers\RHelper::cleanHtml($value)` too, or use `{{ }}`.
 Category names, product names and the order builder labels are escaped. `Category::printCategory()` escapes the name and returns HTML, so keep printing it with `{!! !!}`.
 
-**Exports.** The purchases, orders and mailing list exports pass free-text cells through `RHelper::exportCell()`: commas become dots as before, and a value that starts with `=`, `+`, `-` or `@` (or a tab or carriage return) gets a leading `'` so Excel and similar programs show it as text. Custom exports can call the same helper.
+**Exports.** The orders and mailing list exports pass free-text cells through `RHelper::exportCell()`: commas become dots as before, and a value that starts with `=`, `+`, `-` or `@` (or a tab or carriage return) gets a leading `'` so Excel and similar programs show it as text. Custom exports can call the same helper.
 
 **Tag API.** `GET /api/tag` and `GET /api/tag/name` need a signed-in, active user (new `redminuser` middleware: no route permission is required, so anyone editing content can use the tag field). Guests are redirected to `login`. If a public front end reads these URLs, provide your own public endpoint with the tags you want to expose.
 
@@ -361,7 +361,7 @@ Category names, product names and the order builder labels are escaped. `Categor
 **Picker and gallery.** The file picker on the create and edit forms is now the partial `partials/image-input` (a multiple-file input named `images[]`, with a thumbnail per chosen file), and the "uploaded photos" card on the edit pages is the partial `partials/image-gallery` with a Primary badge and buttons to make an image primary or move it earlier or later. The controllers still accept the old single `image` field, so custom forms keep working; custom edit views can include the two partials. New routes on each content module (`announcements`, `bundles`, `categories`, `medias`, `modules`, `pages`, `portfolios`, `posts`, `products`, `promotions`): `POST admin/<module>/imgprimary/{id}` and `POST admin/<module>/imgmove/{id}/{earlier|later}`. Both need the **update** permission, like removing an image, and only work on images owned by that module. Rebuilt assets: publish them again (`vendor:publish --tag=public --force`). Product variant forms use the multiple-file picker, but their gallery has no primary or order controls yet.
 ### Step 18 — Controller helpers (no action needed)
 
-The ten content controllers, and the Coupon, Group, Mailinglist, Membership, Myaccount, Purchase and User controllers (validation rules only), now use internal helper traits (`Redooor\Redminportal\App\Http\Concerns`) and per-form rules classes (`Redooor\Redminportal\App\Http\Validation`). Routes, public controller method names and signatures, redirects, error messages, validation rules and stored data are unchanged, so a host application that extends one of these controllers keeps working, including an override of `postStore()` that calls `parent::postStore()`. The helper methods are `private` and the new classes are internal, not an extension API. `getImgremove` is still a public method on the same route in every controller; in eight of them it now calls a shared private helper with the controller's fixed model class and path, so overriding the gallery methods used by the primary and order actions does not change image removal.
+The ten content controllers, and the Coupon, Group, Mailinglist, Membership, Myaccount and User controllers (validation rules only), now use internal helper traits (`Redooor\Redminportal\App\Http\Concerns`) and per-form rules classes (`Redooor\Redminportal\App\Http\Validation`). Routes, public controller method names and signatures, redirects, error messages, validation rules and stored data are unchanged, so a host application that extends one of these controllers keeps working, including an override of `postStore()` that calls `parent::postStore()`. The helper methods are `private` and the new classes are internal, not an extension API. `getImgremove` is still a public method on the same route in every controller; in eight of them it now calls a shared private helper with the controller's fixed model class and path, so overriding the gallery methods used by the primary and order actions does not change image removal.
 
 ### Step 19 — Fixes after the controller refactor (check published views and tests)
 
@@ -405,6 +405,14 @@ The `redminsession` middleware group now starts with `PreventFraming`, which add
 
 ---
 
+### Step 25 — Legacy Purchases pages are removed
+
+Purchases pages, `UserPricelist` and the purchases export are removed; they were replaced by Orders in 0.3 and the table is dropped by a migration. Remove the `admin.purchases` permission from groups if you stored it.
+
+The `/admin/purchases` routes and the `/admin/reports/purchases` export route no longer exist. Use the Orders pages and the orders export instead. The 2014 migration still creates `user_pricelists` and the 2015 migration still drops it; do not remove either migration from an existing installation.
+
+---
+
 ### Upgrade checklist
 
 Database: **no table other than `password_reset_tokens` changed.** Your existing
@@ -428,6 +436,8 @@ will not run again.
 - [ ] The password of any `admin@admin.com` account that still uses `admin` is changed (Step 15)
 - [ ] `php artisan migrate` has run (adds `images.sort_order` and `images.is_primary`) (Step 17)
 - [ ] Custom views that print descriptions with `{!! !!}` use `RHelper::cleanHtml()`; anything calling `/api/tag` anonymously is replaced (Step 16)
+- [ ] The `admin.purchases` permission is removed from groups, and any links or
+      custom code using `/admin/purchases` or the purchases export are removed (Step 25)
 - [ ] If you subclass `Api` or the report controllers: they no longer use the
       `AuthorizesRequests`, `DispatchesJobs` or `ValidatesRequests` traits, and
       reports now use `Excel::download(new ...Export)` instead of `Excel::create`

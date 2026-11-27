@@ -241,8 +241,8 @@ trait Permissable
             $type = 'update';
         } elseif ($request->is('*/delete/*')) {
             $type = 'delete';
-        } elseif ($request->is('admin/orders/store', 'admin/purchases/store') && $request->isMethod('post')) {
-            // These handlers always add a new order, whatever id is sent
+        } elseif ($request->is('admin/orders/store') && $request->isMethod('post')) {
+            // This handler always adds a new order, whatever id is sent
             $type = 'create';
         } elseif ($request->is('*/store') && $request->isMethod('post')) {
             // Use the same id for the permission check and the controller

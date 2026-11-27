@@ -36,7 +36,7 @@ class PreventFramingTest extends RedminBrowserTestCase
         $group->save();
 
         $user->groups()->save($group);
-        Auth::guard('redminguard')->loginUsingId($user->id);
+        $this->loginRedminUser($user->id);
     }
 
     private function assertFrameHeaders($response)
