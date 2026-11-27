@@ -31,8 +31,6 @@ return array(
         => 'No memberships found.',
     'no_promotion_found'
         => 'No promotions found.',
-    'no_purchase_found'
-        => 'No purchases found.',
     'no_user_found'
         => 'No users found.',
     'no_bundle_found'
@@ -91,10 +89,6 @@ return array(
         => 'The image cannot be deleted at this time.',
     'error_image_not_found'
         => 'The image cannot be found because it does not exist or may belong to another record.',
-    'purchase_error_delete_no_orders_permission'
-        => 'You also need permission to delete orders.',
-    'purchase_error_create_no_orders_permission'
-        => "You also need permission to add orders.",
     'success_delete_record'
         => 'The record has been deleted successfully.',
     'error_delete_variant_already_ordered'

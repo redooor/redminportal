@@ -64,22 +64,6 @@ class ReportControllerTest extends RedminBrowserTestCase
     }
     
     /**
-     * Test (Fail): access postPurchases with input but no data found
-     */
-    public function testReportPurchases()
-    {
-        $input = array(
-            'start_date' => '29/02/2016',
-            'end_date' => '29/02/2016'
-        );
-
-        $this->call('POST', 'admin/reports/purchases', $input);
-
-        $this->assertRedirectedTo('admin/purchases');
-        $this->assertSessionHasErrors();
-    }
-    
-    /**
      * Test (Fail): access postOrders with input but no data found
      */
     public function testReportOrders()

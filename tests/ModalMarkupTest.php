@@ -25,6 +25,6 @@ class ModalMarkupTest extends TestCase
             }
         }
 
-        $this->assertGreaterThanOrEqual(4, $found);
+        $this->assertGreaterThanOrEqual(3, $found);
     }
 }

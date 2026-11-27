@@ -102,16 +102,6 @@ class HideUnpermittedButtonsTest extends RedminBrowserTestCase
         $this->assertStringNotContainsString('admin/pages/delete/', $html);
     }
 
-    public function testPurchasesCreateButtonNeedsCreatePermission()
-    {
-        $this->user->groups()->save($this->group(['admin.purchases.view' => 1]));
-        $this->loginRedminUser($this->user->id);
-
-        $html = $this->call('GET', '/admin/purchases')->getContent();
-
-        $this->assertStringNotContainsString('admin/purchases/create', $html);
-    }
-
     public function testOrderStatusIsPlainTextForAUserWhoMayNotUpdateOrders()
     {
         $order = new Order;

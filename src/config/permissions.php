@@ -149,10 +149,6 @@ return [
             'value' => 'admin.promotions'
         ],
         [
-            'name' => 'admin/purchases',
-            'value' => 'admin.purchases'
-        ],
-        [
             'name' => 'admin/reports',
             'value' => 'admin.reports'
         ],

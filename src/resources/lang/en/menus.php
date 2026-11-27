@@ -16,7 +16,6 @@ return array(
     'promotions' => 'Promotions',
     'news' => 'News',
     'portfolios' => 'Portfolios',
-    'purchases' => 'Purchases',
     'mailinglist' => 'Mailing List',
     'coupons' => 'Coupons',
     'announcements' => 'Announcements',

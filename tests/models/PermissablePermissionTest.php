@@ -189,27 +189,13 @@ class PermissablePermissionTest extends RedminBrowserTestCase
         $this->assertAccess(true, $user, 'GET', '/admin/users/edit/1');
     }
 
-    public function testOrdersAndPurchasesStoreAlwaysNeedCreate()
+    public function testOrdersStoreAlwaysNeedCreate()
     {
         $updater = $this->userWithPermissions([
             'admin.orders.update' => 1, 'admin.orders.create' => -1,
-            'admin.purchases.update' => 1, 'admin.purchases.create' => -1,
         ]);
 
-        foreach (['orders', 'purchases'] as $module) {
-            $this->assertAccess(false, $updater, 'POST', '/admin/' . $module . '/store', ['id' => '999']);
-            $this->assertAccess(false, $updater, 'POST', '/admin/' . $module . '/store');
-        }
-    }
-
-    public function testPurchaseStoreAlsoNeedsOrdersCreate()
-    {
-        $user = $this->userWithPermissions(['admin.purchases.create' => 1, 'admin.orders.create' => -1]);
-
-        $this->loginRedminUser($user->id);
-
-        $this->call('POST', '/admin/purchases/store', []);
-
-        $this->assertSessionHasErrors('createError');
+        $this->assertAccess(false, $updater, 'POST', '/admin/orders/store', ['id' => '999']);
+        $this->assertAccess(false, $updater, 'POST', '/admin/orders/store');
     }
 }

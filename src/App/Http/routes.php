@@ -20,7 +20,6 @@ use Redooor\Redminportal\App\Http\Controllers\PortfolioController;
 use Redooor\Redminportal\App\Http\Controllers\PostController;
 use Redooor\Redminportal\App\Http\Controllers\ProductController;
 use Redooor\Redminportal\App\Http\Controllers\PromotionController;
-use Redooor\Redminportal\App\Http\Controllers\PurchaseController;
 use Redooor\Redminportal\App\Http\Controllers\ReportController;
 use Redooor\Redminportal\App\Http\Controllers\UserController;
 use Redooor\Redminportal\App\Http\API\EmailApi;
@@ -310,22 +309,11 @@ Route::group(
             Route::post('imgmove/{sid}/{direction}', [PromotionController::class, 'getImgmove']);
         });
 
-        // Purchases
-        // ---------
-        Route::group(['prefix' => 'purchases'], function () {
-            Route::get('/', [PurchaseController::class, 'getIndex']);
-            Route::get('create', [PurchaseController::class, 'getCreate']);
-            Route::get('edit/{sid}', [PurchaseController::class, 'getEdit']);
-            Route::post('store', [PurchaseController::class, 'postStore']);
-            Route::post('delete/{sid}', [PurchaseController::class, 'getDelete']);
-        });
-
         // Reports
         // -------
         Route::group(['prefix' => 'reports'], function () {
             Route::get('/', [ReportController::class, 'getIndex']);
             Route::post('mailinglist', [ReportController::class, 'postMailinglist']);
-            Route::post('purchases', [ReportController::class, 'postPurchases']);
             Route::post('orders', [ReportController::class, 'postOrders']);
         });
 

@@ -76,7 +76,7 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 1. The create/update decision for `store` requests and the controllers now read the `id` field the same way (`Request::input('id')`).
 2. Activate/deactivate user, remove image, media upload and duration, and product variant create/edit need the **update** permission (variant delete needs **delete**), instead of **view**. Their buttons are hidden for users without it.
 3. Removing an image only works through the module that owns it (a page image cannot be removed through the products route).
-4. Deleting or adding a purchase also needs permission to delete or add orders, because purchases are orders. Adding an order or purchase always needs the **create** permission.
+4. Adding an order always needs the **create** permission, whatever `id` is sent.
 5. Permission checks use the decoded request path, the same one the router matches.
 
 **Accounts**
@@ -101,14 +101,17 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 
 **Controllers (contributors)**
 1. The ten content controllers (Announcement, Bundle, Category, Media, Module, Page, Portfolio, Post, Product, Promotion) share small internal helpers (`App\Http\Concerns`) for saving translations, syncing tags, preparing edit data, not-found redirects, input validation and removing gallery images. Each form's validation rules moved to a class in `App\Http\Validation`. Routes, redirects, messages, validation rules and the public controller methods are unchanged.
-2. The validation rules of Coupon, Group, Mailinglist, Membership, Myaccount, Purchase and User moved to rules classes the same way. The order of the permission, authentication and not-found checks around validation is unchanged and pinned by tests.
+2. The validation rules of Coupon, Group, Mailinglist, Membership, Myaccount and User moved to rules classes the same way. The order of the permission, authentication and not-found checks around validation is unchanged and pinned by tests.
 
 **Fixes after the controller refactor**
-1. The purchase "already purchased" check and the module delete guard now join orders to `order_pricelist.order_id` (they used the pivot's own id), so repeat purchases are detected and a purchased module cannot be deleted. `Tag::addTag` trims and lowercases the name before the empty check and the lookup.
+1. The module delete guard now joins orders to `order_pricelist.order_id` (it used the pivot's own id), so a purchased module cannot be deleted. `Tag::addTag` trims and lowercases the name before the empty check and the lookup.
 2. Saving a bundle without `product_id` or `pricelist_id` no longer returns a 500: it shows the "not selected" message, and a non-array value is a validation error. A failed variant image removal redirects to the product's edit page (or the products list) instead of the variant edit page with the image id. A missing category detail answers HTTP 404 (the category tree shows the error page in the panel).
 3. Validation is stricter where it was missing or wrong: Promotion dates must be `d/m/Y` with the end on or after the start; Coupon `amount` is required again and its dates must match `d/m/Y h:i A`; Mailinglist and User emails must be valid addresses; Membership `rank` must be a whole number of 0 or more; a duplicate Group name shows a validation error; empty Product weight, length, width and height are accepted; a Bundle name must be unique among bundles (it was checked against products) and its category must exist.
 4. Save flows no longer leave half-saved state: posting an empty `tags` field clears the tags (a form without the field keeps them), and Page and Post reject an array `tags` value before saving; a User and its groups are saved in one transaction and unknown groups are rejected before anything is written; image files (original and resized copies) and the category image folder are deleted from the configured `image.upload_path` whatever the working directory, and paths that resolve outside it are ignored; a missing translated Page or Post slug is stored as null instead of an empty string.
 5. The bundled edit forms post `1` for a ticked flag checkbox (featured, active, private and the coupon options); they used to post the record's current value, so ticking a box on a record that was off posted `0`. The controllers still treat any non-empty value as on, so published views and custom forms keep working. The dead translation lookup in the announcement edit action was removed.
+
+**Legacy purchases**
+1. Purchases pages, `UserPricelist` and the purchases export are removed; they were replaced by Orders in 0.3 and the table is dropped by a migration. Remove the `admin.purchases` permission from groups if you stored it. The migrations are unchanged: the 2014 migration still creates `user_pricelists` and the 2015 migration still drops it.
 
 **Layouts**
 1. The unused `layouts/bare` view was removed (it was the layout of the iframe modals, which are now fragments). `layouts/plain` stays: the login and not-authorised pages use it.
