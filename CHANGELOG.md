@@ -51,6 +51,8 @@ The admin routes now encrypt cookies like the default `web` group, so visiting t
 
 Forms for modules, medias, products and bundles can be saved with the tags field left empty on hosts that convert empty strings to `null` (the default Laravel `ConvertEmptyStringsToNull` middleware); the tags rule is now `nullable`.
 
+The mailing list, orders and purchases exports use `maatwebsite/excel` 3.x export classes (`src/App/Exports`). The release required version 3.x but still called the removed 2.x `Excel::create()`, so every export ended with an error page.
+
 `ezyang/htmlpurifier` is now a direct requirement (it was already installed through the spreadsheet package).
 
 ## Version 0.58.0

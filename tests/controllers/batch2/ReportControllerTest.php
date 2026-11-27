@@ -1,6 +1,10 @@
 <?php namespace Redooor\Redminportal\Test;
 
 use Illuminate\Support\Facades\Auth;
+use Redooor\Redminportal\App\Models\Mailinglist;
+use Redooor\Redminportal\App\Models\Membership;
+use Redooor\Redminportal\App\Models\Order;
+use Redooor\Redminportal\App\Models\UserPricelist;
 
 class ReportControllerTest extends RedminBrowserTestCase
 {
@@ -72,5 +76,94 @@ class ReportControllerTest extends RedminBrowserTestCase
 
         $this->assertRedirectedTo('admin/orders');
         $this->assertSessionHasErrors();
+    }
+
+    /**
+     * Download the response file for an export and return its contents
+     */
+    private function exportedFile($expectedName)
+    {
+        $this->assertResponseOk();
+        $this->assertInstanceOf(\Symfony\Component\HttpFoundation\BinaryFileResponse::class, $this->response);
+        $this->assertStringContainsString('attachment', $this->response->headers->get('content-disposition'));
+        $this->assertStringContainsString($expectedName, $this->response->headers->get('content-disposition'));
+
+        return file_get_contents($this->response->getFile()->getPathname());
+    }
+
+    /**
+     * Test (Pass): the mailing list export downloads a csv file and escapes cells that start like a formula
+     */
+    public function testReportMailinglistsDownloadsCsv()
+    {
+        $item = new Mailinglist;
+        $item->email = 'report-one@test.com';
+        $item->first_name = '=SUM(1+1)';
+        $item->last_name = 'Reporter';
+        $item->active = true;
+        $item->save();
+
+        $this->call('POST', 'admin/reports/mailinglist', []);
+
+        $content = $this->exportedFile('Redmin_Mailinglist_Report.csv');
+
+        $this->assertStringContainsString('report-one@test.com', $content);
+        $this->assertStringContainsString("'=SUM(1+1)", $content);
+        $this->assertStringNotContainsString(',=SUM', $content);
+        $this->assertStringNotContainsString('"=SUM', $content);
+    }
+
+    /**
+     * Test (Pass): the orders export downloads an xlsx file
+     */
+    public function testReportOrdersDownloadsXlsx()
+    {
+        $order = new Order;
+        $order->user_id = 1;
+        $order->paid = 10.99;
+        $order->transaction_id = '+TX-1';
+        $order->payment_status = 'Completed';
+        $order->save();
+
+        $this->call('POST', 'admin/reports/orders', []);
+
+        $content = $this->exportedFile('Redmin_Orders_Report.xlsx');
+
+        $this->assertSame('PK', substr($content, 0, 2), 'The orders report is not an xlsx (zip) file');
+    }
+
+    /**
+     * Test (Pass): the purchases export downloads a csv file
+     */
+    public function testReportPurchasesDownloadsCsv()
+    {
+        $membership = new Membership;
+        $membership->name = 'Gold';
+        $membership->rank = 5;
+        $membership->save();
+
+        $this->call('POST', '/admin/modules/store', [
+            'name' => 'Report module',
+            'short_description' => 'Body',
+            'category_id' => 1,
+            'sku' => 'REPORTSKU1',
+            'price_1' => 9.99,
+            'price_active_1' => true
+        ]);
+
+        $purchase = new UserPricelist;
+        $purchase->user_id = 1;
+        $purchase->pricelist_id = 1;
+        $purchase->paid = 9.99;
+        $purchase->transaction_id = 'TX-PURCHASE-1';
+        $purchase->payment_status = 'Completed';
+        $purchase->save();
+
+        $this->call('POST', 'admin/reports/purchases', []);
+
+        $content = $this->exportedFile('Redmin_Purchases_Report.csv');
+
+        $this->assertStringContainsString('TX-PURCHASE-1', $content);
+        $this->assertStringContainsString('Report module', $content);
     }
 }
