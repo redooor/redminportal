@@ -88,7 +88,27 @@ class ReportControllerTest extends RedminBrowserTestCase
         $this->assertStringContainsString('attachment', $this->response->headers->get('content-disposition'));
         $this->assertStringContainsString($expectedName, $this->response->headers->get('content-disposition'));
 
-        return file_get_contents($this->response->getFile()->getPathname());
+        $path = $this->response->getFile()->getPathname();
+
+        // The test client never sends the response, so the temporary export file is not deleted for us
+        $this->exportedPaths[] = $path;
+
+        return file_get_contents($path);
+    }
+
+    private $exportedPaths = [];
+
+    public function tearDown(): void
+    {
+        foreach ($this->exportedPaths as $path) {
+            if (is_file($path)) {
+                @unlink($path);
+            }
+        }
+
+        $this->exportedPaths = [];
+
+        parent::tearDown();
     }
 
     /**
@@ -130,6 +150,24 @@ class ReportControllerTest extends RedminBrowserTestCase
         $content = $this->exportedFile('Redmin_Orders_Report.xlsx');
 
         $this->assertSame('PK', substr($content, 0, 2), 'The orders report is not an xlsx (zip) file');
+
+        // Reopen the workbook: the sheet has the report title and the transaction id is a text cell, prefixed so it is not a formula
+        $path = $this->exportedPaths[count($this->exportedPaths) - 1];
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $sheet = $reader->load($path)->getSheet(0);
+
+        $this->assertSame('Orders Report', $sheet->getTitle());
+
+        $transactionCell = null;
+        foreach ($sheet->toArray(null, false, false, false) as $row) {
+            foreach ($row as $value) {
+                if (is_string($value) && strpos($value, 'TX-1') !== false) {
+                    $transactionCell = $value;
+                }
+            }
+        }
+
+        $this->assertSame("'+TX-1", $transactionCell, 'The order row is missing or the transaction id is not escaped');
     }
 
     /**
