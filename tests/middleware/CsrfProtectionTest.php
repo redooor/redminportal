@@ -158,11 +158,15 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         );
 
         // A host application keeps its own EncryptCookies with cookies that stay plain text
-        class_alias(HostEncryptCookiesStub::class, 'App\\Http\\Middleware\\EncryptCookies');
-
         $this->assertSame(
-            'App\\Http\\Middleware\\EncryptCookies',
-            \Redooor\Redminportal\RedminportalServiceProvider::cookieEncrypter()
+            HostEncryptCookiesStub::class,
+            \Redooor\Redminportal\RedminportalServiceProvider::cookieEncrypter(HostEncryptCookiesStub::class)
+        );
+
+        // A class that does not extend the framework middleware is ignored
+        $this->assertSame(
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Redooor\Redminportal\RedminportalServiceProvider::cookieEncrypter(\stdClass::class)
         );
         $this->assertTrue(HostEncryptCookiesStub::isPlain('locale'));
     }

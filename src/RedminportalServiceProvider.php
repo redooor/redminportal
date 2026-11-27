@@ -70,12 +70,11 @@ class RedminportalServiceProvider extends ServiceProvider
      * has its own App\Http\Middleware\EncryptCookies with a list of cookies that stay plain
      * text. Use it when present so both route groups follow the same rules.
      *
+     * @param  string  $host  Class name of the host's middleware
      * @return string
      */
-    public static function cookieEncrypter()
+    public static function cookieEncrypter($host = 'App\\Http\\Middleware\\EncryptCookies')
     {
-        $host = 'App\\Http\\Middleware\\EncryptCookies';
-
         if (class_exists($host) && is_subclass_of($host, \Illuminate\Cookie\Middleware\EncryptCookies::class)) {
             return $host;
         }
