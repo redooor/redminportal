@@ -23,7 +23,7 @@ class PreventRequestForgery extends BasePreventRequestForgery
         try {
             return parent::handle($request, $next);
         } catch (TokenMismatchException | OriginMismatchException $e) {
-            if ($request->is('login/login') && ! $request->expectsJson() && ! $request->isJson()) {
+            if ($request->is('login/login') && ! $request->expectsJson() && ! $request->isJson() && ! $request->ajax()) {
                 $errors = new \Illuminate\Support\MessageBag;
                 $errors->add('invalid', trans('redminportal::messages.login_error_session_expired'));
 

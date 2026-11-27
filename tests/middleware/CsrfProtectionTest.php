@@ -184,6 +184,23 @@ class CsrfProtectionTest extends RedminBrowserTestCase
         $this->assertResponseStatus(419);
     }
 
+    public function testExpiredLoginPostSentByAjaxKeepsTheTokenMismatchResponse()
+    {
+        $this->app['env'] = 'production';
+        Auth::guard('redminguard')->logout();
+
+        $this->call(
+            'POST',
+            '/login/login',
+            ['_token' => 'expired', 'email' => 'peter@test.com', 'password' => 'test'],
+            [],
+            [],
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'HTTP_ACCEPT' => 'text/html']
+        );
+
+        $this->assertResponseStatus(419);
+    }
+
     public function testOtherFormsWithoutTokenStillGetTheTokenMismatchResponse()
     {
         $this->app['env'] = 'production';

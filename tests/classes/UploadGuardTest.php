@@ -1,5 +1,6 @@
 <?php namespace Redooor\Redminportal\Test;
 
+use Illuminate\Support\Facades\Config;
 use Redooor\Redminportal\App\Classes\UploadGuard;
 
 class UploadGuardTest extends RedminTestCase
@@ -17,6 +18,31 @@ class UploadGuardTest extends RedminTestCase
         $this->tempFiles = array();
 
         parent::tearDown();
+    }
+
+    /**
+     * Test (Pass): a published media.php made before allowed_mimes existed still gets the package allowlist
+     */
+    public function testMissingMimeAllowlistInPublishedConfigFallsBackToThePackageDefault()
+    {
+        Config::set('redminportal::media', array(
+            'allowed_extensions' => array('pdf'),
+            'max_size' => 1048576,
+        ));
+
+        $this->assertTrue(UploadGuard::isAllowedMediaMime('file.pdf', 'application/pdf'));
+        $this->assertFalse(UploadGuard::isAllowedMediaMime('file.pdf', 'text/html'));
+    }
+
+    /**
+     * Test (Pass): an allowlist set in the published config is used as written
+     */
+    public function testMimeAllowlistInPublishedConfigIsHonoured()
+    {
+        Config::set('redminportal::media.allowed_mimes', array('pdf' => array('application/x-custom')));
+
+        $this->assertTrue(UploadGuard::isAllowedMediaMime('file.pdf', 'application/x-custom'));
+        $this->assertFalse(UploadGuard::isAllowedMediaMime('file.pdf', 'application/pdf'));
     }
 
     /**

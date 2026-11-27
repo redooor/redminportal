@@ -100,7 +100,14 @@ class UploadGuard
     public static function allowedMimeTypes($fileName)
     {
         $extension = strtolower(pathinfo((string) $fileName, PATHINFO_EXTENSION));
-        $allowed = Config::get('redminportal::media.allowed_mimes', array());
+        $allowed = Config::get('redminportal::media.allowed_mimes');
+
+        if (! is_array($allowed)) {
+            // A published media.php replaces the package config as a whole, so a copy made
+            // before this key existed has no allowlist. Use the package default, not "allow nothing".
+            $defaults = require dirname(__DIR__, 2) . '/config/media.php';
+            $allowed = isset($defaults['allowed_mimes']) ? $defaults['allowed_mimes'] : array();
+        }
 
         if ($extension == '' || ! is_array($allowed)
             || ! isset($allowed[$extension]) || ! is_array($allowed[$extension])) {

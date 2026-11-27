@@ -130,6 +130,32 @@ class OrderInputValidationTest extends RedminBrowserTestCase
         $this->assertSame(0, Order::count());
     }
 
+    public function testSuppliedSelectionThatIsNotAListIsRejected()
+    {
+        $input = $this->orderInput();
+        $input['selected_products'] = 'not-json';
+        $input['selected_bundles'] = array(json_encode(array('id' => $this->bundle->id, 'quantity' => 1)));
+
+        $this->call('POST', '/admin/orders/store', $input);
+
+        $this->assertRedirectedTo('/admin/orders/create');
+        $this->assertSessionHasErrors('productError');
+        $this->assertSame(0, Order::count());
+        $this->assertSame(0, DB::table('bundle_order')->count());
+    }
+
+    public function testEmptySelectionStringIsTreatedAsMissing()
+    {
+        $input = $this->orderInput();
+        $input['selected_products'] = '';
+        $input['selected_bundles'] = array(json_encode(array('id' => $this->bundle->id, 'quantity' => 1)));
+
+        $this->call('POST', '/admin/orders/store', $input);
+
+        $this->assertRedirectedTo('/admin/orders');
+        $this->assertSame(1, Order::count());
+    }
+
     private function assertRejectedItem($item, $errorKey, $field = 'selected_products')
     {
         $input = $this->orderInput();

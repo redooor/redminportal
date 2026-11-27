@@ -250,8 +250,13 @@ class OrderController extends Controller
      **/
     private function modelItemsAreValid($models)
     {
-        if (! is_countable($models) || count($models) == 0) {
+        // A missing selection is allowed; a supplied value must be a list of items
+        if ($models === null || $models === '') {
             return true;
+        }
+
+        if (! is_array($models)) {
+            return false;
         }
 
         foreach ($models as $item_json) {
