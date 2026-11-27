@@ -171,7 +171,7 @@ class BundleController extends Controller
             'price'             => 'numeric',
             'sku'               => 'required|alpha_dash|unique:bundles,sku' . (isset($sid) ? ',' . $sid : ''),
             'category_id'       => 'required',
-            'tags'              => 'regex:/^[a-z,0-9 -]+$/i',
+            'tags'              => 'nullable|regex:/^[a-z,0-9 -]+$/i',
         );
         
         $validation = Validator::make(Input::all(), $rules);

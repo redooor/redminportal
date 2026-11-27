@@ -49,6 +49,8 @@ A sign-in form left open until its session expired sends the user back to the si
 
 The admin routes now encrypt cookies like the default `web` group, so visiting the host's public pages no longer replaces the admin session cookie and signs the user out.
 
+Forms for modules, medias, products and bundles can be saved with the tags field left empty on hosts that convert empty strings to `null` (the default Laravel `ConvertEmptyStringsToNull` middleware); the tags rule is now `nullable`.
+
 `ezyang/htmlpurifier` is now a direct requirement (it was already installed through the spreadsheet package).
 
 ## Version 0.58.0

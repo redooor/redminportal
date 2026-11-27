@@ -86,6 +86,20 @@ class BaseControllerTest extends RedminBrowserTestCase
     }
     
     /**
+     * Test (Pass): a form saved without tags posts an empty tags field, which the app's
+     * ConvertEmptyStringsToNull middleware turns into null. That must not fail validation.
+     */
+    public function testStoreCreatePassWithEmptyTags()
+    {
+        $input = $this->input['create'];
+        $input['tags'] = null;
+
+        $this->call('POST', $this->page . '/store', $input);
+
+        $this->assertRedirectedTo($this->page);
+    }
+
+    /**
      * Test (Fail): access getEdit, return 404
      */
     public function testEditFail404()
