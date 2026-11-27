@@ -17,6 +17,8 @@ use Redooor\Redminportal\App\Models\Pricelist;
 class OrderController extends Controller
 {
     use SorterController, DeleterController, SearcherController, RevisionableController;
+
+    const MAX_ITEM_QUANTITY = 1000;
     
     public function __construct(Order $model)
     {
@@ -128,14 +130,21 @@ class OrderController extends Controller
             return redirect($redirect_url)->withErrors($errors)->withInput();
         }
 
-        $apply_to_models = array();
-        
         // Save products to order
         $selected_products = Request::input('selected_products');
+        $selected_bundles = Request::input('selected_bundles');
+
+        $item_errors = $this->validateModelItems($selected_products, $selected_bundles);
+
+        if ($item_errors->isNotEmpty()) {
+            return redirect($redirect_url)->withErrors($item_errors)->withInput();
+        }
+
+        $apply_to_models = array();
+
         $apply_to_models = array_merge($apply_to_models, $this->addModelToArray($selected_products, new Product));
         
         // Save bundles to order
-        $selected_bundles = Request::input('selected_bundles');
         $apply_to_models = array_merge($apply_to_models, $this->addModelToArray($selected_bundles, new Bundle));
         
         // Save pricelists to order
@@ -187,10 +196,19 @@ class OrderController extends Controller
         
         if (is_countable($models) && count($models) > 0) {
             foreach ($models as $item_json) {
+                if (! is_string($item_json)) {
+                    continue;
+                }
+
                 $item = json_decode($item_json);
+
+                if (! $this->isValidModelItem($item)) {
+                    continue;
+                }
+
                 $object = $model->find($item->id);
                 if ($object != null) {
-                    for ($count = 1; $count <= $item->quantity; $count++) {
+                    for ($count = 1; $count <= (int) $item->quantity; $count++) {
                         $apply_to_models[] = $object;
                     }
                 }
@@ -198,6 +216,97 @@ class OrderController extends Controller
         }
 
         return $apply_to_models;
+    }
+
+    /**
+     * Validate the selected product and bundle JSON items.
+     *
+     * @param array $products
+     * @param array $bundles
+     *
+     * @return object MessageBag
+     **/
+    private function validateModelItems($products, $bundles)
+    {
+        $errors = new \Illuminate\Support\MessageBag;
+
+        if (! $this->modelItemsAreValid($products)) {
+            $errors->add('productError', "The product selection contains an invalid item or quantity. Please try again.");
+        }
+
+        if (! $this->modelItemsAreValid($bundles)) {
+            $errors->add('bundleError', "The bundle selection contains an invalid item or quantity. Please try again.");
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Determine whether every JSON item is an object with a valid id and quantity.
+     *
+     * @param mixed $models
+     *
+     * @return bool
+     **/
+    private function modelItemsAreValid($models)
+    {
+        if (! is_countable($models) || count($models) == 0) {
+            return true;
+        }
+
+        foreach ($models as $item_json) {
+            if (! is_string($item_json)) {
+                return false;
+            }
+
+            if (! $this->isValidModelItem(json_decode($item_json))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine whether a decoded order item has an integer-like id and quantity.
+     *
+     * @param mixed $item
+     *
+     * @return bool
+     **/
+    private function isValidModelItem($item)
+    {
+        if (! is_object($item) || ! isset($item->id, $item->quantity)) {
+            return false;
+        }
+
+        if (! $this->isIntegerLike($item->id) || (int) $item->id < 1) {
+            return false;
+        }
+
+        if (! $this->isIntegerLike($item->quantity)) {
+            return false;
+        }
+
+        $quantity = (int) $item->quantity;
+
+        return $quantity >= 1 && $quantity <= self::MAX_ITEM_QUANTITY;
+    }
+
+    /**
+     * Determine whether a value is an integer or a string of digits.
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     **/
+    private function isIntegerLike($value)
+    {
+        if (is_int($value)) {
+            return true;
+        }
+
+        return is_string($value) && preg_match('/^\d+$/', $value) === 1;
     }
     
     /**
@@ -214,6 +323,11 @@ class OrderController extends Controller
         
         if (is_countable($models) && count($models) > 0) {
             foreach ($models as $item) {
+                // A nested value would make find() return a collection instead of a model
+                if (! is_scalar($item)) {
+                    continue;
+                }
+
                 $object = $model->find($item);
                 if ($object != null) {
                     $apply_to_models[] = $object;
