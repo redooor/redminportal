@@ -113,6 +113,9 @@ Supports Laravel 13 and PHP 8.3+. See [UPGRADE.md](UPGRADE.md).
 **Legacy purchases**
 1. Purchases pages, `UserPricelist` and the purchases export are removed; they were replaced by Orders in 0.3 and the table is dropped by a migration. Remove the `admin.purchases` permission from groups if you stored it. The migrations are unchanged: the 2014 migration still creates `user_pricelists` and the 2015 migration still drops it.
 
+**Permissions**
+1. A `redmin` Gate answers from the stored user and group permissions for a path and an action: `Gate::allows('redmin', ['admin/pages', 'update'])`, `@can('redmin', [...])`. The route middleware and `@permitted` are unchanged. See UPGRADE Step 26.
+
 **Layouts**
 1. The unused `layouts/bare` view was removed (it was the layout of the iframe modals, which are now fragments). `layouts/plain` stays: the login and not-authorised pages use it.
 

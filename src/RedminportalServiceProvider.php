@@ -1,11 +1,14 @@
 <?php namespace Redooor\Redminportal;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Redooor\Redminportal\App\Classes\Redminportal;
+use Redooor\Redminportal\App\Models\User;
 use Illuminate\Routing\Router;
 
 class RedminportalServiceProvider extends ServiceProvider
@@ -39,6 +42,17 @@ class RedminportalServiceProvider extends ServiceProvider
             }
 
             return false;
+        });
+
+        /**
+         * Gate::allows('redmin', ['admin/pages', 'update']) or @can('redmin', ['admin/pages', 'update'])
+         * Answers from the same stored permissions as the route middleware and @permitted, for a path and an action
+         * (view, create, update or delete). It answers for the user passed to the Gate (for example
+         * Gate::forUser($user)), which must be a Redmin user; when there is no user on the default guard it uses the
+         * user signed in on the redminguard.
+         */
+        Gate::define('redmin', function (?Authenticatable $user, string $path, string $action = 'view') {
+            return static::mayAccess($user, $path, $action);
         });
 
         // Get views
@@ -192,5 +206,48 @@ class RedminportalServiceProvider extends ServiceProvider
 
             $this->app['config']->set('auth', $authConfig);
         }
+    }
+
+    /**
+     * Whether a Redmin user may do an action on a path, for the "redmin" gate.
+     *
+     * @param Authenticatable|null $user The user the Gate resolved. Null (no user on the default guard) means the user
+     *                                   signed in on the redminguard; any other user that is not a Redmin user is denied
+     * @param string $path Path such as admin/pages, decoded and cleaned the way the router sees it
+     * @param string $action view, create, update or delete
+     * @return bool
+     */
+    public static function mayAccess(?Authenticatable $user, string $path, string $action = 'view'): bool
+    {
+        if ($user === null) {
+            $user = Auth::guard('redminguard')->user();
+        }
+
+        if (! $user instanceof User || ! $user->activated) {
+            return false;
+        }
+
+        if (! in_array($action, ['view', 'create', 'update', 'delete'], true)) {
+            return false;
+        }
+
+        // Same form as Request::decodedPath(), so an encoded path cannot slip past a deny written for the plain one
+        $segments = [];
+
+        foreach (explode('/', rawurldecode($path)) as $segment) {
+            if ($segment === '.' || $segment === '..') {
+                return false;
+            }
+
+            if ($segment !== '') {
+                $segments[] = $segment;
+            }
+        }
+
+        if (empty($segments)) {
+            return false;
+        }
+
+        return $user->hasPermission(implode('/', $segments), $action);
     }
 }
