@@ -12,6 +12,8 @@ class RImageHelperTest extends RedminTestCase
     {
         $this->library = null;
         $this->model = null;
+
+        parent::tearDown();
     }
     
     /**
