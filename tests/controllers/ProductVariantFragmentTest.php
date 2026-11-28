@@ -465,6 +465,37 @@ class ProductVariantFragmentTest extends RedminBrowserTestCase
         $this->assertSame(2, $this->parent->variants()->count());
     }
 
+    /**
+     * An empty tags box reaches the server as '' or, with ConvertEmptyStringsToNull, as null. Neither may fail validation.
+     */
+    public function testVariantSavesWithAnEmptyTagsBox()
+    {
+        foreach (array('' => 'EMPTY', 'null' => 'NULL') as $kind => $label) {
+            $tags = $kind === 'null' ? null : '';
+
+            $response = $this->ajaxPost('/admin/products/store', $this->variantInput(array(
+                'name' => 'Untagged variant ' . $label,
+                'sku' => 'VARIANT-TAGS-' . $label,
+                'tags' => $tags,
+            )));
+
+            $created = Product::where('sku', 'VARIANT-TAGS-' . $label)->first();
+            $this->assertNotNull($created, 'A variant with ' . $label . ' tags was not created');
+            $response->assertRedirect('/admin/products/view-variant/' . $created->id);
+
+            $response = $this->ajaxPost('/admin/products/store', $this->variantInput(array(
+                'id' => $created->id,
+                'name' => 'Untagged variant edited ' . $label,
+                'sku' => 'VARIANT-TAGS-' . $label,
+                'tags' => $tags,
+            )));
+
+            $response->assertSessionHasNoErrors();
+            $response->assertRedirect('/admin/products/view-variant/' . $created->id);
+            $this->assertSame('Untagged variant edited ' . $label, $created->fresh()->name);
+        }
+    }
+
     public function testInvalidImageUploadShowsTheErrorAndNoSuccessView()
     {
         $input = $this->variantInput(array(
