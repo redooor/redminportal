@@ -413,6 +413,20 @@ The `/admin/purchases` routes and the `/admin/reports/purchases` export route no
 
 ---
 
+### Step 26 — The `redmin` gate (no action needed)
+
+The package defines one Laravel Gate, `redmin`, so your own code can ask the Redmin permissions without calling the model:
+
+    Gate::allows('redmin', ['admin/pages', 'update']);    // path, action (view, create, update, delete; default view)
+    $this->authorize('redmin', ['admin/pages', 'update']);
+    @can('redmin', ['admin/pages', 'update']) ... @endcan
+
+It runs `User::hasPermission()` on the stored user and group permissions, the same data the route middleware and `@permitted` use; nothing about them changed. It answers for the user passed to the Gate (`Gate::forUser($user)`, or your default-guard user), which must be a Redmin user, that is a model extending `Redooor\Redminportal\App\Models\User`. Any other kind of user is denied. When no user is signed in on the default guard it uses the user signed in on the `redminguard`. The path is decoded and cleaned like a request path, and `.` or `..` segments are denied. A user that is not activated, an unknown action, or no user at all is denied.
+
+Sites that keep their members in the same `users` table are safe: a member holds their own permissions (for example `{"user":1}`), which grant no `admin/*` path, so the gate denies them. Do not put `admin` permissions on a member group.
+
+---
+
 ### Upgrade checklist
 
 Database: **no table other than `password_reset_tokens` changed.** Your existing
