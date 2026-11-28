@@ -29,6 +29,8 @@ class BaseControllerTest extends RedminBrowserTestCase
         $this->page = null;
         $this->viewhas = null;
         $this->input = null;
+
+        parent::tearDown();
     }
 
     /**

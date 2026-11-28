@@ -25,6 +25,8 @@ class ImageControllerTest extends RedminBrowserTestCase
     public function tearDown(): void
     {
         $this->page = null;
+
+        parent::tearDown();
     }
     
     /**

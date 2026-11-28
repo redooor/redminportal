@@ -21,6 +21,8 @@ class BaseModelTest extends RedminTestCase
     {
         $this->model = null;
         $this->testcase = null;
+
+        parent::tearDown();
     }
     
     /**

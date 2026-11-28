@@ -54,6 +54,13 @@ class RedminTestCase extends TestBenchTestCase
         putenv('REDMIN_ADMIN_EMAIL');
         putenv('REDMIN_ADMIN_PASSWORD');
 
+        // An in-memory database is discarded with the app, so do not run each migration's down() method on it. Some of
+        // them fail on data the tests created (for example the categories name unique index). Any other database keeps
+        // its rollback.
+        if ($this->usesSqliteInMemoryDatabaseConnection()) {
+            $this->cachedTestMigratorProcessors = [];
+        }
+
         parent::tearDown();
     }
 }
